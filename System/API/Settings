@@ -23,7 +23,7 @@
 	}
 
 	function WriteDefaults(self)
-		local file = fs.open('/System/.OneOS.settings', 'w')
+		local file = fs.open('/System/OneOS.settings', 'w')
 		local defaults = {}
 		for k, v in pairs(self.Defaults) do
 			defaults[k] = v.Default
@@ -34,11 +34,11 @@
 	end
 
 	function GetValues(self)
-		if not fs.exists('/System/.OneOS.settings') then
+		if not fs.exists('/System/OneOS.settings') then
 			self:WriteDefaults()
 		end
 
-		local file = fs.open('/System/.OneOS.settings','r')
+		local file = fs.open('/System/OneOS.settings','r')
 		local values = textutils.unserialize(file.readAll())
 		for k, v in pairs(self.Defaults) do
 			if values[k] == nil then
@@ -60,7 +60,7 @@
 	function SetValue(self, key, value)
 		local currentValues = self:GetValues()
 		currentValues[key] = value
-		local file = fs.open('/System/.OneOS.settings', 'w')
+		local file = fs.open('/System/OneOS.settings', 'w')
 		file.write(textutils.serialize(currentValues))
 		file.close()
 		UpdateInterfaceForKey(key, value)
