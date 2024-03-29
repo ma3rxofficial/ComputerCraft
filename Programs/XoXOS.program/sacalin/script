@@ -1,0 +1,1078 @@
+OneOS.LoadAPI("SpeedAPI/SpeedText")
+
+--[[
+		Darklands: Tales from Transylvania
+		
+		--Fighter
+		You are still but a young squire, consripted into the service under the command of Lord Klint, a
+		Moldavian defector and an arrogant, cruel man. When he was not slaughtering men from whichever
+		side appeared most likely to succeed, he was punishing his servants with the lash with almost
+		sadistic pleasure.
+		
+		When first the call came for a scout amongst the ranks, embittered by your evil master, you rushed
+		at all speed from your quarters to volunteer. There's no evil below that could stand toe to toe
+		with what you have suffered through, and you are immediately conscripted.
+		
+		--Theif
+		Profit always follows war, or so it's said. The life of an urchin in peace time is difficult and
+		wearisome, but in war, where corpses lie where they fall, along with their purses and satchels,
+		a young man can make good of himself, if only for a spell. So you have spent your youth, hiding
+		in shadows and picking from the bones of conflits between those greater than yourself.
+		
+		So you had hoped would be the case with this latest invasion, but after weeks of hard travel shadowing
+		the invasion force not so much as a drop of blood had been spilled. Starving and desparate, you
+		made an attempt on a supply trailer, but the soldiers were too quick, and the rest of the journey
+		you spent in chains. When the call came out for a scouting mission almost guaranteed to be suicide,
+		it was no surprise to see you finding an audience with the general himself.
+		
+		--Mage
+		Just six months from your training, barely a whelp, your magistrates saw fit to send you to the
+		Carpathians in the hopes you would set up a herbarium. Though the first few quiet, contemplative
+		weeks are relaxing, you soon find yourself venturing farther and father into the reaches of the
+		mountains, to break the monotony.
+		
+		It is on one of your longer journeys that you come across the soldiers, camping above the ridge in
+		an abandoned keep. As a member of the mystics you extend your authority to demand a meeting with the
+		general and order him to hault his invasion- but he has other things in mind.
+]]--
+
+--Note: throughout the script several "print" statements have been scattered to demonstrate progress. These are nonessential, but useful for error detection.
+
+--A simple single town, with a single quest giver and two storefronts, as well as one random NPC.
+--This demonstrates the primary features of writing a town script, and a simple dungeon with quest queues.
+
+		--[[SECTION: Initialization]]--
+
+function debugDisplay(str)
+	term.setCursorPos(1,1)
+	print("Debug: "..str)
+	os.pullEvent("key")
+end
+
+--Quick function that allows the user to choose his class, which is then assigned equipment, stats & gold
+function selectClass()
+	term.clear()
+	
+	local str = "From what vocation do you hail, "..charName.."?"
+	term.setCursorPos(w/2 - #str/2, 3)
+	term.write(str)
+	
+	list = {"Squire", "Urchin", "Journeyman"}
+	local sel = 1
+	
+	while true do
+		for i=1,#list do
+			term.setCursorPos(w/2 - #list[i]/2 - 2, 3 + i * 3)
+			term.clearLine()
+			if sel == i then term.write("[ "..list[i].." ]")
+			else term.write("  "..list[i].."  ") end
+		end
+		
+		local id,key = os.pullEvent("key")
+		if key == keys.up and sel > 1 then sel = sel - 1
+		elseif key == keys.down and sel < #list then sel = sel + 1
+		elseif key == keys.space or key == keys.enter then
+			charClass = list[sel]
+			break
+		end
+	end
+	
+	--All players start with rough robes and sandals
+	local robes = cloneItem(6)
+	robes.enchantment = cloneEnchantment("rough")
+	local sandals = cloneItem(7)
+	table.insert(inventory, robes)
+	table.insert(inventory, sandals)
+	
+	if sel == 1 then
+		--Squires are peniless but well equipped by their master
+		table.insert(inventory, cloneItem(3))
+		table.insert(inventory, cloneItem(5))
+		charGold = 0
+	elseif sel == 2 then
+		--Urchins have a good weapon but little coin to their name
+		local dagger = cloneItem(1)
+		dagger.enchantment = cloneEnchantment("sharp")
+		table.insert(inventory, dagger)
+		charGold = 5
+	elseif sel == 3 then
+		--Journeymen have pathetic weapons but much more money
+		local staff = cloneItem(2)
+		staff.enchantment = cloneEnchantment("rotting")
+		table.insert(inventory, staff)
+		charGold = 30
+	end
+	
+	for i=1,#inventory do
+		equipItem(i)
+	end
+end
+		
+function onDebugInit()
+	shell.run("clear")
+	print("Type a key to begin debug session")
+	
+	table.insert(inventory, cloneItem(6))
+	table.insert(inventory, cloneItem(7))
+	table.insert(inventory, cloneItem(2))
+	charName = "Debug"
+	
+	for i=1,#inventory do
+		equipItem(i)
+	end
+	
+	charGold = 100
+	
+	os.pullEvent("key")
+end
+		
+function onInit()
+	local darkSword = {
+		"   /\\",
+		"   ||",
+		"   ||",
+		"   ||",
+		"   ||",
+		"   ||",
+		"   /\\",
+		"o======o",
+		"   ||",
+		"   ||",
+		"   __"
+	}
+	
+	term.clear()
+	sleep(1)
+	
+	for i=1,#darkSword do
+		printLeft(darkSword[i], 2+i, w/2 - #darkSword[8]/2 - 1)
+	end
+	
+	sleep(1.5)
+	term.setCursorPos(w/2 - 9/2, h-4)
+	print("DarkLands")
+	sleep(1)
+	printOffCenter("Tales from Transylvania", h-3, w, 0)
+	printOffCenter("Press a key to begin", h-1, w, 0)
+	os.pullEvent(key)
+	
+	term.clearLine()
+	
+	printLeft("Enter your name, hero: ", h-1, 2, 0)
+	term.setCursorBlink(true)
+	setCharName(io.read())
+	term.setCursorBlink(false)
+	
+	--The generic story preface is told here.
+	
+	term.clear()
+	sleep(1) 
+	term.setCursorPos(1, 1)
+	print("It is 1430.\n")
+	print(
+		"Seeking to relieve the strain from a lengthy war with Moldava and widespread famines in the "..
+		"south, the king of Wallachia ordered an invasion on Transylvania. The warlords of Transylvania, often "..
+		"as busy fighting each other as foreign invaders are considered by His Grace a means to relieve the "..
+		"strain on the armed forces, and restore faith in the monarchy.\n")
+	print(
+		"In November of that month, an army of 300 men assembled at the base "..
+		"of the Carpathian mountain ranges, one of the most trecherous stretches of land in Europe. Two weeks "..
+		"of bitter cold and snowstorms, with limited rations and low morale, they finally came upon a keep "..
+		"within the mountains.\n")
+	term.setCursorPos(1, h)
+	term.write("Type any key to continue")
+	os.pullEvent("key")
+	
+	term.clear()
+	term.setCursorPos(1, 2)
+	print(
+		"The abandoned keep, Groazagol, afforded a view over the southern reaches of the country, but the land, in day "..
+		"and night was shrouded in an impenetrable darkness. It was not long before rumours spread through "..
+		"the garrison, of evil sweeping the country side- the black death, horsemen of the apocalypse, or "..
+		"some other sinister force of evil.\n")
+	print(
+		"The commander general of the Wallachian forces Lord Jeirbe, fearing his men would mutiny or flee "..
+		"at an order to trave into the abyss, called for a single scout to map the underlying country, "..
+		"provide insight into what was happening, and inform the army on their next move.\n")
+	term.setCursorPos(1, h)
+	term.write("Type any key to continue")
+	os.pullEvent("key")
+	
+	--The player selects their class here:
+	
+	selectClass()
+	
+	pox = 29
+	poy = 24
+end
+
+--Comment out this line as needed.
+--onInit = onDebugInit
+
+		--[[SECTION: Images]]--
+		
+
+
+		--[[SECTION: Items]]--
+
+print("Loading items...")		
+
+--Note: Stores use these (not creatures) so be sure not to include creature weapons in this list- just
+--create those within the creature's insert page.
+
+table.insert(items, { name = "Copper Dagger",
+	class = "weapon",
+	desc = "A copper dagger, weathered and nicked from age.",
+	bodypart = "swordhand",
+	level = 1,
+	requirements = { },
+	base = 6,
+	enchantment = nil,
+	enchantTypes = {"#blade", "#metal", "#aged"},
+	value = 5,
+	weight = 5
+})
+table.insert(items, { name = "Wooden Staff",
+	class = "weapon",
+	desc = "A solid but soft yew staff, made from a fallen branch.",
+	bodypart = "both",
+	level = 1,
+	requirements = { },
+	base = 8,
+	enchantment = nil,
+	enchantTypes = {"#wood", "#aged"},
+	value = 2,
+	weight = 8
+})
+table.insert(items, { name = "Iron Gladius",
+	class = "weapon",
+	desc = "Shortsword of antiquity.",
+	bodypart = "swordhand",
+	level = 3,
+	requirements = { },
+	base = 8,
+	enchantment = nil,
+	enchantTypes = {"#iron", "#blade", "#aged"},
+	value = 15,
+	weight = 6
+})
+table.insert(items, { name = "Quarterstaff",
+	class = "weapon",
+	desc = "An oaken staff, without ornament.",
+	bodypart = "both",
+	level = 3,
+	requirements = { },
+	base = 11,
+	enchantment = nil,
+	enchantTypes = {"#wood"},
+	value = 12,
+	weight = 9
+})
+table.insert(items, { name = "Practice Buckler",
+	class = "shield",
+	desc = "A fist-sized shield made from wooden boards, repurposed from sword training.",
+	bodypart = "offhand",
+	level = 1,
+	requirements = { },
+	base = 0.5,
+	enchantment = nil,
+	enchantTypes = {"#wood", "#aged"},
+	value = 8,
+	weight = 4
+})
+table.insert(items, { name = "Hessian Robe",
+	class = "armour",
+	desc = "Old hessian robes, with flax fastenings and cotten piping.",
+	bodypart = "chest",
+	level = 1,
+	requirements = { },
+	base = 0,
+	enchantment = nil,
+	enchantTypes = {"#fabric", "#aged"},
+	value = 3,
+	weight = 8
+})
+table.insert(items, { name = "Sandals",
+	class = "armour",
+	desc = "Well worn flax sandals.",
+	bodypart = "feet",
+	level = 1,
+	requirements = { },
+	base = 0,
+	enchantment = nil,
+	enchantTypes = {"#fabric", "#aged"},
+	value = 1,
+	weight = 3
+})
+table.insert(items, { name = "Iron Mace",
+	class = "weapon",
+	desc = "An iron-shafed mace with a droplet-shaped head.",
+	bodypart = "swordhand",
+	level = 4,
+	requirements = { },
+	base = 10,
+	enchantment = nil,
+	enchantTypes = {"#mace", "#iron"},
+	value = 12,
+	weight = 9
+})
+
+		--[[SECTION: Enchantments]]--
+
+enchantments["#blade"] = {"dull", "sharp", "ornamental"};
+enchantments["#metal"] = {"pure", "impure", "blistered", "smooth"};
+enchantments["#wood"] = {"rotting", "firm"};
+enchantments["#iron"] = {"#metal", "pig", "wrought", "cast"};
+enchantments["#fabric"] = {"rough", "quality"};
+enchantments["#aged"] = {"enduring", "weakened"};
+enchantments["#mace"] = {"flanged", "ornamental"};
+	
+enchantments["dull"] = {
+		name = "Dull",
+		desc = "The edge of the blade has dulled.",
+		prefix = true,
+		skill = "base",
+		effect = -2,
+		level = 1,
+		value = 0.5
+	};
+enchantments["sharp"] = {
+		name = "Sharp",
+		desc = "The edge of the blade is very sharp.",
+		prefix = true,
+		skill = "base",
+		effect = 2,
+		level = 1,
+		value = 1.5
+	};
+enchantments["pure"] = {
+		name = "Pure",
+		desc = "It's pure metal base has left it well balanced.",
+		prefix = true,
+		skill = "speed",
+		effect = 1,
+		level = 1,
+		value = 1.7
+	};
+enchantments["impure"] = {
+		name = "Impure",
+		desc = "It's impure metal base has left it unbalanced.",
+		prefix = true,
+		skill = "speed",
+		effect = -1,
+		level = 1,
+		value = 0.3
+	};
+enchantments["blistered"] = {
+		name = "Blistered",
+		desc = "It has not been well forged, and the metal is inconsistent throughout.",
+		prefix = true,
+		skill = "strength",
+		effect = -1,
+		level = 1,
+		value = 0.25
+	};
+enchantments["smooth"] = {
+		name = "Smooth",
+		desc = "The metal was carefully forged, and is free of imperfections.",
+		prefix = true,
+		skill = "strength",
+		effect = 1,
+		level = 1,
+		value = 1.75
+	};
+enchantments["rotting"] = {
+		name = "Rotten",
+		desc = "Moisture has significantly weakened the strength of the wood.",
+		prefix = true,
+		skill = "strength",
+		effect = -1,
+		level = 1,
+		value = 0.25
+	};
+enchantments["firm"] = {
+		name = "Firm",
+		desc = "Particularly hard wood was used in its crafting.",
+		prefix = true,
+		skill = "strength",
+		effect = 1,
+		level = 1,
+		value = 1.75
+	};
+enchantments["pig"] = {
+		name = "Pig",
+		desc = "The unrefined iron is quite brittle.",
+		prefix = true,
+		skill = "durability",
+		effect = 0.5,
+		level = 1,
+		value = 0.75
+	};
+enchantments["wrought"] = {
+		name = "Wrought",
+		desc = "The bloomer-smelted iron is sturdy but quite heavy.",
+		prefix = true,
+		skill = "weight",
+		effect = 1.2,
+		level = 1,
+		value = 0.8
+	};
+enchantments["cast"] = {
+		name = "Hard",
+		desc = "Though a little heavy, you feel the strength the forge lends the iron.",
+		prefix = true,
+		skill = "strength",
+		effect = 2,
+		level = 1,
+		value = 2.5
+	};
+enchantments["rough"] = {
+		name = "Rough",
+		desc = "The weave of the material is inconsistent and holes have appeared.",
+		prefix = true,
+		skill = "endurance",
+		effect = -1,
+		level = 1,
+		value = 0.4
+	};
+enchantments["quality"] = {
+		name = "of Quality",
+		desc = "The careful weave has given the fabric extra strength.",
+		prefix = false,
+		skill = "endurance",
+		effect = 1,
+		level = 1,
+		value = 1.6
+	};
+enchantments["enduring"] = {
+		name = "Enduring",
+		desc = "Quality has been well preserved despite the advanced age.",
+		prefix = true,
+		skill = "durability",
+		effect = 1.5,
+		level = 2,
+		value = 1.2
+	};
+enchantments["weakened"] = {
+		name = "of Age",
+		desc = "After years of use, it is now a shadow of it's former self.",
+		prefix = false,
+		skill = "durability",
+		effect = 0.5,
+		level = 1,
+		value = 0.1
+	};
+enchantments["flanged"] = {
+	name = "Flanged",
+	desc = "The sharp flanges on the mace head make it lethal against armoured opponents.",
+	prefix = false,
+	skill = "base",
+	effect = 2,
+	level = 4,
+	value = 2.2
+}
+enchantments["ornamental"] = {
+	name = "Ornamental",
+	desc = "Though beautifully decorated, it clearly was not designed for combat.",
+	prefix = false,
+	skill = "base",
+	effect = -4,
+	level = 1,
+	value = 3.5
+}
+
+print("Loading creatures...")	
+	
+		--[[SECTION: Creatures]]--
+
+--Rat: A common pest in Sacalin
+table.insert(creatures, { name = "Rat",
+	xpos = -1,
+	ypos = -1,
+	levelpos = -1,
+	level = 1,
+	xp = 10,
+	hit = 8,
+	weapon = {
+		name = "claws",
+		base = 4,
+	},
+	ac = 0,
+	imageone = {
+		  "_---_",
+		 "/     \\",
+		"/ (\\-/) \\",
+		"| /o o\\ |",
+		"| \\ v / |",
+		 "\\-\\_/-/",
+		  "_M   M_"
+	},
+	imagetwo = {
+		 "___",
+		"/o_o\\",
+		"|\\_/|",
+		"M M"
+	}
+})
+--Snake: Oversized lizards with sharp fangs, but quite weak.
+table.insert(creatures, { name = "Snake",
+	xpos = -1,
+	ypos = -1,
+	levelpos = -1,
+	level = 1,
+	xp = 15,
+	hit = 6,
+	weapon = {
+		name = "fangs",
+		base = 8
+	},
+	ac = 0,
+	imageone = {
+		"/0-0\\",
+		"\\___/",
+		" | | ",
+		"_\\  \\",
+	   "(__\\___)"
+	},
+	imagetwo = {
+		" ;oo;",
+		" _|| ",
+		"(__) "
+	}
+})
+--Tyrat: Small humanoid figures with sharp faces and carrying sickles. Weak and stupid.
+table.insert(creatures, { name = "Tyrat",
+	xpos = -1,
+	ypos = -1,
+	levelpos = -1,
+	level = 1,
+	xp = 12,
+	hit = 10,
+	weapon = {
+		name = "sickle",
+		base = 6
+	},
+	ac = 0,
+	imageone = {
+		" _____ ",
+		"< V V >",
+		" \\___/ ",
+		"  / \\  ",
+		" ( _ )",
+		"/_) (_\\"
+	},
+	imagetwo = {
+		" __ ",
+		"<..>",
+		" /\\ ",
+		" || "
+	}
+})
+--Wraith: Evil spirits that haunt caves. Tied to quest "Shadows over Aemelius"
+table.insert(creatures, { name = "Wraith",
+	xpos = -1,
+	ypos = -1,
+	levelpos = -1,
+	level = 3,
+	xp = 50,
+	hit = 30,
+	ac = 0,
+	weapon = {
+		name = "WraithBlade",
+		base = 6
+	},
+	imageone = {
+		"  /:\\  ",
+		" |O#O| ",
+		" |{x}| ",
+		" /   \\ ",
+		"|  /:",
+		": /||",
+		" |/ |/ ",
+		":~:~:~:",
+		" :~:~: ",
+	},
+	imagetwo = {
+		" /:\\ ",
+		" |:| ",
+		" |/| ",
+		" ~~~ "
+	}
+})
+
+print("Loading towns & npcs...")	
+
+		--[[SECTION: Towns]]--
+
+--You can use in-text "#name", it will replace it with the player's name, and in-text "#class" for the player's class.
+--Dialogues are flexible. They can be: 
+	--Strings: This will simply display the message as though the NCP is delivering it
+	--Tables: Work the same as strings but will cycle through each message, giving user the ability to respond at the end of the conversation.
+	--Functions: These can do... anything you like really. Usually used for talking with NPC's and simultaneously updating info (such as quests). Functions can return
+		--Strings and tables, which work the same way as they do for typical dialogues, or nil, which will break out of the conversation immediately.
+globalDialogue = {
+	["#name"] = function(me) 
+		local r = math.random(1,3)
+		if r == 1 then return "You can call me "..me.name.."."
+		elseif r == 2 then return "My name is "..me.name.."."
+		elseif r == 3 then return "I am "..me.name.."." end
+	end; 
+	["#job"] = function(me)
+		if me.job == "smith" then
+			return "I'm a smith. I work a forge and produce weapons and armour. I can trade my inventory with you if you like."
+		elseif me.job == "merchant" then
+			return "I'm a merchant, buying goods from adventurers like yourselves and selling them to interested buyers. I'll trade good gold for any items you're carrying."
+		elseif me.job == "mystic" then
+			return "I'm a mystic, a trainer in the arts of magic. I can teach you spells, for a fee."
+		else
+			local article = "a"
+			if isVowel(string.sub(me.job, 1, 1)) then article = "an" end
+			return "I work as "..article.." "..me.job.."."
+		end
+	end;
+	["#hello"] = "#ongreet";
+	["#bye"] = "#onfarewell";
+	["#goodbye"] = "#onfarewell";
+	["#exit"] = "#onfarewell";
+	["#farewell"] = "#onfarewell";
+	["#leave"] = "#onfarewell";
+	["#work"] = "#quest";
+	["#quest"] = "I'm afraid I don't have any work for you, #name.";
+}
+
+--INDEX 1: NEBUN
+--The Mad Town. Home to a series of eccentrics that worship false gods and sacrifice food, supplies and life
+--to appease them.
+
+--I keep a list of "on activation" of quests here.
+local function onActivateKP(me)
+	printTownInterface()
+	displayConfirmDialogue("Quest Offer by Jeremiah: ", "It is a somewhat complicated matter. Kershel has lived here all his life and has always been lax in his obligations to the city.")
+	local response = displayOptionDialogue("Quest Offer by Jeremiah: ", "Would you be able to extract his monthly due of 50 gold pieces? I would gladly share a portion of the sum with you.")
+	if response == "yes" then
+		activateQuest(quests["Kershel's Problem"])
+		setNPCDialogue(me.name, 1, "#ongreet", "Hello again #name, have you recovered Kershel's debt yet?")
+		setNPCDialogue(me.name, 1, "#quest", "Ask Kershel about his debt, and return to me when you have the money.")
+		return "Great! You should be able to find Kershel in town- ask him about his debt, and let me know when you have the money."
+	else
+		return "Let me know if you change your mind."
+	end
+end
+local function onActivateEITH(me)
+	printTownInterface()
+	displayConfirmDialogue("Quest Offer by Jeremiah: ", "There have been troubling reports from the hills to the north of Aemelius. Farms appear to be going... missing.")
+	displayConfirmDialogue("Quest Offer by Jeremiah: ", "I would consider it a great favour should you venture to the hills, discover all that you can and report back to me.")
+	local response = displayOptionDialogue("Quest Offer by Jeremiah: ", "I can probably put together a few pieces of gold too. Will you help us?")
+	if response == "yes" then
+		activateQuest(quests["Evil in the Hills"])
+		setNPCDialogue(me.name, 1, "#ongreet", "Greetings #name, I trust you bring word of your adventures in the hills? Or do you wish something else of me?")
+		setNPCDialogue(me.name, 1, "#quest", "Travel to the hills north of Aemelius, discover all that you can and report on what you find.")
+		return "I thank you sir, and shall await your report with great anticipation."
+	else
+		return "The job will be waiting for you if you so desire."
+	end
+end
+
+town[1].dialogue = {
+	["#transylvania"] = "";
+	["#nebun"] = "";
+	["#groazagol"] = "";
+	["#dark"] = "";
+
+	["#castle aemelius"] = "#aemelius";
+	["#castle"] = "#aemelius";
+	["#aemelius"] = "Aemelius is the only town in Sacalin. It's just a little port on the route from Turkey to Romania. It's not heavily trafficked, so it's quiet here.";
+	["#hills"] = "They're about a league north of town. A few farmers up that way, but it's pretty unremarkable.";
+	["#crypts"] = "The town crypts are about two leagues east of town- follow the river. No one's been there for months... not sure what's there now.";
+	["#spire"] = "Why would you want to go there? Well it's just a bit north of town, near the coast, but only a few kooky wizards are up that way.";
+	["#quest"] = "You should ask Jeremiah if you're looking for work- he would probably have something for you.";
+}
+
+table.insert(town[1].npc, { name = "Daedelus",
+		job = "smith",
+		xpos = 17, ypos = 6,
+		level = 1,
+		dialogue = {
+			["#onfirstgreet"] = "Greetings stranger. I'm Daedelus, town smith here. I can give you an offer on some of my goods if you want to trade." ;
+			["#ongreet"] = "Good morrow to you, #name. In need of fresh iron?";
+			["#name"] = "My name is Daedelus. It's an old Greek name on my mother's side, if you're curious.";
+			["#job"] = "I work the smithy here. We don't have much in the way of goods but I can offer you what I have, if you'd like to trade.";
+			["#kershel"] = "That bum? He's the town fool- spends most of his time dead to the world on drink. He has helped in the workshop when he's short, though.";
+			["#jeremiah"] = "He's a nervous fellow but runs the town quite well.";
+			["#erika"] = "She's just settled down here, used to travel a lot. I sometimes buy from her inventory to stock up my own supplies. Not bad prices.";
+			["#daedelus"] = "Yes, I'm Daedelus.";
+			["#buy"] = "#trade";
+			["#trade"] = function(me)
+				if #me.inventory == 0 then
+					return "Sorry, I don't have any inventory at the moment. I should have some new stuff ready soon."
+				else
+					displayConfirmDialogue(me.name.." the "..me.job.." says:", "Take a look, see if anything catches your fancy:")
+					runTradeInterface(me, false)
+					return "Thanks for your business, stranger."
+				end
+			end;
+			["#onfarewell"] = "Good travels to you, #name."
+		},
+		nodialogue = "I'm not sure what you're talking about, friend. Maybe someone else does?",
+		inventory = { },
+		priceModifier = 2.5,
+		goldLimit = 0
+	})
+table.insert(town[1].npc, { name = "Erika",
+		job = "merchant",
+		xpos = 22, ypos = 6,
+		level = 1,
+		dialogue = {
+			["#onfirstgreet"] = "It's #name is it? I'm Erika. Can give you a good price on any goods you want to sell.";
+			["#ongreet"] = "Looking to sell off some of your goods #name?";
+			["#kershel"] = "The town fool. He's pretty harmless.";
+			["#jeremiah"] = "Jeremiah? Don't know him too well, just moved here. Seems to do a good enough job, given the circumstances.";
+			["#erika"] = "I've just freshly arrived here in Aemelius- travelled the mediterranian before that.";
+			["#daedelus"] = "He's a good man. We occasionally do business. His goods are a little on the pricy side but they're good quality.";
+			["#trade"] = function(me)
+				if #inventory == 0 then
+					return "Looks like you're out of goods- let me know when you have something, I'll give you a good price on it."
+				else
+					displayConfirmDialogue(me.name.." the "..me.job.." says:", "All right, lets see what you've got...")
+					runTradeInterface(me, true)
+					return "Appreciate your business, #name."
+				end
+			end;
+			["#sell"] = "#trade";
+			["#onfarewell"] = "Until next time.";
+		},
+		nodialogue = "Couldn't tell you, #name.",
+		inventory = { },
+		priceModifier = 0.75,
+		goldLimit = 25
+	})
+table.insert(town[1].npc, { name = "Kershel",
+		job = "fool",
+		xpos = 18, ypos = 12,
+		level = 1,
+		dialogue = {
+			["#onfirstgreet"] = "Ah another fool to arrive in Sacalin. I am Kershel, the town fool.";
+			["#ongreet"] = "The fool returns... what is it you wish of me?";
+			["#name"] = "I am known by many names, but best by Kershel.";
+			["#job"] = "My trade is my own, one characterized by ignorance, and rewarded with bliss.";
+			["#kershel"] = "The town fool, at your service.";
+			["#jeremiah"] = "The taxman bleeds even my pockets dry.";
+			["#erika"] = "Is it that the road to hell is paved with the best of intentions, or the gold of the less fortunate?";
+			["#daedelus"] = "That rolling stone has gathered much moss.";
+			["#trade"] = "Were it that I carried anything of worth, I would not be a fool.";
+			["#onfarewell"] = "Shall we meet again? Only time will tell...";
+		},
+		nodialogue = "A wise man asks questions, but a fool asks questions and doesn't listen."
+	})
+table.insert(town[1].npc, { name = "Jeremiah",
+		job = "mayor",
+		xpos = 2, ypos = 8,
+		level = 1,
+		dialogue = {
+			["#onfirstgreet"] = "A stranger! Greetings, and welcome to the town of Aemelius. I am Jeremiah, the town mayor. If you plan to stay for awhile I may have some work for you.";
+			["#ongreet"] = "Greetings, #name, I trust all is well. Are you looking for work?";
+			["#job"] = "Oh, I'm mayor here in Aemelius. I manage the city's finances and make most decisions regarding our future. I also employ adventurers to help the town-  let me know if you're looking for work.";
+			["#kershel"] = "Kershel is a thorn in my side. He consistently dodges tax collection. In fact I would appreciate your help on that matter...";
+			["#jeremiah"] = "Yes, I am Jeremiah. How can I help you?";
+			["#erika"] = "Erika is a new resident to Aemelius, she appeared a few months ago and has set up shop here. So far she has made a valuable contribution to the city.";
+			["#daedelus"] = "Daedelus has lived here for many years, and is a fine smith.";
+			["#trade"] = "Both Daedelus and Erika offer trading services if you wish to purchase or sell of equipment.";
+			["#onfarewell"] = "Farewell, #name. Seek me out if you wish anything of our town.";
+			["#quest"] = onActivateKP;
+		},
+		nodialogue = "I'm afraid I can't help you with that.",
+	})
+
+print("Loading quests...")		
+
+		--[[SECTION: Quests]]--
+		
+--Quest: Kershel's Problem: Petition members of Aemelius for money to pay Kershel's debt to the mayor
+
+quests["Kershel's Problem"] = { name = "Kershel's Problem",
+	activestage = 1,
+	variables = { },
+	generalDescription = "Kersehl of Aemelius is behind on his taxes, and owes 50 gold to the mayor, Jeremiah. Help Jeremiah to recover the owed money.",
+	stages = {
+		[1] = {
+			desc = "Speak to Kershel about his overdue taxes",
+			condition = function(quest, event)
+				if event.type == "dialogue" and event.town == 1 and event.npc.name == "Kershel" and findIn(event.topic, "debt", "loan", "tax") then
+					setNPCDialogue("Kershel", 1, "#ongreet", "Have you spoken to Erika about my debt?")
+					quest.activestage = 2
+					return "You have come to collect my taxes? Though all may laugh at a fool, it seems none shall lend him money... so I must seek what is owed of"..
+					" me. The merchant has lent me a sum of moneys in the past. Ask her to increase this debt and I'm sure she will pay."
+				end
+			end
+		}, [2] = {
+			desc = "Ask Erika in Aemelius to increase Kershel's debt",
+			condition = function(quest, event)
+				if event.type == "dialogue" and event.town ==  1 and event.npc.name == "Erika" and findIn(event.topic, "debt", "loan", "kershel", "tax") then
+					quest.activestage = 3
+					return "Kershel requires me to raise his debt? I can help but I do not have enough to cover him altogether. Here is what I can spare, and tell him that he must pay me back double for us to be square"
+				end
+			end
+		}, [3] = {
+			desc = "Return to Kershel to speak about his taxes",
+			condition = function(quest, event)
+				if event.type == "dialogue" and event.town ==  1 and event.npc.name == "Kershel" and findIn(event.topic, "debt", "loan", "tax") then
+					quest.activestage = 4
+					setNPCDialogue("Kershel", 1, "#ongreet", "Seek out Daedelus to see if he will buoy our funds.")
+					return "It seems we are in need of further funds. I have in the past helped Daedelus man his forge- perhaps he could part with his money just as all fools are."
+				end
+			end
+		}, [4] = {
+			desc = "Ask Daedelus to extend a debt to Kershel",
+			condition = function(quest, event)
+				if event.type == "dialogue" and event.town == 1 and event.npc.name == "Daedelus" and findIn(event.topic, "debt", "kershel", "tax") then
+					quest.activestage = 5
+					setNPCDialogue("Kershel", 1, "#ongreet", "It appears that the monies have been collected. Waste no time- return these to Jeremiah, that I may be left alone to my foolishness.")
+					return "This is the LAST time I cover Kerhsel's debts. Take this to Jeremiah, and if you run into Kershel tell him he needs to get a job. And no, town fool doesn't count!"
+				end
+			end
+		}, [5] = {
+			desc = "Return Kershel's debt money to Jeremiah",
+			condition = function(quest, event)
+				if event.type == "dialogue" and event.town == 1 and event.npc.name == "Jeremiah" and findIn(event.topic, "debt", "kershel", "tax", "loan") then
+					quest.activestage = -1
+					setNPCDialogue("Kershel", 1, "#ongreet", "My leaseman has returned! This humble fool offers his welcome and thanks.")
+					setNPCDialogue("Jeremiah", 1, "#ongreet", "Welcome back friend. There is a matter that troubles me- I would appreciate your assistance if you're looking for work.")
+					setNPCDialogue("Jeremiah", 1, "#quest", onActivateEITH)
+					addGold(25)
+					return "Excellent, this meets the required amount! Now half the tax brings us to... 25 gold pieces I think? Job well done, however, another matter has arise, that may need attention..."
+				end
+			end
+		}
+	}
+}
+--Quest: Evil in the Hills: Explore the hills north of Aemelius and learn what you can about the creatures that dwell there
+quests["Evil in the Hills"] = { name = "Evil in the Hills",
+	activestage = 1,
+	variables = { [1] = true, [2] = true, [3] = true, [4] = true, [5] = true },
+	generalDescription = "Jeremiah of Aemelius fears evil has taken root in the hills to the north. Head for the north and see what you can discover.",
+	stages = {
+		[1] = {
+			desc = "Investigate the hills north of Aemelius",
+			condition = function(quest, event)
+				if inDungeon and activeDungeon == 1 then
+					displayConfirmDialogue("You step inside...", "You step into the dark cave to see a slew of rough passages cut from the clay walls, and you hear the squeals of wild beasts from within.")
+					return 2
+				end
+				return nil
+			end
+		}, [2] = {
+			desc = "Explore the Hillside Caverns, north of Aemelius",
+			--This function shows an example of multiple conditions occurring, which don't change the game state but provide the player with clues.
+			--At certain dead-ends in the dungeon, messages regarding the dungeon will be given
+			condition = function(quest, event)
+				if inDungeon and activeDungeon == 1 and dunpx == 3 + 2 and dunpy == 3 + 2 and dunlevel == 2 then
+					displayConfirmDialogue("You notice something:", "The walls here are freshly dug- the creatures that inhabit this place must need more space.")
+					return nil
+				elseif inDungeon and activeDungeon == 1 and dunpx == 8 + 2 and dunpy == 5 + 2 and dunlevel == 1 then
+					displayConfirmDialogue("You notice something:", "There is a ladder leading down here- it appears these tunnels are not just the work of simple rats.")
+					return nil
+				elseif inDungeon and activeDungeon == 1 and dunpx == 1 + 2 and dunpy == 1 + 2 and dunlevel == 3 then
+					displayConfirmDialogue("Oh no!", "You grasp the ladder but just as you do it gives way, plummeting you into the bottom of the tunnel. You'll have to find another way out.")
+					return nil
+				elseif inDungeon and activeDungeon == 1 and dunpx == 2 + 2 and dunpy == 1 + 2 and dunlevel == 3 then
+					displayConfirmDialogue("You notice something", "Up ahead you spy a small creature- a Tyrat, mean little humanoids that like to steal metals from farmers. They're undoubtedly the creators of these tunnels.")
+					return nil
+				elseif inDungeon and activeDungeon == 1 and dunpx == 1 + 2 and dunpy == 2 + 2 and dunlevel == 1 then
+					displayConfirmDialogue("At last!", "Finally you can see daylight- you have found a way out! You should return to Aemelius and report what you've found.")
+					return 3
+				end
+				return nil
+			end
+		}, [3] = {
+			desc = "Report to Jeremiah of Aemelius about the northern hills",
+			condition = function(quest, event)
+				if activeTown == 1 and activeDialog == "Jeremiah" then
+					displayConfirmDialogue("Jeremiah the mayor says:", "You found infestations in the northern hills? I hope you were able to clear them out... thankyou for your help, but now I must ask of you an even greater task.")
+					setNPCDialogue("Kershel", 1, "Is Sacalin really going to sink?")
+					setNPCQuest("Jeremiah", 1, "Shadows over Aemelius")
+					setNPCDialogue("Jeremiah", 1, "The fate of this village depends on you... good luck!")
+					return -1
+				end
+				return nil
+			end
+		}
+	}
+}
+--Quest: Shadows over Aemelius: A vengeful spirit has threatened to sink the island of Sacalin if he is not appeased.
+quests["Shadows over Aemelius"] = { name = "Shadows over Aemelius",
+	acceptMessage = "A cave to the east of Aemelius has opened, and we have seen an evil spirit within its depths! Left as it is, who knows what could happen? Shut this open maw to the depths of Hades, and I shall see you well rewarded.",
+	activestage = 1,
+	variables = { },
+	stages = {
+		[1] = {
+			desc = "Find the newly opened cave east of Aemelius",
+			--This condition actively changes the state of the world (adds a dungeon)
+			condition = function()
+				if activeTown == 0 then
+					displayConfirmDialogue("You notice something:", "Just as you step outside you hear a great explosion, and a plume of smoke rise in the foothills to the east. Something has changed.")
+					addDungeonToWorld(mausoleum, 3)
+					return 2
+				end
+			end
+		}, [2] = {
+			desc = "Find the newly opened cave east of Aemelius",
+			condition = function()
+				if inDungeon and activeDungeon == 3 then
+					displayConfirmDialogue("You step inside...", "The halls here are lined with stone bricks that look centuries old, and a frozen breeze chills you to the bone. You can feel evil emanating from every inch of this place.")
+					return 3
+				end
+			end
+		}, [3] = {
+			desc = "Close the Mausoelum east of Aemelius",
+			condition = function() 
+				if inDungeon and activeDungeon == 3 and dunpx == 3 + 2 and dunpy == 1 + 2 and dunlevel == 1 then
+					displayConfirmDialogue("You hear a quiet whisper:", "\"Those who enter shall have the honour of meeting Death- turn back now!\"")
+					return nil
+				elseif inDungeon and activeDungeon == 3 and dunpx == 9 + 2 and dunpy == 5 + 2 and dunlevel == 1 then
+					displayConfirmDialogue("You hear a quiet whisper:", "\"Do you like my home, trespasser? You should know you face a foce you cannot possibly reckon\"")
+					return nil
+				elseif inDungeon and activeDungeon == 3 and dunpx == 8 + 2 and dunpy == 8 + 2 and dunlevel == 2 then
+					displayConfirmDialogue("You hear a quiet whisper:", "\"Know that I was once a citizen of Aemelius, but by foul murder I was taken from my home, banished to the realm of spectres.\"")
+					return nil
+				elseif inDungeon and activeDungeon == 3 and dunpx == 2 + 2 and dunpy == 8 + 2 and dunlevel == 3 then
+					displayConfirmDialogue("You hear a quiet whisper:", "\"With every breath of my body I shall wreak vengance on this place- by My almighty fury this island shall sink into the ocean!\"")
+					return nil
+				elseif inDungeon and activeDungeon == 3 and dunpx == 5 + 2 and dunpy == 8 + 2 and dunlevel == 3 then
+					displayConfirmDialogue("You notice something:", "A frightning sight is ahead of you- the wraith that haunts this place, floating gently above the ground. You cannot see his face, but you are certain his expression is menacing.")
+					return 4
+				end
+			end
+		}, [4] = {
+			desc = "Defeat the Wraith of the Mausoleum",
+			condition = function () 
+				if not inDungeon then
+					displayConfirmDialogue("Quest Updated!", "You burst out from the mausolean, out of breath and barely alive. The wraith has been defeated, and with it, the mausoleum has been sealed. Aemelius is finally safe!")
+					return 5
+				end
+			end
+		}, [5] = {
+			desc = "Return to Jeremiah of Aemelius to inform him of the battle",
+			condition = function ()
+				if activeTown == 1 and activeDialog == "Jeremiah" then
+					displayConfirmDialogue("Jeremiah the mayor says:", "The wraith has been defeated? We of this town owe you the greatest of gratitudes! You shall forever be a friend of Aemelius and all of Sacalin!")
+					setNPCDialogue("Kershel", 1, "Were I less foolish perhaps I could have helped...")
+					setNPCDialogue("Jeremiah", 1, "We are forever in your debt!")
+					return -1
+				end
+				return nil
+			end
+		}
+	},
+	reward = { "GOLD", 100 }
+}
+
+print("Loading dungeons...")	
+
+		--[[SECTION: Dungeons]]--
+
+--Dungeon 1: Hillside Caverns. Associated with the quest "Evil in the Hills"
+dungeons[1] = { name = "Hillside Caverns",
+	xpos = 18,
+	ypos = 5,
+	startx = 8, starty = 1, startlevel = 1,
+	startfx = -1, startfy = 0,
+	level = {
+		[1] = {
+		   --123456789
+			"E C# # #E",--1
+			"#  # ### ",--2
+			"##### # #",--3
+			"  #   ###",--4
+			"C####D D " --5
+			--Monsters at: 6,2 7,4
+		},
+		[2] = {
+			"D #####C ",
+			"## #  #  ",
+			" ######  ",
+			" #    ## ",
+			"C# D#U U "
+		},
+		[3] = {
+			"##### C #",
+			"  # ### #",
+			" ###  ###",
+			"##  C # #",
+			"C  U#### ",
+		}
+	},
+	creatures = { 
+		cloneCreature(4, 6 + 2, 2 + 2, 1),
+		cloneCreature(3, 5 + 2, 1 + 2, 3),
+		cloneCreature(3, 6 + 2, 5 + 2, 3),
+		cloneCreature(3, 5 + 2, 5 + 2, 2),
+		cloneCreature(3, 1 + 2, 3 + 2, 1)
+	},
+	creaturesSpawn = true
+}
+--Dungeon 2: Gallery. This is a debug program written for Tommy Royall to view the monsters he's created
+dungeons[2] = { name = "Monster Gallery",
+	xpos = 11,
+	ypos = 10,
+	startx = 2, starty = 1, startlevel = 1,
+	startfx = 1, startfy = 0,
+	creatures = { 
+		cloneCreature(1, 3 + 2, 3 + 2, 1)
+	},
+	creatureSpawn = false,
+	level = {
+		[1] = {
+			"E######E",
+			"########",
+			"########",
+			"########",
+			"########",
+			"########",
+			"E######E"
+		}
+	}
+}
+--Dungeon 3: Mausoleum. Associated with the quest "Shadows over Aemelius". Note this dungeon is dynamically added (always to index 2)
+mausoleum = { name = "Mausoleum",
+	xpos = 30,
+	ypos = 9,
+	startx = 2, starty = 1, startlevel = 1,
+	startfx = 1, startfy = 0,
+	creatures = { cloneCreature(4, 8 + 2, 8 + 2, 3) },
+	creaturesSpawn = true,
+	level = {
+		[1] = {
+			"E## #### ",
+			"  ###  #C",
+			" C#  ### ",
+			"C  ### # ",
+			"####  ###",
+			" # # C# D",
+			"## ##    ",
+			" C  ###C "
+		}, [2] = {
+			"D# ### C ",
+			" ### ####",
+			"  #    # ",
+			"###C #  #",
+			"#   C####",
+			"####  # B",
+			" # ##### ",
+			"D#  #  C "
+		}, [3] = {
+			"U# C#####",
+			" ### #  #",
+			"#    #C  ",
+			"#####  #C",
+			"#C# #### ",
+			"    #  #U",
+			" ###     ",
+			"U# #####E"
+		},
+	}
+}
+
+print("Script run successfully!")
+
+--This MUST be included- it indicates the script was successful. Failure to call/reach this will result in the game not running.
+return true

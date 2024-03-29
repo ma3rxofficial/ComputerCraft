@@ -1,0 +1,168 @@
+--[[
+		Creatures Script
+		
+		This defines the mosters that the player will encounter, both in the overworld and in dungeons.
+]]--
+
+--[[Creatures can have the following attributes:
+	xpos:int = the x position (set to -1 in this file)
+	ypos:int = the y position (set to -1 in this file)
+	levelpos:int = the level of a dungeon the creature is on (again, -1 in this file)
+	level:int = the player level at which this enemy starts appearing randomly
+	xp:int = the amount of XP earnt for slaying it
+	hit:int = the number of hit points the enemy has
+	weapon:table = an item the enemy uses as a weapon. This can be anything specified in the equipment sheet, or a custom item
+	ac:int = the creature's armour class- how easily it can deflect/avoid strikes
+	imageone:table = an ASCII image of the enemy when 1 tile away from the player
+	imagetwo:table = an ASCII image of the enemy when 2 tiles away from the player
+	
+	Warning- make sure the images are consistent in their spacing, or opponents may look... 'segmented'
+]]--
+
+--Rat: A common pest in Transylvania
+table.insert(creatures, { name = "Rat",
+	xpos = -1,
+	ypos = -1,
+	levelpos = -1,
+	level = 1,
+	xp = 10,
+	hit = 12,
+	weapon = {
+		name = "claws",
+		base = 4,
+	},
+	ac = 0,
+	imageone = {
+		  "_---_",
+		 "/     \\",
+		"/ (\\-/) \\",
+		"| /o o\\ |",
+		"| \\ v / |",
+		 "\\-\\_/-/",
+		  "_M   M_"
+	},
+	imagetwo = {
+		 "___",
+		"/o_o\\",
+		"|\\_/|",
+		"M M"
+	}
+})
+--Snake: Oversized lizards with sharp fangs, but quite weak.
+table.insert(creatures, { name = "Snake",
+	xpos = -1,
+	ypos = -1,
+	levelpos = -1,
+	level = 1,
+	xp = 15,
+	hit = 8,
+	weapon = {
+		name = "fangs",
+		base = 8
+	},
+	ac = 0,
+	imageone = {
+		"/0-0\\",
+		"\\___/",
+		" | | ",
+		"_\\  \\",
+	   "(__\\___)"
+	},
+	imagetwo = {
+		" ;oo;",
+		" _|| ",
+		"(__) "
+	}
+})
+--Tyrat: Small humanoid figures with sharp faces and carrying sickles. Weak and stupid.
+table.insert(creatures, { name = "Tyrat",
+	xpos = -1,
+	ypos = -1,
+	levelpos = -1,
+	level = 1,
+	xp = 20,
+	hit = 16,
+	weapon = {
+		name = "sickle",
+		base = 6
+	},
+	ac = 0,
+	imageone = {
+		" _____ ",
+		"< V V >",
+		" \\___/ ",
+		"  / \\  ",
+		" ( _ )",
+		"/_) (_\\"
+	},
+	imagetwo = {
+		" __ ",
+		"<..>",
+		" /\\ ",
+		" || "
+	}
+})
+--Skeletons: Living dead, prowling tombs and now the darklands.
+table.insert(creatures, { name = "Skeleton",
+	xpos = -1,
+	ypos = -1,
+	levelpos = -1,
+	level = 5,
+	xp = 25,
+	hit = 25,
+	weapon = {
+		name = "fingers",
+		base = 8
+	},
+	ac = 1,
+	imageone = {
+		" /o o\\";
+		" | ^ |";
+		"  \\W/";
+		"/--|--\\";
+		"|/-|-\\\|";
+		"||-|-||";
+		"w|-|-|w";
+		" /0-0\\";
+		" |   |";
+		" V   V";
+		" |   |";
+	},
+	imagetwo = {
+		" {}";
+		"/()\\";
+		" ||";
+		" ||";
+	}
+})
+--Wraith: Evil spirits that haunt caves. 
+table.insert(creatures, { name = "Wraith",
+	xpos = -1,
+	ypos = -1,
+	levelpos = -1,
+	level = 10,
+	xp = 100,
+	hit = 50,
+	ac = 0,
+	weapon = {
+		name = "WraithBlade",
+		base = 10
+	},
+	imageone = {
+		"  /:\\  ",
+		" |O#O| ",
+		" |{x}| ",
+		" /   \\ ",
+		"|  /:",
+		": /||",
+		" |/ |/ ",
+		":~:~:~:",
+		" :~:~: ",
+	},
+	imagetwo = {
+		" /:\\ ",
+		" |:| ",
+		" |/| ",
+		" ~~~ "
+	}
+})

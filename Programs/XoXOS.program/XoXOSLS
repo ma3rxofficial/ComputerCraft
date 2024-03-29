@@ -1,0 +1,51 @@
+while true do
+for _,v in pairs(rs.getSides()) do rednet.open(v) end
+users = {}
+passs = {}
+userf = fs.open("XoXUsers", "r" )
+lastuser = ""
+while lastuser ~= nil do 
+lastuser = userf.readLine()
+if lastuser ~= nil then
+users[#users + 1] = lastuser
+end
+end
+userf.close()
+
+
+passf = fs.open("XoXPasss", "r" )
+lastpass = ""
+while lastpass ~= nil do 
+lastpass = passf.readLine()
+if lastpass ~= nil then
+passs[#passs + 1] = lastpass
+end
+end
+passf.close()
+
+print("Ready to recieve login request")
+_, pcid, pccr, _ = os.pullEvent("rednet_message")
+if pcid ~= 235 then
+pccrs = {}
+for i in string.gmatch(pccr, "[^%;]+") do
+pccrs[#pccrs + 1] = i
+end
+print("Incoming request from user " .. pccrs[1] .. " from computer #" .. pcid  )
+pccrt = false
+for k, v in pairs(users) do
+if v == pccrs[1] and passs[k] == pccrs[2] then
+pccrt = true
+end
+end
+if pccrt == true then
+print("Accepted")
+rednet.send(pcid, "OK")
+logf = fs.open("loginlog", "a")
+logf.writeLine( pcid )
+logf.close()
+else
+print("Rejected")
+rednet.send(pcid, "BAD")
+end
+end
+end

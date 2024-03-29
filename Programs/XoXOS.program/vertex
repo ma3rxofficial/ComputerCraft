@@ -1,0 +1,72 @@
+
+--[[
+This is a modified vector API to include vertex information for texture mapping
+(UV coordinates). 
+
+]]--
+local vertex = {
+        -- note that arithmetic functions return VECTORS- and lose UV info
+	add = function( self, o )
+		return vector.new(
+			self.x + o.x,
+			self.y + o.y,
+			self.z + o.z
+		)
+	end,
+	sub = function( self, o )
+		return vector.new(
+			self.x - o.x,
+			self.y - o.y,
+			self.z - o.z
+		)
+	end,
+	-- This is not true of multiplication
+	mul = function( self, m )
+		return vertex.new(
+			self.x * m,
+			self.y * m,
+			self.z * m,
+			self.u, self.v
+		)
+	end,
+	dot = function( self, o )
+		return self.x*o.x + self.y*o.y + self.z*o.z
+	end,
+	cross = function( self, o )
+		return vector.new(
+			self.y*o.z - self.z*o.y,
+			self.z*o.x - self.x*o.z,
+			self.x*o.y - self.y*o.x
+		)
+	end,
+	length = function( self )
+		return math.sqrt( self.x*self.x + self.y*self.y + self.z*self.z )
+	end,
+	normalize = function( self )
+		return self:mul( 1 / self:length() )
+	end,
+	tostring = function( self )
+		return self.x..","..self.y..","..self.z..",("..self.u..","..self.v..")"
+	end,
+}
+
+local vmetatable = {
+	__index = vertex,
+	__add = vertex.add,
+	__sub = vertex.sub,
+	__mul = vertex.mul,
+	__unm = function( v ) return v:mul(-1) end,
+	__tostring = vertex.tostring,
+}
+
+function new( x, y, z, u, v )
+	local v = {
+		x = x or 0,
+		y = y or 0,
+		z = z or 0,
+		u = u or 0,
+		v = v or 0
+	}
+	setmetatable( v, vmetatable )
+	return v
+end

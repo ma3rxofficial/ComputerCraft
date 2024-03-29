@@ -1,0 +1,213 @@
+if not term.isColor() then
+ error("You need an advanced Computer to run this",2)
+end
+local field = {}
+field[1] = {"X","O","X","O"};
+field[2] = {"O","X","O","X"};
+field[3] = {"X","O","X","X"};
+field[4] = {"O","X","O","X"};
+local running = true
+local clicks = 0
+local slc = 1
+--[[
+y
+^
+|
+|
+|
++----->x
+]]
+
+function clear()
+term.setBackgroundColor(colors.black)
+term.clear()
+term.setCursorPos(1,1)
+end
+
+function generate()
+for i=1,4 do
+ for j=1,4 do
+  field[i][j] = (math.random(1,2)==1 and "X" or "O")
+ end
+end
+end
+
+function draw()
+ clear()
+ print("New | Exit | Clicks: ",clicks)
+ print()
+ if slc == 1 then
+  for y=1,4 do
+   term.write(" ")
+   for x=1,4 do
+   term.setBackgroundColor(field[y][x] == "X" and colors.blue or colors.red)
+    term.write(field[y][x])
+   term.setBackgroundColor(colors.black)
+    term.write(" ") 
+   end
+   print()
+  end
+ else
+  print("You won! And it took you "..clicks.." clicks")
+ end
+end
+
+function check()
+ if field[1][1] == field[1][2] and field[1][2] == field[1][3] and 
+    field[1][3] == field[1][4] and
+    field[1][4] == field[2][1] and field[2][1] == field[2][2] and
+    field[2][2] == field[2][3] and field[2][3] == field[2][4] and
+    field[2][4] == field[3][1] and field[3][1] == field[3][2] and
+    field[3][2] == field[3][3] and field[3][3] == field[3][4] then
+  return true
+ else
+  return false
+ end
+end
+
+function update(e)
+ if e[1] == "char" then
+  if e[2] == "q" then
+   running = false
+   return
+  end
+ elseif e[1] == "mouse_click" then
+  button = e[2]
+  x = e[3]
+  y = e[4]
+  --click new
+  if x >=1 and x <= 3 and y==1 then
+   generate()
+   clicks = 0
+   slc = 1
+   return
+  --exit
+  elseif x >= 7 and x <= 10 and y == 1 then
+   running = false
+   return
+  --click the buttons
+  
+
+  elseif x == 2 then
+    if y == 3 then
+      --y, x
+      field[1][1] = (field[1][1] == "X" and "O" or "X");
+      field[1][2] = (field[1][2] == "X" and "O" or "X");
+      field[2][1] = (field[2][1] == "X" and "O" or "X");
+      clicks = clicks + 1
+    elseif y == 4 then
+      field[1][1] = (field[1][1] == "X" and "O" or "X");
+      field[2][1] = (field[2][1] == "X" and "O" or "X");
+      field[2][2] = (field[2][2] == "X" and "O" or "X");
+      field[3][1] = (field[3][1] == "X" and "O" or "X");
+      
+    elseif y == 5 then
+      field[2][1] = (field[2][1] == "X" and "O" or "X");
+      field[3][1] = (field[3][1] == "X" and "O" or "X");
+      field[3][2] = (field[3][2] == "X" and "O" or "X");
+      field[4][1] = (field[4][1] == "X" and "O" or "X");
+      
+    elseif y == 6 then
+      field[3][1] = (field[3][1] == "X" and "O" or "X");
+      field[4][1] = (field[4][1] == "X" and "O" or "X");
+      field[4][2] = (field[4][2] == "X" and "O" or "X");
+      
+    end
+    clicks = clicks + 1
+  elseif x == 4 then
+    if y == 3 then
+      field[1][1] = (field[1][1] == "X" and "O" or "X");
+      field[1][2] = (field[1][2] == "X" and "O" or "X");
+      field[1][3] = (field[1][3] == "X" and "O" or "X");
+      field[2][2] = (field[2][2] == "X" and "O" or "X");
+      
+    elseif y == 4 then
+      field[1][2] = (field[1][2] == "X" and "O" or "X");
+      field[2][1] = (field[2][1] == "X" and "O" or "X");
+      field[2][2] = (field[2][2] == "X" and "O" or "X");
+      field[2][3] = (field[2][3] == "X" and "O" or "X");
+      field[3][2] = (field[3][2] == "X" and "O" or "X");
+      
+    elseif y == 5 then
+      field[2][2] = (field[2][2] == "X" and "O" or "X");
+      field[3][1] = (field[3][1] == "X" and "O" or "X");
+      field[3][2] = (field[3][2] == "X" and "O" or "X");
+      field[3][3] = (field[3][3] == "X" and "O" or "X");
+      field[4][2] = (field[4][2] == "X" and "O" or "X");
+      
+    elseif y == 6 then
+      field[3][2] = (field[3][2] == "X" and "O" or "X");
+      field[4][1] = (field[4][1] == "X" and "O" or "X");
+      field[4][2] = (field[4][2] == "X" and "O" or "X");
+      field[4][3] = (field[4][3] == "X" and "O" or "X");
+      
+    end
+    clicks = clicks + 1
+  elseif x == 6 then
+    if y == 3 then
+      field[1][2] = (field[1][2] == "X" and "O" or "X");
+      field[1][3] = (field[1][3] == "X" and "O" or "X");
+      field[1][4] = (field[1][4] == "X" and "O" or "X");
+      field[2][3] = (field[2][3] == "X" and "O" or "X");
+      
+    elseif y == 4 then
+      field[1][3] = (field[1][3] == "X" and "O" or "X");
+      field[2][2] = (field[2][2] == "X" and "O" or "X");
+      field[2][3] = (field[2][3] == "X" and "O" or "X");
+      field[2][4] = (field[2][4] == "X" and "O" or "X");
+      field[3][3] = (field[3][3] == "X" and "O" or "X");
+      
+    elseif y == 5 then
+      field[2][3] = (field[2][3] == "X" and "O" or "X");
+      field[3][2] = (field[3][2] == "X" and "O" or "X");
+      field[3][3] = (field[3][3] == "X" and "O" or "X");
+      field[3][4] = (field[3][4] == "X" and "O" or "X");
+      field[4][3] = (field[4][3] == "X" and "O" or "X");
+
+    elseif y == 6 then
+      field[3][3] = (field[3][3] == "X" and "O" or "X");
+      field[4][2] = (field[4][2] == "X" and "O" or "X");
+      field[4][3] = (field[4][3] == "X" and "O" or "X");
+      field[4][4] = (field[4][4] == "X" and "O" or "X");
+    end
+    clicks = clicks + 1
+  elseif x == 8 then
+    if y == 3 then
+      field[1][3] = (field[1][3] == "X" and "O" or "X");
+      field[1][4] = (field[1][4] == "X" and "O" or "X");
+      field[2][4] = (field[2][4] == "X" and "O" or "X");
+    elseif y == 4 then
+      field[1][4] = (field[1][4] == "X" and "O" or "X");
+      field[2][3] = (field[2][3] == "X" and "O" or "X");
+      field[2][4] = (field[2][4] == "X" and "O" or "X");
+      field[3][4] = (field[3][4] == "X" and "O" or "X");
+    elseif y == 5 then
+      field[2][4] = (field[2][4] == "X" and "O" or "X");
+      field[3][3] = (field[3][3] == "X" and "O" or "X");
+      field[3][4] = (field[3][4] == "X" and "O" or "X");
+      field[4][4] = (field[4][4] == "X" and "O" or "X");
+    elseif y == 6 then
+      field[3][4] = (field[3][4] == "X" and "O" or "X");
+      field[4][3] = (field[4][3] == "X" and "O" or "X");
+      field[4][4] = (field[4][4] == "X" and "O" or "X");
+    end
+    clicks = clicks + 1
+  end
+ end
+end
+
+function mainLoop()
+while running do
+ e = {os.pullEvent()}
+ update(e)
+ if check() == true then
+  slc = 2
+ end
+ draw()
+end
+end
+
+generate()
+draw()
+mainLoop()
+clear()

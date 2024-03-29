@@ -1,0 +1,8 @@
+computer_label = "XoXOS 1.2-" .. os.getComputerID()
+print("Your computer ID: ", os.getComputerID())
+print("Your computer label: ", computer_label)
+print("Free space: ", fs.getFreeSpace("/"), " bytes")
+print("Size of XoXOS main file: ", fs.getSize("/startup"), " bytes")
+print("Disk free space: ", fs.getFreeSpace("/disk"), " bytes")
+print("\n Press ENTER to exit")
+read()

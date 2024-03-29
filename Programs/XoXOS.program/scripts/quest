@@ -1,0 +1,335 @@
+--Quest 1: The Report - gather information regarding the progress of Petre's grand plan
+quests["The Report"] = { name = "The Report",
+	activestage = 1,
+	variables = { fane = false, matheus = false, noff = false, jocelyn = false, grainActivated = false},
+	generalDescription = "Donmur Petre has asked you gather information regarding his secret plan",
+	stages = {
+		[1] = {
+			desc = "Ask for a report from the following people: Fane Matheus Noff Jocelyn",
+			condition = function(quest, event)
+				local retstring = nil
+				if event.type == "dialogue" and event.town == 1 and event.npc.name == "Matheus" and findIn(event.topic, "report") 
+						and not quest.variables.matheus then
+					setNPCDialogue("Matheus", 1, "#report", "You have my response. Return it to Petre, if you have not already.")
+					quest.variables.matheus = true
+					retstring = "You are collecting the report? Well you may inform Petre that I have met expectations, and the equipment he requires is almost complete."
+				end
+				if event.type == "dialogue" and event.town == 1 and event.npc.name == "Fane" and findIn(event.topic, "report") and
+						not quest.variables.fane then
+					setNPCDialogue("Fane", 1, "#report", "I hope Petre is satisfied with my progress.")
+					quest.variables.fane = true
+					printTownInterface()
+					displayConfirmDialogue("Fane the merchant says:", "Petre has trusted you with this task? I am surprised- it is something he would not usually so much as discuss with an outsider...")
+					retstring = "You may inform him that my accounts are in order and my earnings are... sufficient, if a little below expectations. I will send him a full account soon."
+				end
+				if event.type == "dialogue" and event.town == 3 and event.npc.name == "Jocelyn" and findIn(event.topic, "report") and
+						not quest.variables.jocelyn then
+					quest.variables.jocelyn = true
+					setNPCDialogue("Jocelyn", 3, "#report", "Still you pester me with this? I have nothing for Petre, nor shall I. He can find another unwitting soul to fulfill his lunacy.")
+					return "Petre's report? You may tell him I am no longer woodsman of his town, in fact you may tell him I am dead, or as good as. He shall receive no aid from me."
+				end
+				if event.type == "dialogue" and event.town == 1 and event.npc.name == "Noff" and findIn(event.topic, "report") and
+						not quest.variables.noff then
+					if not quest.variables.grainActivated then
+						printTownInterface()
+						displayConfirmDialogue("Noff the farmer says:", "Oh, you're here about that... there is a small problem. I have reached expectations, but a great deal of my grain has been stolen, by Tyrats...")
+						local response = displayOptionDialogue("Noff the farmer says:", "Of course, if you would be willing to find their lair and retrieve my grain... that would be a great help to me.")
+						if response == "yes" then
+							retstring = "Ah... what a relief. The tyrats took it somewhere to the west. Those cave-dwelling fools will pay for their larceny."
+							activateQuest(quests["Fuel for the Pyre"])
+							quest.variables.grainActivated = true
+						else
+							retstring = "Well without your help I cannot complete my report for Petre. So it is up to you."
+						end
+					elseif quests["Fuel for the Pyre"].activestage == -1 then
+						quest.variables.noff = true
+						setNPCDialogue("Noff", 1, "#report", "I have nothing more to say on the matter. Take the information to Petre, and quickly.")
+						retstring = "Yes, the report. Well thanks to you I am at least somewhat prepared for the report. You may give Petre this- my current reserves."
+					else
+						retstring = "I can't discuss my progress without that grain. Please find it."
+					end
+				end
+				
+				local newdesc = "Ask for a report from the following people:"
+				if not quest.variables.fane then newdesc = newdesc.." Fane" end
+				if not quest.variables.matheus then newdesc = newdesc.." Matheus" end
+				if not quest.variables.noff then newdesc = newdesc.." Noff" end
+				if not quest.variables.jocelyn then newdesc = newdesc.." Jocelyn" end
+				quest.stages[1].desc = newdesc
+				
+				if quest.variables.fane and quest.variables.matheus and quest.variables.noff and quest.variables.jocelyn then
+					quest.activestage = 2
+					printTownInterface()
+					displayConfirmDialogue(event.npc.name.." the "..event.npc.job.." says:", retstring)
+					retstring = "I think you've spoken to everyone now- you should return your report to Donmur Petre."
+				end
+				
+				return retstring
+			end
+		}, [2] = {
+			desc = "Return to Donmur Petre with the completed report.",
+			condition = function(quest, event)
+				if event.type == "dialogue" and event.town ==  1 and event.npc.name == "Donmur Petre" and findIn(event.topic, "report", "quest") then
+					quest.activestage = -1
+					addXP(150)
+					addGold(20)
+					setNPCDialogue("Donmur Petre", 1, "#report", "Thank you for returning the report to me.")
+					setNPCDialogue("Donmur Petre", 1, "#quest", function(me)
+						printTownInterface()
+						displayConfirmDialogue(me.name.." the "..me.job.." says:", "Part of my plan calls for a specific kind of plant that grows in the caves near here. It is hazardous to handle, but very useful.")
+						printTownInterface()
+						local response = displayOptionDialogue(me.name.." the "..me.job.." says:", "Would you consider visiting Lichen cave to collect it?")
+						if response == "yes" then
+							activateQuest(quests["The Empty Larder"])
+							setNPCDialogue("Donmur Petre", 1, "#lichen", "#quest")
+							setNPCDialogue("Donmur Petre", 1, "#quest", "Please make haste in collecting the lichen. It grows in a cave east of here.")
+							return "Good. Go to Lichen Cave on the river a bit east of here, and gather up as much as you can. Just be careful with it..."
+						else 
+							return "Very well. If you do not wish to help, I would ask you leave our town. There is no place here for those who cannot work."
+						end
+					end)
+					
+					return "It sounds as though all is going according to plan. I thank you, stranger. If you insist on staying I have another task for you."
+				end
+			end
+		}
+	}
+}
+
+--Quest 2: The Unwilling Mage - find Jocelyn, the woodsman
+quests["The Unwilling Mage"] = { name = "The Unwilling Mage",
+	activestage = 1,
+	variables = { },
+	generalDescription = "Helmar the mystic has told you that Jocelyn fled upon learning he was a lunamagus.",
+	onActivation = function(quest)
+		town[3].visible = true
+	end;
+	stages = {
+		[1] = {
+			desc = "Find Jocelyn, in the woods to the northwest of Nebun",
+			condition = function(quest, event)
+				if event.type == "dialogue" and event.npc.name == "Jocelyn" then
+					quest.activestage = -1
+					addXP(50)
+					printTownInterface()
+					displayConfirmDialogue("Quest Update!", "You have found a man, sitting on a tree stump and staring at the ground morosely.")
+					return "You have found me? Helmar has sent you? Well, here I am. I am Jocelyn, the lunamagus... the accursed lunamagus. And you have found me, it seems."
+				end
+			end
+		}
+	}
+}
+
+--Quest 3: Fuel for the Pyre - Gather stolen grain from a nearby cave
+quests["Fuel for the Pyre"] = { name = "Fuel for the Pyre",
+	activestage = 1,
+	variables = { 
+		{ x = 3+2, y = 3+2, level = 1, message = "This cave has been freshly dug- the scratches are new and the sweaty Tyrat stench has yet to take a firm hold." }, 
+		{ x = 7+2, y = 1+2, level = 1, message = "In the darkness you can hear the sounds of twittering and the clink of metal- the tunnel is not empty." } 
+	},
+	generalDescription = "Several bags of grain have been stolen from Noff by Tyrats.",
+	onActivation = function(quest)
+		subDungeonTile(2, 1+2, 3+2, 1, "C")
+		table.insert(dungeons[2].creatures, cloneCreature(3, 11+2, 2+2, 1))
+		table.insert(dungeons[2].creatures, cloneCreature(3, 11+2, 6+2, 1))
+		table.insert(dungeons[2].creatures, cloneCreature(3, 6+2, 7+2, 1))
+		table.insert(dungeons[2].creatures, cloneCreature(3, 1+2, 4+2, 1))
+	end;
+	stages = {
+		[1] = {
+			desc = "Find Fell's Cave, east of Nebun",
+			condition = function(quest, event)
+				if event.type == "move" and event.dungeon == 2 then
+					quest.activestage = 2
+					return "The sign of pickaxe scratchings and discarded metal strewn about this cave marks it as a lair for Tyrats. This must be the cave Noff spoke of. You take deep breath... and step inside."
+				end
+			end
+		},
+		[2] = {
+			desc = "Find the missing grain in Fell's Cave",
+			condition = function(quest, event)
+				local chestLocation = { x = 1+2, y = 3+2, z = 1 }
+				if event.type == "move" and event.dungeon == 2 then
+					for i,v in ipairs(quest.variables) do
+						if event.xpos == v.x and event.ypos == v.y and event.zpos == v.level then
+							table.remove(quest.variables, i)
+							return v.message
+						end
+					end
+				end
+				
+				if event.type == "chest" and event.dungeon == 2 and event.xpos == chestLocation.x and event.ypos == chestLocation.y
+						and event.zpos == chestLocation.z then
+					quest.activestage = 3
+					addGold(15)
+					return "Within the chest you find several large sacks of grain, along with a few coins. You gather them up, and prepare to head back to Noff."
+				end
+			end
+		},
+		[3] = {
+			desc = "Return the grain sacks to Noff in Nebun.",
+			condition = function(quest, event)
+				if event.type == "dialogue" and event.town == 1 and event.npc.name == "Noff" and findIn(event.topic, "grain", "sack") then
+					quest.activestage = -1
+					addGold(20)
+					addXP(40)
+					return "Ah you found my grain. Well, thank you, stranger. This has taken a weight off my mind."
+				end
+			end
+		}
+	}
+}
+
+--Quest 4: Laid to Rest - Leave the bones of a loved one in the local mausoleum
+quests["Laid to Rest"] = { name = "Laid to Rest",
+	activestage = 1,
+	variables = { 
+		{ x = 4+2, y = 10+2, level = 1, message = "It appears as though there was once a way down here, but the way has since collapsed in. You wonder how safe these halls still are." }, 
+		{ x = 20+2, y = 9+2, level = 2, message = "The second part of the mausoleum is much less organized, with the stone passageways sprawling almost randomly." },
+		{ x = 8+2, y = 2+2, level = 3, message = "All here is deathly still. The air has no feel, and all you can smell is the musty scent of damp earth. It is pitch black." } 
+	},
+	generalDescription = "Erika has asked you lay the bones of her deceased husband to rest in a nearby mausoleum.",
+	onActivation = function(quest)
+		dungeons[3].playerHasMap = true
+	end;
+	stages = {
+		[1] = {
+			desc = "Enter the Nebun Mausoleum, southeast of Nebun.",
+			condition = function(quest, event)
+				if event.type == "move" and event.dungeon == 3 then
+					quest.activestage = 2
+					return "Shrouded in dust and grime, you manage to find the ancient stone passageway leading into the crypt. You feel greatly uneasy as you step inside."
+				end
+			end
+		},
+		[2] = {
+			desc = "Reach the third level of the mausoleum",
+			condition = function(quest, event)
+				local corpseLocation = { x = 11+2, y = 3+2, z = 3 }
+				if event.type == "move" and event.dungeon == 3 then
+					for i,v in ipairs(quest.variables) do
+						if event.xpos == v.x and event.ypos == v.y and event.zpos == v.level then
+							table.remove(quest.variables, i)
+							return v.message
+						end
+					end
+				end
+				
+				if event.type == "move" and event.dungeon == 3 and event.xpos == corpseLocation.x and event.ypos == corpseLocation.y
+						and event.zpos == corpseLocation.z then
+					quest.activestage = 3
+					dungeons[3].creaturesSpawn = false
+					displayConfirmDialogue("Quest Update", "You find an empty spot at last, and carefully place the remains Erika gave you into the space.")
+					local wraith = cloneCreature(5, 11+2, 2+2, 3)
+					table.insert(dungeons[3].creatures, wraith)
+					quest.variables.wraith = wraith
+					return "Just as you do, you feel a freezing wind blow past you- the bones rise from their resting place and reassemble themselves into a mosnterous apparition!"
+				end
+			end
+		},
+		[3] = {
+			desc = "Slay the undead Wraith",
+			condition = function(quest, event)
+				if event.type == "kill" and event.monster == quest.variables.wraith then
+					quest.activestage = 4
+					addGold(50)
+					return "Your final blow leaves blows the wraith to pieces, leaving nothing but a soft mist in the air. The darkness that consumes this places seems to have lifted."
+				end
+			end
+		},
+		[4] = {
+			desc = "Speak with Erika in Nebun",
+			condition = function(quest, event)
+				if event.type == "dialogue" and event.town == 1 and event.npc.name == "Erika" and findIn(event.topic, "ongreet") then
+					quest.activestage = -1
+					setNPCDialogue("Erika", 1, "#onfarewell", "May you spend eternity in hell, you foolish do-gooder!")
+					printTownInterface()
+					displayConfirmDialogue("Erika the widow says:", "You fool! You've dispelled the curse I cast on that mausoleum- how can you still be alive! Everything is ruined!")
+					printTownInterface()
+					displayConfirmDialogue("Quest Update:", "You watch as Erika slowly turns into pure silver light, before disappearing in a flash, with only the whispers of her voice in the wind.")
+					setNPCPosition("Erika", 1, -1, -1)
+					return "#onfarewell"
+				end
+			end
+		}
+	}
+}
+
+--Quest 5: The Empty Larder - Collect Lichen from a nearby cave
+quests["The Empty Larder"] = { name = "The Empty Larder",
+	activestage = 1,
+	variables = { 
+		{ x = 9+2, y = 2+2, level = 3, message = "Although the chest is empty, you can see the green lichen Petre mentioned growing around the edges. You gather it into your pack." }, 
+		{ x = 4+2, y = 4+2, level = 2, message = "Although the chest is empty, you can see the green lichen Petre mentioned growing around the edges. You gather it into your pack." },
+		{ x = 9+2, y = 2+2, level = 1, message = "Although the chest is empty, you can see the green lichen Petre mentioned growing around the edges. You gather it into your pack." } 
+	},
+	generalDescription = "Donmur Petre has asked you to collect some special lichen from a nearby caves.",
+	onActivation = function(quest)
+		dungeons[3].playerHasMap = true
+	end;
+	stages = {
+		[1] = {
+			desc = "Find 3 good samples of green lichen from Lichen Cave.",
+			condition = function(quest, event)
+				if event.type == "chest" and event.dungeon == 4 then
+					for i,v in ipairs(quest.variables) do
+						if event.xpos == v.x and event.ypos == v.y and event.zpos == v.level then
+							table.remove(quest.variables, i)
+							if #quest.variables == 0 then
+								quest.activestage = 2
+								table.insert(quest.variables, "steppedOutside", false)
+								displayConfirmDialogue("Quest Update:", v.message)
+								return "You have a good collection of lichen now- you should return to Donmur Petre to collect your reward."
+							else
+								quest.stages[1].desc = "Find "..#quest.variables.." good samples of green lichen from Lichen Cave."
+								return v.message
+							end
+						end
+					end
+				end
+			end
+		},
+		[2] = {
+			desc = "Return the supplies to Donmur Petre",
+			condition = function(quest, event)
+				if event.type == "move" and not event.town and not event.dungeon and not quest.variables["steppedOutside"] then
+					quest.stages[2].desc = "Return empty-handed to Donmur Petre"
+					quest.variables["steppedOutside"] = true
+					return "Just as you take your first step outside you hear a bang- you pack has exploded! You rush to put it out, but are unable to save the lichen, which seemed to combust as soon as it entered daylight!"
+				elseif event.type == "dialogue" and event.town == 1 and event.npc.name == "Donmur Petre" and findIn(event.topic, "lichen", "quest") then
+					quest.activestage = -1
+					setNPCDialogue("Donmur Petre", 1, "#lichen", "Yes it's too bad about the lichen... it can be somewhat volatile in sunlight.")
+					setNPCDialogue("Donmur Petre", 1, "#quest", function(me)
+						printTownInterface()
+						displayConfirmDialogue(me.name.." the "..me.job.." says:", "As you seem so adept at surviving impossible odds, perhaps you would like to help us retrieve a very important ornamental artefact for our town?")
+						printTownInterface()
+						local response = displayOptionDialogue(me.name.." the "..me.job.." says:", "It's in a secret cave, filled with treasure to the east of here. Are you willing to help us?")
+						if response == "yes" then
+							activateQuest(quests["An Impossible Errand"])
+							setNPCDialogue("Donmur Petre", 1, "#mace", "#quest")
+							setNPCDialogue("Donmur Petre", 1, "#quest", "Fargo's Place is east, past the river. You'll find the mace in there.")
+							return "Excellent! I'll mark Fargo's Place on your map- the cave lies east of here. The object is an ornamental mace. Good hunting..."
+						else 
+							return "Very well. If you do not wish to help, I would ask you leave our town. There is no place here for those who cannot work."
+						end
+					end)
+					printTownInterface()
+					displayConfirmDialogue("Donmur Elenko the ruler says:", "The lichen exploded? And you survived? Well... that is unfortunate.")
+					displayConfirmDialogue("Donmur Elenko the ruler says:", "What was before an insistence is now an order. Our plan is now ready to execute and we shall not have you interfere. You are hereby banished from Nebun, never to return.")
+					printTownInterface()
+					displayConfirmDialogue("Quest Update!", "With the snap of his fingers, Elenko orders two men to collect you and throw you from the town, closing the town gate behind you.")
+					pox = town[1].xpos
+					poy = town[1].ypos - 2
+					overworld[town[1].ypos-1][town[1].xpos] = "#"
+					inTown = false
+					activeTown = 0
+					printOverworldInterface()
+					printWorldMap()
+					town[4].visible = true
+					setNPCDialogue("Donmur Petre", 1, "#onfarewell", "You are banished. Be gone from here. There is naught left for you.")
+					return "#farewell"
+				end
+			end
+		}
+	}
+}

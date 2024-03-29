@@ -1,0 +1,87 @@
+term.setBackgroundColor(colors.lime)
+term.clear()
+local w,h = term.getSize()
+local p1y = (h/2)-2
+local p2y = (h/2)-2
+local score1 = 0
+local score2 = 0
+local ballx = w/2
+local bally = h/2
+local ballvx = -1
+local ballvy = 1
+function draw()
+  term.setBackgroundColor(colors.black)
+  term.clear()
+  term.setBackgroundColor(colors.white)
+  drawPaddle(2, p1y)
+  drawPaddle(w-1, p2y)
+  term.setCursorPos(ballx, bally)
+  term.write(" ")
+  term.setTextColor(colors.white)
+  term.setBackgroundColor(colors.black)
+  term.setCursorPos(2, 1)
+  term.write(score1)
+  term.setCursorPos(w-1, 1)
+  term.write(score2)
+end
+function drawPaddle(x, y)
+  for i=y,y+5 do
+    term.setCursorPos(x, i)
+    term.write(" ")
+  end
+end
+function keyPress()
+  while true do
+    event, key = os.pullEvent("key")
+    if key == keys.up then
+      p2y = p2y-1
+    end
+    if key == keys.down then
+      p2y = p2y+1
+    end
+    if key == keys.w then
+      p1y = p1y-1
+    end
+    if key == keys.s then
+      p1y = p1y+1
+    end
+    draw()
+  end
+end
+function moveball()
+  while true do
+    sleep(0.1)
+    ballx = ballx + ballvx
+    bally = bally + ballvy
+    if bally > h-1 then
+      ballvy = -ballvy
+    end
+    if bally < 1 then
+      ballvy = -ballvy
+    end
+    if ballx > 2 and ballx < 3 and bally > p1y and bally < p1y+5 then
+      ballvx = -ballvx
+    end
+    if ballx > w-1 and ballx < w and bally > p2y and bally < p2y+5 then
+      ballvx = -ballvx
+    end
+    if ballx > w then
+      score1 = score1+1
+      ballx = w/2
+      bally = h/2
+      ballvx = -1
+      ballvy = 1
+    end
+    if ballx < 1 then
+      score2 = score2+1
+      ballx = w/2
+      bally = h/2
+      ballvx = 1
+      ballvy = 1
+    end
+    draw()
+  end
+end
+
+    parallel.waitForAll(keyPress, moveball)
+

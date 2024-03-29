@@ -1,0 +1,6 @@
+term.clear()
+term.setCursorPos(1,1)
+print("Which file to execute?")
+filename = read()
+print(shell.run(filename))
+os.pullEvent()
