@@ -1,0 +1,63 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+SpeedOS.LoadAPI("/SpeedAPI/alphanumeric")
+SpeedOS.LoadAPI("/SpeedAPI/SpeedText")
+
+SpeedOS.ToolBarColour = colours.lightGrey
+SpeedOS.ToolBarTextColour = colours.white
+
+local workingTime = 0
+local x, y = term.getSize()
+local last_score = fs.open("nothing.score", "r").readAll()
+
+term.setBackgroundColor(colors.gray)
+term.setTextColor(colors.lightGray)
+term.clear()
+
+while true do
+  term.setBackgroundColor(colors.gray)
+  term.setTextColor(colors.lightGray)
+  term.clear()
+
+  workingTime = workingTime + 1
+  
+  term.setCursorPos(1, 1)
+  term.setTextColor(colors.white)
+  io.write("Last score: ")
+  term.setTextColor(colors.lightGray)
+  io.write(tostring(last_score))
+
+  SpeedText.cPrint("You are doing nothing", 5)
+  SpeedText.cPrint("for", 6)
+
+  if workingTime < 10 then
+	  alphanumeric.stringToImg(tostring(workingTime), colors.white, (x/2)-2, 8)
+  elseif workingTime < 100 then
+	  alphanumeric.stringToImg(tostring(workingTime), colors.white, ((x/2)-2) - 3, 8)
+
+  elseif workingTime < 1000 then
+	  alphanumeric.stringToImg(tostring(workingTime), colors.white, ((x/2)-2) - 6, 8)
+
+  elseif workingTime < 10000 then
+	  alphanumeric.stringToImg(tostring(workingTime), colors.white, ((x/2)-2) - 9, 8)
+  
+  elseif workingTime < 100000 then
+	  alphanumeric.stringToImg(tostring(workingTime), colors.white, ((x/2)-2) - 12, 8)
+  
+  elseif workingTime < 1000000 then
+	  alphanumeric.stringToImg(tostring(workingTime), colors.white, ((x/2)-2) - 15, 8)
+  
+  elseif workingTime < 10000000 then
+	  alphanumeric.stringToImg(tostring(workingTime), colors.white, ((x/2)-2) - 18, 8)
+
+  end
+    
+
+  sleep(1)
+  term.clear()
+  
+  local file = fs.open("nothing.score", "w")
+  file.write(tostring(workingTime))  
+  file.flush()
+  file.close()
+end
