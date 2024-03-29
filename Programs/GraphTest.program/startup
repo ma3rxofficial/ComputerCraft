@@ -1,6 +1,9 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
 
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+
 fs=SpeedOS.fs
 os.loadAPI("SpeedAPI/graph")
 os.loadAPI("SpeedAPI/peripheral")
@@ -16,8 +19,9 @@ end
 --our graph declaration.  We use nil as the gradientTable parameter, so it will use the default red-green gradient.
 local graphInstance
 
-if peripheral.find("monitor") then
-  graphInstance = graph.new(peripheral.wrap(peripheral.find("monitor")), update, "Testing", nil, 0, 100)
+if peripheral.find("monitor", true) then
+  graphInstance = graph.new(peripheral.wrap(peripheral.find("monitor", true)), update, "Testing", nil, 0, 100)
+  print("Running graph on monitor(side "..peripheral.find("monitor", true)..")")
 
 else
   graphInstance = graph.new(term, update, "Testing", nil, 0, 100)
