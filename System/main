@@ -56,7 +56,7 @@ function Initialise()
 	Draw()
 	clockTimer = os.startTimer(0.8333333)
 	desktopRefreshTimer = os.startTimer(5)
-	local h = fs.open('.version', 'r')
+	local h = fs.open('System/.version', 'r')
 	OneOSVersion = h.readAll()
 	h.close()
 
