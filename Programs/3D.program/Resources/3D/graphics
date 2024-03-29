@@ -1,0 +1,19 @@
+--Focal distance. Tweak to change lens angle
+local focalDistance = 20
+--Display width and height.
+local dispWidth, dispHeight = term.getSize()
+
+function project(vertex)
+	local zval = vertex.z
+	if zval == 0 then zval = 1 end --Stops divide by zeros
+	
+	--I've applied centring to the display (after all the camera doesn't need to include this)
+	--Note focal projection is square but centring is applied according to screen dimensions
+	local xmap = (focalDistance * vertex.x) / (vertex.z + math.min(dispHeight,dispWidth)/2) + dispWidth/3
+	local ymap = (focalDistance * vertex.y) / (vertex.z + math.min(dispHeight,dispWidth)/2) + dispHeight/2
+	
+	--Correcting for pixel size
+	xmap = (3 * xmap) / 2 
+	
+	return { x = xmap, y = ymap }
+end
