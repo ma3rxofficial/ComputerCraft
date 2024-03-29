@@ -1,0 +1,247 @@
+oldTerm = term
+os.loadAPI("SpeedAPI/SpeedText")
+
+local install_files = {"OS.tar", "tar", "installer2", "dN2gMnV9"}
+
+for _, value in pairs(install_files) do
+  if fs.exists(value) then
+    fs.delete(value)
+  end
+end
+
+--[[
+term.setBackgroundColour(colours.white)
+term.setTextColour(colours.black)
+term.clear()
+]]--
+
+--local _, err = pcall(function()
+
+local tAPIsLoading = {}
+
+
+function LoadAPI(_sPath)
+	local sName = fs.getName( _sPath )
+	if tAPIsLoading[sName] == true then
+		printError( "API "..sName.." is already being loaded" )
+		return false
+	end
+	tAPIsLoading[sName] = true
+		
+	local tEnv = {}
+	setmetatable( tEnv, { __index = getfenv() } )
+	local fnAPI, err = loadfile( _sPath )
+	if fnAPI then
+		setfenv( fnAPI, tEnv )
+		fnAPI()
+	else
+		printError( err )
+        tAPIsLoading[sName] = nil
+		return false
+	end
+	
+	local tAPI = {}
+	for k,v in pairs( tEnv ) do
+		tAPI[k] =  v
+	end
+	
+	getfenv()[sName] = tAPI
+
+	tAPIsLoading[sName] = nil
+	return true
+end
+
+term.setCursorPos(1,1)
+root = ''
+
+function PrintCentered(text, y)
+    local w, h = term.getSize()
+    x = math.ceil(math.ceil((w / 2) - (#text / 2)), 0)+1
+    term.setCursorPos(x, y)
+    print(text)
+end
+
+function LoadingScreen()
+	if false then
+		term.setBackgroundColor(colours.grey)
+		term.setTextColor(colours.white)
+		term.clear()
+
+		PrintCentered('You have less than 50KB of free space remaining!', 6)
+		PrintCentered('You may encounter crashes due to this.' , 7)
+		term.setTextColor(colours.lightGrey)
+
+		PrintCentered('Try to free up some space, open \'About SpeedOS\'' , 9)
+		PrintCentered('in the One menu for more information.' , 10)
+		term.setTextColor(colours.white)
+
+		PrintCentered('Click anywhere to continue.', 12)
+
+		os.pullEvent('mouse_click')
+	end
+	local screenWidth, screenHeight = term.getSize()
+	term.setBackgroundColour(colours.white)	
+	term.clear()
+	local x = (screenWidth - 14) / 2
+	local y = (screenHeight - 9) / 2
+
+	local text = 'SpeedOS by Ma3rX'
+	term.setCursorPos((screenWidth - #text) / 2, y + 13)
+	term.setTextColour(colours.blue)
+	term.write(text)
+
+	local currentImage = -1
+	local totalAPIs = #fs.list(root .. 'System/API/')
+
+	term.setBackgroundColor(colors.gray)
+	term.clear()
+	term.setTextColor(colors.lightGray)
+
+	for _, file in pairs(fs.list(root .. 'System/API/')) do
+		if string.sub(file,1,1) ~= "." then
+			SpeedText.cPrint("API "..file.." loaded!")
+			sleep(0.1)
+		        term.clear()
+			if not LoadAPI(root .. 'System/API/' .. file) then
+				term.setTextColour(colours.red)
+				PrintCentered('Error While Loading API '..file, y + 11)
+				term.setCursorPos(1, 1)
+				return false
+			end
+		end
+	end
+
+	for _, file in pairs(fs.list(root .. 'SpeedAPI/')) do
+		if string.sub(file,1,1) ~= "." then
+			os.unloadAPI('SpeedAPI/'..file)
+  			if not value == "SpeedText" then
+			    os.loadAPI('SpeedAPI/'..file)
+			end
+			SpeedText.cPrint("API "..file.." loaded!")
+			sleep(0.1)
+		        term.clear()
+		end
+	end
+	
+	for _, file in pairs(fs.list(root .. 'System/Alias/')) do
+		if string.sub(file,1,1) ~= "." then
+			os.unloadAPI('System/Alias/'..file)
+  			shell.setAlias(file, 'System/Alias/'..file)
+			SpeedText.cPrint("Alias "..file.." set!")
+			sleep(0.1)
+		        term.clear()
+		end
+	end
+ os.loadAPI("SpeedAPI/peripheral")
+ if peripheral.find("modem") then
+   rednet.open(peripheral.find("modem"))
+ end
+
+	sleep(0.1)
+	return true
+end
+
+if not term.isColour() then
+	term.setBackgroundColor(colours.black)
+	term.setTextColor(colours.white)
+	term.clear()
+
+	PrintCentered('SpeedOS requires an advanced (gold) computer.', 8)
+
+	PrintCentered('Press any key to return to the shell.', 10)
+
+	os.pullEvent('key')
+	term.clear()
+	term.setCursorPos(1,1)
+
+elseif LoadingScreen() then
+
+	if fs.exists('/.update/') and fs.isDir('/.update/') then
+		if not fs.exists('/.update/.version') then
+			fs.delete('/.update/')
+		end
+
+		function installFolder(path)
+			for i, v in ipairs(fs.list('/.update/'..path)) do
+				Drawing.DrawArea(1, math.floor(Drawing.Screen.Height / 2), Drawing.Screen.Width, 1, ' ', colours.lightGrey, colours.white)
+				Drawing.DrawCharactersCenter(nil, 0, nil, nil, path .. v, colours.lightGrey, colours.white)
+				Drawing.DrawBuffer()
+				if fs.isDir('/.update/'..path .. v) then
+					fs.makeDir('/'..path .. v)
+					installFolder(path .. v .. '/')
+				else
+					fs.delete('/'..path .. v)
+					fs.move('/.update/'..path .. v, '/'..path .. v)
+				end
+				sleep(0)
+			end
+		end
+		Drawing.Clear(colours.white)
+		Drawing.DrawCharactersCenter(nil, -3, nil, nil, 'Installing Update', colours.blue, colours.white)
+		Drawing.DrawCharactersCenter(nil, -2, nil, nil, 'This may take a moment.', colours.grey, colours.white)
+		Drawing.DrawBuffer()
+		installFolder('')
+		fs.delete('/.update/')
+	end
+
+	os.run(getfenv(), '/System/main')
+	
+
+	local ok = {pcall(Initialise)}
+
+	if not ok[1] then
+		term.setBackgroundColor(colours.grey)
+		term.setTextColor(colours.white)
+		term.clear()
+		paintutils.drawImage(paintutils.loadImage('/crash'), (Drawing.Screen.Width-7)/2 + 1, 3)
+		term.setBackgroundColor(colours.grey)
+		term.setTextColor(colours.white)
+
+		PrintCentered('SpeedOS has crashed!', 8)
+
+		PrintCentered('SpeedOS has encountered a serious error,', 10)
+		PrintCentered('click anywhere to reboot.', 11)
+
+		term.setTextColor(colours.lightGrey)
+		table.remove(ok, 1)
+		for i, v in ipairs(ok) do
+			local w, h = term.getSize()
+		    x = math.ceil(math.ceil((w / 2) - (#v / 2)), 0)+1
+		    if x < 1 then
+		    	x = 1
+		    end
+		    term.setCursorPos(x, i+12)
+		    print(v)
+		end
+
+		PrintCentered('Please report this on the forum.', Drawing.Screen.Height)
+		term.setTextColor(colours.white)
+		success = true
+		if success then
+			local message = 'Error report failed!'
+			if success then
+				message = 'Error report sent!'
+			end
+			term.setCursorPos(1, Drawing.Screen.Height-3)
+			term.clearLine()
+			PrintCentered(message..' Click to reboot.', Drawing.Screen.Height-3)
+		end
+
+		os.pullEvent('mouse_click')
+		os.reboot()
+	end
+	--[[end)
+	if err then
+		local w, h = term.getSize()
+		local x = w/2
+		local y = h/2
+		local warning = "A fatal error occured"
+		term.setCursorPos(x-(#warning/2), y)
+		term.clearLine()
+		term.write(warning)
+		print()
+		print()
+		term.setTextColour(colours.red)
+		print(err)
+	end]]
+end
