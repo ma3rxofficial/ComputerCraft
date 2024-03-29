@@ -1,7 +1,7 @@
 oldTerm = term
 os.loadAPI("SpeedAPI/SpeedText")
 
-local install_files = {"OS.tar", "tar", "installer2", "dN2gMnV9"}
+local install_files = {"installer", "dN2gMnV9"}
 
 for _, value in pairs(install_files) do
   if fs.exists(value) then
