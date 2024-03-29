@@ -30,7 +30,7 @@ function UpdateButtons()
 				{
 					Title = 'About SpeedOS',
 					Click = function()
-						LaunchProgram('/System/Programs/About OneOS/startup', {}, 'About SpeedOS')
+						LaunchProgram('/System/Programs/About_SpeedOS/startup', {}, 'About SpeedOS')
 					end
 				},
 				{
