@@ -1,0 +1,77 @@
+OneOS.ToolBarColour = colours.black
+OneOS.ToolBarTextColour = colours.white
+
+local backgroundColour = colours.black
+local mainTextColour = colours.white
+local highlightTextColour = colours.yellow
+
+term.setBackgroundColour(backgroundColour)
+term.setTextColour(highlightTextColour)
+term.setCursorPos(1,2)
+print(os.version())
+
+local commandHistory = {}
+
+
+local tProgramStack = {}
+
+local function _run( _sCommand, ... )
+	local sPath = OneOS.Shell.resolveProgram(_sCommand)
+	if sPath ~= nil then
+		tProgramStack[#tProgramStack + 1] = sPath
+   		local result = OneOS.OSRun( {fs = OneOS.FS, shell = shell, io = OneOS.IO, loadfile = OneOS.LoadFile, os = os, sleep = os.sleep}, sPath, ... )
+		tProgramStack[#tProgramStack] = nil
+		return result
+   	else
+    	printError( "No such program" )
+    	return false
+    end
+end
+
+local function runLine( _sLine )
+	local tWords = {}
+	for match in string.gmatch( _sLine, "[^ \t]+" ) do
+		table.insert( tWords, match )
+	end
+
+	local sCommand = tWords[1]
+	if sCommand then
+		return _run( sCommand, unpack( tWords, 2 ) )
+	end
+	return false
+end
+
+while true do
+	term.setTextColour(highlightTextColour)
+	term.setBackgroundColour(backgroundColour)
+	term.write("> ")
+	term.setTextColour(mainTextColour)
+	local cursorPosX, cursorPosY = term.getCursorPos()
+	term.setCursorPos(cursorPosX, cursorPosY)
+	local command = read(nil, commandHistory)
+	
+	if command then
+		local args = {}
+		for arg in command:gmatch('%S+') do
+			table.insert(args, arg)
+		end
+
+		if not args[1] or args[1] == '' then
+		else
+			local path = OneOS.Shell.resolveProgram(args[1])
+			if path ~= nil then
+				args[1] = path
+				if path:sub(1,3) == 'rom' then
+					runLine( table.concat( args, " " ) )
+				else
+					runLine( table.concat( args, " " ) )
+				end
+			else
+				printError("The file '"..args[1].."' does not exist")
+			end
+		end
+
+		table.insert(commandHistory, command)
+	end
+end
+

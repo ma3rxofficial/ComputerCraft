@@ -1,0 +1,252 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+local showStars = true
+local showTime = true
+local starsColor = {colors.white, colors.gray}
+local starTwinkleColor = {colors.black, colors.orange}
+local timeColor = {colors.white, colors.cyan}
+
+--End User Settings
+
+--Don't modify unless you are brave:
+local tArgs = { ... }
+local mon
+local w, h = 1,1
+local pix={}
+local ss_running = true
+local tX = {}
+local tY = {}
+local tXD = {}
+local tYD = {}
+local positions = {'top', 'bottom', 'left', 'right', 'front', 'back', 'top:white', 'top:orange', 'top:magenta', 'top:lightBlue', 'top:yellow', 'top:lime', 'top:pink', 'top:gray', 'top:cyan', 'top:purple', 'top:blue', 'top:brown', 'top:green', 'top:red', 'top:black', 'bottom:white', 'bottom:orange', 'bottom:magenta', 'bottom:lightBlue', 'bottom:yellow', 'bottom:lime', 'bottom:pink', 'bottom:gray', 'bottom:cyan', 'bottom:purple', 'bottom:blue', 'bottom:brown', 'bottom:green', 'bottom:red', 'bottom:black', 'front:white', 'front:orange', 'front:magenta', 'front:lightBlue', 'front:yellow', 'front:lime', 'front:pink', 'front:gray', 'front:cyan', 'front:purple', 'front:blue', 'front:brown', 'front:green', 'front:red', 'front:black', 'back:white', 'back:orange', 'back:magenta', 'back:lightBlue', 'back:yellow', 'back:lime', 'back:pink', 'back:gray', 'back:cyan', 'back:purple', 'back:blue', 'back:brown', 'back:green', 'back:red', 'back:black', 'left:white', 'left:orange', 'left:magenta', 'left:lightBlue', 'left:yellow', 'left:lime', 'left:pink', 'left:gray', 'left:cyan', 'left:purple', 'left:blue', 'left:brown', 'left:green', 'left:red', 'left:black', 'right:white', 'right:orange', 'right:magenta', 'right:lightBlue', 'right:yellow', 'right:lime', 'right:pink', 'right:gray', 'right:cyan', 'right:purple', 'right:blue', 'right:brown', 'right:green', 'right:red', 'right:black'}
+local pix = {}
+function set(monID,r,c,v)
+    if not pix[monID] then
+        pix[monID] = {}
+    end
+    pix[monID][w * r + c] = v
+end
+function get(monID,r,c)
+    if pix[monID] then
+        --if #pix[monID] >= w * r + c then
+            return pix[monID][w * r + c]
+        --end
+    end
+    return 0
+end
+function setPix(monID)
+    for i=1, ((w*h)/10) do
+        set(monID,math.random(1, h),math.random(1, w),math.random(0, 1))
+    end
+end
+
+local skipMove = 1
+local addRow = 1
+local time,timeFmt,timeLen
+function getColorMode(monitor)
+    if monitor.isColor() then
+        return 2
+    else
+        return 1
+    end
+end
+function update(monitor, monID)
+    mon = monitor
+    --if mon then
+        w, h = mon.getSize()
+        local x, y, i, flicker
+        mon.clear()
+        mon.setBackgroundColor(colors.black)
+        local colorMode = getColorMode(mon)
+        for y=1, h do
+            for x=1, w do
+                if get(monID,y,x) == 1 then
+                    flicker = math.random(0, 100)
+                    mon.setTextColor(starsColor[colorMode])
+                    if flicker == 0 then
+                        mon.setTextColor(starTwinkleColor[colorMode])
+                    end
+                    mon.setCursorPos(x, y)
+                    mon.write(".")
+                end
+            end
+        end
+        if addRow == 0 then
+            for y=2, h do
+                for x=1, w do
+                    set(monID,y-1,x,get(monID,y,x))
+                end
+            end
+            for x=1, w do
+                set(monID,h,x,0)
+            end
+            for i=1, (w/10) do
+                set(monID,h,math.random(1, w),math.random(0, 1))
+            end
+        end
+        if skipMove == 0 then
+            tX[monID] = tX[monID] + tXD[monID]
+            tY[monID] = tY[monID] + tYD[monID]
+            if tX[monID] > w-timeLen+1 then
+                tX[monID] = w-timeLen+1
+                tXD[monID] = -1
+            end
+            if tX[monID] < 1 then
+                tX[monID] = 1
+                tXD[monID] = 1
+            end
+            if tY[monID] > h then
+                tY[monID] = h
+                tYD[monID] = -1
+            end
+            if tY[monID] < 1 then
+                tY[monID] = 1
+                tYD[monID] = 1
+            end
+        end
+        mon.setTextColor(timeColor[colorMode])
+        mon.setCursorPos(tX[monID], tY[monID])
+        mon.write(timeFmt)
+    --end
+end
+function updateSM(monitor, monID)
+    mon = monitor
+    --if mon then
+        w, h = mon.getSize()
+        local x, y, i, flicker
+        mon.clear()
+        mon.setBackgroundColor(colors.black)
+        local colorMode = getColorMode(mon)
+
+        -- Time
+        local time = os.time()
+        --we want to manually parse am/pm
+        timeFmt = textutils.formatTime(time, false)
+        local len = string.len(timeFmt)
+        local part = string.sub(timeFmt, len-1)
+        timeFmt = string.sub(timeFmt, 1, len-3)..part
+        timeLen = string.len(timeFmt)
+        
+        for y=1, h do
+            for x=1, w do
+                if get(monID,y,x) == 1 then
+                    flicker = math.random(0, 100)
+                    mon.setTextColor(starsColor[colorMode])
+                    if flicker == 0 then
+                        mon.setTextColor(starTwinkleColor[colorMode])
+                    end
+                    mon.setCursorPos(x, y)
+                    mon.write(".")
+                end
+            end
+        end
+        if addRow == 0 then
+            for y=2, h do
+                for x=1, w do
+                    set(monID,y-1,x,get(monID,y,x))
+                end
+            end
+            for x=1, w do
+                set(monID,h,x,0)
+            end
+            for i=1, (w/10) do
+                set(monID,h,math.random(1, w),math.random(0, 1))
+            end
+        end
+        if skipMove == 0 then
+            tX[monID] = tX[monID] + tXD[monID]
+            tY[monID] = tY[monID] + tYD[monID]
+            if tX[monID] > w-timeLen+1 then
+                tX[monID] = w-timeLen+1
+                tXD[monID] = -1
+            end
+            if tX[monID] < 1 then
+                tX[monID] = 1
+                tXD[monID] = 1
+            end
+            if tY[monID] > h then
+                tY[monID] = h
+                tYD[monID] = -1
+            end
+            if tY[monID] < 1 then
+                tY[monID] = 1
+                tYD[monID] = 1
+            end
+        end
+        mon.setTextColor(timeColor[colorMode])
+        mon.setCursorPos(tX[monID], tY[monID])
+        mon.write(timeFmt)
+    --end
+end
+
+function updateTemplate(monitor, monID)
+    if monitor then
+        w,h = monitor.getSize()
+        if w and h then
+            if not pix[monID] then
+                tX[monID] = math.random(1, w-6)
+                tY[monID] = math.random(1, h)
+                tXD[monID] = 1
+                tYD[monID] = 1
+                setPix(monID)
+            end
+            if w > 7 and h > 5 then
+                update(monitor, monID)
+            else
+                updateSM(monitor, monID)
+            end
+        end
+    end
+end
+function updateAll()
+    updateTemplate(term, 0)
+    for i=1, #positions do
+        if peripheral.getType(positions[i]) == "monitor" then
+            updateTemplate(peripheral.wrap(positions[i]), i)
+        end
+    end
+end
+function cleanUp()
+    term.clear()
+    term.setCursorPos(1,1)
+    for i=1, #positions do
+        if peripheral.getType(positions[i]) == "monitor" then
+            local mon = peripheral.wrap(positions[i])
+            if mon then
+                mon.setTextScale(1)
+                mon.clear()
+                mon.setCursorPos(1,1)
+            end
+        end
+    end
+end
+local ss_timer = os.startTimer(0)
+while ss_running do
+    local event, p1, p2 = os.pullEvent()
+    if event == "key" then
+        ss_running = false
+    else
+        if event == "timer" and p1 == ss_timer then
+            ss_timer = os.startTimer(0.05)
+        end
+        if ss_running then
+            time = os.time()
+            timeFmt = textutils.formatTime(time, false)
+            timeLen = string.len(timeFmt)
+            updateAll()
+            skipMove = skipMove + 1 
+            if skipMove > 10 then            
+                skipMove = 0
+            end
+            addRow = addRow + 1
+            if addRow > 50 then
+                addRow = 0
+            end
+        end
+    end
+end
+
+cleanUp()

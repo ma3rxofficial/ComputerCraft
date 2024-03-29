@@ -1,0 +1,76 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+local rs_enabled = false
+local routing_enabled = false
+local blacklisted = {}
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+
+function blacklist(id)
+  for _, value in pairs(blacklisted) do
+    if value == id then
+      return false
+    end
+  end
+
+  return true
+end
+
+windows.clearScreen(colors.white)
+
+if not peripheral.find("LAN NIC") then
+  windows.error("You need wired modem!")
+  SpeedOS.Close()
+end
+
+
+button = windows.select({"Hello!"},{"Do you want to use","your computer as router?"},{"No",colors.gray,colors.white}, {"Yes",colors.orange,colors.white})
+
+if button == "Yes" then
+  routing_enabled = true
+end
+
+if routing_enabled then
+  if not peripheral.find("modem") then
+    windows.clearScreen(colors.white)
+    windows.error("You need wireless modem!")
+    SpeedOS.Close()
+  end
+
+  rednet.open(peripheral.find("modem"))
+  modem = peripheral.wrap(peripheral.find("LAN NIC"))
+  
+  windows.clearScreen(colors.black)
+  term.setCursorPos(1, 1)
+
+  while true do
+    event, id, msg, dist = os.pullEvent()
+    if event == "rednet_message" and blacklist(id) then
+      modem.send("<"..tostring(id).."> "..msg)
+      print("<"..tostring(id).."> "..msg)
+    end
+  end
+
+else
+
+windows.clearScreen(colors.black)
+term.setCursorPos(1, 1)
+
+while true do
+  event, side, id, channel, msg = os.pullEvent()
+  if event == "lan_message" then 
+    print(msg) 
+    if rs_enabled then
+      rs.setOutput("top", true) 
+      sleep(0.5) 
+      rs.setOutput("top", false) 
+    end
+  end
+end
+
+end

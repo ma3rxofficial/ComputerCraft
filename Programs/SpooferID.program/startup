@@ -1,0 +1,69 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/SpeedGUI")
+
+term.setBackgroundColor(colors.white)
+term.setTextColor(colors.blue)
+term.clear()
+term.setCursorPos(1, 1)
+
+SpeedText.cPrint("ID Spoofer", 1)
+
+term.setTextColor(colors.gray)
+
+SpeedText.line()
+
+term.setCursorPos(51-7, 19)
+term.setTextColor(colors.lightGray)
+term.write("by Ma3rX")
+
+function spoofer()
+  term.setBackgroundColor(colors.white)
+  term.setTextColor(colors.blue)
+  term.clear()
+  term.setCursorPos(1, 1)
+
+  SpeedText.cPrint("ID Spoofer", 1)
+ 
+  term.setTextColor(colors.gray)
+
+  SpeedText.line()
+
+  term.setCursorPos(2, 4)
+  term.setTextColor(colors.black)  
+
+  SpeedText.cPrint("Enter new ID: ", 4)
+  term.setCursorPos(20, 5)
+  term.setBackgroundColor(colors.lightGray)
+  term.setTextColor(colors.white)
+  SpeedText.cPrint("    ", 5)
+  
+  term.setTextColor(colors.black)
+  term.setCursorPos(23, 5)
+  newID = io.read()
+
+  term.setBackgroundColor(colors.black)
+  term.setTextColor(colors.lightBlue)
+  term.setCursorPos(1, 1)
+  term.clear()
+
+  shell.run("Resources/sp "..tostring(newID))
+
+  term.setCursorPos(1, 2)
+  io.write("Done! Your ID is now ")
+  term.setTextColor(colors.cyan)
+  io.write("#"..tostring(os.getComputerID()))
+  
+  sleep(3)
+  term.setTextColor(colors.white)
+  term.setBackgroundColor(colors.black)
+  term.setCursorPos(1, 1)
+  term.clear()
+  error()
+end
+
+SpeedGUI.gui.button.add("Spoof ID",spoofer,SpeedText.cCursor("SpoofID")[1]-3,5,2,3,colors.white,colors.gray)
+SpeedGUI.gui.button.add("Exit",SpeedText.extraExit,SpeedText.cCursor("Exit")[1]-2,9,2,3,colors.white,colors.red)
+SpeedGUI.start()

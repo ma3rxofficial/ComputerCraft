@@ -1,0 +1,195 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+fs = SpeedOS.fs
+os.loadAPI("SpeedAPI/devices")
+os.loadAPI("SpeedAPI/windows")
+os.loadAPI("SpeedAPI/peripheral")
+
+SpeedOS.ToolBarColour = colours.grey
+SpeedOS.ToolBarTextColour = colours.white
+
+windows.clearScreen(colors.white)
+
+if peripheral.find("modem") then
+  rednet.open(peripheral.find("modem"))
+else
+  windows.error("You need wireless modem!")
+  SpeedOS.Close()
+end
+
+-- GLOBAL VARIABLES --
+local ver="1.1"
+local id=os.getComputerID()
+local wifi
+local dest
+local sfile
+local sender
+local dcat
+local dfile
+local dpath
+-- /GLOBAL VARIABLES --
+
+function Main()
+  Clear()
+  Menu()
+end
+
+function Menu()
+  windows.clearScreen(colors.white)
+  --SpeedOS.ToolBarColour = colours.white
+  --SpeedOS.ToolBarTextColour = colours.black
+  pressedButton = windows.select({"Hello!"},{"Welcome to FTP!"},{"Send",colors.lightGray,colors.black},{"Receive",colors.lightBlue,colors.black})
+
+  local p1 = pressedButton
+    if p1=="Send" then
+          SendMenu()
+    elseif p1=="Receive" then
+          DownMenu()
+    end
+end  
+
+function SendMenu()
+  windows.clearScreen(colors.white)
+  local govno = windows.input("auto", "auto", "Send", 10, {"ID", ""}, {"Filename", ""})
+  dest=tonumber(govno[1])
+  sfile=govno[2]
+  if fs.exists(sfile)==true then
+    windows.clearScreen(colors.black)
+    term.setTextColor(colors.white)
+    term.setCursorPos(1,1)
+    --SpeedOS.ToolBarColour = colours.black
+    --SpeedOS.ToolBarTextColour = colours.white
+  else
+    windows.error("File not found!")
+    Menu()
+  end
+  print("Estabilishing connection")
+  rednet.send(dest,"@rftpstart")
+  rednet.send(dest,sfile)
+  print("Waiting for device #"..dest.." to respond... [Press SPACE to cancel]")
+  Waiting()
+end
+
+function Waiting()
+  while true do
+    local event,p1,p2=os.pullEvent()
+
+    if (event=="rednet_message") and (p2=="@rftpagree") then
+        print("File accepted by #"..dest.."!")
+        sleep(1)
+        Transfer()
+        break
+    elseif (event=="rednet_message") and (p2=="@rftpdeny") then
+        print("#"..dest.." denied connection! Any key to continue...")
+        os.pullEvent("key")
+        Menu()
+        break
+    elseif (event=="key") and (p1==57) then
+        Menu()
+        break
+    end
+  end
+end
+
+function Transfer()
+    local plik=fs.open(sfile,"r")
+    local tresc=plik.readAll()
+    rednet.send(dest,tresc)
+    sleep(0.3)
+    rednet.send(dest,"@rftpend")
+    plik.close()
+    print("Transfer complete! Any key to continue...")
+    os.pullEvent("key")
+    Menu()
+end
+    
+function DownMenu()
+    Clear()
+    --SpeedOS.ToolBarColour = colours.black
+    --SpeedOS.ToolBarTextColour = colours.white
+    print("Your ID: "..id)
+    print()
+    print("Waiting for an oncoming file... [Press SPACE to cancel]")
+    local event,p1,p2
+    repeat
+    event,p1,p2=os.pullEvent()
+    until ((event=="rednet_message") and (p2=="@rftpstart")) or ((event=="key") and (p1==57))
+    if (event=="rednet_message") and (p2=="@rftpstart") then
+        sender=p1
+        event,p1,p2=os.pullEvent("rednet_message")
+        print("Device "..p1.." want to send you a file: "..p2..". Accept? [y/N]")
+        local event,pp1=os.pullEvent("key")
+        if (pp1==20) or (pp1==21) then
+            Download()
+        else
+            rednet.send(p1,"@rftpdeny")
+            Menu()
+        end
+    elseif (event=="key") and (p1==57) then
+        Menu()
+    end
+end
+
+function Download()
+    Clear()
+    
+    print("Select the folder: [default: /]")
+    dcat=read()
+    if dcat=="" then
+        dcat="/"
+    end
+    fs.makeDir(dcat)
+    
+    print("Select filename:")
+    dfile=read()
+    
+    dpath=fs.combine(dcat,dfile)
+    
+    if fs.exists(dpath)==false then
+        SaveFile()
+    else
+        print("File already exists! Try again? [y/N]")
+        local event,p1=os.pullEvent("key")
+        if (p1==20) or (p1==21) then
+            Download()
+        else
+            rednet.send(p1,"@rftpdeny")
+            Menu()
+        end
+    end
+end
+
+function SaveFile()
+    local plik=fs.open(dpath,"w")
+    rednet.send(p1,"@rftpagree")
+    local event,p1,p2
+    repeat
+        event,p1,p2=os.pullEvent("rednet_message")
+    until p1==sender
+    if p2~="@rftpend" then
+        plik.write(p2)
+    end
+    os.startTimer(10)
+    while true do
+        local event,p1,p2=os.pullEvent()
+        if event=="rednet_message" and p1==sender and p2=="@rftpend" then
+            write("Transfer completed! ")
+            break
+        elseif event=="timer" then
+            write("Timed out! Check the file. ")
+            break
+        end
+    end
+    plik.close()
+    print("Any key to continue...")
+    os.pullEvent("key")
+    Menu()
+end
+
+function Clear()
+  windows.clearScreen(colors.black)
+  term.setTextColor(colors.white)
+  term.setCursorPos(1, 1)
+end
+
+Main()
