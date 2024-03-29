@@ -1,0 +1,69 @@
+serverid = 630
+rednet.open("top")
+
+local args = {...}
+
+if args[1] == "send" or args[1] == "put" then
+    if 1>#args or #args>3 then
+        print("Usage:\n "..program.." put <local_file>")
+        return
+    end
+    if not fs.exists(shell.resolve(args[2])) or fs.isDir(shell.resolve(args[2])) then
+        printError("No such file!")
+        return
+    end
+    theirFile=fs.open(shell.resolve(args[2]),"r")
+    if not args[3] then args[3] = args[2] end
+    rednet.send(serverid,"@put~!DSX!~"..args[3].."~!DSX!~"..theirFile.readAll())
+    theirFile.close()
+   --g get()
+elseif args[1] == "get" then
+    if #args == 3 then
+        args[4] = args[3]
+        args[3] = args[2]
+        args[2] = os.getComputerID()
+    end
+    if #args < 3 then
+        print("Usage:\n '..program..' get [id] <server_file> <local_name>")
+        return
+    end
+    rednet.send(serverid,"@get~!DSX!~"..args[2].."~!DSX!~"..args[3])
+    repeat
+        id,msg = rednet.receive(5)
+    until id == serverid or id == nil
+    if not id or not msg then error("Cannot Reach Server",0) end
+    theirFile=fs.open(args[4],"w")
+    if not theirFile then error("Could not open "..args[4].."! Try rebooting the computer.",0) end
+    theirFile.write(msg)
+    theirFile.close()
+    print("Saved to: "..args[4])
+elseif args[1] == "dir" or args[1] == "list" or args[1] == "ls" then
+    if #args > 2 then
+        print("Usage:\n "..program.." dir [id]")
+        return
+    end
+    if args[2] then
+        rednet.send(serverid,"@list~!DSX!~"..args[2])
+    else
+        rednet.send(serverid,"@list~!DSX!~")
+    end
+    repeat
+        id,msg = rednet.receive(5)
+    until id == serverid or id == nil
+    if id == nil then print("Cannot Reach Server") return end
+    textutils.pagedTabulate(textutils.unserialize(msg))
+elseif args[1] == "del" or args[1] == "delete" then
+    if #args > 2 or #args==1 then
+        print("Usage:\n "..program.." del <server_file>\nNote: Cannot delete multiple files.")
+        return
+    end
+    rednet.send(serverid,"@delete~!DSX!~"..args[2])
+    get()
+else
+    print("DropX Usage:")
+    print(program.." put <local_file>")
+    print(program.." get [id] <server_file> <local_name>")
+    print(program.." dir [id]")
+    print(program.." del <server_file>")
+    print("Made by: willwac")
+end

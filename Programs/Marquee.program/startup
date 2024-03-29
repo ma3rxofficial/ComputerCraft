@@ -1,0 +1,82 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+fs=SpeedOS.fs
+os.loadAPI("SpeedAPI/windows")
+os.loadAPI("SpeedAPI/config")
+os.loadAPI("SpeedAPI/peripheral")
+ 
+windows.clearScreen(colors.lightBlue)
+ 
+local m = peripheral.find("monitor", true)
+if m == nil then
+        windows.error("This program requires external advanced monitor.")
+        return 0
+end
+m=peripheral.wrap(m)
+if not m.isColor() then
+        windows.error("This program will work only with ADVANCED monitor.")
+        return 0
+end
+ 
+--------------------------------
+ 
+local args = {}
+ 
+if not fs.exists("System/Marquee") then
+	fs.makeDir("System/Marquee")
+end
+local pathToConfig = "/System/Marquee/userdata.cfg"
+ 
+local function askAndRemember(p1,p2,p3,p4)
+        local data = windows.input("auto","auto","Marquee",12,{"String",p1},{"Scale",p2},{"Delay",p3},{"Speed",p4})
+        config.write(pathToConfig,"string",data[1])
+        config.write(pathToConfig,"scale",data[2])
+        config.write(pathToConfig,"delay",data[3])
+        config.write(pathToConfig,"speed",data[4])
+        args[1],args[2],args[3],args[4] = data[1],data[2],data[3],data[4]
+end
+ 
+if fs.exists(pathToConfig) then
+        args[1]=config.read(pathToConfig,"string")
+        args[2]=config.read(pathToConfig,"scale")
+        args[3]=config.read(pathToConfig,"delay")
+        args[4]=config.read(pathToConfig,"speed")
+ 
+        askAndRemember(args[1],args[2],args[3],args[4])
+else
+        askAndRemember("Hello world, bitches!","5","10","0.1")
+end
+ 
+windows.clearScreen(colors.lightBlue)
+ 
+ 
+---------------------------------
+ 
+m.setTextScale(tonumber(args[2]))
+local xSize, ySize = m.getSize()
+ 
+local function display()
+        m.setBackgroundColor(colors.black)
+        m.setTextColor(colors.white)
+        m.clear()
+ 
+        local str=args[1]
+ 
+        str = " "..str .. string.rep(" ",tonumber(args[3]))
+ 
+        while true do
+         str = string.sub(str, 2, -1) .. string.sub(str, 1, 1)
+         m.setCursorPos(math.ceil(xSize/2-#str/2), math.ceil(ySize/2))
+         m.write(str)
+         sleep(tonumber(args[4]))
+        end
+end
+ 
+local function govno()
+        windows.attention({"Program started!"},{"Press OK to quit."})
+        m.clear()
+        SpeedOS.Close()
+end
+ 
+parallel.waitForAny(govno,display)

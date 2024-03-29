@@ -1,0 +1,40 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/config")
+
+if not peripheral.find("modem") then
+  windows.clearScreen(colors.white)
+  windows.error("You need wireless modem!")
+  SpeedOS.Close()
+end
+
+rednet.open(peripheral.find("modem"))
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+
+local pathToConfig = "System/DiceBlock.settings"
+local bundleSide = config.read(pathToConfig, "bundleOutput")
+
+while true do
+i, s = rednet.receive()
+  if s == "DICE%START" then     --Your command and the ID of the transmitter.
+      local n = math.random(6)
+      term.write(n)
+      cell = {}
+        cell[1] = colors.combine(colors.yellow)
+        cell[2] = colors.combine(colors.orange, colors.white)
+        cell[3] = colors.combine(colors.gray, colors.yellow, colors.pink)
+        cell[4] = colors.combine(colors.gray, colors.magenta, colors.lime, colors.pink)
+        cell[5] = colors.combine(colors.gray, colors.magenta, colors.lime, colors.pink, colors.yellow)
+        cell[6] = colors.combine(colors.gray, colors.magenta, colors.white, colors.orange, colors.lime, colors.pink)
+
+     numb = cell[n]
+     rs.setBundledOutput(bundleSide, 0)
+     sleep(1)
+     rs.setBundledOutput(bundleSide, numb)
+  end
+end

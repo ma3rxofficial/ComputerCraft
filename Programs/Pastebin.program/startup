@@ -1,0 +1,93 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+fs=SpeedOS.fs
+SpeedOS.LoadAPI("/SpeedAPI/SpeedGUI")
+SpeedOS.LoadAPI("/SpeedAPI/lddfm")
+
+SpeedOS.ToolBarColour = colours.lightGrey
+SpeedOS.ToolBarTextColour = colours.white
+
+term.setBackgroundColor(colors.gray)
+term.clear()
+term.setCursorPos(1, 1)
+term.setCursorPos(18, 2)
+print("Pastebin client")
+
+function download()
+
+  term.setBackgroundColor(colors.gray)
+  term.clear()
+  term.setTextColor(colors.white)
+  term.setCursorPos(2, 2)
+  
+  print("Enter code: ")
+  term.setCursorPos(25, 2)
+  term.setBackgroundColor(colors.lightGray)
+  term.setTextColor(colors.white)
+  print("          ")
+  
+  term.setTextColor(colors.white)
+  term.setCursorPos(25, 2)
+  code = io.read()
+
+  term.setBackgroundColor(colors.gray)
+  term.setTextColor(colors.white)
+  term.setCursorPos(2, 4)
+  
+  print("Enter filename: ")
+  term.setCursorPos(25, 4)
+  term.setBackgroundColor(colors.lightGray)
+  term.setTextColor(colors.white)
+  print("          ")
+  
+  term.setTextColor(colors.white)
+  term.setCursorPos(25, 4)
+  fn = io.read()
+  
+  term.setBackgroundColor(colors.gray)
+  term.setTextColor(colors.lime)
+  term.setCursorPos(2, 6)
+  shell.run("pastebin get "..tostring(code).." "..tostring(fn))
+  
+  sleep(1)
+  term.setTextColor(colors.white)
+  term.setBackgroundColor(colors.black)
+  term.clear()
+  OneOS.Close()
+end
+
+function upload()
+
+  term.setBackgroundColor(colors.gray)
+  term.clear()
+  term.setTextColor(colors.white)
+  term.setCursorPos(2, 2)
+  
+  print("Enter filename: ")
+  term.setCursorPos(25, 2)
+  term.setBackgroundColor(colors.lightGray)
+  term.setTextColor(colors.white)
+  print("          ")
+  
+  term.setTextColor(colors.white)
+  term.setCursorPos(25, 2)
+  f_n = tostring(lddfm.makeMenu())
+
+  term.setBackgroundColor(colors.gray)
+  term.setTextColor(colors.lime)
+  term.setCursorPos(2, 4)
+  term.clear()
+
+  shell.run("pastebin put "..tostring(f_n))
+  
+  sleep(3)
+  term.setTextColor(colors.white)
+  term.setBackgroundColor(colors.black)
+  term.clear()
+  OneOS.Close()
+end
+
+SpeedGUI.gui.button.add("Upload to pastebin",upload,15,5,2,3,colors.white,colors.orange)
+SpeedGUI.gui.button.add("Download from pastebin",download,13,9,2,3,colors.white,colors.orange)
+SpeedGUI.start()

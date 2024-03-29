@@ -1,0 +1,31 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+fs=SpeedOS.fs
+os.loadAPI("SpeedAPI/graph")
+os.loadAPI("SpeedAPI/peripheral")
+
+local tab = 0
+
+--our update function
+function update()
+  tab = tab + 1
+  return tab
+end
+
+--our graph declaration.  We use nil as the gradientTable parameter, so it will use the default red-green gradient.
+local graphInstance
+
+if peripheral.find("monitor") then
+  graphInstance = graph.new(peripheral.wrap(peripheral.find("monitor")), update, "Testing", nil, 0, 100)
+
+else
+  graphInstance = graph.new(term, update, "Testing", nil, 0, 100)
+
+end
+
+while true do
+  --update the graph
+  graphInstance:draw()
+  sleep(0.5)
+end

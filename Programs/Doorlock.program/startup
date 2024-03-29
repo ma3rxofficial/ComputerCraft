@@ -1,0 +1,80 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/SpeedGUI")
+SpeedOS.LoadAPI("SpeedAPI/config")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+
+if not peripheral.find("modem") then
+  windows.clearScreen(colors.white)
+  windows.error("You need wireless modem!")
+  SpeedOS.Close()
+end
+
+rednet.open(peripheral.find("modem"))
+
+pathToConfig = "System/Doorlock.settings"
+
+door_side = config.read(pathToConfig, "side")
+PDA_s = config.read(pathToConfig, "PDA")
+
+function openDoor()
+	rs.setOutput(door_side, true)
+	sleep(6)
+	rs.setOutput(door_side, false)
+end
+
+function wait()
+	term.setCursorPos(1, 1)
+	term.setTextColor(colors.green)
+	print("["..SpeedText.time().."] Waiting for clients...")
+	while true do
+		event, id, msg, dist = os.pullEvent()
+		if event == "rednet_message" then
+			if id == tonumber(PDA_s) then
+				if msg == "DOORLOCK%OPEN" then
+					term.setTextColor(colors.blue)
+					print("["..SpeedText.time().."] "..tostring(id).." opened door!")
+					openDoor()
+				end
+			end
+		end
+	end
+end
+
+function PDA()
+	eblo = windows.input("auto", "auto", "New PDA", 10, {"Id", ""}, {"Redstone side", ""})
+	pdaID = tonumber(eblo[1])
+	side = tostring(eblo[2])
+	config.write(pathToConfig, "PDA", tostring(pdaID))
+	config.write(pathToConfig, "side", side)
+	door_side = config.read(pathToConfig, "side")
+	PDA_s = config.read(pathToConfig, "PDA")
+	term.setCursorPos(1, 18)
+	term.setTextColor(colors.green)
+	term.setBackgroundColor(colors.white)
+	term.write("Sucessfuly saved to config!")
+	sleep(1)
+	draw()
+end	
+
+
+function draw()
+	windows.fadeIn(0)
+	--windows.clearScreen(colors.white)
+	term.setTextColor(colors.black)
+	SpeedText.cPrint("DoorLock")
+	sleep(0.5)
+	windows.clearScreen(colors.white)
+	pizda = windows.select({"Welcome to DoorLock!"},{"What you will do?"},{"Wait",colors.lightGray,colors.black},{"New PDA",colors.lightBlue,colors.black})
+	if pizda == "Wait" then
+		wait()
+	else
+		PDA()
+	end
+end
+
+draw()

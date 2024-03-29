@@ -1,0 +1,978 @@
+--[[
+	Program: HexIt
+	Created by: Lewisk3/Redxone
+	
+	Terms of use ( 6/23/17 ):
+		Do not edit this program and re-distribute the edit on the forums.
+		Use on ROM hacking is soley the responibility of the user.
+		Do not copy the program and try to push it off as your own.
+	
+	Have fun!
+--]]
+ 
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+fs = SpeedOS.fs
+
+-- Monochrome support (WIP)
+if(not term.isColor())then
+  colors.orange    = colors.black
+  colors.magenta   = colors.white
+  colors.lightBlue = colors.lightGray
+  colors.yellow    = colors.white
+  colors.lime      = colors.white
+  colors.pink      = colors.white
+  colors.cyan      = colors.white
+  colors.purple    = colors.white
+  colors.blue      = colors.gray
+  colors.brown     = colors.white
+  colors.green     = colors.gray
+  colors.red       = colors.gray
+end
+
+os.loadAPI("/SpeedAPI/lddfm")
+local w, h = term.getSize()
+--local w,h = 26, 20
+local validHex = "0123456789abcdef"
+local running = true
+local barsize = 4
+local baroffs = 3
+local writeMode = "hex"
+local funcKey = false
+_currentMemory = 0
+view_w = (math.floor(w/1.40)-barsize)+1
+local isEvenRes = ((w-view_w)%3) <= 0
+if( not isEvenRes )then
+	baroffs = 2
+end
+_isPocket = (w == 26)
+_hexLineSize = math.floor(view_w/3)
+_hexPageSize = view_w
+_hexData = ""
+_hexSelected = 1
+_hexFile = ""
+_hexSize = 1
+_hexEditMode = "return"
+_hexBuffer = ""
+_hexLastByte = 0
+_searches = {}
+_lastSearch = {
+	mode = "hex",
+	dir  = "down",
+	data = "00",
+}
+_hexAddress = ""
+local dropColors = {colors.black,colors.white,colors.blue,colors.black}
+
+hexedit_buttons = {
+} 
+
+hexedit_dropdowns = {
+}
+
+if(_isPocket)then
+	table.remove(hexedit_menus,3)
+	hexedit_menus[3].x = 13
+end
+
+
+
+function searchFile(mode,dir,bytes)
+	--error(mode .. ": " .. dir .. " :> " .. bytes)
+	if(bytes == nil)then return false end
+	if(mode == "hex")then
+	-- Convert hex string to Ascii, for ease of use using string.find.
+		local charStr = ""
+		hexStr = bytes:gsub("%s","")
+		for i = 1, #hexStr, 2 do
+			local charbyte = tonumber(hexStr:sub(i,i+1),16)
+			if(charbyte == nil)then
+				showBox("Find Hex","Invalid search.","key",21,9) 
+				refreshScreen()
+				return
+			end
+			charStr = charStr .. string.char(charbyte)
+		end
+		local findex
+		if(dir == "down")then
+			findex, _ = _hexData:find(charStr,_hexSelected)
+			if(checkJump(findex))then -- We are already here.
+				findex, _ = _hexData:find(charStr,_hexSelected+#charStr+1)
+			end
+		elseif("up")then
+			findex, _ = (_hexData:sub(1,_hexSelected)):reverse():find(charStr:reverse())
+			if(findex ~= nil)then
+				findex = (#(_hexData:sub(1,_hexSelected))+1-findex)-(#charStr-1)
+				if(checkJump(findex))then -- We are already here.
+					findex, _ = (_hexData:sub(1,_hexSelected-1)):reverse():find(charStr:reverse())
+					findex = (#(_hexData:sub(1,_hexSelected-1))+1-findex)-(#charStr-1)
+				end
+			end
+		else
+			showBox("Invalid search","Invalid mode: \n" .. dir .. "\n  Press any key. ","key",21,10)
+			return false
+		end
+		if(findex ~= nil)then
+			if(showBox("Jump to location?","Jump to hex \nfound at:" .. toHex(findex) .. "?","yesno",21,10) == "yes")then 
+				jumpToByte(findex)
+				writeMode = "hex"
+			end
+		else
+			showBox("Find Hex","Not found: \n" .. hexStr:sub(1,20) .. "\n   Press any key. ","key",21,10)
+		end
+		refreshScreen()
+	elseif(mode == "ascii")then
+		local findex
+		if(dir == "down")then
+			findex, _ = _hexData:find(bytes,_hexSelected)
+			if(checkJump(findex))then -- We are already here.
+				findex, _ = _hexData:find(bytes,_hexSelected+#bytes+1)
+			end
+		elseif("up")then
+			findex, _ = (_hexData:sub(1,_hexSelected)):reverse():find(bytes:reverse())
+			if(findex ~= nil)then
+				findex = (#(_hexData:sub(1,_hexSelected))+1-findex)-(#bytes-1)
+				if(checkJump(findex))then -- We are already here.
+					findex, _ = (_hexData:sub(1,_hexSelected-1)):reverse():find(bytes:reverse())
+					findex = (#(_hexData:sub(1,_hexSelected-1))+1-findex)-(#bytes-1)
+				end
+			end
+		else
+			showBox("Invalid search","Invalid mode: \n" .. dir .. "\n   Press any key. ","key",21,10)
+			return false
+		end
+			if(findex ~= nil)then
+				if(showBox("Jump to location?","Jump to string \nfound at:" .. toHex(findex) .. "?","yesno",21,10) == "yes")then 
+					jumpToByte(findex)
+					writeMode = "char"
+				end
+			else
+				showBox("Find Ascii","Not found: \n" .. bytes:sub(1,20) .. "\n   Press any key. ","key",21,10)
+			end
+		refreshScreen()
+	else
+		showBox("Invalid search","Invalid mode: \n" .. mode .. "\n   Press any key. ","key",21,10)
+	end
+	_lastSearch.dir = dir
+	_lastSearch.mode = mode
+	_lastSearch.data = bytes
+end
+
+function getScreenPage(val)
+	return math.ceil(val / (_hexLineSize * (h-3)))
+end
+
+function exitHexIt()
+	running = false
+	term.setTextColor(colors.white)
+	term.setBackgroundColor(colors.black)
+	term.clear()
+	term.setCursorPos(1, 1)
+end
+
+
+function flashButton(tc,bc,time,x,y,graphic,nt,nb)
+	term.setCursorPos(x,y)
+	term.setTextColor(tc)
+	term.setBackgroundColor(bc)
+	write(graphic)
+	sleep(time)
+	term.setCursorPos(x,y)
+	term.setTextColor(nt)
+	term.setBackgroundColor(nb)
+	write(graphic)
+end
+
+function seekPage(pg)
+	if(#_hexBuffer > 0)then _hexBuffer = "" end
+	_currentMemory = _currentMemory + (pg*_hexLineSize * (h-3))
+	if(_currentMemory < 0)then _currentMemory = 0 end
+	if(getScreenPage(_currentMemory) >= getScreenPage(_hexSize))then 
+	_currentMemory = (getScreenPage(_hexSize)-1)*_hexLineSize * (h-3)
+	end
+	redrawData()
+end
+function seek(mem)
+	if(_currentMemory + mem*_hexLineSize < 0)then return false end
+	if(_currentMemory + mem*_hexLineSize > _hexSize)then return false end
+	if(#_hexBuffer > 0)then _hexBuffer = "" end
+	_currentMemory = _currentMemory + (mem*_hexLineSize)
+	if(_currentMemory < 0)then _currentMemory = 0 end
+	if(getScreenPage(_currentMemory) >= getScreenPage(_hexSize))then 
+		_currentMemory = (getScreenPage(_hexSize)-1)*_hexLineSize * (h-3) 
+	end
+	redrawData()
+end
+
+function toHex(dec)
+    local hex = ""
+    local hexkey = "0123456789ABCDEF"
+    local rim
+    if(dec == nil)then
+    	error("Failed to load file: " .. _hexFile .. " at " .. _hexLastByte)
+    end
+    if(dec == 0)then hex = "0" end
+    while dec > 0 do
+       rim = math.floor(dec%16)
+       hex = hexkey:sub(rim+1,rim+1) .. hex
+       dec = math.floor(dec/16)
+    end
+    if(#hex == 1)then
+      hex = "0" .. hex
+    end
+    if(dec < 0)then
+      local num = 256 + dec
+      return toHex(num)
+    end
+    return hex
+end
+
+function toBin (dec)
+    -- Convert to base 10 soooo easy
+    local bin = ""
+    local binkey = "01"
+    local rim
+    if(type(dec) == "string")then error("toBin -> Invalid type: " .. dec) end
+    while dec > 0 do
+       rim = math.floor(dec%2)
+       bin = binkey:sub(rim+1,rim+1) .. bin
+       dec = math.floor(dec/2)
+    end
+    if(#bin < 8)then
+      bin = string.rep("0",8-#bin) .. bin
+    end
+    return bin
+  end
+
+
+function drawGUI()
+	term.setBackgroundColor(colors.white)
+	term.clear()
+	paintutils.drawLine(1,1,w,1,colors.gray)
+	paintutils.drawLine(1,2,w,2,colors.lightGray)
+	term.setTextColor(colors.lightGray)
+	term.setBackgroundColor(colors.gray)
+	term.setCursorPos(1,1)
+	paintutils.drawLine(1+barsize,3,1+barsize,h,colors.lightGray)
+	paintutils.drawLine(2+barsize,3,2+barsize,h,colors.black)
+	-- 3 / 2 = 1.5 "#(LL ) = 3" div 2 because of string.reps
+	paintutils.drawLine(barsize+(view_w)+baroffs,3,barsize+(view_w)+baroffs,h,colors.lightGray)
+end
+
+function loadFile(file)
+	if(not fs.exists(file))then error("HexEditCC: error -> File doesn't exist (" .. file .. ")." ) end
+	-- Load data into vars
+	_currentMemory = 0
+	_hexData = ""
+	_hexSelected = 1
+	_hexFile = ""
+	_hexSize = 1
+	_hexBuffer = ""
+	_hexLastByte = 0
+	f = fs.open(file,"rb")
+	_hexFile = file
+	for byte in f.read do
+		_hexData = _hexData .. string.char(byte)
+	end
+	f.close()
+	if(#_hexData == 0)then _hexData = string.char(0) end
+	_hexSize = #_hexData
+end
+
+function newFile(file,size)
+	if(fs.exists(file))then error("HexEditCC: error -> File already exists (" .. file .. ")." ) end
+	-- Load data into vars
+	_currentMemory = 0
+	_hexData = ""
+	_hexSelected = 1
+	_hexFile = ""
+	_hexSize = 1
+	_hexBuffer = ""
+	_hexLastByte = 0
+	_hexFile = file
+	_hexData = _hexData .. string.rep(string.char(0),size)
+	if(#_hexData == 0)then _hexData = string.char(0) end
+	_hexSize = #_hexData
+end
+
+function moveSelectedByte(dir)
+	drawSelectedByte(1)
+	_hexSelected = _hexSelected + dir
+	if(_hexSelected > _hexSize)then _hexSelected = _hexSize end
+	if(_hexSelected < 1)then _hexSelected = 1 end
+	if( math.ceil((_hexSelected-_currentMemory)/_hexLineSize) > h-2)then
+		seek(1)
+	end
+	if( math.ceil((_hexSelected-_currentMemory)/_hexLineSize) <= 0)then
+		seek(-1)
+	end
+	drawSelectedByte()
+end
+
+function getByte(byte)
+	if(_hexData == "")then return "00" end
+	_hexLastByte = byte
+	if(byte > #_hexData)then return nil end
+	return toHex(string.byte(_hexData:sub(byte,byte)))
+end
+
+function getChar(byte)
+	if(_hexData == "")then return "00" end
+	_hexLastByte = byte
+	if(byte > #_hexData)then return nil end
+	return _hexData:sub(byte,byte):gsub("\n"," ")
+end
+
+function setByte(addr,byte)
+	local byte = string.char(tonumber(byte,16))
+	_hexData = _hexData:sub(1,addr-1) .. byte .. _hexData:sub(addr+1,-1)
+	_hexBuffer = ""
+	moveSelectedByte(1)
+end
+
+function setChar(addr,byte)
+	_hexData = _hexData:sub(1,addr-1) .. byte .. _hexData:sub(addr+1,-1)
+	_hexBuffer = ""
+	moveSelectedByte(1)
+end
+
+function insertBytes(addr,bytes)
+	local ovrhex = _hexData:sub(1,addr) .. bytes .. _hexData:sub(addr,-1)
+	_hexData = ovrhex
+	_hexSize = #_hexData
+	moveSelectedByte(#bytes)
+end
+
+function checkJump(addr)
+	if(addr == nil)then 
+		return false 
+	end
+	local offs = 1
+
+	if(addr > _hexLineSize)then
+		offs = math.floor(addr%_hexLineSize)
+		addr = math.floor(addr/_hexLineSize)
+		return (_hexSelected == ((addr)*_hexLineSize) + offs)
+	else
+		return (_hexSelected == offs)
+	end
+end
+
+function jumpToByte(addr)
+	if(addr == nil)then 
+		refreshScreen()
+		return false 
+	end
+	local offs = 1
+	drawSelectedByte(1)
+	drawGUI()
+
+	if(addr > _hexLineSize)then
+		offs = math.floor(addr%_hexLineSize)
+		addr = math.floor(addr/_hexLineSize)
+		_hexSelected = ((addr)*_hexLineSize) + offs
+		if(_hexSelected > _hexSize)then 
+			_hexSelected = 0 
+			redrawData()
+			showBox("Notice","End of file reached.","key",21,3)
+			drawGUI()
+			return false
+		else
+			_currentMemory = ((addr)*_hexLineSize)
+		end
+	else
+		offs = addr
+		_currentMemory = 0
+		_hexSelected = offs
+	end
+	
+	drawSelectedByte()
+	redrawData()
+	-- Re-align memory
+	seek(1)
+	seek(-1)
+	return true
+end
+
+function printLn(txt)
+    local lines={}
+    local i=1
+    for str in string.gmatch(txt, "([^\n]+)") do
+        lines[i] = str
+        i = i + 1
+    end
+    for i = 1, #lines do
+    	local _x, _y = term.getCursorPos()
+    	write(lines[i])
+    	term.setCursorPos(_x, _y+1)
+    end
+end
+
+function dropMenu(sx,sy,mcolors,buttons,textoffs)
+	local inmenu = true
+	if(textoffs == nil)then textoffs = 0 end
+	menuDrop = {
+		mx = sx,
+		my = sy,
+		mw = 1,
+		txtoff = textoffs,
+		tcol = mcolors[1],
+		bcol = mcolors[2],
+		ftcol = mcolors[3],
+		fbcol = mcolors[4],
+		menu = buttons, -- Menu structure: {txt="Test",call=function() do stuff! end}
+		mh = #buttons,
+		draw = function(self)
+				term.setTextColor(self.tcol)
+				term.setBackgroundColor(self.bcol)
+				term.setCursorPos(self.mx,self.my)
+				-- Get longest length of menu for size
+				for i = 1, #self.menu do
+					if(self.mw < (#self.menu[i].txt)+self.txtoff)then 
+					   self.mw = (#self.menu[i].txt)+self.txtoff 
+					end
+				end
+				--paintutils.drawFilledBox(self.mx-1,self.my+1,self.mw+self.mx,self.mh+self.my+2,colors.black)
+				--paintutils.drawFilledBox(self.mx,self.my,self.mw+self.mx+1,self.mh+self.my+1,self.bcol)
+				-- Commence drawing!
+				for i = 1, #self.menu do
+					term.setCursorPos(self.mx+self.txtoff,self.my+i)
+					write(self.menu[i].txt)
+				end
+		end,
+		clickbutton = function(self,time,buttonindex)
+			if(self.menu[buttonindex].call ~= nil)then
+				term.setTextColor(self.ftcol)
+				term.setBackgroundColor(self.fbcol)
+				term.setCursorPos(self.mx+self.txtoff,self.my+buttonindex)
+				write(self.menu[buttonindex].txt)
+				sleep(time)
+				term.setTextColor(self.tcol)
+				term.setBackgroundColor(self.bcol)
+				term.setCursorPos(self.mx+self.txtoff,self.my+buttonindex)
+				write(self.menu[buttonindex].txt)	
+				self.menu[buttonindex].call()
+				inmenu = false
+				return
+			end
+		end,
+		update = function(self,ev)
+			if(inmenu == false)then
+				return false
+			end
+			if(ev[1] == "mouse_click")then
+				local mb, mx, my = ev[2], ev[3], ev[4]
+				if(mb == 1)then
+					if(mx >= self.mx and mx < self.mx+self.mw and my >= self.my and my <= self.my+self.mh+1)then
+						if(mx >= self.mx+self.txtoff)then
+							if(self.menu[(my-self.my)])then
+								self:clickbutton(0.1,(my-self.my))
+							end
+						end
+					else
+						inmenu = false
+						return false
+					end
+				end
+			end
+			return true
+		end,
+	}
+	menuDrop:draw()
+	while inmenu do
+		if(not menuDrop:update({os.pullEvent()}))then
+			return
+		end
+	end
+end
+
+function showBox(title,text,btype,bw,bh,ym,nm,hist)
+	local prevsearches = _searches
+	if(hist == nil)then
+		hist = false	
+	end
+	local midw, midh = math.floor(w/2), math.floor(h/2)
+--	paintutils.drawBox((midw-(bw/2))-1,(midh-(bh/2))+1,(midw+(bw/2))-1,midh+1, colors.black)
+--	paintutils.drawFilledBox(midw-(bw/2),midh-(bh/2),(midw+(bw/2)),midh, colors.lightGray)
+	paintutils.drawLine(midw-(bw/2),midh-(bh/2),(midw+(bw/2)),midh-(bh/2), colors.blue)
+	term.setTextColor(colors.white)
+	term.setBackgroundColor(colors.blue)
+	term.setCursorPos(midw-(bw/2)+1,(midh-(bh/2)))
+	write(title)
+	term.setTextColor(colors.white)
+	term.setBackgroundColor(colors.lightGray)
+	term.setCursorPos(midw-(bw/2),midh-(bh/2)+1)
+	printLn(text)
+	if(btype == "input")then
+		sleep(0.01) -- Cancel already pressed keys.
+		local readwin = window.create(term.current(),(midw-(bw/2))+1,midh-1,bw-1,1)
+		paintutils.drawLine((midw-(bw/2))+1,midh-1,(midw+(bw/2))-1,midh-1, colors.black)
+		term.setCursorPos((midw-(bw/2))+1,midh-1)
+		local _oldTerm = term.current()
+		term.redirect(readwin)
+		local res
+		if(hist == true)then 
+			 res = read(nil,_searches)
+			if((res ~= "" or res ~= nil))then
+				table.insert(_searches, res) 
+			end
+		else
+			 res = read()
+		end
+		term.redirect(_oldTerm)
+		term.setCursorPos((midw-(bw/2))+1,midh-1)
+		write(res:sub(1,bw-2))
+		return res
+	end
+	if(btype == "key")then os.pullEvent("key") end
+	if(btype == "inputmode")then
+		sleep(0.01) -- Cancel already pressed keys.
+		paintutils.drawLine((midw-(bw/2))+1,midh-3,(midw+(bw/2))-1,midh-3, colors.black)
+		if(ym == nil)then ym = "Yes" end
+		if(nm == nil)then nm = "No" end
+		paintutils.drawLine((midw-(bw/2))+1,midh-1,midw-2,midh-1, colors.green)
+		term.setCursorPos((((midw-(bw/2))+1+(midw-2))/2)-math.floor( (#ym+3)/2),midh-1)
+		write("1. " .. ym)
+		paintutils.drawLine(midw+1,midh-1,(midw+(bw/2))-1,midh-1, colors.red)
+		term.setCursorPos(((midw+1+(midw+(bw/2))-1)/2)-math.floor( (#nm+3)/2),midh-1,midh-1)
+		write("2. " .. nm)
+		term.setBackgroundColor(colors.black)
+		term.setCursorPos((midw-(bw/2))+1,midh-3)
+		local readwin = window.create(term.current(),(midw-(bw/2))+1,midh-3,bw-1,1)
+		local _oldTerm = term.current()
+		term.redirect(readwin)
+		local res
+		if(hist == true)then 
+			res = read(nil,_searches)
+			if((res ~= "" or res ~= nil))then
+				table.insert(_searches, res) 
+			end
+		else
+			res = read()
+		end
+		term.redirect(_oldTerm)
+		term.setCursorPos((midw-(bw/2))+1,midh-3)
+		write(res:sub(1,bw-2))
+		
+		if(res == nil or res == "")then return "" end
+		local rett = ""
+		local waiting = true
+		while waiting do
+			local e,b,mx,my = os.pullEvent()
+			if(e == "mouse_click")then 
+				if(mx >= (midw-(bw/2))+1 and mx <= midw-2 and my == midh-1)then -- Yes
+					paintutils.drawLine((midw-(bw/2))+1,midh-1,midw-2,midh-1, colors.black)
+					term.setCursorPos((((midw-(bw/2))+1+(midw-2))/2)-math.floor( (#ym+3)/2),midh-1)
+					write("1. " .. ym)
+					sleep(0.1)
+					waiting = false
+					rett = ym
+				elseif(mx >= midw+1 and mx <= (midw+(bw/2))-1 and my == midh-1)then -- No
+					paintutils.drawLine(midw+1,midh-1,(midw+(bw/2))-1,midh-1, colors.black)
+					term.setCursorPos(((midw+1+(midw+(bw/2))-1)/2)-math.floor( (#nm+3)/2),midh-1,midh-1)
+					write("2. " .. nm)
+					sleep(0.1)
+					waiting = false
+					rett = nm
+				end
+			elseif(e == "key")then
+				if(b == keys.one or b == keys.numPad1 or b == keys.enter)then
+					paintutils.drawLine((midw-(bw/2))+1,midh-1,midw-2,midh-1, colors.black)
+					term.setCursorPos((((midw-(bw/2))+1+(midw-2))/2)-math.floor( (#ym+3)/2),midh-1)
+					write("1. " .. ym)
+					sleep(0.1)
+					waiting = false
+					rett = ym
+				elseif(b == keys.two or b == keys.numPad2 or b == keys.backspace)then
+					paintutils.drawLine(midw+1,midh-1,(midw+(bw/2))-1,midh-1, colors.black)
+					term.setCursorPos(((midw+1+(midw+(bw/2))-1)/2)-math.floor( (#nm+3)/2),midh-1,midh-1)
+					write("2. " .. nm)
+					sleep(0.1)
+					waiting = false
+					rett = nm
+				end
+			end
+		end
+		return res, string.lower(rett)
+	end
+	if(btype == "yesno")then
+		if(ym == nil)then ym = "Yes" end
+		if(nm == nil)then nm = "No" end
+		paintutils.drawLine((midw-(bw/2))+1,midh-1,midw-2,midh-1, colors.green)
+		term.setCursorPos((((midw-(bw/2))+1+(midw-2))/2)-math.floor( (#ym+3)/2),midh-1)
+		write("1. " .. ym)
+		paintutils.drawLine(midw+1,midh-1,(midw+(bw/2))-1,midh-1, colors.red)
+		term.setCursorPos(((midw+1+(midw+(bw/2))-1)/2)-math.floor( (#nm+3)/2),midh-1,midh-1)
+		write("2. " .. nm)
+		term.setBackgroundColor(colors.black)
+		term.setCursorPos((midw-(bw/2))+1,midh-3)
+		local waiting = true
+		while waiting do
+			local e,b,mx,my = os.pullEvent()
+			if(e == "mouse_click")then 
+				if(mx >= (midw-(bw/2))+1 and mx <= midw-2 and my == midh-1)then -- Yes
+					paintutils.drawLine((midw-(bw/2))+1,midh-1,midw-2,midh-1, colors.black)
+					term.setCursorPos((((midw-(bw/2))+1+(midw-2))/2)-math.floor( (#ym+3)/2),midh-1)
+					write("1. " .. ym)
+					sleep(0.1)
+					waiting = false
+					return string.lower(ym)
+				elseif(mx >= midw+1 and mx <= (midw+(bw/2))-1 and my == midh-1)then -- No
+					paintutils.drawLine(midw+1,midh-1,(midw+(bw/2))-1,midh-1, colors.black)
+					term.setCursorPos(((midw+1+(midw+(bw/2))-1)/2)-math.floor( (#nm+3)/2),midh-1,midh-1)
+					write("2. " .. nm)
+					sleep(0.1)
+					waiting = false
+					return string.lower(nm)
+				end
+			elseif(e == "key")then
+				if(b == keys.one or b == keys.numPad1 or b == keys.enter)then
+					paintutils.drawLine((midw-(bw/2))+1,midh-1,midw-2,midh-1, colors.black)
+					term.setCursorPos((((midw-(bw/2))+1+(midw-2))/2)-math.floor( (#ym+3)/2),midh-1)
+					write("1. " .. ym)
+					sleep(0.1)
+					waiting = false
+					return string.lower(ym)
+				elseif(b == keys.two or b == keys.numPad2 or b == keys.backspace)then
+					paintutils.drawLine(midw+1,midh-1,(midw+(bw/2))-1,midh-1, colors.black)
+					term.setCursorPos(((midw+1+(midw+(bw/2))-1)/2)-math.floor( (#nm+3)/2),midh-1,midh-1)
+					write("2. " .. nm)
+					sleep(0.1)
+					waiting = false
+					return string.lower(nm)
+				end
+			end
+		end
+	end
+	sleep(0.1)
+end
+
+
+function drawHexBuffer()
+	if( ((_hexSelected-_currentMemory)/view_w) <= h and math.ceil((_hexSelected-_currentMemory)/_hexLineSize) >= 1)then
+		if( math.ceil((_hexSelected-_currentMemory)/_hexLineSize) <= 1)then 
+			hy = 1 
+			hx = (_hexSelected-_currentMemory)*3
+		else
+			hy = math.ceil((_hexSelected-_currentMemory)/_hexLineSize)
+			hx = math.ceil((_hexSelected-_currentMemory)%_hexLineSize)*3
+			if(math.ceil((_hexSelected-_currentMemory)%_hexLineSize) == 0)then
+				hx = _hexLineSize*3
+			end
+		end
+		if(writeMode == "hex")then
+			if(not un)then
+				term.setTextColor(colors.white)
+				term.setBackgroundColor(colors.blue)
+			else
+				term.setTextColor(colors.lightGray)
+				term.setBackgroundColor(colors.black)
+			end
+			term.setCursorPos(hx+barsize,hy+2)
+			write("  ")
+			term.setCursorPos(hx+barsize,hy+2)
+			write(_hexBuffer)
+		elseif(writeMode == "char")then
+			if(not un)then
+				term.setTextColor(colors.lightGray)
+				term.setBackgroundColor(colors.orange)
+			else
+				term.setTextColor(colors.black)
+				term.setBackgroundColor(colors.white)
+			end
+			term.setCursorPos( (view_w+barsize+baroffs) + math.ceil(hx/3), hy+2)
+			write(_hexBuffer)
+		end
+	end
+end
+
+function drawSelectedByte(un)
+	if(#_hexBuffer > 0)then _hexBuffer = "" end
+	if(un == nil)then un = false end
+	local hx, hy = 1, 1
+	if( ((_hexSelected-_currentMemory)/view_w) <= h and math.ceil((_hexSelected-_currentMemory)/_hexLineSize) >= 1)then
+		if( math.ceil((_hexSelected-_currentMemory)/_hexLineSize) <= 1)then 
+			hy = 1 
+			hx = (_hexSelected-_currentMemory)*3
+		else
+			hy = math.ceil((_hexSelected-_currentMemory)/_hexLineSize)
+			hx = math.ceil((_hexSelected-_currentMemory)%_hexLineSize)*3
+			if(math.ceil((_hexSelected-_currentMemory)%_hexLineSize) == 0)then
+				hx = _hexLineSize*3
+			end
+		end
+		if(not un)then
+			term.setTextColor(colors.lightGray)
+			term.setBackgroundColor(colors.black)
+		else
+			term.setTextColor(colors.white)
+			term.setBackgroundColor(colors.lightGray)
+		end
+		local sideY = math.ceil((_hexSelected-_currentMemory)/_hexLineSize)
+		term.setCursorPos(1,sideY+2)
+		local onmem = _currentMemory+(_hexLineSize*(sideY-1))
+		write(string.rep(" ", 5-#toHex(onmem)) .. toHex(onmem))
+		if(not un)then
+			term.setTextColor(colors.lightGray)
+			term.setBackgroundColor(colors.blue)
+			if(writeMode == "char")then term.setBackgroundColor(colors.orange) end
+		else
+			term.setTextColor(colors.black)
+			term.setBackgroundColor(colors.white)
+		end
+		term.setCursorPos( (view_w+barsize+baroffs) + math.ceil(hx/3), hy+2)
+		write(getChar(_hexSelected))
+
+		if(not _isPocket)then
+			term.setBackgroundColor(colors.gray)
+			term.setTextColor(colors.lime)
+			term.setCursorPos(w-22,1)
+			local decByte = string.byte(_hexData:sub(_hexSelected,_hexSelected))
+			if(decByte == nil)then decByte = 0 end
+			write(toHex(math.min(_hexSelected,1048575)) .. "M|" .. toBin(decByte) .. "B|" .. string.rep("0",3-#tostring(decByte)) .. decByte .. "D ")
+		end
+
+		-- This must happen last needed due to the space after each hex
+		if(not un)then
+			term.setTextColor(colors.white)
+			term.setBackgroundColor(colors.blue)
+		else
+			term.setTextColor(colors.lightGray)
+			term.setBackgroundColor(colors.black)
+		end
+		term.setCursorPos(hx+barsize,hy+2)
+		write(getByte(_hexSelected))
+	end
+end
+
+function redrawData()
+	term.setTextColor(colors.black)
+	term.setBackgroundColor(colors.white)
+	term.setCursorPos(1,1)
+	if(#_hexData == 0)then
+		if(term.current)then term.current().setVisible(true) end
+		showBox("Error"," File too small. \n Inflating 1 byte. \n \n Press any key.","none",21,10)
+		sleep(0.1)
+		_hexData = string.char(0)
+		_hexSize = 1
+		os.pullEvent("key")
+	end
+	-- Draw mem bar
+	local onmem = _currentMemory
+	--local drawSize
+	if( _hexSize-(onmem) > h*(_hexLineSize))then drawSize = h*(_hexLineSize) else drawSize = (_hexSize-(onmem)) end
+	_hexPageSize = drawSize
+
+	for i = 1, math.ceil(drawSize/_hexLineSize) do
+			term.setCursorPos(1,i+2)
+			if(math.ceil((_hexSelected-_currentMemory)/_hexLineSize) == i)then
+				term.setTextColor(colors.lightGray)
+				term.setBackgroundColor(colors.black)
+			else
+				term.setTextColor(colors.white)
+				term.setBackgroundColor(colors.lightGray)
+			end
+			write(string.rep(" ", 5-#toHex(onmem)) .. toHex(onmem))
+			onmem = onmem + _hexLineSize
+	end
+	--paintutils.drawLine(1+barsize,3,1+barsize,h,colors.lightGray)
+	paintutils.drawLine(2+barsize,3,2+barsize,h,colors.black)
+	local ind = 1
+	term.setCursorPos(barsize+3,3)
+	for px = 1, drawSize do
+		if(ind > _hexLineSize)then
+			local _, _y = term.getCursorPos()
+			term.setCursorPos(barsize+3,_y+1)
+			ind = 1
+		end
+		local byte = getByte(px+_currentMemory)
+		if(byte ~= nil)then
+			if((px+_currentMemory) == _hexSelected)then
+				drawSelectedByte()
+				term.setTextColor(colors.lightGray)
+				term.setBackgroundColor(colors.black)
+			else
+				term.setTextColor(colors.lightGray)
+				term.setBackgroundColor(colors.black)
+				write(byte)
+			end
+			if( ((ind) < _hexLineSize) or isEvenRes)then
+				write(" ")
+			end
+		end
+		ind = ind + 1
+	end
+	ind = 1
+	term.setCursorPos(view_w+barsize+1+baroffs,3)
+	for px = 1, drawSize do
+		local _x, _y = term.getCursorPos()
+		if(_x > w)then
+			term.setCursorPos(view_w+barsize+1+baroffs,_y+1)
+			ind = 1
+		end
+		local byte = getChar(px+_currentMemory)
+		if(byte ~= nil)then
+			if((px+_currentMemory) == _hexSelected)then
+				_x, _y = term.getCursorPos()
+				drawSelectedByte()
+				term.setCursorPos(_x+1,_y)
+			else
+				term.setTextColor(colors.black)
+				term.setBackgroundColor(colors.white)
+				write(byte)
+			end
+		end
+		ind = ind + 1
+	end
+	-- 3 / 2 = 1.5 "#(LL ) = 3" div 2 because of string.reps
+	paintutils.drawLine(barsize+(view_w)+baroffs,3,barsize+(view_w)+baroffs,h,colors.lightGray)
+end
+
+function refreshScreen()
+	if(term.current)then term.current().setVisible(false) end
+	drawGUI()
+	redrawData()
+	drawSelectedByte()
+	if(term.current)then term.current().setVisible(true) end
+end
+
+function update(ev)
+	if(ev[1] == "mouse_scroll")then
+		if(ev[2] == -1)then -- UP
+			seek(-1)
+		elseif(ev[2] == 1)then -- DOWN
+			seek(1)
+		end
+	elseif(ev[1] == "key_up")then
+		if(ev[2] == keys.leftCtrl)then funcKey = false end
+	elseif(ev[1] == "key")then
+		local key = ev[2]
+
+		if(key == keys.leftCtrl)then
+			funcKey = true
+		end
+		if(key == keys.left)then
+			moveSelectedByte(-1)	
+		elseif(key == keys.right)then
+			moveSelectedByte(1)
+		elseif(key == keys.up)then
+			moveSelectedByte(-_hexLineSize)
+		elseif(key == keys.down)then
+			moveSelectedByte(_hexLineSize)
+		elseif(key == keys.pageUp)then
+			seekPage(-1)
+		elseif(key == keys.pageDown)then
+			seekPage(1)
+		elseif(key == keys.tab)then
+			if(writeMode == "hex")then writeMode = "char" else writeMode = "hex" end
+			refreshScreen()
+			-- No hold.
+			sleep(0.01)
+		elseif(key == keys.delete)then
+			if(_hexSelected > 0)then
+			 	_hexData = _hexData:sub(1,_hexSelected-1) .. _hexData:sub(_hexSelected+1,-1)
+			 	_hexSize = #_hexData
+			 	if(_hexSelected > _hexSize)then _hexSelected = _hexSize end
+			 	refreshScreen()
+			end
+		elseif(key == keys.backspace and writeMode == "char")then
+			moveSelectedByte(-1)
+		elseif(key == keys.enter and _hexEditMode == "return" )then
+			if(_hexBuffer ~= "")then
+				if(writeMode == "hex")then
+					setByte(_hexSelected,_hexBuffer)
+				elseif(writeMode == "char")then
+					setChar(_hexSelected,_hexBuffer)
+				end
+			else
+				if(writeMode == "hex")then
+					moveSelectedByte(1)
+				elseif(writeMode == "char")then
+					moveSelectedByte(1)
+				end
+			end
+		elseif(key == keys.f5)then
+			-- Repeat search
+			searchFile(_lastSearch.mode,_lastSearch.dir,_lastSearch.data)
+		end
+	elseif(ev[1] == "char")then
+		local char = ev[2]
+		if(writeMode == "hex")then
+			if(char ~= "[" and char ~= "." and char ~= "/")then -- Special chars that string.find doesnt "like"
+				if(validHex:find(string.lower(char)))then
+					if(#_hexBuffer == 2 )then
+						if(_hexEditMode == "return")then
+							_hexBuffer = "" 
+						end
+					end
+					_hexBuffer = _hexBuffer .. string.upper(char)
+					drawHexBuffer() 
+					if(#_hexBuffer == 2 and _hexEditMode == "fill")then
+						setByte(_hexSelected,_hexBuffer)
+						_hexBuffer = "" 
+					end
+				end
+			end
+		elseif(writeMode == "char")then
+			if(#_hexBuffer == 1 )then 
+			-- Handles fill mode and for newline clears it.
+				if(_hexEditMode == "return")then
+					_hexBuffer = "" 
+				end
+			end
+			_hexBuffer = _hexBuffer .. char
+			drawHexBuffer() 
+			if(#_hexBuffer == 1 and _hexEditMode == "fill")then
+				setChar(_hexSelected,_hexBuffer)
+				_hexBuffer = "" 
+			end
+		end
+	elseif(ev[1] == "mouse_click" or ev[1] == "mouse_drag")then
+		local mb, mx, my = ev[2], ev[3], ev[4]
+		local memIndex = 0
+		if(my == 1)then
+			if(mx == w and my == 1)then exitHexIt() end
+		elseif(my == 2)then
+			for i = 1, #hexedit_buttons do
+				if(mx >= hexedit_buttons[i].x and mx <= hexedit_buttons[i].x+#hexedit_buttons[i].graphic)then
+					flashButton(colors.white,colors.blue,0.1,hexedit_buttons[i].x,2,hexedit_buttons[i].graphic,colors.white,colors.lightGray)
+					hexedit_buttons[i].call()
+				end
+			end
+		end
+		
+		if(mb == 1 and mx > barsize+2 and my > 2 and mx < view_w+barsize+2)then
+			if( ((mx)-(barsize+2))%3 > 0)then
+				local newSelect = ((math.floor(mx/3)-1)+((my-3)*_hexLineSize)+_currentMemory)
+				if(getByte(newSelect) ~= nil)then
+					drawSelectedByte(1)
+					_hexSelected = newSelect
+					writeMode = "hex"
+					drawSelectedByte()
+				end
+			end
+		elseif(mb == 1 and mx >= view_w+barsize+1+baroffs and my > 2 and mx <= w)then
+			local newSelect = (mx-(view_w+barsize+baroffs)+((my-3)*_hexLineSize)+_currentMemory)
+			if(getByte(newSelect) ~= nil)then
+				drawSelectedByte(1)
+				_hexSelected = newSelect
+				writeMode = "char"
+				drawSelectedByte()
+			end
+		end
+	end
+
+end
+
+local tArgs = { ... }
+if(#tArgs == 0) then 
+	showBox("File","Loading\n"..lddfm.makeMenu(),"nomode",21,3)
+	loadFile(lddfm.makeMenu())
+	refreshScreen()
+end
+
+while running do
+	local e = {os.pullEvent()}
+	update(e)
+end

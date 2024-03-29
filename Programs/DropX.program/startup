@@ -1,0 +1,104 @@
+os.loadAPI("loader")
+
+SpeedOS = loader.OS()
+fs = SpeedOS.fs
+
+SpeedOS.LoadAPI("SpeedAPI/SpeedGUI")
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/lddfm")
+SpeedOS.LoadAPI("SpeedAPI/config")
+
+SpeedOS.ToolBarColour = colours.lightGrey
+SpeedOS.ToolBarTextColour = colours.white
+
+local pathToConfig = "System/DropX.settings"
+local serverid = tonumber(config.read(pathToConfig, "ServerID"))
+
+if not peripheral.find("modem") then
+  windows.clearScreen(colors.white)
+  windows.error("You need wireless modem!")
+  SpeedOS.Close()
+end
+
+function Upload()
+	windows.clearScreen(colors.gray)
+	SpeedText.cPrint("Enter filename:", 6)
+	filename = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
+	if filename == "" then Menu() end
+	if not fs.exists(filename) then windows.clearScreen(colors.white) windows.error("File not exists!") Menu() end
+	theirFile=fs.open(shell.resolve(filename),"r")
+	rednet.send(serverid,"@put~!DSX!~"..filename.."~!DSX!~"..theirFile.readAll())
+        theirFile.close()
+	windows.clearScreen(colors.gray)
+	SpeedText.cPrint("Sucessfuly uploaded file to server!")
+	sleep(3)
+	Menu()
+end
+
+function Get()
+	windows.clearScreen(colors.gray)
+	SpeedText.cPrint("Enter ID, where file is:", 6)
+	id = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
+	windows.clearScreen(colors.gray)
+	SpeedText.cPrint("Enter filename(on server):", 6)
+	filename = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
+	windows.clearScreen(colors.gray)
+	SpeedText.cPrint("Enter filename(to save):", 6)
+	filename2 = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
+	rednet.send(serverid,"@get~!DSX!~"..tostring(id).."~!DSX!~"..filename)
+	repeat
+          id,msg = rednet.receive(5)
+        until id == serverid or id == nil
+        if not id or not msg then error("Cannot Reach Server",0) end
+        theirFile=fs.open(filename2,"w")
+        if not theirFile then error("Could not open "..filename2.."! Try rebooting the computer.",0) end
+        theirFile.write(msg)
+        theirFile.close()
+	windows.clearScreen(colors.gray)
+	SpeedText.cPrint("Sucessfuly downloaded!")
+	sleep(3)
+	Menu()
+end
+
+function Delete()
+	windows.clearScreen(colors.gray)
+	SpeedText.cPrint("Enter filename:", 6)
+	filename = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
+
+	rednet.send(serverid,"@delete~!DSX!~"..filename)
+    windows.clearScreen(colors.gray)
+	SpeedText.cPrint("Sucessfuly deleted!")
+	sleep(3)
+	Menu()
+
+end
+
+function GetList()
+	windows.clearScreen(colors.gray)
+
+	rednet.send(serverid,"@list~!DSX!~")
+    repeat
+        id,msg = rednet.receive(5)
+    until id == serverid or id == nil
+    if id == nil then print("Cannot Reach Server") return end
+    term.setCursorPos(1, 1)
+    textutils.pagedTabulate(textutils.unserialize(msg))
+    while true do
+    	event, key = os.pullEvent()
+    	if event == "key" or event == "mouse_click" or event == "mouse_drag" then Menu() end
+    end
+end
+
+function Menu()
+	windows.clearScreen(colors.gray)
+	SpeedText.cPrint("DropX - rednet File Server")
+
+	SpeedGUI.gui.button.add("Upload to DropX",Upload,2,2,2,3,colors.white,colors.orange)
+	SpeedGUI.gui.button.add("Download from DropX",Get,28,2,2,3,colors.white,colors.orange)
+	SpeedGUI.gui.button.add("Delete files",Delete,17,11,2,3,colors.white,colors.orange)
+	SpeedGUI.gui.button.add("Get list of files from DropX",GetList,9,15,2,3,colors.white,colors.orange)
+	SpeedGUI.start()
+end
+
+Menu()

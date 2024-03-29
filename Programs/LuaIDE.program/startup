@@ -1,0 +1,1844 @@
+if OneOS then
+OneOS.ToolBarColour=colours.grey
+OneOS.ToolBarTextColour=colours.white
+end
+local l=io
+if OneOS then
+l=OneOS.IO
+end
+local c=fs
+if OneOS then
+c=OneOS.FS
+end
+local F="1.0"
+local G={...}
+local n,T=term.getSize()
+local e=2
+local B=20
+local E=true
+local m=.4
+local u=nil
+local t={}
+local s={}
+local d={}
+local S="luaide_distractionEvent"
+local M="https://raw.github.com/GravityScore/LuaIDE/master/luaide.lua"
+local C="/"..shell.getRunningProgram()
+local z="/.LuaIDE-Theme"
+local function b()return term.isColor and term.isColor()end
+local function p(e)
+local a,t=term.getSize()
+local t={replaceChar=nil,history=nil,visibleLength=nil,textLength=nil,
+liveUpdates=nil,exitOnKey=nil}
+if not e then e={}end
+for t,a in pairs(t)do if not e[t]then e[t]=a end end
+if e.replaceChar then e.replaceChar=e.replaceChar:sub(1,1)end
+if not e.visibleLength then e.visibleLength=a end
+local s,h=term.getCursorPos()
+local a=""
+local t=0
+local i=nil
+local function n(i)
+local o=0
+if e.visibleLength and s+t>e.visibleLength+1 then
+o=(s+t)-(e.visibleLength+1)
+end
+term.setCursorPos(s,h)
+local e=i or e.replaceChar
+if e then term.write(string.rep(e,a:len()-o))
+else term.write(a:sub(o+1,-1))end
+term.setCursorPos(s+t-o,h)
+end
+local function s(t,...)
+if type(e.liveUpdates)=="function"then
+local i,o=term.getCursorPos()
+local t,e=e.liveUpdates(a,t,...)
+if t==true and e==nil then
+term.setCursorBlink(false)
+return a
+elseif t==true and e~=nil then
+term.setCursorBlink(false)
+return e
+end
+term.setCursorPos(i,o)
+end
+end
+term.setCursorBlink(true)
+while true do
+local h,o,r,l,d,u=os.pullEvent()
+if h=="char"then
+local s=false
+if e.textLength and a:len()<e.textLength then s=true
+elseif not e.textLength then s=true end
+local i=true
+if not e.grantPrint and e.refusePrint then
+local t={}
+if type(e.refusePrint)=="table"then
+for a,e in pairs(e.refusePrint)do
+table.insert(t,tostring(e):sub(1,1))
+end
+elseif type(e.refusePrint)=="string"then
+for e in e.refusePrint:gmatch(".")do
+table.insert(t,e)
+end
+end
+for t,e in pairs(t)do if o==e then i=false end end
+elseif e.grantPrint then
+i=false
+local t={}
+if type(e.grantPrint)=="table"then
+for a,e in pairs(e.grantPrint)do
+table.insert(t,tostring(e):sub(1,1))
+end
+elseif type(e.grantPrint)=="string"then
+for e in e.grantPrint:gmatch(".")do
+table.insert(t,e)
+end
+end
+for t,e in pairs(t)do if o==e then i=true end end
+end
+if s and i then
+a=a:sub(1,t)..o..a:sub(t+1,-1)
+t=t+1
+n()
+end
+elseif h=="key"then
+if o==keys.enter then break
+elseif o==keys.left then if t>0 then t=t-1 n()end
+elseif o==keys.right then if t<a:len()then t=t+1 n()end
+elseif(o==keys.up or o==keys.down)and e.history then
+n(" ")
+if o==keys.up then
+if i==nil and#e.history>0 then
+i=#e.history
+elseif i>1 then
+i=i-1
+end
+elseif o==keys.down then
+if i==#e.history then i=nil
+elseif i~=nil then i=i+1 end
+end
+if e.history and i then
+a=e.history[i]
+t=a:len()
+else
+a=""
+t=0
+end
+n()
+local e=s("history")
+if e then return e end
+elseif o==keys.backspace and t>0 then
+n(" ")
+a=a:sub(1,t-1)..a:sub(t+1,-1)
+t=t-1
+n()
+local e=s("delete")
+if e then return e end
+elseif o==keys.home then
+t=0
+n()
+elseif o==keys.delete and t<a:len()then
+n(" ")
+a=a:sub(1,t)..a:sub(t+2,-1)
+n()
+local e=s("delete")
+if e then return e end
+elseif o==keys["end"]then
+t=a:len()
+n()
+elseif e.exitOnKey then
+if o==e.exitOnKey or(e.exitOnKey=="control"and
+(o==29 or o==157))then
+term.setCursorBlink(false)
+return nil
+end
+end
+end
+local e=s(h,o,r,l,d,u)
+if e then return e end
+end
+term.setCursorBlink(false)
+if a~=nil then a=a:gsub("^%s*(.-)%s*$","%1")end
+return a
+end
+local N={
+background="gray",
+backgroundHighlight="lightGray",
+prompt="cyan",
+promptHighlight="lightBlue",
+err="red",
+errHighlight="pink",
+editorBackground="gray",
+editorLineHightlight="lightBlue",
+editorLineNumbers="gray",
+editorLineNumbersHighlight="lightGray",
+editorError="pink",
+editorErrorHighlight="red",
+textColor="white",
+conditional="yellow",
+constant="orange",
+["function"]="magenta",
+string="red",
+comment="lime"
+}
+local U={
+background="black",
+backgroundHighlight="black",
+prompt="black",
+promptHighlight="black",
+err="black",
+errHighlight="black",
+editorBackground="black",
+editorLineHightlight="black",
+editorLineNumbers="black",
+editorLineNumbersHighlight="white",
+editorError="black",
+editorErrorHighlight="black",
+textColor="white",
+conditional="white",
+constant="white",
+["function"]="white",
+string="white",
+comment="white"
+}
+local D={
+{"Water (Default)","https://raw.github.com/GravityScore/LuaIDE/master/themes/default.txt"},
+{"Fire","https://raw.github.com/GravityScore/LuaIDE/master/themes/fire.txt"},
+{"Sublime Text 2","https://raw.github.com/GravityScore/LuaIDE/master/themes/st2.txt"},
+{"Midnight","https://raw.github.com/GravityScore/LuaIDE/master/themes/midnight.txt"},
+{"TheOriginalBIT","https://raw.github.com/GravityScore/LuaIDE/master/themes/bit.txt"},
+{"Superaxander","https://raw.github.com/GravityScore/LuaIDE/master/themes/superaxander.txt"},
+{"Forest","https://raw.github.com/GravityScore/LuaIDE/master/themes/forest.txt"},
+{"Night","https://raw.github.com/GravityScore/LuaIDE/master/themes/night.txt"},
+{"Original","https://raw.github.com/GravityScore/LuaIDE/master/themes/original.txt"},
+}
+local function L(e)
+local t=io.open(e)
+local e=t:read("*l")
+local a={}
+while e~=nil do
+local i,o=string.match(e,"^(%a+)=(%a+)")
+if i and o then a[i]=o end
+e=t:read("*l")
+end
+t:close()
+return a
+end
+if b()then t=N
+else t=U end
+local function f(e,t)
+if type(e)=="table"then for t,e in pairs(e)do f(e)end
+else
+local o,a=term.getCursorPos()
+local o,i=term.getSize()
+term.setCursorPos(o/2-e:len()/2+(#e%2==0 and 1 or 0),t or a)
+print(e)
+end
+end
+local function w(e)
+term.setTextColor(colors[t.textColor])
+term.setBackgroundColor(colors[t.background])
+term.clear()
+term.setBackgroundColor(colors[t.backgroundHighlight])
+for e=2,4 do term.setCursorPos(1,e)term.clearLine()end
+term.setCursorPos(3,3)
+term.write(e)
+end
+local function I(e,a)
+local function i(i,o,i,t,a,i,i)
+if b()and o=="mouse_click"and t>=n/2-e/2 and t<=n/2-e/2+10
+and a>=13 and a<=15 then
+return true,""
+end
+end
+if not a then a=""end
+term.setTextColor(colors[t.textColor])
+term.setBackgroundColor(colors[t.promptHighlight])
+for t=8,10 do
+term.setCursorPos(n/2-e/2,t)
+term.write(string.rep(" ",e))
+end
+if b()then
+term.setBackgroundColor(colors[t.errHighlight])
+for t=13,15 do
+term.setCursorPos(n/2-e/2+1,t)
+term.write(string.rep(" ",10))
+end
+term.setCursorPos(n/2-e/2+2,14)
+term.write("> Cancel")
+end
+term.setBackgroundColor(colors[t.promptHighlight])
+term.setCursorPos(n/2-e/2+1,9)
+term.write("> "..a)
+return p({visibleLength=n/2+e/2,liveUpdates=i})
+end
+local function q(a,i,h)
+local function o(o)
+for a,e in ipairs(a)do
+if a==o then term.setBackgroundColor(e.highlight or colors[t.promptHighlight])
+else term.setBackgroundColor(e.bg or colors[t.prompt])end
+term.setTextColor(e.tc or colors[t.textColor])
+for t=-1,1 do
+term.setCursorPos(e[2],e[3]+t)
+term.write(string.rep(" ",e[1]:len()+4))
+end
+term.setCursorPos(e[2],e[3])
+if a==o then
+term.setBackgroundColor(e.highlight or colors[t.promptHighlight])
+term.write(" > ")
+else term.write(" - ")end
+term.write(e[1].." ")
+end
+end
+local r=i=="horizontal"and 203 or 200
+local d=i=="horizontal"and 205 or 208
+local e=1
+o(e)
+while true do
+local t,i,n,s=os.pullEvent()
+if t=="key"and i==28 then
+return a[e][1]
+elseif t=="key"and i==r and e>1 then
+e=e-1
+o(e)
+elseif t=="key"and i==d and((err==true and e<#a-1)or(e<#a))then
+e=e+1
+o(e)
+elseif h and t=="key"and i==203 and e>2 then
+e=e-2
+o(e)
+elseif h and t=="key"and i==205 and e<3 then
+e=e+2
+o(e)
+elseif t=="mouse_click"then
+for t,e in ipairs(a)do
+if n>=e[2]-1 and n<=e[2]+e[1]:len()+3 and s>=e[3]-1 and s<=e[3]+1 then
+return a[t][1]
+end
+end
+end
+end
+end
+local function Y(r)
+local function i(e,s,a)
+for e,a in ipairs(e)do
+local i=colors[t.prompt]
+local o=colors[t.promptHighlight]
+if a:find("Back")or a:find("Return")then
+i=colors[t.err]
+o=colors[t.errHighlight]
+end
+if e==s then term.setBackgroundColor(o)
+else term.setBackgroundColor(i)end
+term.setTextColor(colors[t.textColor])
+for t=-1,1 do
+term.setCursorPos(3,(e*4)+t+4)
+term.write(string.rep(" ",n-13))
+end
+term.setCursorPos(3,e*4+4)
+if e==s then
+term.setBackgroundColor(o)
+term.write(" > ")
+else term.write(" - ")end
+term.write(a.." ")
+end
+end
+local function d(t,a,o)
+local e={}
+for o=1,o do
+local t=t[o+a-1]
+if t then table.insert(e,t)end
+end
+return e
+end
+local t=1
+local e=1
+local o=3
+local a=d(r,e,o)
+i(a,t,e)
+while true do
+local s,h,l,u=os.pullEvent()
+if s=="mouse_click"then
+for e,t in ipairs(a)do
+if l>=3 and l<=n-11 and u>=e*4+3 and u<=e*4+5 then return t end
+end
+elseif s=="key"and h==200 then
+if t>1 then
+t=t-1
+i(a,t,e)
+elseif e>1 then
+e=e-1
+a=d(r,e,o)
+i(a,t,e)
+end
+elseif s=="key"and h==208 then
+if t<o then
+t=t+1
+i(a,t,e)
+elseif e+o-1<#r then
+e=e+1
+a=d(r,e,o)
+i(a,t,e)
+end
+elseif s=="mouse_scroll"then
+os.queueEvent("key",h==-1 and 200 or 208)
+elseif s=="key"and h==28 then
+return a[t]
+end
+end
+end
+function monitorKeyboardShortcuts()
+local n,i=nil,nil
+local o=false
+local a=false
+while true do
+local t,e=os.pullEvent()
+if t=="key"and(e==42 or e==52)then
+a=true
+i=os.startTimer(m)
+elseif t=="key"and(e==29 or e==157 or e==219 or e==220)then
+E=false
+o=true
+n=os.startTimer(m)
+elseif t=="key"and o then
+local t=nil
+for t,o in pairs(keys)do
+if o==e then
+if a then os.queueEvent("shortcut","ctrl shift",t:lower())
+else os.queueEvent("shortcut","ctrl",t:lower())end
+sleep(.005)
+E=true
+end
+end
+if a then os.queueEvent("shortcut","ctrl shift",e)
+else os.queueEvent("shortcut","ctrl",e)end
+elseif t=="timer"and e==n then
+E=true
+o=false
+elseif t=="timer"and e==i then
+a=false
+end
+end
+end
+local function P(e,t)
+for a=1,3 do
+local e=http.get(e)
+if e then
+local a=e.readAll()
+e.close()
+if t then
+local e=io.open(t,"w")
+e:write(a)
+e:close()
+end
+return true
+end
+end
+return false
+end
+local function y(e,a)
+local t=e:sub(1,e:len()-c.getName(e):len())
+if not c.exists(t)then c.makeDir(t)end
+if not c.isDir(e)and not c.isReadOnly(e)then
+local t=""
+for a,e in pairs(a)do t=t..e.."\n"end
+local e=l.open(e,"w")
+e:write(t)
+e:close()
+return true
+else return false end
+end
+local function J(e)
+if not c.exists(e)then
+local t=e:sub(1,e:len()-c.getName(e):len())
+if not c.exists(t)then c.makeDir(t)end
+local e=l.open(e,"w")
+e:write("")
+e:close()
+end
+local t={}
+if c.exists(e)and not c.isDir(e)then
+local e=l.open(e,"r")
+if e then
+local a=e:read("*l")
+while a do
+table.insert(t,a)
+a=e:read("*l")
+end
+e:close()
+end
+else return nil end
+if#t<1 then table.insert(t,"")end
+return t
+end
+s.lua={}
+s.brainfuck={}
+s.none={}
+s.lua.helpTips={
+"A function you tried to call doesn't exist.",
+"You made a typo.",
+"The index of an array is nil.",
+"The wrong variable type was passed.",
+"A function/variable doesn't exist.",
+"You missed an 'end'.",
+"You missed a 'then'.",
+"You declared a variable incorrectly.",
+"One of your variables is mysteriously nil."
+}
+s.lua.defaultHelpTips={
+2,5
+}
+s.lua.errors={
+["Attempt to call nil."]={1,2},
+["Attempt to index nil."]={3,2},
+[".+ expected, got .+"]={4,2,9},
+["'end' expected"]={6,2},
+["'then' expected"]={7,2},
+["'=' expected"]={8,2}
+}
+s.lua.keywords={
+["and"]="conditional",
+["break"]="conditional",
+["do"]="conditional",
+["else"]="conditional",
+["elseif"]="conditional",
+["end"]="conditional",
+["for"]="conditional",
+["function"]="conditional",
+["if"]="conditional",
+["in"]="conditional",
+["local"]="conditional",
+["not"]="conditional",
+["or"]="conditional",
+["repeat"]="conditional",
+["return"]="conditional",
+["then"]="conditional",
+["until"]="conditional",
+["while"]="conditional",
+["true"]="constant",
+["false"]="constant",
+["nil"]="constant",
+["print"]="function",
+["write"]="function",
+["sleep"]="function",
+["pairs"]="function",
+["ipairs"]="function",
+["loadstring"]="function",
+["loadfile"]="function",
+["dofile"]="function",
+["rawset"]="function",
+["rawget"]="function",
+["setfenv"]="function",
+["getfenv"]="function",
+}
+s.lua.parseError=function(e)
+local t={filename="unknown",line=-1,display="Unknown!",err=""}
+if e and e~=""then
+t.err=e
+if e:find(":")then
+t.filename=e:sub(1,e:find(":")-1):gsub("^%s*(.-)%s*$","%1")
+e=(e:sub(e:find(":")+1)..""):gsub("^%s*(.-)%s*$","%1")
+if e:find(":")then
+t.line=e:sub(1,e:find(":")-1)
+e=e:sub(e:find(":")+2):gsub("^%s*(.-)%s*$","%1")..""
+end
+end
+t.display=e:sub(1,1):upper()..e:sub(2,-1).."."
+end
+return t
+end
+s.lua.getCompilerErrors=function(e)
+e="local function ee65da6af1cb6f63fee9a081246f2fd92b36ef2(...)\n\n"..e.."\n\nend"
+local t,e=loadstring(e)
+if not e then
+local a,t=pcall(t)
+if t then e=t end
+end
+if e then
+local t=e:find("]",1,true)
+if t then e="string"..e:sub(t+1,-1)end
+local e=s.lua.parseError(e)
+if tonumber(e.line)then e.line=tonumber(e.line)end
+return e
+else return s.lua.parseError(nil)end
+end
+s.lua.run=function(e,a)
+local t,e=OneOS.LoadFile(e)
+setfenv(t,getfenv())
+if not e then
+_,e=pcall(function()t(unpack(a))end)
+end
+return e
+end
+s.brainfuck.helpTips={
+"Well idk...",
+"Isn't this the whole point of the language?",
+"Ya know... Not being able to debug it?",
+"You made a typo."
+}
+s.brainfuck.defaultHelpTips={
+1,2,3
+}
+s.brainfuck.errors={
+["No matching '['"]={1,2,3,4}
+}
+s.brainfuck.keywords={}
+s.brainfuck.parseError=function(e)
+local t={filename="unknown",line=-1,display="Unknown!",err=""}
+if e and e~=""then
+t.err=e
+t.line=e:sub(1,e:find(":")-1)
+e=e:sub(e:find(":")+2):gsub("^%s*(.-)%s*$","%1")..""
+t.display=e:sub(1,1):upper()..e:sub(2,-1).."."
+end
+return t
+end
+s.brainfuck.mapLoops=function(o)
+local t={}
+local e=1
+local a=1
+for o in string.gmatch(o,".")do
+if o=="["then
+t[e]=true
+elseif o=="]"then
+local o=false
+for a=e,1,-1 do
+if t[a]==true then
+t[a]=e
+o=true
+end
+end
+if not o then
+return a..": No matching '['"
+end
+end
+if o=="\n"then a=a+1 end
+e=e+1
+end
+return t
+end
+s.brainfuck.getCompilerErrors=function(e)
+local e=s.brainfuck.mapLoops(e)
+if type(e)=="string"then return s.brainfuck.parseError(e)
+else return s.brainfuck.parseError(nil)end
+end
+s.brainfuck.run=function(e)
+local e=OneOS.IO.open(e,"r")
+local h=e:read("*a")
+e:close()
+local t={}
+local e=1
+local a=1
+local i=s.brainfuck.mapLoops(h)
+if type(i)=="string"then return i end
+while true do
+local o=h:sub(a,a)
+if o==">"then
+e=e+1
+if not t[tostring(e)]then t[tostring(e)]=0 end
+elseif o=="<"then
+if not t[tostring(e)]then t[tostring(e)]=0 end
+e=e-1
+if not t[tostring(e)]then t[tostring(e)]=0 end
+elseif o=="+"then
+if not t[tostring(e)]then t[tostring(e)]=0 end
+t[tostring(e)]=t[tostring(e)]+1
+elseif o=="-"then
+if not t[tostring(e)]then t[tostring(e)]=0 end
+t[tostring(e)]=t[tostring(e)]-1
+elseif o=="."then
+if not t[tostring(e)]then t[tostring(e)]=0 end
+if term.getCursorPos()>=n then print("")end
+write(string.char(math.max(1,t[tostring(e)])))
+elseif o==","then
+if not t[tostring(e)]then t[tostring(e)]=0 end
+term.setCursorBlink(true)
+local o,a=os.pullEvent("char")
+term.setCursorBlink(false)
+t[tostring(e)]=string.byte(a)
+if term.getCursorPos()>=n then print("")end
+write(a)
+elseif o=="/"then
+if not t[tostring(e)]then t[tostring(e)]=0 end
+if term.getCursorPos()>=n then print("")end
+write(t[tostring(e)])
+elseif o=="["then
+if t[tostring(e)]==0 then
+for e,t in pairs(i)do
+if e==a then a=t end
+end
+end
+elseif o=="]"then
+for e,t in pairs(i)do
+if t==a then a=e-1 end
+end
+end
+a=a+1
+if a>h:len()then print("")break end
+end
+end
+s.none.helpTips={}
+s.none.defaultHelpTips={}
+s.none.errors={}
+s.none.keywords={}
+s.none.parseError=function(e)
+return{filename="",line=-1,display="",err=""}
+end
+s.none.getCompilerErrors=function(e)
+return s.none.parseError(nil)
+end
+s.none.run=function(e)end
+d=s.lua
+local function h(a)
+w("LuaIDE - Error Help")
+local e=nil
+for o,t in pairs(d.errors)do
+if a.display:find(o)then e=t break end
+end
+term.setBackgroundColor(colors[t.err])
+for e=6,8 do
+term.setCursorPos(5,e)
+term.write(string.rep(" ",35))
+end
+term.setBackgroundColor(colors[t.prompt])
+for e=10,18 do
+term.setCursorPos(5,e)
+term.write(string.rep(" ",46))
+end
+if e then
+term.setBackgroundColor(colors[t.err])
+term.setCursorPos(6,7)
+term.write("Error Help")
+term.setBackgroundColor(colors[t.prompt])
+for t,e in ipairs(e)do
+term.setCursorPos(7,t+10)
+term.write("- "..d.helpTips[e])
+end
+else
+term.setBackgroundColor(colors[t.err])
+term.setCursorPos(6,7)
+term.write("No Error Tips Available!")
+term.setBackgroundColor(colors[t.prompt])
+term.setCursorPos(6,11)
+term.write("There are no error tips available, but")
+term.setCursorPos(6,12)
+term.write("you could see if it was any of these:")
+for t,e in ipairs(d.defaultHelpTips)do
+term.setCursorPos(7,t+12)
+term.write("- "..d.helpTips[e])
+end
+end
+q({{"Back",n-8,7}},"horizontal")
+end
+local function m(a,i,o)
+local e={}
+if o then
+w("LuaIDE - Run "..fs.getName(a))
+local t=I(n-13,fs.getName(a).." ")
+for t in string.gmatch(t,"[^ \t]+")do e[#e+1]=t:gsub("^%s*(.-)%s*$","%1")end
+end
+y(a,i)
+term.setCursorBlink(false)
+term.setBackgroundColor(colors.black)
+term.setTextColor(colors.white)
+term.clear()
+term.setCursorPos(1,1)
+local e=d.run(a,e)
+term.setBackgroundColor(colors.black)
+print("\n")
+if e then
+if b()then term.setTextColor(colors.red)end
+f("The program has crashed!")
+end
+term.setTextColor(colors.white)
+f("Press any key to return to LuaIDE...")
+while true do
+local e=os.pullEvent()
+if e=="key"then break end
+end
+os.queueEvent(S)
+os.pullEvent()
+if e then
+if d==s.lua and e:find("]")then
+e=fs.getName(a)..e:sub(e:find("]",1,true)+1,-1)
+end
+while true do
+w("LuaIDE - Error!")
+term.setBackgroundColor(colors[t.err])
+for e=6,8 do
+term.setCursorPos(3,e)
+term.write(string.rep(" ",n-5))
+end
+term.setCursorPos(4,7)
+term.write("The program has crashed!")
+term.setBackgroundColor(colors[t.prompt])
+for e=10,14 do
+term.setCursorPos(3,e)
+term.write(string.rep(" ",n-5))
+end
+local a=d.parseError(e)
+term.setCursorPos(4,11)
+term.write("Line: "..a.line)
+term.setCursorPos(4,12)
+term.write("Error:")
+term.setCursorPos(5,13)
+local e=a.display
+local o=nil
+if e:len()>n-8 then
+for t=e:len(),1,-1 do
+if e:sub(t,t)==" "then
+o=e:sub(t+1,-1)
+e=e:sub(1,t)
+break
+end
+end
+end
+term.write(e)
+if o then
+term.setCursorPos(5,14)
+term.write(o)
+end
+local e=q({{"Error Help",n/2-15,17},{"Go To Line",n/2+2,17}},
+"horizontal")
+if e=="Error Help"then
+h(a)
+elseif e=="Go To Line"then
+os.queueEvent(S)
+os.pullEvent()
+return"go to",tonumber(a.line)
+end
+end
+end
+end
+local function j()
+term.setBackgroundColor(colors[t.backgroundHighlight])
+term.setCursorPos(2,1)
+term.clearLine()
+term.write("Line: ")
+local e=p({visibleLength=n-2})
+local e=tonumber(e)
+if e and e>0 then return e
+else
+term.setCursorPos(2,1)
+term.clearLine()
+term.write("Not a line number!")
+sleep(1.6)
+return nil
+end
+end
+local function k()
+local a={
+"[Lua]   Brainfuck    None ",
+" Lua   [Brainfuck]   None ",
+" Lua    Brainfuck   [None]"
+}
+local e=1
+term.setCursorBlink(false)
+term.setBackgroundColor(colors[t.backgroundHighlight])
+term.setCursorPos(2,1)
+term.clearLine()
+term.write(a[e])
+while true do
+local o,t,o,o=os.pullEvent("key")
+if t==203 then
+e=math.max(1,e-1)
+term.setCursorPos(2,1)
+term.clearLine()
+term.write(a[e])
+elseif t==205 then
+e=math.min(#a,e+1)
+term.setCursorPos(2,1)
+term.clearLine()
+term.write(a[e])
+elseif t==28 then
+if e==1 then d=s.lua
+elseif e==2 then d=s.brainfuck
+elseif e==3 then d=s.none end
+term.setCursorBlink(true)
+return
+end
+end
+end
+local W=2
+local o={}
+local a={}
+local g={
+"if%s+.+%s+then%s*$",
+"for%s+.+%s+do%s*$",
+"while%s+.+%s+do%s*$",
+"repeat%s*$",
+"function%s+[a-zA-Z_0-9]\(.*\)%s*$"
+}
+local v={
+"end",
+"until%s+.+"
+}
+local p={
+"else%s*$",
+"elseif%s+.+%s+then%s*$"
+}
+local function i(e)
+for t,e in pairs(e)do
+local t=e["lineStart"]
+local a=e["lineEnd"]
+local o=e["charStart"]
+local e=e["charEnd"]
+if line>=t and line<=a then
+if line==t then return o<charNumb
+elseif line==a then return e>charNumb
+else return true end
+end
+end
+end
+local function r(e,e)
+if i(o)then return true end
+if i(a)then return true end
+return false
+end
+local function l(i,t,e,a)
+o[#o+1]={}
+o[#o].lineStart=i
+o[#o].lineEnd=t
+o[#o].charStart=e
+o[#o].charEnd=a
+end
+local function h(e,t,o,i)
+a[#a+1]={}
+a[#a].lineStart=e
+a[#a].lineEnd=t
+a[#a].charStart=o
+a[#a].charEnd=i
+end
+local function e(e)
+local i=false
+local t=false
+for e=1,#e do
+if content[e]:find("%-%-%[%[")and not t and not i then
+local t=content[e]:find("%-%-%[%[")
+l(e,nil,t,nil)
+i=true
+elseif content[e]:find("%-%-%[=%[")and not t and not i then
+local t=content[e]:find("%-%-%[=%[")
+l(e,nil,t,nil)
+i=true
+elseif content[e]:find("%[%[")and not t and not i then
+local a=content[e]:find("%[%[")
+h(e,nil,a,nil)
+t=true
+elseif content[e]:find("%[=%[")and not t and not i then
+local a=content[e]:find("%[=%[")
+h(e,nil,a,nil)
+t=true
+end
+if content[e]:find("%]%]")and t and not i then
+local i,o=content[e]:find("%]%]")
+a[#a].lineEnd=e
+a[#a].charEnd=o
+t=false
+elseif content[e]:find("%]=%]")and t and not i then
+local i,o=content[e]:find("%]=%]")
+a[#a].lineEnd=e
+a[#a].charEnd=o
+t=false
+end
+if content[e]:find("%]%]")and not t and i then
+local a,t=content[e]:find("%]%]")
+o[#o].lineEnd=e
+o[#o].charEnd=t
+i=false
+elseif content[e]:find("%]=%]")and not t and i then
+local a,t=content[e]:find("%]=%]")
+o[#o].lineEnd=e
+o[#o].charEnd=t
+i=false
+end
+if content[e]:find("%-%-")and not t and not i then
+local t=content[e]:find("%-%-")
+l(e,e,t,-1)
+elseif content[e]:find("'")and not t and not i then
+local a,t=content[e]:find("'")
+local t=content[e]:sub(t+1,string.len(content[e]))
+local o,t=t:find("'")
+h(e,e,a,t)
+elseif content[e]:find('"')and not t and not i then
+local a,t=content[e]:find('"')
+local t=content[e]:sub(t+1,string.len(content[e]))
+local o,t=t:find('"')
+h(e,e,a,t)
+end
+end
+end
+local function h(a)
+local e=nil
+if d~=s.lua then
+e="Cannot indent languages other than Lua!"
+elseif d.getCompilerErrors(table.concat(a,"\n")).line~=-1 then
+e="Cannot indent a program with errors!"
+end
+if e then
+term.setCursorBlink(false)
+term.setCursorPos(2,1)
+term.setBackgroundColor(colors[t.backgroundHighlight])
+term.clearLine()
+term.write(e)
+sleep(1.6)
+return a
+end
+local s={}
+local t=0
+for a,e in pairs(a)do
+local o=false
+local i=false
+for n,t in pairs(g)do
+if e:find(t)and not r(a,e:find(t))then
+o=true
+end
+if e:find(t:sub(1,-2))and not r(a,e:find(t))then
+i=true
+end
+end
+local n=false
+if not o then
+for s,o in pairs(v)do
+if e:find(o)and not r(a,e:find(o))and not i then
+t=math.max(0,t-1)
+n=true
+end
+end
+end
+if not n then
+for n,i in pairs(p)do
+if e:find(i)and not r(a,e:find(i))then
+o=true
+t=math.max(0,t-1)
+end
+end
+end
+s[a]=string.rep(" ",t*W)..e
+if o then t=t+1 end
+end
+return s
+end
+local _={
+[1]={"File",
+"New File  ^+N",
+"Open File ^+O",
+"Save File ^+S",
+"Close     ^+W",
+"Print     ^+P",
+"Quit      ^+Q"
+},[2]={"Edit",
+"Cut Line   ^+X",
+"Copy Line  ^+C",
+"Paste Line ^+V",
+"Delete Line",
+"Clear Line"
+},[3]={"Functions",
+"Go To Line    ^+G",
+"Re-Indent     ^+I",
+"Set Syntax    ^+E",
+"Start of Line ^+<",
+"End of Line   ^+>"
+},[4]={"Run",
+"Run Program       ^+R",
+"Run w/ Args ^+Shift+R"
+}
+}
+local K={
+["ctrl n"]="New File  ^+N",
+["ctrl o"]="Open File ^+O",
+["ctrl s"]="Save File ^+S",
+["ctrl w"]="Close     ^+W",
+["ctrl p"]="Print     ^+P",
+["ctrl q"]="Quit      ^+Q",
+["ctrl x"]="Cut Line   ^+X",
+["ctrl c"]="Copy Line  ^+C",
+["ctrl v"]="Paste Line ^+V",
+["ctrl g"]="Go To Line    ^+G",
+["ctrl i"]="Re-Indent     ^+I",
+["ctrl e"]="Set Syntax    ^+E",
+["ctrl 203"]="Start of Line ^+<",
+["ctrl 205"]="End of Line   ^+>",
+["ctrl r"]="Run Program       ^+R",
+["ctrl shift r"]="Run w/ Args ^+Shift+R"
+}
+local H={
+["New File  ^+N"]=function(t,e)y(t,e)return"new"end,
+["Open File ^+O"]=function(e,t)y(e,t)return"open"end,
+["Save File ^+S"]=function(e,t)y(e,t)end,
+["Close     ^+W"]=function(e,t)y(e,t)return"menu"end,
+["Print     ^+P"]=function(e,t)y(e,t)return nil end,
+["Quit      ^+Q"]=function(e,t)y(e,t)return"exit"end,
+["Cut Line   ^+X"]=function(a,e,t)
+u=e[t]table.remove(e,t)return nil,e end,
+["Copy Line  ^+C"]=function(a,t,e)u=t[e]end,
+["Paste Line ^+V"]=function(a,e,t)
+if u then table.insert(e,t,u)end return nil,e end,
+["Delete Line"]=function(a,e,t)table.remove(e,t)return nil,e end,
+["Clear Line"]=function(a,e,t)e[t]=""return nil,e,"cursor"end,
+["Go To Line    ^+G"]=function()return nil,"go to",j()end,
+["Re-Indent     ^+I"]=function(t,e)
+local a=h(e)y(t,e)return nil,a
+end,
+["Set Syntax    ^+E"]=function(t,e)
+k()
+if d==s.brainfuck and e[1]~="-- Syntax: Brainfuck"then
+table.insert(e,1,"-- Syntax: Brainfuck")
+return nil,e
+end
+end,
+["Start of Line ^+<"]=function()os.queueEvent("key",199)end,
+["End of Line   ^+>"]=function()os.queueEvent("key",207)end,
+["Run Program       ^+R"]=function(t,e)
+y(t,e)
+return nil,m(t,e,false)
+end,
+["Run w/ Args ^+Shift+R"]=function(t,e)
+y(t,e)
+return nil,m(t,e,true)
+end,
+}
+local function A(a)
+term.setCursorPos(1,1)
+term.setTextColor(colors[t.textColor])
+term.setBackgroundColor(colors[t.backgroundHighlight])
+term.clearLine()
+local e=0
+for a,t in pairs(_)do
+term.setCursorPos(3+e,1)
+term.write(t[1])
+e=e+t[1]:len()+3
+end
+if a then
+local o={}
+local e=1
+for i,t in pairs(_)do
+if a==t[1]then
+o=t
+break
+end
+e=e+t[1]:len()+3
+end
+e=e+1
+local a={}
+for e=2,#o do
+table.insert(a,o[e])
+end
+local t=1
+for a,e in pairs(a)do if e:len()+2>t then t=e:len()+2 end end
+for a,o in ipairs(a)do
+term.setCursorPos(e,a+1)
+term.write(string.rep(" ",t))
+term.setCursorPos(e+1,a+1)
+term.write(o)
+end
+term.setCursorPos(e,#a+2)
+term.write(string.rep(" ",t))
+return a,t
+end
+end
+local function Q(o,e)
+local e=0
+local a=nil
+for i,t in pairs(_)do
+if o>=e+3 and o<=e+t[1]:len()+2 then
+a=t[1]
+break
+end
+e=e+t[1]:len()+3
+end
+local e=e+2
+if not a then return false end
+term.setCursorBlink(false)
+term.setCursorPos(e,1)
+term.setBackgroundColor(colors[t.background])
+term.write(string.rep(" ",a:len()+2))
+term.setCursorPos(e+1,1)
+term.write(a)
+sleep(.1)
+local h,s=A(a)
+local n=true
+local l,d=term.getCursorPos()
+while type(n)~="string"do
+local r,d,i,o=os.pullEvent()
+if r=="mouse_click"then
+if i<e-1 or i>e+s-1 then break
+elseif o>#h+2 then break
+elseif o==1 then break end
+for r,h in ipairs(h)do
+if o==r+1 and i>=e and i<=e+s-2 then
+term.setCursorPos(e,o)
+term.setBackgroundColor(colors[t.background])
+term.write(string.rep(" ",s))
+term.setCursorPos(e+1,o)
+term.write(h)
+sleep(.1)
+A(a)
+n=h
+break
+end
+end
+end
+end
+term.setCursorPos(l,d)
+term.setCursorBlink(true)
+return n
+end
+local V={
+"if%s+.+%s+then%s*$",
+"for%s+.+%s+do%s*$",
+"while%s+.+%s+do%s*$",
+"repeat%s*$",
+"function%s+[a-zA-Z_0-9]?\(.*\)%s*$",
+"=%s*function%s*\(.*\)%s*$",
+"else%s*$",
+"elseif%s+.+%s+then%s*$"
+}
+local O={
+["("]=")",
+["{"]="}",
+["["]="]",
+["\""]="\"",
+["'"]="'",
+}
+local a,e=0,0
+local x,g=0,T-1
+local l,h=0,1
+local m,i=0,0
+local o={}
+local r=d.parseError(nil)
+local v=true
+local j=os.clock()
+local function u(o,e,a)
+local e=string.match(o,e)
+if e then
+if type(a)=="number"then term.setTextColor(a)
+elseif type(a)=="function"then term.setTextColor(a(e))end
+term.write(e)
+term.setTextColor(colors[t.textColor])
+return o:sub(e:len()+1,-1)
+end
+return nil
+end
+local function R(e)
+if d==s.lua then
+while e:len()>0 do
+e=u(e,"^%-%-%[%[.-%]%]",colors[t.comment])or
+u(e,"^%-%-.*",colors[t.comment])or
+u(e,"^\".*[^\\]\"",colors[t.string])or
+u(e,"^\'.*[^\\]\'",colors[t.string])or
+u(e,"^%[%[.-%]%]",colors[t.string])or
+u(e,"^[%w_]+",function(e)
+if d.keywords[e]then
+return colors[t[d.keywords[e]]]
+end
+return colors[t.textColor]
+end)or
+u(e,"^[^%w_]",colors[t.textColor])
+end
+else term.write(e)end
+end
+local function k()
+term.setTextColor(colors[t.textColor])
+term.setBackgroundColor(colors[t.editorBackground])
+term.clear()
+A()
+l,h=tostring(#o):len()+1,1
+x,g=n-l,T-1
+for a=1,g do
+local n=o[i+a]
+if n then
+local o=string.rep(" ",l-1-tostring(i+a):len())..tostring(i+a)
+local s=n:sub(m+1,x+m+1)
+o=o..":"
+if r.line==i+a then o=string.rep(" ",l-2).."!:"end
+term.setCursorPos(1,a+h)
+term.setBackgroundColor(colors[t.editorBackground])
+if i+a==e then
+if i+a==r.line and os.clock()-j>3 then
+term.setBackgroundColor(colors[t.editorErrorHighlight])
+else term.setBackgroundColor(colors[t.editorLineHightlight])end
+term.clearLine()
+elseif i+a==r.line then
+term.setBackgroundColor(colors[t.editorError])
+term.clearLine()
+end
+term.setCursorPos(1-m+l,a+h)
+if i+a==e then
+if i+a==r.line and os.clock()-j>3 then
+term.setBackgroundColor(colors[t.editorErrorHighlight])
+else term.setBackgroundColor(colors[t.editorLineHightlight])end
+elseif i+a==r.line then term.setBackgroundColor(colors[t.editorError])
+else term.setBackgroundColor(colors[t.editorBackground])end
+if i+a==r.line then
+if v then term.write(n)
+else term.write(r.display)end
+else R(n)end
+term.setCursorPos(1,a+h)
+if i+a==e then
+if i+a==r.line and os.clock()-j>3 then
+term.setBackgroundColor(colors[t.editorError])
+else term.setBackgroundColor(colors[t.editorLineNumbersHighlight])end
+elseif i+a==r.line then
+term.setBackgroundColor(colors[t.editorErrorHighlight])
+else term.setBackgroundColor(colors[t.editorLineNumbers])end
+term.write(o)
+end
+end
+term.setCursorPos(a-m+l,e-i+h)
+end
+local function p(...)
+local n={...}
+l=tostring(#o):len()+1
+for n,a in pairs(n)do
+local o=o[a]
+if o then
+local n=string.rep(" ",l-1-tostring(a):len())..tostring(a)
+local s=o:sub(m+1,x+m+1)
+n=n..":"
+if r.line==a then n=string.rep(" ",l-2).."!:"end
+term.setCursorPos(1,(a-i)+h)
+term.setBackgroundColor(colors[t.editorBackground])
+if a==e then
+if a==r.line and os.clock()-j>3 then
+term.setBackgroundColor(colors[t.editorErrorHighlight])
+else term.setBackgroundColor(colors[t.editorLineHightlight])end
+elseif a==r.line then
+term.setBackgroundColor(colors[t.editorError])
+end
+term.clearLine()
+term.setCursorPos(1-m+l,(a-i)+h)
+if a==e then
+if a==r.line and os.clock()-j>3 then
+term.setBackgroundColor(colors[t.editorErrorHighlight])
+else term.setBackgroundColor(colors[t.editorLineHightlight])end
+elseif a==r.line then term.setBackgroundColor(colors[t.editorError])
+else term.setBackgroundColor(colors[t.editorBackground])end
+if a==r.line then
+if v then term.write(o)
+else term.write(r.display)end
+else R(o)end
+term.setCursorPos(1,(a-i)+h)
+if a==e then
+if a==r.line and os.clock()-j>3 then
+term.setBackgroundColor(colors[t.editorError])
+else term.setBackgroundColor(colors[t.editorLineNumbersHighlight])end
+elseif a==r.line then
+term.setBackgroundColor(colors[t.editorErrorHighlight])
+else term.setBackgroundColor(colors[t.editorLineNumbers])end
+term.write(n)
+end
+end
+term.setCursorPos(a-m+l,e-i+h)
+end
+local function u(n,o,s)
+local a,t=n-m,o-i
+local e=false
+if a<1 then
+m=n-1
+a=1
+e=true
+elseif a>x then
+m=n-x
+a=x
+e=true
+end if t<1 then
+i=o-1
+t=1
+e=true
+elseif t>g then
+i=o-g
+t=g
+e=true
+end if e or s then k()end
+term.setCursorPos(a+l,t+h)
+end
+local function R(t,n)
+if type(t)=="string"and H[t]then
+local n,t,i=H[t](n,o,e)
+if type(n)=="string"then term.setCursorBlink(false)return n end
+if type(t)=="table"then
+if#o<1 then table.insert(o,"")end
+e=math.min(e,#o)
+a=math.min(a,o[e]:len()+1)
+o=t
+elseif type(t)=="string"then
+if t=="go to"and i then
+a,e=1,math.min(#o,i)
+u(a,e)
+end
+end
+end
+term.setCursorBlink(true)
+k()
+term.setCursorPos(a-m+l,e-i+h)
+end
+local function H(q)
+a,e=1,1
+l,h=0,1
+m,i=0,0
+o=J(q)
+if not o then return"menu"end
+if o[1]=="-- Syntax: Brainfuck"then
+d=s.brainfuck
+end
+local z=os.clock()
+local c=os.clock()
+local x=os.clock()
+local b=false
+k()
+term.setCursorPos(a+l,e+h)
+term.setCursorBlink(true)
+local j=os.startTimer(3)
+while true do
+local s,n,f,w=os.pullEvent()
+if s=="key"and E then
+if n==200 and e>1 then
+a,e=math.min(a,o[e-1]:len()+1),e-1
+p(e,e+1)
+u(a,e)
+elseif n==208 and e<#o then
+a,e=math.min(a,o[e+1]:len()+1),e+1
+p(e,e-1)
+u(a,e)
+elseif n==203 and a>1 then
+a=a-1
+local t=false
+if e-i+h<h+1 then t=true end
+u(a,e,t)
+elseif n==205 and a<o[e]:len()+1 then
+a=a+1
+local t=false
+if e-i+h<h+1 then t=true end
+u(a,e,t)
+elseif(n==28 or n==156)and(v and true or e+i-1==
+r.line)then
+local i=nil
+for a,t in pairs(V)do
+if o[e]:find(t)then i=t end
+end
+local n,t=o[e]:find("^[ ]+")
+if not t then t=0 end
+if i then
+table.insert(o,e+1,string.rep(" ",t+2))
+if not i:find("else",1,true)and not i:find("elseif",1,true)then
+table.insert(o,e+2,string.rep(" ",t)..
+(i:find("repeat",1,true)and"until "or i:find("{",1,true)and"}"or
+"end"))
+end
+a,e=t+3,e+1
+u(a,e,true)
+else
+local i=o[e]
+o[e]=o[e]:sub(1,a-1)
+table.insert(o,e+1,string.rep(" ",t)..i:sub(a,-1))
+a,e=t+1,e+1
+u(a,e,true)
+end
+elseif n==14 and(v and true or e+i-1==r.line)then
+if a>1 then
+local t=false
+for i,n in pairs(O)do
+if o[e]:sub(a-1,a-1)==i then t=true end
+end
+o[e]=o[e]:sub(1,a-2)..o[e]:sub(a+(t and 1 or 0),-1)
+p(e)
+a=a-1
+u(a,e)
+elseif e>1 then
+local t=o[e-1]:len()+1
+o[e-1]=o[e-1]..o[e]
+table.remove(o,e)
+a,e=t,e-1
+u(a,e,true)
+end
+elseif n==199 then
+a=1
+local t=false
+if e-i+h<h+1 then t=true end
+u(a,e,t)
+elseif n==207 then
+a=o[e]:len()+1
+local t=false
+if e-i+h<h+1 then t=true end
+u(a,e,t)
+elseif n==211 and(v and true or e+i-1==r.line)then
+if a<o[e]:len()+1 then
+o[e]=o[e]:sub(1,a-1)..o[e]:sub(a+1)
+local t=false
+if e-i+h<h+1 then t=true end
+p(e)
+u(a,e,t)
+elseif e<#o then
+o[e]=o[e]..o[e+1]
+table.remove(o,e+1)
+k()
+u(a,e)
+end
+elseif n==15 and(v and true or e+i-1==r.line)then
+o[e]=string.rep(" ",W)..o[e]
+a=a+2
+local t=false
+if e-i+h<h+1 then t=true end
+p(e)
+u(a,e,t)
+elseif n==201 then
+e=math.min(math.max(e-g,1),#o)
+a=math.min(o[e]:len()+1,a)
+u(a,e,true)
+elseif n==209 then
+e=math.min(math.max(e+g,1),#o)
+a=math.min(o[e]:len()+1,a)
+u(a,e,true)
+end
+elseif s=="char"and E and(v and true or
+e+i-1==r.line)then
+local t=false
+for s,i in pairs(O)do
+if n==i and o[e]:find(s,1,true)and o[e]:sub(a,a)==i then
+t=true
+end
+end
+local s=false
+if not t then
+for t,i in pairs(O)do
+if n==t and o[e]:sub(a,a)~=t then n=n..i s=true end
+end
+o[e]=o[e]:sub(1,a-1)..n..o[e]:sub(a,-1)
+end
+a=a+(s and 1 or n:len())
+local t=false
+if e-i+h<h+1 then t=true end
+p(e)
+u(a,e,t)
+elseif s=="mouse_click"and n==1 then
+if w>1 then
+if f<=l and w-h==r.line-i then
+v=not v
+p(r.line)
+else
+local t=e
+e=math.min(math.max(i+w-h,1),#o)
+a=math.min(math.max(m+f-l,1),o[e]:len()+1)
+if t~=e then p(t,e)end
+u(a,e)
+end
+else
+local e=Q(f,w)
+if e then
+local e=R(e,q)
+if e then return e end
+end
+end
+elseif s=="shortcut"then
+local a=K[n.." "..f]
+if a then
+local e=nil
+local o=0
+for i,t in ipairs(_)do
+for o,t in pairs(t)do
+if t==a then
+e=_[i][1]
+break
+end
+end
+if e then break end
+o=o+t[1]:len()+3
+end
+local o=o+2
+term.setCursorBlink(false)
+term.setCursorPos(o,1)
+term.setBackgroundColor(colors[t.background])
+term.write(string.rep(" ",e:len()+2))
+term.setCursorPos(o+1,1)
+term.write(e)
+sleep(.1)
+A()
+local e=R(a,q)
+if e then return e end
+end
+elseif s=="mouse_scroll"then
+if n==-1 and i>0 then
+i=i-1
+if os.clock()-c>5e-4 then
+k()
+term.setCursorPos(a-m+l,e-i+h)
+end
+c=os.clock()
+b=true
+elseif n==1 and i<#o-g then
+i=i+1
+if os.clock()-c>5e-4 then
+k()
+term.setCursorPos(a-m+l,e-i+h)
+end
+c=os.clock()
+b=true
+end
+elseif s=="timer"and n==j then
+p(e)
+j=os.startTimer(3)
+end
+if b and os.clock()-c>.1 then
+k()
+term.setCursorPos(a-m+l,e-i+h)
+b=false
+end
+if os.clock()-z>B then
+y(q,o)
+z=os.clock()
+end
+if os.clock()-x>1 then
+local a=r
+r=d.parseError(nil)
+local e=""
+for a,t in pairs(o)do e=e..t.."\n"end
+r=d.getCompilerErrors(e)
+r.line=math.min(r.line-2,#o)
+if r~=a then k()end
+x=os.clock()
+end
+end
+return"menu"
+end
+local function r()
+local a=n-13
+w("Lua IDE - New File")
+local e=I(a,"/")
+if not e or e==""then return"menu"end
+e="/"..e
+w("Lua IDE - New File")
+term.setTextColor(colors[t.textColor])
+term.setBackgroundColor(colors[t.promptHighlight])
+for e=8,10 do
+term.setCursorPos(n/2-a/2,e)
+term.write(string.rep(" ",a))
+end
+term.setCursorPos(1,9)
+if c.isDir(e)then
+f("Cannot Edit a Directory!")
+sleep(1.6)
+return"menu"
+elseif c.exists(e)then
+f("File Already Exists!")
+local t=q({{"Open",n/2-9,14},{"Cancel",n/2+2,14}},"horizontal")
+if t=="Open"then return"edit",e
+elseif t=="Cancel"then return"menu"end
+else return"edit",e end
+end
+local function h()
+local a=n-13
+w("Lua IDE - Open File")
+local e=I(a,"/")
+if not e or e==""then return"menu"end
+e="/"..e
+w("Lua IDE - New File")
+term.setTextColor(colors[t.textColor])
+term.setBackgroundColor(colors[t.promptHighlight])
+for e=8,10 do
+term.setCursorPos(n/2-a/2,e)
+term.write(string.rep(" ",a))
+end
+term.setCursorPos(1,9)
+if c.isDir(e)then
+f("Cannot Open a Directory!")
+sleep(1.6)
+return"menu"
+elseif not c.exists(e)then
+f("File Doesn't Exist!")
+local t=q({{"Create",n/2-11,14},{"Cancel",n/2+2,14}},"horizontal")
+if t=="Create"then return"edit",e
+elseif t=="Cancel"then return"menu"end
+else return"edit",e end
+end
+local function e()
+local function e(e)
+w("LuaIDE - Update")
+term.setBackgroundColor(colors[t.prompt])
+term.setTextColor(colors[t.textColor])
+for t=8,10 do
+term.setCursorPos(n/2-(e:len()+4),t)
+write(string.rep(" ",e:len()+4))
+end
+term.setCursorPos(n/2-(e:len()+4),9)
+term.write(" - "..e.." ")
+term.setBackgroundColor(colors[t.errHighlight])
+for e=8,10 do
+term.setCursorPos(n/2+2,e)
+term.write(string.rep(" ",10))
+end
+term.setCursorPos(n/2+2,9)
+term.write(" > Cancel ")
+end
+if not http then
+e("HTTP API Disabled!")
+sleep(1.6)
+return"settings"
+end
+e("Updating...")
+local i=os.startTimer(10)
+http.request(M)
+while true do
+local t,o,a,s=os.pullEvent()
+if(t=="key"and o==28)or
+(t=="mouse_click"and a>=n/2+2 and a<=n/2+12 and s==9)then
+e("Cancelled")
+sleep(1.6)
+break
+elseif t=="http_success"and o==M then
+local a=a.readAll()
+local t=io.open(C,"r")
+local o=t:read("*a")
+t:close()
+if o~=a then
+e("Update Found")
+sleep(1.6)
+local t=io.open(C,"w")
+t:write(a)
+t:close()
+e("Click to Exit")
+while true do
+local e=os.pullEvent()
+if e=="mouse_click"or(not b()and e=="key")then break end
+end
+return"exit"
+else
+e("No Updates Found!")
+sleep(1.6)
+break
+end
+elseif t=="http_failure"or(t=="timer"and o==i)then
+e("Update Failed!")
+sleep(1.6)
+break
+end
+end
+return"settings"
+end
+local function o()
+w("LuaIDE - Theme")
+if b()then
+local e={"Back"}
+for a,t in pairs(D)do table.insert(e,t[1])end
+local a=Y(e)
+local e=nil
+for o,t in pairs(D)do if t[1]==a then e=t[2]end end
+if not e then return"settings"end
+if a=="Dawn (Default)"then
+term.setBackgroundColor(colors[t.backgroundHighlight])
+term.setCursorPos(3,3)
+term.clearLine()
+term.write("LuaIDE - Loaded Theme!")
+sleep(1.6)
+fs.delete(z)
+t=N
+return"menu"
+end
+term.setBackgroundColor(colors[t.backgroundHighlight])
+term.setCursorPos(3,3)
+term.clearLine()
+term.write("LuaIDE - Downloading...")
+fs.delete("/.LuaIDE_temp_theme_file")
+P(e,"/.LuaIDE_temp_theme_file")
+local e=L("/.LuaIDE_temp_theme_file")
+term.setCursorPos(3,3)
+term.clearLine()
+if e then
+term.write("LuaIDE - Loaded Theme!")
+fs.delete(z)
+fs.move("/.LuaIDE_temp_theme_file",z)
+t=e
+sleep(1.6)
+return"menu"
+end
+term.write("LuaIDE - Could Not Load Theme!")
+fs.delete("/.LuaIDE_temp_theme_file")
+sleep(1.6)
+return"settings"
+else
+term.setCursorPos(1,8)
+f("Themes are not available on")
+f("normal computers!")
+end
+end
+local function s()
+w("LuaIDE - Settings")
+local e=q({{"Change Theme",n/2-17,8},{"Return to Menu",n/2-22,13},
+{"Exit IDE",n/2+2,13,bg=colors[t.err],
+highlight=colors[t.errHighlight]}},"vertical",true)
+if e=="Change Theme"then return o()
+elseif e=="Return to Menu"then return"menu"
+elseif e=="Exit IDE"then return"exit"end
+end
+local function i()
+w("Welcome to LuaIDE "..F)
+local e=q({{"New File",n/2-13,8},{"Open File",n/2-14,13},
+{"Settings",n/2+2,8},{"Exit IDE",n/2+2,13,bg=colors[t.err],
+highlight=colors[t.errHighlight]}},"vertical",true)
+if e=="New File"then return"new"
+elseif e=="Open File"then return"open"
+elseif e=="Settings"then return"settings"
+elseif e=="Exit IDE"then return"exit"end
+end
+local function o(a)
+local e,t="menu",nil
+if type(a)=="table"and#a>0 then
+local a="/"..shell.resolve(a[1])
+if c.isDir(a)then print("Cannot edit a directory.")end
+e,t="edit",a
+end
+while true do
+if e=="menu"then e=i()end
+if e=="new"then e,t=r()
+elseif e=="open"then e,t=h()
+elseif e=="settings"then e=s()
+end if e=="exit"then break end
+if e=="edit"and t then e=H(t)end
+end
+end
+if fs.exists(z)then t=L(z)end
+if not t and b()then t=N
+elseif not t then t=U end
+local a,e=pcall(function()
+parallel.waitForAny(function()o(G)end,monitorKeyboardShortcuts)
+end)
+if e and not e:find("Terminated")then
+term.setCursorBlink(false)
+w("LuaIDE - Crash! D:")
+term.setBackgroundColor(colors[t.err])
+for e=6,8 do
+term.setCursorPos(5,e)
+term.write(string.rep(" ",36))
+end
+term.setCursorPos(6,7)
+term.write("LuaIDE Has Crashed! D:")
+term.setBackgroundColor(colors[t.background])
+term.setCursorPos(2,10)
+print(e)
+term.setBackgroundColor(colors[t.prompt])
+local a,e=term.getCursorPos()
+for e=e+1,e+4 do
+term.setCursorPos(5,e)
+term.write(string.rep(" ",36))
+end
+term.setCursorPos(6,e+2)
+term.write("Please report this error to")
+term.setCursorPos(6,e+3)
+term.write("GravityScore! ")
+term.setBackgroundColor(colors[t.background])
+if b()then f("Click to Exit...",T-1)
+else f("Press Any Key to Exit...",T-1)end
+while true do
+local e=os.pullEvent()
+if e=="mouse_click"or(not b()and e=="key")then break end
+end
+os.queueEvent(S)
+os.pullEvent()
+end
+term.setBackgroundColor(colors.black)
+term.setTextColor(colors.white)
+term.clear()
+term.setCursorPos(1,1)
+f("Thank You for Using Lua IDE "..F)
+f("Made by GravityScore")

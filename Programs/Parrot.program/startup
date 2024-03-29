@@ -1,0 +1,27 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+io = SpeedOS.IO
+
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/windows")
+
+if not peripheral.find("modem") then
+  windows.clearScreen(colors.white)
+  windows.error("This program requires modem!")
+  SpeedOS.Close()
+end
+
+rednet.open(peripheral.find("modem"))
+windows.clearScreen(colors.white)
+term.setTextColor(colors.lightGray)
+term.setCursorPos(1, 1)
+while true do
+  event, id, msg, dist = os.pullEvent()
+  if event == "rednet_message" then
+    rednet.send(id, msg)
+    term.setTextColor(colors.black)
+    io.write("["..SpeedText.time().."] ") 
+    term.setTextColor(colors.lightGray)
+    print("Parroted '"..msg.."' to "..tostring(id).."!")    
+  end
+end

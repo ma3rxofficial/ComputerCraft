@@ -1,0 +1,86 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+SpeedOS = OneOS
+
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+
+windows.clearScreen(colors.white)
+
+local p = nil
+local w, h = term.getSize()
+
+if not peripheral.find("adventure map interface", true) then
+  windows.error("You need Adventure map!")  
+  SpeedOS.Close()
+
+else
+	p = peripheral.wrap(peripheral.find("adventure map interface", true))
+end
+
+w = p.getWorld(0)
+
+windows.clearScreen(colors.gray)
+SpeedText.cPrint("Enter victim's username here:", 6)
+selected_player = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
+if not selected_player then
+  SpeedOS.Close()
+end
+
+
+windows.clearScreen(colors.black)
+
+term.setCursorPos(1, 1)
+term.setTextColor(colors.red)
+SpeedText.slowPrint("Activating killing protocol...", 1000)
+sleep(1)
+term.setTextColor(colors.lime)
+print("Activated!")
+sleep(2)
+term.setTextColor(colors.white)
+term.setCursorPos(1, 4)
+SpeedText.slowPrint("Locating victim...")
+sleep(0.5)
+term.setTextColor(colors.blue)
+print("Victim name: "..tostring(selected_player))
+term.setTextColor(colors.white)
+sleep(5)
+
+-- REAL LOCATING!
+pl = p.getPlayerByName(tostring(selected_player))
+ent = pl.asEntity()
+x, y, z = ent.getPosition()
+print("X: "..tostring(x))
+sleep(1)
+print("Y: "..tostring(y))
+sleep(1)
+print("Z: "..tostring(z))
+sleep(2)
+term.setTextColor(colors.lime)
+print("Player "..tostring(selected_player).." is located!")
+term.setTextColor(colors.red)
+term.setCursorPos(1, 11)
+SpeedText.slowPrint("KILLING...")
+pl.damage(20) --real killing!
+sleep(3)
+
+if pl.getGamemode() == 1 then
+  print("PLAYER IS IN CRETIVE MODE. CAN'T KILL!")
+  sleep(5)
+  SpeedOS.Close()
+end
+
+term.setTextColor(colors.red)
+print("KILLED!")
+
+
+while true do
+  event, key = os.pullEvent()
+  if event == "key" or event == "mouse_click" or event == "mouse_drag" then
+    SpeedOS.Close()
+  end
+end
