@@ -1,0 +1,47 @@
+function archive(chto,vochto)
+        local Massiv2 = {}
+        local function FileList(path)
+                local Massiv = fs.list(path)
+                if #Massiv==0 then
+                        local Massiv2Id = #Massiv2 + 1
+                        Massiv2[Massiv2Id] = {}
+                        Massiv2[Massiv2Id]["path"] = path
+                        Massiv2[Massiv2Id]["text"] = "@empty@empty"
+                else
+                        for i=1,#Massiv do
+                                if fs.isDir(path.."/"..Massiv[i]) and Massiv[i] ~= "/rom" and Massiv[i] ~= "rom" then
+                                        FileList(path.."/"..Massiv[i])
+                                elseif not fs.isDir(path.."/"..Massiv[i]) and Massiv[i] ~= "/rom" and Massiv[i] ~= "rom" then
+                                        local Massiv2Id = #Massiv2 + 1
+                                        Massiv2[Massiv2Id] = {}
+                                        Massiv2[Massiv2Id]["path"] = path.."/"..Massiv[i]
+                                        local file = fs.open(path.."/"..Massiv[i],"r")
+                                        Massiv2[Massiv2Id]["text"] = file.readAll()
+                                        file.close()
+                                end
+                        end
+                end
+        end
+        FileList(chto)
+        file=fs.open(vochto..".zip","w")
+        file.write(textutils.serialise(Massiv2))
+        file.close()
+        return Massiv2
+end
+ 
+function unarchive(chto,kuda)
+        --shell.run("cd "..kuda)
+        shell.run(chto)
+        --local file = fs.open(chto,"r")
+        --Massiv = textutils.unserialise(file.readAll())
+        --file.close()
+        --for i=1,#Massiv do
+        --        if Massiv[i]["text"] == "@empty@empty" then
+        --                fs.makeDir(kuda.."/"..Massiv[i]["path"])
+        --        else
+        --                local file = fs.open(kuda.."/"..Massiv[i]["path"],"w")
+        --                file.write(Massiv[i]["text"])
+        --                file.close()
+       --         end
+       -- end
+end

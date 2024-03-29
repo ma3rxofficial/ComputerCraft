@@ -1,0 +1,30 @@
+function bsod(error)
+  -- for the following 2 functions are from my Extended String Library...
+  local trim = function(str) return (str:gsub("^%s*(.-)%s*$", "%1")) end
+
+  -- localize these as they are only used here
+  local setColors = function(bg, txt) if not (term.isColor and term.isColor()) then return false end if txt then term.setTextColor(txt) end if bg then term.setBackgroundColor(bg) end end
+  local clear = function(col) if col then term.setBackgroundColor(col) end term.clear() end
+  local cwrite = function(msg, y, offset) local sw,sh = term.getSize() term.setCursorPos(sw/2-#msg/2, (y or (sh/2)) + (offset or 0)) write(msg) end
+  local errHeader = function(text, y, centre) setColors(colors.white, colors.blue) if centre then cwrite(text, y) else term.setCursorPos(1,y) print(text) end setColors(colors.blue, colors.white) end
+  local printMsg = function(text, y) term.setCursorPos(1,y) print(text) end
+  local waitForKey = function() while true do local e,k=os.pullEventRaw("key") if k == 28 or k == 156 then break end end end
+  local sw,sh = term.getSize()
+
+  clear(colors.blue)
+
+  -- the error headers
+  errHeader(" ERROR :  SpeedOS", 2, true)
+  errHeader(" Description:  "..error, 7, false)
+  errHeader(" Reporting the Issue ", sh-7, false)
+
+  -- BSOD content
+  printMsg("An error has occurred during runtime with and the program has ceased working.", 4)
+  printMsg("If this problem persists please try reinstall SpeedOS and if the problem still persists report the issue to Ma3rX. Thanks!",sh-5)
+
+  cwrite("Press enter to quit...",sh-1)
+  waitForKey()
+
+  term.clear(colors.black)
+  term.setCursorPos(1,1)
+end
