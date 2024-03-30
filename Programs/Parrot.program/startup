@@ -4,6 +4,7 @@ io = SpeedOS.IO
 
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 if not peripheral.find("modem") then
   windows.clearScreen(colors.white)
@@ -13,15 +14,17 @@ end
 
 rednet.open(peripheral.find("modem"))
 windows.clearScreen(colors.white)
-term.setTextColor(colors.lightGray)
+term.setTextColor(colors.green)
 term.setCursorPos(1, 1)
+io.write("["..SpeedText.time().."] ") 
+print("Waiting for clients...")
 while true do
   event, id, msg, dist = os.pullEvent()
   if event == "rednet_message" then
-    rednet.send(id, msg)
-    term.setTextColor(colors.black)
+    rednet.send(id, msg) -- sosi suka
+    term.setTextColor(colors.blue)
     io.write("["..SpeedText.time().."] ") 
-    term.setTextColor(colors.lightGray)
+    term.setTextColor(colors.cyan)
     print("Parroted '"..msg.."' to "..tostring(id).."!")    
   end
 end
