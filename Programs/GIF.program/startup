@@ -13,7 +13,7 @@ local args = {...}
 windows.clearScreen(colors.white)
 if not peripheral.find("monitor", true) then
 	windows.error("This program requires external advanced monitor.")
-	error()
+	SpeedOS.Close()
 end
 local mon = peripheral.wrap(peripheral.find("monitor", true))
 mon.setTextScale(0.5)
