@@ -1,0 +1,1304 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+--[[
+	Snake Maze
+	Inspired by Snake, Snake's Alive and a few other simple games.
+	
+	Navigate the maze searching for bird eggs, then head to the exit
+	
+	Written By: Nitrogen Fingers
+]]--
+
+local w,h = term.getSize()
+
+local map = { }
+local scenew,sceneh = 51, 18
+local currx, curry = 1, 1
+local levelname = 'level.nfp'
+
+local start = { mx = 1, my = 1, x = 5, y = 5 }
+
+local snake = { } 
+local addSegments = 8
+local score = 0
+local snakefx = 1
+local snakefy = 0
+
+local energy = 1000
+local tflip = 1
+
+local fb = 0
+local flaming = false
+local fbcx,fbcy = 0,0
+local fbx,fby = 0,0
+
+local baseTimer = 0.25
+local timerLength = 0.2
+local timerID = -1
+local gameOver = false
+local exiting = false
+local paused = false
+
+local showScores = false
+local inSplash = false
+
+local bgfmin = 8
+local bgfmax = 25
+local bgnext = 0
+
+local eggtotal = 0
+local eggcount = 0
+
+local shfmin = 50
+local shfmax = 100
+local shnext = 0
+
+local regex = "^"
+
+--some display consts.
+local scw, sch = 34, 14
+local scxoff,scyoff = math.floor(w/2 - scw/2), math.floor(h/2 - sch/2)+1
+
+local hs = {}
+
+local sncol = {
+	{
+		index = 1,
+		body = colours.lime,
+		scales = colours.green,
+		eyes = colours.red
+	},
+	{
+		index = 2,
+		body = colours.cyan,
+		scales = colours.blue,
+		eyes = colours.red
+	},
+	{
+		index = 3,
+		body = colours.pink,
+		scales = colours.purple,
+		eyes = colours.red
+	},
+	{
+		index = 4,
+		body = colours.lightGrey,
+		scales = colours.grey,
+		eyes = colours.black
+	},
+	{
+		index = 5,
+		body = colours.white,
+		scales = colours.black,
+		eyes = colours.black
+	}
+}
+local selcol = sncol[math.random(1,3)]
+if not term.isColour() then selcol = sncol[5] end
+
+local function setBG(col, bwcol)
+	if term.isColour() then
+		term.setBackgroundColour(col)
+	else
+		term.setBackgroundColour(bwcol)
+	end
+end
+
+local function setTX(col, bwcol)
+	if term.isColour() then
+		term.setTextColour(col)
+	else
+		term.setTextColour(bwcol)
+	end
+end
+
+local function drawFooter()
+	term.setCursorPos(3, h)
+	setBG(colours.blue, colours.black)
+	setTX(colours.white, colours.white)
+	term.clearLine()
+	term.write("Energy: ")
+	if energy > 800 then setTX(colours.green, colours.white)
+	elseif energy > 600 then setTX(colours.yellow, colours.white)
+	elseif energy > 400 then setTX(colours.orange, colours.white)
+	elseif energy > 200 or tflip == 1 then setTX(colours.red, colours.white)
+	end
+	pzero = ''
+	if energy % 10 == 0 then pzero = '.0' end
+	term.write((energy / 10)..pzero.."%")
+	tflip = (tflip + 1) % 2
+	setTX(colours.white, colours.white)
+	term.setCursorPos(21, h)
+	term.write("Score: "..score.."    ")
+	setTX(colours.yellow, colours.white)
+	term.setCursorPos(w-15, h)
+	term.write("Eggs: ")
+	setTX(colours.white, colours.white)
+	term.write(eggcount.."/"..eggtotal)
+end
+
+local function drawSegment(i)
+	if i == 1 and exiting then return end
+	local v = snake[i]
+	if inSplash and showScores and v.x > scxoff-1 and v.x <= scxoff + scw - 1 and
+		v.y > scyoff - 1 and v.y <= scyoff + sch - 1 then return end
+	
+	term.setCursorPos(v.x, v.y)
+	if energy <= 0 then selcol = sncol[4] end
+	term.setBackgroundColour(selcol.body)
+	local schar = ' '
+	if i == 1 then
+		term.setTextColour(selcol.eyes)
+		if fb > 0 then setBG(colours.orange, selcol.body) end
+		if gameOver then
+			if snakefx > 0 then schar = 'X'
+			else schar = '*' end
+		elseif snakefx == 1 then schar = ':'
+		elseif snakefx == -1 then schar = ':'
+		elseif snakefy == 1 then schar = '_'
+		elseif snakefy == -1 then schar = '^'
+		end
+	elseif i < #snake then
+		vdx = snake[i-1].x - snake[i+1].x
+		vdy = snake[i-1].y - snake[i+1].y
+		term.setTextColour(selcol.scales)
+		if math.abs(vdx) == 2 then schar = '-'
+		elseif math.abs(vdy) == 2 then schar = '|'
+		elseif vdx == vdy then schar = '\\'
+		else schar = '/'
+		end
+	else
+		vb = snake[i-1]
+		term.setTextColour(selcol.scales)
+		if math.abs(vb.x - v.x) == 1 then schar = '-'
+		elseif math.abs(vb.y - v.y) == 1 then schar = '|' end
+	end
+	term.write(schar)
+end
+
+local function drawSnake()
+	for i = 1, #snake do
+		drawSegment(i)
+	end
+end
+
+local function updateMap(mx, my, x, y)
+	if mx ~= currx or my ~= curry then return end
+	local scene = map[my][mx]
+	for i,v in ipairs(snake) do
+		if v.mx == mx and v.my == my and v.x == x and v.y == y then
+			drawSegment(i)
+			return
+		end
+	end
+	
+	local val = scene[y][x]
+	term.setCursorPos(x, y)
+	if val == nil then
+		setBG(colours.grey, colours.black)
+		term.write(' ')
+	elseif val == 0 then
+		setBG(colours.lightGrey, colours.white)
+		term.write(" ")
+	elseif val == 1 then
+		setBG(colours.yellow, colours.white)
+		term.write(" ")
+	elseif val == 2 then
+		setBG(colours.orange, colours.white)
+		term.write(" ")
+	elseif val == 3 then
+		setBG(colours.red, colours.white)
+		term.write(" ")
+	elseif val == 'e' then
+		setBG(colours.grey, colours.black)
+		setTX(colours.yellow, colours.white)
+		term.write("0")
+	elseif val == 't' then
+		setBG(colours.grey, colours.black)
+		setTX(colours.purple, colours.white)
+		term.write(string.char(166))
+	elseif val == 'b' then
+		setBG(colours.grey, colours.black)
+		setTX(colours.green, colours.white)
+		term.write('*')
+	elseif val == 'B' then
+		setBG(colours.grey, colours.black)
+		setTX(colours.orange, colours.white)
+		term.write('+')
+	elseif val == 'X' then
+		setBG(colours.grey, colours.black)
+		setTX(colours.blue, colours.white)
+		term.write('@')
+	elseif val == 'F' then
+		setBG(colours.grey, colours.black)
+		setTX(colours.red, colours.white)
+		term.write('&')
+	elseif val == '@' and eggcount == eggtotal then
+		setBG(colours.blue, colours.white)
+		setTX(colours.lightBlue, colours.black)
+		term.write('@')
+	end
+end
+
+local function updateFire()
+	local fcy, fcx = curry, currx
+	local scene = map[fcy][fcx]
+	setBG(colours.black, colours.black)
+	setTX(colours.white, colours.white)
+	if snakefx ~= 0 then
+		local ffx = snake[1].x + snakefx
+		while map[fcy] and map[fcy][fcx] and type(map[fcy][fcx][snake[1].y][ffx]) ~= "number" do
+			map[fcy][fcx][snake[1].y][ffx] = nil
+			for i,v in ipairs(snake) do
+				if v.mx == fcx and v.my == fcy and v.x == ffx and v.y ==
+				snake[1].y then
+					gameOver = true
+					break
+				end
+			end
+			
+			if fcy == curry and fcx == currx then
+				term.setCursorPos(ffx, snake[1].y)
+				term.write("=")
+			end
+			
+			ffx = ffx + snakefx
+			if ffx < 0 then
+				fcx = fcx - 1
+				ffx = ffx + scenew
+			elseif ffx > scenew then
+				fcx = fcx + 1
+				ffx = ffx - scenew
+			end
+		end
+		if map[fcy][fcx] then 
+			fbx = ffx
+			fby = snake[1].y
+			fbcx = fcx
+			fbcy = fcy
+		else
+			fbx = -1
+			fby = -1
+			fbcx = -1
+			fbcy = -1
+		end
+	else
+		local ffy = snake[1].y + snakefy
+		while map[fcy] and map[fcy][fcx] and type(map[fcy][fcx][ffy][snake[1].x]) ~= "number" do
+			map[fcy][fcx][ffy][snake[1].x] = nil
+			for i,v in ipairs(snake) do
+				if v.mx == fcx and v.my == fcy and v.x == snake[1].x and v.y ==
+				ffy then
+					gameOver = true
+					break
+				end
+			end
+			if fcy == curry and fcx == currx then
+				term.setCursorPos(snake[1].x, ffy)
+				term.write("|")
+			end
+			ffy = ffy + snakefy
+			if ffy < 0 then
+				fcy = fcy - 1
+				ffy = ffy + sceneh
+			elseif ffy > sceneh then
+				fcy = fcy + 1
+				ffy = ffy - sceneh
+			end
+		end
+		if map[fcy][fcx] then 
+			fbx = snake[1].x
+			fby = ffy
+			fbcx = fcx
+			fbcy = fcy
+		else
+			fbx = -1
+			fby = -1
+			fbcx = -1
+			fbcy = -1
+		end
+	end
+end
+
+local function lookup(x,y)
+	if y < 1 or y > sceneh or x < 1 or x > scenew then return 0 end
+	return map[curry][currx][y][x]
+end
+
+local function drawMap()
+	local scene = map[curry][currx]
+	for y = 1, sceneh do
+		for x = 1, scenew do
+			updateMap(currx, curry, x, y)
+		end
+	end
+end
+
+local function parseValue(mx, my, x, y, lchar)
+	if not map[my][mx][y] then map[my][mx][y] = {} end
+	if tonumber(lchar, 16) then
+		lchar = math.pow(2, tonumber(lchar,16))
+		
+		if lchar == colours.white then
+			map[my][mx][y][x] = 0
+		elseif lchar == colours.yellow then
+			map[my][mx][y][x] = 'e'
+			eggtotal = eggtotal + 1
+		elseif lchar == colours.purple then
+			map[my][mx][y][x] = 't'
+		elseif lchar == colours.lime then
+			start = { mx = mx, my = my, x = x, y = y }
+		elseif lchar == colours.blue then
+			map[my][mx][y][x] = '@'
+		elseif lchar == colours.pink then
+			map[my][mx][y][x] = 'F'
+		end
+	else
+		table.insert(map[my][mx].whitespace, {x = x, y = y})
+	end	
+end
+
+
+
+local function writeHS()
+	local f = io.open(shell.resolve(".").."/Resources/hs", "w")
+	
+	for i,v in ipairs(hs) do
+		f:write(v.name..regex..v.snake..regex..v.eggs..regex..v.score)
+		if i < #hs then f:write("\n") end
+	end
+	
+	f:close()
+end
+
+local function loadHS()
+	hs = {}
+	if not fs.exists(shell.resolve(".").."/Resources/hs") then
+		print("Error: Resources/hs missing! Rewriting...")
+		os.pullEvent("key")
+		writeHS()
+		return
+	end
+	local f = fs.open(shell.resolve(".").."/Resources/hs", "r")
+	
+	local line = f:readLine()
+  
+	while line do
+		local vals = split(line, regex)
+		if #vals ~= 4 and not tonumber(vals[2]) and not tonumber(vals[3]) and not tonumber(vals[4]) then
+			print("Error: Resources/hs invalid! Rewriting...")
+			os.pullEvent("key")
+			f:close()
+			writeHS()
+			return
+		end
+		table.insert(hs, { name = vals[1], snake = tonumber(vals[2]), 
+				eggs = tonumber(vals[3]), score = tonumber(vals[4]) })
+		if #hs == 10 then break end
+		line = f:readLine()
+	end
+	f:close()
+end
+
+local function addHighScore()
+	name = displayInputDialogue("You got a new high score! Enter your name:", 8, colours.blue, colours.white)
+	local entry = { name = name, snake = selcol.index, score = score,
+			eggs = eggcount }
+	local place = 1
+	for i=1,#hs do
+		if hs[place].score < entry.score then 
+			break 
+		end
+		place = i + 1
+	end
+	table.insert(hs, place, entry)
+	while #hs > 10 do
+		table.remove(hs, #hs)
+	end
+	writeHS()
+end
+
+local function loadMap(_sPath)
+	if not fs.exists(_sPath) then
+		return false 
+	end
+	mx, my = 1,1
+	lineno = 1
+  
+	eggtotal = 0
+  
+	local file = fs.open(_sPath, 'r')
+	local line = file:readLine()
+  
+	map = {}
+  
+	while line do
+		if not map[my] then map[my] = { } end
+		for i=1,#line do
+			mx = math.floor((i-1)/scenew)+1
+			if not map[my][mx] then map[my][mx] = { whitespace = {} } end
+			local lchar = string.sub(line,i,i)
+			local x = 
+			parseValue(mx, my, i-((mx-1)*scenew), lineno-((my-1)*sceneh), lchar)
+		end
+		line = file:readLine()
+		my = math.floor(lineno / sceneh) + 1
+		lineno = lineno + 1
+	end
+	file:close()
+	maxGoldCount = goldCount
+	titleLoaded = false
+	return true
+end
+
+local function spawnBug()
+	bgnext = math.random(bgfmin, bgfmax)
+	bugplaced = false
+	while not bugplaced do
+		local ran = math.random(1, #map[currx][curry].whitespace)
+		local ws = map[currx][curry].whitespace[ran]
+		if map[curry][currx][ws.y][ws.x]  == nil then
+			bugtype = math.random(1,8)
+			bug = ''
+			if bugtype <= 5 then bug = 'b'
+			elseif bugtype <=7 then bug = 'B'
+			else bug = 'X' end
+			map[curry][currx][ws.y][ws.x] = bug
+			updateMap(currx, curry, ws.x, ws.y)
+			bugplaced = true
+		end
+	end
+end
+
+local function spawnShroom()
+	shnext = math.random(shfmin, shfmax)
+	shroomplaced = false
+	while not shroomplaced do
+		local ran = math.random(1, #map[currx][curry].whitespace)
+		local ws = map[currx][curry].whitespace[ran]
+		if map[curry][currx][ws.y][ws.x] == nil then
+			map[curry][currx][ws.y][ws.x] = 't'
+		end
+		updateMap(currx, curry, ws.x, ws.y)
+		shroomplaced = true
+	end
+end
+
+local function initSnake()
+	-- Hardcoded. Lazy but easy.
+	snake = {}
+	addSegments = 8
+	eggcount = 0
+	energy = 1000
+	score = 0
+	gameOver = false
+	paused = false
+	exiting = false
+	snakefx = 1
+	snakefy = 0
+	snake[1] = { mx = start.mx, my = start.my, x = start.x, y = start.y }
+	currx = snake[1].mx
+	curry = snake[1].my
+	
+	drawSnake()
+	drawMap(currx, curry)
+end
+
+local function updateSnake()
+	energy = energy - 2
+	
+	if (addSegments > 0) then
+		addSegments = addSegments - 1
+	else
+		local val = snake[#snake]
+		table.remove(snake, #snake)
+		behindscores = inSplash and showScores and val.x > scxoff - 1 and val.x <= scxoff + scw - 1 and val.y > scyoff - 1 and val.y <= scyoff + sch - 1
+	
+		if currx == val.mx and curry == val.my and not behindscores then 
+			updateMap(currx, curry, val.x, val.y)
+		end
+	end
+	
+	if exiting then
+		score = score + 5
+		if #snake == 1 then	
+			drawFooter()
+			gameOver = true
+			return
+		end
+	end
+	
+	local ox,oy = currx,curry
+	nx = snake[1].x + snakefx
+	ny = snake[1].y + snakefy
+	if nx <= 0 then
+		currx = currx - 1
+		nx = nx + scenew
+	elseif nx > scenew then
+		currx = currx + 1
+		nx = nx - scenew
+	elseif ny <= 0 then
+		curry = curry - 1
+		ny = ny + sceneh
+	elseif ny > sceneh then
+		curry = curry + 1
+		ny = ny - sceneh
+	end
+	if currx ~= ox or curry ~= oy then
+		if not map[curry] or not map[curry][currx] then
+			gameOver = true
+			return
+		else
+			if not map[curry][currx].visited then
+				for i=1,5 do spawnBug() end
+				map[curry][currx].visited = true
+			end
+			drawMap()
+		end
+	end
+	if not exiting then
+		table.insert(snake, 1, {
+			mx = currx, my = curry,
+			x = nx, y = ny})
+	end
+	
+	local terr = map[snake[1].my][snake[1].mx][snake[1].y][snake[1].x] 
+	if type(terr) == "number" then
+		--collision code
+		map[snake[1].my][snake[1].mx][snake[1].y][snake[1].x] = nil
+		drawSegment(2)
+		term.setCursorPos(snake[1].x, snake[1].y)
+		setBG(colours.lightGrey, colours.white)
+		setTX(colours.brown, colours.black)
+		term.write("@")
+		gameOver = true
+		return
+	elseif terr == 'e' then
+		map[snake[1].my][snake[1].mx][snake[1].y][snake[1].x] = nil
+		table.insert(map[snake[1].my][snake[1].mx].whitespace, 
+			{ x = snake[1].x, y = snake[1].y })
+		energy = energy + 200
+		addSegments = addSegments + 5
+		score = score + 200
+		eggcount = eggcount + 1
+	elseif terr == 't' then
+		map[snake[1].my][snake[1].mx][snake[1].y][snake[1].x] = nil
+		energy = energy - 50
+		addSegments = addSegments + 3
+		score = score - 50
+	elseif terr == 'b' then
+		map[snake[1].my][snake[1].mx][snake[1].y][snake[1].x] = nil
+		energy = energy + 20
+		addSegments = addSegments + 1
+		score = score + 10
+	elseif terr == 'B' then
+		map[snake[1].my][snake[1].mx][snake[1].y][snake[1].x] = nil
+		energy = energy + 40
+		addSegments = addSegments + 2
+		score = score + 20
+	elseif terr == 'X' then
+		map[snake[1].my][snake[1].mx][snake[1].y][snake[1].x] = nil
+		energy = energy + 100
+		addSegments = addSegments + 3
+		score = score + 50
+	elseif terr == 'F' then
+		map[snake[1].my][snake[1].mx][snake[1].y][snake[1].x] = nil
+		fb = fb + 8
+		score = score + 50
+	elseif terr == "@" and eggcount == eggtotal and not exiting then
+		exiting = true
+		score = score + 2000
+		timerLength = 0.05
+	end
+	
+	if energy < 0 then
+		gameOver = true
+		drawSnake()
+		return
+	end
+	if energy > 1000 then
+		energy = 1000
+	end
+	
+	for i=4,#snake do
+		local v = snake[i]
+		if v.mx == snake[1].mx and v.my == snake[1].my and 
+				v.x == snake[1].x and v.y == snake[1].y then
+			gameOver = true
+			drawSegment(2)
+			term.setCursorPos(snake[1].x, snake[1].y)
+			term.setBackgroundColour(selcol.body)
+			setTX(colours.red, colours.black)
+			term.write("@")
+			return
+		end
+	end
+	
+	if snake[#snake].mx == currx and snake[#snake].my == curry then
+		drawSegment(#snake)
+	end
+	if snake[2].mx == currx and snake[2].my == curry then
+		drawSegment(2)
+	end
+	drawSegment(1)
+end
+
+function readInput(lim)
+	sleep(0.1)
+	term.setCursorBlink(true)
+
+	local inputString = ""
+	local ox,oy = term.getCursorPos()
+	term.write(" ")
+	term.setCursorPos(ox, oy)
+	if not lim or type(lim) ~= "number" or lim < 1 then lim = w - ox end
+	
+	while true do
+		local id,key = os.pullEvent()
+		
+		if id == "key" and key == 14 and #inputString > 0 then
+			inputString = string.sub(inputString, 1, #inputString-1)
+			term.setCursorPos(ox + #inputString,oy)
+			term.write(" ")
+		elseif id == "key" and key == 28 and inputString ~= string.rep(" ", #inputString) then 
+			break
+		elseif id == "char" and #inputString < lim and key ~= regex then
+			inputString = inputString..key
+		end
+		term.setCursorPos(ox,oy)
+		term.write(inputString)
+		term.setCursorPos(ox + #inputString, oy)
+	end
+	
+	while string.sub(inputString, 1, 1) == " " do
+		inputString = string.sub(inputString, 2, #inputString)
+	end
+	while string.sub(inputString, #inputString, #inputString) == " " do
+		inputString = string.sub(inputString, 1, #inputString-1)
+	end
+	term.setCursorBlink(false)
+	
+	return inputString
+end
+
+function wprintOffCenter(msg, height, width, offset)
+	local inc = 0
+	local ops = 1
+	while #msg - ops > width do
+		local nextspace = 0
+		while string.find(msg, " ", ops + nextspace) and
+				string.find(msg, " ", ops + nextspace) - ops < width do
+			nextspace = string.find(msg, " ", nextspace + ops) + 1 - ops
+		end
+		local ox,oy = term.getCursorPos()
+		term.setCursorPos(width/2 - (nextspace)/2 + offset, height + inc)
+		inc = inc + 1
+		term.write(string.sub(msg, ops, nextspace + ops - 1))
+		ops = ops + nextspace
+	end
+	term.setCursorPos(width/2 - #string.sub(msg, ops)/2 + offset, height + inc)
+	term.write(string.sub(msg, ops))
+	
+	return inc + 1
+end
+
+function displayConfirmDialogue(msg, offset, backColour, textColour)
+	local dialogoffset = 10
+	if not offset then offset = 8 end
+	if not backColour or not term.isColour() then backColour = colours.white end
+	if not textColour or not term.isColour() then textColour = colours.black end
+	setBG(backColour, backColour)
+	setTX(textColour, textColour)
+	--We actually print twice- once to get the lines, second time to print proper. Easier this way.
+	local lines = wprintOffCenter(msg, offset, w - (dialogoffset+2) * 2, dialogoffset + 2)
+	
+	--This cluster of statements prints a nice box with the message the NPC has for the player in it.
+	for i=offset-1,offset+lines do
+		term.setCursorPos(dialogoffset, i) 
+		term.write(" "..string.rep(" ", w - (dialogoffset) * 2 - 2).." ")
+	end
+	--term.setCursorPos(dialogoffset, 10 + lines + 1)
+	--term.write(string.rep(" ", w - (dialogoffset) * 2))
+	wprintOffCenter(msg, offset, w - (dialogoffset+2) * 2, dialogoffset + 2)
+end
+
+function displayInputDialogue(msg, offset, backColour, textColour, prompt)
+	if not prompt then prompt = ">" end
+	
+	local dialogoffset = 10
+	if not backColour or not term.isColour() then backColour = colours.white end
+	if not textColour or not term.isColour() then textColour = colours.black end
+	setBG(backColour, backColour)
+	setTX(textColour, textColour)
+
+	--We actually print twice- once to get the lines, second time to print proper. Easier this way.
+	local lines = wprintOffCenter(msg, offset, w - (dialogoffset+2) * 2, dialogoffset + 2)
+	
+	--This cluster of statements prints a nice box with the message the NPC has for the player in it.
+	for i=offset-1,offset+2+lines do
+		term.setCursorPos(dialogoffset, i) 
+		term.write("*"..string.rep(" ", w - (dialogoffset) * 2 - 2).."*")
+	end
+	wprintOffCenter(msg, offset, w - (dialogoffset+2) * 2, dialogoffset + 2)
+	
+	term.setCursorPos(dialogoffset + 1, offset + 2 + lines)
+	term.write(" "..prompt)
+	
+	--We get our input here
+	local input = readInput(10)
+	
+	return input
+end
+
+local function drawSelect(x,y,word,charl,charr)
+	term.setCursorPos(x,y)
+	term.write(charl)
+	term.setCursorPos(x+#word+1,y)
+	term.write(charr)
+end
+
+local function initTimers()
+	bgnext = math.random(bgfmin, bgfmax)
+	shnext = math.random(shfmin, shfmax)
+	timerID = os.startTimer(timerLength)
+end
+
+local function drawScores(sel)
+	local noff,soff,eoff = 1,25,31
+	local ntoff,stoff,etoff = 5,20,28
+	local opt = {"New Game", "Quit"}
+	
+	setBG(colours.blue, colours.black)
+	setTX(colours.white, colours.white)
+	term.setCursorPos(scxoff,scyoff)
+	term.write(string.rep(" *", scw/2))
+	for i=1,12 do
+		term.setCursorPos(scxoff,scyoff+i)
+		if (i%2) == 1 then
+			term.write("*"..string.rep(" ",scw-2).." ")
+		else
+			term.write(" "..string.rep(" ",scw-2).."*")
+		end
+	end
+	term.setCursorPos(scxoff,scyoff + sch - 1)
+	term.write(string.rep("* ", scw/2))
+	term.setCursorPos(scxoff + ntoff,scyoff+1)
+	term.write("Name")
+	term.setCursorPos(scxoff + stoff,scyoff+1)
+	term.write("Score")
+	term.setCursorPos(scxoff + etoff,scyoff+1)
+	setTX(colours.yellow, colours.white)
+	term.write("Eggs")
+	
+	for i,v in ipairs(hs) do
+		term.setCursorPos(scxoff + noff,scyoff+1+i)
+		setBG(sncol[v.snake].body, colours.white)
+		setTX(sncol[v.snake].scales, colours.black)
+		term.write("-- "..v.name.." -")
+		setTX(sncol[v.snake].eyes, colours.black)
+		term.write(":")
+		term.setCursorPos(scxoff + soff - #tostring(v.score), scyoff+1+i)
+		setBG(colours.blue, colours.black)
+		setTX(colours.white, colours.white)
+		term.write(tostring(v.score))
+		term.setCursorPos(scxoff + eoff - #tostring(v.eggs), scyoff+1+i)
+		setTX(colours.yellow, colours.white)
+		term.write(tostring(v.eggs))
+	end
+	
+	term.setCursorPos(scxoff + scw/4 - #opt[1]/2 - 1, scyoff + sch-2)
+	setTX(colours.white, colours.white)
+	if sel == 1 then term.write("<"..opt[1]..">")
+	else term.write(" "..opt[1].." ") end
+	term.setCursorPos(scxoff + (3*scw)/4 - #opt[2]/2 - 1, scyoff + sch-2)
+	if sel == 2 then term.write("<"..opt[2]..">")
+	else term.write(" "..opt[2].." ") end
+end
+
+local function prepareRandomScene()
+	gameOver = false
+	currx = math.random(1,#map[1])
+	curry = math.random(1,#map)
+	addSegments = 12
+	energy = 1000
+	local s = map[curry][currx].whitespace[math.random(1,#map[curry][currx].whitespace)]
+	snake = {}
+	snake[1] = { mx = currx, my = curry, x = s.x, y = s.y}
+	selcol = sncol[math.random(1,3)]
+	if not term.isColour() then selcol = sncol[5] end
+	drawMap(currx, curry)
+	drawSnake()
+end
+
+local function runSplash()
+	inSplash = true
+	exiting = false
+	flaming = false
+	paused = false
+	fb = 0
+	loadMap(shell.resolve(".").."/Resources/"..levelname)
+	prepareRandomScene()
+	local sel = 1
+	local splashOver = false
+	local msg = ""
+	if not showScores then
+		displayConfirmDialogue("Snake Maze", 8, colours.blue, colours.white)
+		displayConfirmDialogue("By NitrogenFingers", 10, colours.blue, colours.white)
+		msg = "Press a key to begin"
+	else
+		drawScores(sel)
+		msg = "Use arrows to move and enter to select"
+	end
+	term.setCursorPos(w/2 - #msg/2,h)
+	setTX(colours.white, colours.white)
+	setBG(colours.blue, colours.black)
+	term.clearLine()
+	term.write(msg)
+	local splashTimer = os.startTimer(timerLength)
+	while not splashOver do
+		local klist = {}
+		local head = snake[1]
+		local insertOK = true
+		if lookup(head.x + 1, head.y) ~= 0 then
+			for i = 2,#snake do
+				v = snake[i]
+				if v.x == head.x + 1 and v.y == head.y then
+					insertOK = false
+					break
+				end
+			end
+			if insertOK then table.insert(klist, { fx = 1, fy = 0 }) end
+		end
+		insertOK = true
+		if lookup(head.x - 1, head.y) ~= 0 then
+			for i = 2,#snake do
+				v = snake[i]
+				if v.x == head.x - 1 and v.y == head.y then
+					insertOK = false
+					break
+				end
+			end
+			if insertOK then table.insert(klist, { fx = -1, fy = 0 }) end
+		end
+		insertOK = true
+		if lookup(head.x, head.y + 1) ~= 0 then
+			for i = 2,#snake do
+				v = snake[i]
+				if v.x == head.x and v.y == head.y + 1 then
+					insertOK = false
+					break
+				end
+			end
+			if insertOK then table.insert(klist, { fx = 0, fy = 1 }) end
+		end
+		insertOK = true
+		if lookup(head.x, head.y - 1) ~= 0 then
+			for i = 2,#snake do
+				v = snake[i]
+				if v.x == head.x and v.y == head.y - 1 then
+					insertOK = false
+					break
+				end
+			end
+			if insertOK then table.insert(klist, { fx = 0, fy = -1 }) end
+		end
+		if #klist > 0 then
+			local rk = klist[math.random(1,#klist)]
+			snakefx = rk.fx
+			snakefy = rk.fy
+		end
+		
+		local id, key = os.pullEvent()
+		if id == "key" then
+			if not showScores then
+				showScores = true
+				drawScores(sel)
+				local msg = "Use arrows to move and enter to select"
+				term.setCursorPos(w/2 - #msg/2,h)
+				setTX(colours.white, colours.white)
+				setBG(colours.blue, colours.black)
+				term.clearLine()
+				term.write(msg)
+			elseif key == keys.enter then
+				inSplash = false
+				return sel
+			elseif key == keys.left and sel == 2 then
+				sel = 1
+				drawScores(sel)
+			elseif key == keys.right and sel == 1 then
+				sel = 2
+				drawScores(sel)
+			end
+		elseif id == "timer" and key == splashTimer then
+			local ox,oy = currx,curry
+			updateSnake()
+			if ox ~= currx or oy ~= curry then
+				if not showScores then
+					displayConfirmDialogue("Snake Maze", 8, colours.blue, colours.white)
+					displayConfirmDialogue("By NitrogenFingers", 10, colours.blue, colours.white)
+				else
+					drawScores(sel)
+				end
+			end
+			if gameOver then
+				prepareRandomScene()
+				if showScores then drawScores(sel) end
+			end
+			if not showScores then
+				displayConfirmDialogue("Snake Maze", 8, colours.blue, colours.white)
+				displayConfirmDialogue("By NitrogenFingers", 10, colours.blue, colours.white)
+			end
+			splashTimer = os.startTimer(timerLength)
+		end
+	end
+end
+
+local function runMenu()
+	gameOver = false
+	exiting = false
+	paused = false
+	flaming = false
+	fb = 0
+	currx = 1
+	curry = 1
+	local menw,menh = 26,14
+	local xoff,yoff = math.floor(w/2-menw/2), math.floor(h/2-menh/2)
+	local sm, mo = 1,1
+	local spsel, snsel = 2, 1
+	local spop = { "Slow", "Medium", "Fast", "Fiendish" }
+	local spopl,spopt,spopy = xoff + 2, xoff + 5, yoff + 4
+	local snop = { "Sammy", "Clyde", "Joss " }
+	local snopl,snopt,snopy = xoff + menw - 2, xoff + menw - 4 - #snop[1], yoff + 3
+	local bot = "Play Snake Maze"
+	local bott,boty = xoff + (menw/2 - #bot/2) + 1, yoff + 13
+	
+	for i=1,#hs do
+		if hs[i].eggs == 16 then
+			table.insert(snop, "Bones")
+			snopy = snopy - 1
+			break
+		end
+	end
+	
+	if not term.isColour() then
+		snop = {}
+		spopl = spopl + 5
+		spopt = spopt + 5
+	end
+	
+	setBG(colours.grey, colours.black)
+	term.clear()
+	setBG(colours.blue, colours.black)
+	setTX(colours.white, colours.white)
+	for i=1,menh do
+		term.setCursorPos(xoff,yoff+i)
+		term.write(string.rep(" ", menw))
+	end
+	term.setCursorPos(spopl + 1, yoff + 2)
+	term.write("Speed")
+	if term.isColour() then term.write(string.rep(" ",9).."Snake") end
+	for i=1,#spop do
+		term.setCursorPos(spopl, spopy + i*2 - 2)
+		if i == spsel then
+			setBG(colours.lime, colours.black)
+			setTX(colours.lime, colours.white)
+		else
+			setBG(colours.red, colours.black)
+			setTX(colours.red, colours.black)
+		end
+		term.write("X")
+		setBG(colours.blue, colours.black)
+		setTX(colours.white, colours.white)
+		term.write("  "..spop[i])
+	end
+	for i=1,#snop do
+		setBG(colours.blue, colours.black)
+		setTX(colours.white, colours.white)
+		term.setCursorPos(snopt, snopy + i*2)
+		term.write(snop[i].."  ")
+		if i == snsel then
+			setBG(colours.lime, colours.black)
+			setTX(colours.lime, colours.white)
+		else
+			setBG(colours.red, colours.black)
+			setTX(colours.red, colours.black)
+		end
+		term.write("X")
+	end
+	setBG(colours.blue, colours.black)
+	setTX(colours.white, colours.white)
+	term.setCursorPos(bott, boty)
+	term.write(bot)
+	local snstx = xoff + math.random(2,menw - 1)
+	local snsty = yoff + menh + 1
+	snakefx = 1
+	snakefy = 0
+	snake = {}
+	for i=1,70 do
+		snstx = snstx + snakefx
+		snsty = snsty + snakefy
+		if snstx == xoff + menw and snsty == yoff + menh + 1 then
+			snakefx = 0
+			snakefy = -1
+		elseif snstx == xoff + menw and snsty == yoff then
+			snakefx = -1
+			snakefy = 0
+		elseif snstx == xoff - 1 and snsty == yoff then
+			snakefx = 0
+			snakefy = 1
+		elseif snstx == xoff - 1 and snsty == yoff + menh + 1 then
+			snakefx = 1
+			snakefy = 0
+		end
+		table.insert(snake, 1, {mx = 1, my = 1, x = snstx, y = snsty })
+	end
+	if term.isColour() then
+		selcol = sncol[snsel]
+	else
+		selcol = sncol[5]
+	end
+	drawSnake()
+	timerLength = baseTimer - (spsel-1)*0.05
+	local menutimer = os.startTimer(timerLength)
+	local inMenu = true
+	while inMenu do
+		setTX(selcol.body, selcol.body)
+		setBG(colours.blue, colours.black)
+		if sm == 1 then
+			drawSelect(spopt - 1, spopy + mo*2 - 2, spop[mo], "<", ">")
+		elseif sm == 2 then
+			drawSelect(snopt - 1, snopy + mo*2, snop[mo], "<", ">")
+		else
+			drawSelect(bott - 1, boty, bot, "<", ">")
+		end
+		local id,key = os.pullEvent()
+		
+		if id == "timer" and key == menutimer then
+			local head = snake[1]
+			if head.x == xoff + menw and head.y == yoff + menh + 1 then
+				snakefx = 0
+				snakefy = -1
+			elseif head.x == xoff + menw and head.y == yoff then
+				snakefx = -1
+				snakefy = 0
+			elseif head.x == xoff - 1 and head.y == yoff then
+				snakefx = 0
+				snakefy = 1
+			elseif head.x == xoff - 1 and head.y == yoff + menh + 1 then
+				snakefx = 1
+				snakefy = 0
+			end
+			setBG(colours.grey, colours.black)
+			term.setCursorPos(snake[#snake].x, snake[#snake].y)
+			term.write(" ")
+			table.remove(snake, #snake)
+			table.insert(snake, 1, { mx = 1, my = 1, x = head.x + snakefx, y = 
+					head.y + snakefy} )
+			drawSegment(1)
+			drawSegment(2)
+			menutimer = os.startTimer(timerLength)
+		elseif id == "key" then
+			if key == keys.left and sm == 2 then
+				drawSelect(snopt - 1, snopy + mo*2, snop[mo], " ", " ")
+				sm = 1
+				if mo > #spop then mo = #spop end
+			elseif key == keys.right and sm == 1 and term.isColour() then
+				drawSelect(spopt - 1, spopy + mo*2 - 2, spop[mo], " ", " ")
+				sm = 2
+				if mo > #snop then mo = #snop end
+			elseif key == keys.down then
+				if sm == 1 then
+					drawSelect(spopt - 1, spopy + mo*2 - 2, spop[mo], " ", " ")
+					if mo == #spop then
+						mo = 1
+						sm = 3
+					else mo = mo + 1 end
+				elseif sm == 2 then
+					drawSelect(snopt - 1, snopy + mo*2, snop[mo], " ", " ")
+					if mo == #snop then
+						mo = 1
+						sm = 3
+					else mo = mo + 1 end
+				elseif sm == 3 then
+					drawSelect(bott - 1, boty, bot, " ", " ")
+					sm = 1
+					mo = 1
+				end
+			elseif key == keys.up then
+				if sm == 1 then
+					drawSelect(spopt - 1, spopy + mo*2 - 2, spop[mo], " ", " ")
+					if mo == 1 then
+						mo = 1
+						sm = 3
+					else mo = mo - 1 end
+				elseif sm == 2 then
+					drawSelect(snopt - 1, snopy + mo*2, snop[mo], " ", " ")
+					if mo == 1 then
+						mo = 1
+						sm = 3
+					else mo = mo - 1 end
+				elseif sm == 3 then
+					drawSelect(bott - 1, boty, bot, " ", " ")
+					sm = 1
+					mo = #spop
+				end
+			elseif key == keys.enter then
+				if sm == 1 then
+					term.setCursorPos(spopl, spopy + spsel*2 - 2)
+					setBG(colours.red, colours.black)
+					setTX(colours.red, colours.black)
+					term.write("X")
+					spsel = mo
+					timerLength = baseTimer - (spsel-1)*0.05
+					term.setCursorPos(spopl, spopy + spsel*2 - 2)
+					setBG(colours.lime, colours.black)
+					setTX(colours.lime, colours.white)
+					term.write("X")
+				elseif sm == 2 then
+					term.setCursorPos(snopl, snopy + snsel*2)
+					setBG(colours.red, colours.black)
+					setTX(colours.red, colours.black)
+					term.write("X")
+					snsel = mo
+					selcol = sncol[snsel]
+					term.setCursorPos(snopl, snopy + snsel*2)
+					setBG(colours.lime, colours.black)
+					setTX(colours.lime, colours.white)
+					term.write("X")
+					drawSnake()
+				elseif sm == 3 then
+					inMenu = false
+				end
+			end
+		end
+	end
+end
+
+local function runGame()
+	loadMap(shell.resolve(".").."/Resources/"..levelname)
+	initSnake()
+	initTimers()
+	drawFooter()
+	while not gameOver do
+		local id,key = os.pullEvent()
+		if id == 'timer' and key == timerID and not paused then
+			drawFooter()
+			bgnext = bgnext - 1
+			if bgnext <= 0 then
+				spawnBug()
+			end
+			shnext = shnext - 1
+			if shnext <= 0 then
+				spawnShroom()
+			end
+			if flaming then
+				if map[fbcy] and map[fbcy][fbcx] then
+					map[fbcy][fbcx][fby][fbx] = map[fbcy][fbcx][fby][fbx] + 1
+					if map[fbcy][fbcx][fby][fbx] == 4 then
+						map[fbcy][fbcx][fby][fbx] = nil
+						updateFire()
+					else
+						updateMap(fbcx,fbcy,fbx,fby)
+					end
+				end
+				fb = fb - 1
+				if fb == 0 then 
+					flaming = false
+					drawMap()
+				end
+			end
+			updateSnake()
+			timerID = os.startTimer(timerLength)
+		elseif id == 'key' and #snake > 1 then
+			local xdiff = snake[2].x - snake[1].x
+			local ydiff = snake[2].y - snake[1].y
+			if not paused then
+				if key == keys.left and xdiff ~= -1 and 
+						not flaming and not exiting then
+					snakefx = -1
+					snakefy = 0
+					drawSegment(1)
+				elseif key == keys.right and xdiff ~= 1 and not flaming then
+					snakefx = 1
+					snakefy = 0
+					drawSegment(1)
+				elseif key == keys.up and ydiff ~= -1 and not flaming then
+					snakefx = 0
+					snakefy = -1
+					drawSegment(1)
+				elseif key == keys.down and ydiff ~= 1 and not flaming then
+					snakefx = 0
+					snakefy = 1
+					drawSegment(1)
+				elseif key == keys.space and fb > 0 and not flaming then
+					flaming = true
+					updateFire()
+				elseif key ~= keys.left and key ~= keys.right and key ~= keys.up
+						and key ~= keys.down and key ~= keys.space then
+					displayConfirmDialogue("Paused", 8, colours.blue, colours.white)
+					displayConfirmDialogue("Press \'Q\' to quit, any other key to continue", 10, colours.blue, colours.white)
+					paused = true
+				end				
+			elseif key == keys.q then
+				gameOver = true
+				os.pullEvent()
+			else
+				drawMap(currx,curry)
+				timerID = os.startTimer(timerLength)
+				paused = false
+			end
+		end
+	end
+	
+	if not paused then		
+		term.setCursorPos(3,h)
+		setBG(colours.blue, colours.white)
+		setTX(colours.white, colours.black)
+		term.write("Game Over!    ")
+		os.pullEvent("key")
+		
+		--high scores here
+		if #hs < 10 or score > hs[10].score then
+			addHighScore()
+		end
+	else
+		paused = false
+	end
+end
+
+function split(str, pattern)
+  local t = { }
+  local fpat = "(.-)" .. pattern
+  local last_end = 1
+  local s, e, cap = str:find(fpat, 1)
+  while s do
+    if s ~= 1 or cap ~= "" then
+      table.insert(t,cap)
+    end
+    last_end = e+1
+    s, e, cap = str:find(fpat, last_end)
+  end
+  if last_end <= #str then
+    cap = str:sub(last_end)
+    table.insert(t, cap)
+  end
+  return t
+end
+
+local tArgs = {...}
+if tArgs[1] == "-o" then
+	scenew = 50
+	levelname = "levelo.nfp"
+end
+
+loadHS()
+--So this is lazy... but whatever
+local v = runSplash()
+while v == 1 do
+	runMenu()
+	runGame()
+	v = runSplash()
+end
+setBG(colours.black, colours.black)
+SpeedOS.Close()
