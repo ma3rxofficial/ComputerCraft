@@ -5,11 +5,13 @@ SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 SpeedOS.ToolBarColour = colours.lightGrey
 SpeedOS.ToolBarTextColour = colours.white
+
 windows.clearScreen(colors.gray)
 term.setTextColor(colors.white)
 
 local test = http.get("https://api.ipify.org/?format=raw")
 SpeedText.cPrint("Your IP is "..test.readAll())
+
 while true do
   event, key = os.pullEvent()
   if event == "key" or event == "mouse_click" or event == "mouse_drag" then
