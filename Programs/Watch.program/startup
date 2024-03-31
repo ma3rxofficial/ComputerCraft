@@ -1,4 +1,4 @@
-local updateTime_delay = 0
+local updateTime_delay = 0.8
 local cur_time, cur_date = nil, nil
 local h, m, s, d, month, y = nil, nil, nil, nil, nil, nil
 local time_URL = "http://test-my-php.freeiz.com/time.php"
@@ -417,7 +417,7 @@ local function updateTime()
 		if timer == updateTimer then
 			if m < 59 then
 				_, m = eblan(os.time())
-			elseif m == 59 then
+			elseif m == 59 or m == 60 then
 				m = 0
 				h = h + 1
 			end
