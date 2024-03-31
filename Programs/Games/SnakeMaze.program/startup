@@ -1,6 +1,9 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
 
+SpeedOS.ToolBarColour = colours.grey
+SpeedOS.ToolBarTextColour = colours.white
+
 --[[
 	Snake Maze
 	Inspired by Snake, Snake's Alive and a few other simple games.
