@@ -21,4 +21,5 @@ while true do
   if rs.getInput("right", false) then
     rs.setOutput("left", true)
   end
+  sleep(0)
 end
