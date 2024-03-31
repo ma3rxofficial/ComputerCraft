@@ -1409,7 +1409,7 @@ function mainMenu()
 			elseif (Y == 9) then
 				if (X >= math.floor(screenWidth / 2) - math.floor(string.len("Exit") / 2) + 1 and X < math.floor(screenWidth / 2) - math.floor(string.len("Exit") / 2) + 1 + string.len("Exit")) then
 					term.clear()
-					SpeedOS.Close()
+					error()
 					break
 				end
 			end
