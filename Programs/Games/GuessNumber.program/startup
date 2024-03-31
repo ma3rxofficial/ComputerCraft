@@ -1,6 +1,11 @@
-fs=OneOS.fs
-os.loadAPI("/SpeedAPI/SpeedText")
-os.loadAPI("/SpeedAPI/SpeedGUI")
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.ToolBarColour = colours.lightGrey
+SpeedOS.ToolBarTextColour = colours.white
+
+SpeedOS.LoadAPI("/SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("/SpeedAPI/SpeedGUI")
 
 function choosenum(num)
   real_num = math.random(0, 9)
