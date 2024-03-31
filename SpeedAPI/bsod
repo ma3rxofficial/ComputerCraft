@@ -8,7 +8,7 @@ function bsod(error)
   local cwrite = function(msg, y, offset) local sw,sh = term.getSize() term.setCursorPos(sw/2-#msg/2, (y or (sh/2)) + (offset or 0)) write(msg) end
   local errHeader = function(text, y, centre) setColors(colors.white, colors.blue) if centre then cwrite(text, y) else term.setCursorPos(1,y) print(text) end setColors(colors.blue, colors.white) end
   local printMsg = function(text, y) term.setCursorPos(1,y) print(text) end
-  local waitForKey = function() while true do local e,k=os.pullEventRaw("key") if k == 28 or k == 156 then break end end end
+  local waitForKey = function() while true do local e,k=os.pullEventRaw("key") if k == 28 or k == 156 then SpeedOS.Close() end end end
   local sw,sh = term.getSize()
 
   clear(colors.blue)
