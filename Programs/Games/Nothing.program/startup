@@ -1,5 +1,6 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
+
 SpeedOS.LoadAPI("/SpeedAPI/alphanumeric")
 SpeedOS.LoadAPI("/SpeedAPI/SpeedText")
 
@@ -8,7 +9,7 @@ SpeedOS.ToolBarTextColour = colours.white
 
 local workingTime = 0
 local x, y = term.getSize()
-local last_score = fs.open("nothing.score", "r").readAll()
+local last_score = fs.open("Resources/nothing.score", "r").readAll()
 
 term.setBackgroundColor(colors.gray)
 term.setTextColor(colors.lightGray)
@@ -56,7 +57,7 @@ while true do
   sleep(1)
   term.clear()
   
-  local file = fs.open("nothing.score", "w")
+  local file = fs.open("Resources/nothing.score", "w")
   file.write(tostring(workingTime))  
   file.flush()
   file.close()
