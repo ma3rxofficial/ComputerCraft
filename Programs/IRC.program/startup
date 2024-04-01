@@ -1,0 +1,50 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/windows")
+
+io = SpeedOS.IO
+
+if not peripheral.find("adventure map interface", true) then
+	windows.clearScreen(colors.white)
+	windows.error("You need adventure map interface!")
+	SpeedOS.Close()
+end
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+
+p = peripheral.wrap(peripheral.find("adventure map interface", true))
+
+term.setTextColor(colors.lightGray)
+io.write("TechWorld ")
+term.setTextColor(colors.cyan)
+print(" #IRC")
+
+while true do
+	event, user, msg = os.pullEvent()
+
+	if event == "chat_message" then
+		term.setTextColor(colors.orange)
+		io.write("<")
+		term.setTextColor(colors.cyan)
+		io.write("G")
+		term.setTextColor(colors.orange)
+		io.write("> ")
+		term.setTextColor(colors.lightGray)
+		io.write(user)
+		term.setTextColor(colors.white)
+		print(": "..msg)
+	elseif event == "char" then
+		term.setTextColor(colors.lightGray)
+		io.write("> ")
+		term.setTextColor(colors.white)
+		msg2 = io.read()
+		for _, value in pairs(p.getPlayerUsernames()) do
+			pl = p.getPlayerByName(value)
+			pl.sendChat(msg2)
+		end
+	end
+
+end
