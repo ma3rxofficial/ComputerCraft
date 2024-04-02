@@ -7,6 +7,12 @@ windows.clearScreen(colors.white)
 
 local _sleep = tonumber(windows.input("auto", "auto", "Sleep time", 5, {"Enter sleep time", ""})[1])
 
+if type(_sleep) == "nil" then
+  windows.clearScreen(colors.white)
+  windows.error("Ti 4o dolbaeb? Normalno vvodi!")
+  SpeedOS.Close()
+end
+
 windows.fadeIn(0)
 sleep(_sleep)
 windows.error("Idi nahui!")
