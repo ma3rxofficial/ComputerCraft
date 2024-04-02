@@ -3,6 +3,7 @@ SpeedOS = loader.OS()
 
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/config")
 
 io = SpeedOS.IO
 
@@ -12,8 +13,21 @@ if not peripheral.find("adventure map interface", true) then
 	SpeedOS.Close()
 end
 
+
 SpeedOS.ToolBarColour = colours.black
 SpeedOS.ToolBarTextColour = colours.white
+
+huy = config.read("System/IRC.settings", "blacklist")
+local blacklist = textutils.unserialize(huy)
+
+function Blacklist(name)
+	for _, _name in pairs(blacklist) do
+		if _name == name then
+			return false
+		end
+	end
+	return true
+end
 
 p = peripheral.wrap(peripheral.find("adventure map interface", true))
 
@@ -85,9 +99,17 @@ while true do
 		io.write("> ")
 		term.setTextColor(colors.white)
 		msg2 = io.read()
+
+		if msg2 == "/exit" or msg2 == "/quit" then
+			SpeedOS.Close()
+			error()
+		end
 		for _, value in pairs(p.getPlayerUsernames()) do
 			pl = p.getPlayerByName(value)
-			pl.sendChat(msg2)
+
+			if Blacklist(value) then
+				pl.sendChat(msg2)
+			end
 		end
 	end
 
