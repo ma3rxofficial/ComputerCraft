@@ -14,7 +14,7 @@ term.setCursorPos(1,1)
 windows.clearScreen(colors.white)
 if not peripheral.find("printer", true) then
   windows.error("You need printer!")
-  error()
+  SpeedOS.Close()
 end
 
 windows.clearScreen(colors.gray)
@@ -37,7 +37,7 @@ while true do
   if input == "exit" then
     term.clear()
     term.setCursorPos(1, 1)
-    error()
+    SpeedOS.Close()
   elseif input == "help" then
     term.setTextColor(colors.blue)
     print("help: Displays this message.")
