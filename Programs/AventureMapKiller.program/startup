@@ -1,6 +1,5 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
-SpeedOS = OneOS
 
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
@@ -31,6 +30,20 @@ if not selected_player then
   SpeedOS.Close()
 end
 
+function checkIsPlayerOnline(user)
+  for _, value in pairs(p.getPlayerUsernames()) do
+      if value == user then
+        return true
+      end
+  end
+
+  return false
+end
+
+if not checkIsPlayerOnline(selected_player) then
+  windows.error("Player not found!")
+  SpeedOS.Close()
+end
 
 windows.clearScreen(colors.black)
 
@@ -69,7 +82,7 @@ pl.damage(20) --real killing!
 sleep(3)
 
 if pl.getGamemode() == 1 then
-  print("PLAYER IS IN CRETIVE MODE. CAN'T KILL!")
+  print("PLAYER IS IN CREATIVE MODE. CAN'T KILL!")
   sleep(5)
   SpeedOS.Close()
 end
