@@ -249,7 +249,7 @@ for j=1,monitorsCountInHeight do
                 m[j][i].setBackgroundColor(colors.white)
                 m[j][i].clear()
                 m[j][i].setTextColor(colors.lightGray)
-                local textHeh = "Monitor "..string.sub(side,9,-1)
+                local textHeh = "Monitor "..side
                 m[j][i].setCursorPos(math.ceil(monitors[j][i]["xSize"]/2-#textHeh/2),math.ceil(monitors[j][i]["ySize"]/2))
                 m[j][i].write(textHeh)
         end
