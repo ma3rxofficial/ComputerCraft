@@ -1,0 +1,47 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.ToolBarColour = colours.grey
+SpeedOS.ToolBarTextColour = colours.white
+
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/config")
+
+huy = config.read("System/Repeater.settings", "blacklist")
+local blacklist = textutils.unserialize(huy)
+local send_to = tonumber(config.read("System/Repeater.settings", "receiver"))
+
+function Log(str, color)
+  term.setTextColor(color)
+  print("["..SpeedText.time().."] "..str)
+end
+
+function Blacklist(id)
+  for _, _id in pairs(blacklist) do
+    if _id == id then
+      return false
+    end
+  end
+  
+  return true
+end
+
+if not peripheral.find("modem") then
+  windows.clearScreen(colors.white)
+  windows.error("You need wireless modem!")
+end
+
+rednet.open(peripheral.find("modem"))
+
+Log("Port "..peripheral.find("modem").." opened!", colors.green)
+
+while true do
+  event, id, msg, dist = os.pullEvent()
+  
+  if event == "rednet_message" and Blacklist(id) then
+    rednet.send(send_to, msg)    
+    Log(tostring(id)..": "..msg, colors.lightBlue)
+  end
+end
