@@ -1,9 +1,9 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
 
-SpeedOS.loadAPI("SpeedAPI/peripheral")
-SpeedOS.loadAPI("SpeedAPI/windows")
-SpeedOS.loadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 if not peripheral.find("adventure map interface", true) then
   windows.clearScreen(colors.white)
