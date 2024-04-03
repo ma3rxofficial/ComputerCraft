@@ -1,0 +1,34 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+
+fs = SpeedOS.fs
+
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+
+
+term.setTextColor(colors.white)
+term.setBackgroundColor(colors.black)
+term.clear()
+term.setCursorPos(1, 1)
+
+SpeedText.cPrint("Computer statistics", 1)
+SpeedText.line()
+
+print("Your computer ID: ", os.getComputerID())
+print("Computer label: ", os.getComputerLabel())
+print("Free space: ", fs.getFreeSpace("/"), " bytes")
+print("Computer running: ", os.clock(), " seconds")
+print("Disk free space: ", fs.getFreeSpace("/disk"), " bytes")
+
+while true do
+	event, hueta = os.pullEvent()
+
+	if event == "key" then
+		SpeedOS.Close()
+	elseif event == "mouse_click" or event == "mouse_drag" then
+		SpeedOS.Close()
+	end
+end
