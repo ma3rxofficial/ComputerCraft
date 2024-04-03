@@ -66,3 +66,5 @@ while bRunning do
     end
     
 end
+
+SpeedOS.Close()
