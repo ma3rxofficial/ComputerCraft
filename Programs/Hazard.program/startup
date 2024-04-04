@@ -1,0 +1,52 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+
+--hueta
+term.clear()
+term.setCursorPos(1,1)
+
+while true do
+
+print("------Technical Channel 1------")
+print("")
+print("------   Power Control   ------")
+print("")
+print("            00000              ")
+print("          000000000            ")
+print("         0[1]000[2]0")
+print("        0[3]00000[4]0")
+print("        0000000000000")
+print("        0[5]00000[6]0")
+print("         0[7]000[8]0")
+print("          000000000")
+print("            00000")
+print("")
+print("================================")
+print("")
+print(" Q - UP Power | A - Down Power")
+
+local event, param1 = os.pullEvent("char")
+if param1 == "q" then
+print("Up Power")
+rs.setBundledOutput("bottom", 1)
+sleep(0.66)
+rs.setBundledOutput("bottom", 0)
+sleep(0,4)
+term.clear()
+term.setCursorPos(1,1)
+end
+if param1 == "a" then
+print("Downed Power")
+rs.setBundledOutput("bottom", 2)
+sleep(0.66)
+rs.setBundledOutput("bottom", 0)
+sleep(0,4)
+term.clear()
+term.setCursorPos(1,1)
+end
+end
+
+
