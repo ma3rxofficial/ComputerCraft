@@ -1,0 +1,1 @@
+local tArg = {...} if realID == nil then realID = os.getComputerID() end if tArg[1] == "reset" then os.getComputerID = function() return realID end end if not tonumber(tArg[1]) then return false else newID = tonumber(tArg[1]) end os.getComputerID = function() return newID end

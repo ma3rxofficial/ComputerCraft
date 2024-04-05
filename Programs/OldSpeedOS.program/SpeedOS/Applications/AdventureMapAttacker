@@ -1,0 +1,57 @@
+os.loadAPI("SpeedAPI/peripheral")
+os.loadAPI("SpeedAPI/windows")
+os.loadAPI("SpeedAPI/SpeedText")
+
+if not peripheral.find("adventure map interface", true) then
+  windows.clearScreen(colors.white)
+  windows.error("You need Adventure map!")  
+  error()
+end
+m = peripheral.wrap(peripheral.find("adventure map interface", true))
+w = m.getWorld(0)
+term.setTextColor(colors.lightGray)
+windows.clearScreen(colors.white)
+SpeedText.cPrint("Adventure map found on side "..peripheral.find("adventure map interface", true))
+
+sleep(2)
+
+term.setTextColor(colors.black)
+windows.clearScreen(colors.white)
+
+vveden = windows.input("auto", 1, "Attacker", 20, {"X: ", ""}, 
+                                                       {"Y: ", ""},
+                                                       {"Z: ", ""},
+                                                       {"Power: ", ""},
+                                                       {"Create fire: ", ""},
+                                                       {"Destroy blocks: ", ""},
+                                                       {"Number of attacks: ", ""})
+
+x = tonumber(vveden[1])
+y = tonumber(vveden[2])
+z = tonumber(vveden[3])
+power = tonumber(vveden[4])
+create_fire = vveden[5]
+destroy_blocks = vveden[6]
+count = tonumber(vveden[7]) + 1
+
+count2 = 0
+while true do
+  count2 = count2 + 1
+  if count2 >= count then
+    break
+  end
+  
+  if create_fire == "" or create_fire == "n" or create_fire == "N" then
+    if destroy_blocks == "" or destroy_blocks == "n" or destroy_blocks == "N" then  
+      w.explode(x, y, z, power, false, false)
+    else
+      w.explode(x, y, z, power, false, true)
+    end
+  else
+    if destroy_blocks == "" or destroy_blocks == "n" or destroy_blocks == "N" then
+      w.explode(x, y, z, power, true, false)      
+    else
+      w.explode(x, y, z, power, true, true)
+    end
+  end
+end

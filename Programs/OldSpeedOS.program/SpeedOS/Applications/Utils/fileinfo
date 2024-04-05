@@ -1,0 +1,32 @@
+os.loadAPI("/SpeedAPI/lddfm")
+
+local tArgs = {...}
+if #tArgs ~= 1 then
+	tArgs[1] = tostring(lddfm.makeMenu())
+	term.clear()
+end
+print("-----Infomation------")
+if fs.exists(tArgs[1]) then
+	if not fs.isDir(tArgs[1]) then
+		print("Name : "..fs.getName(tArgs[1]))
+		local sizBytes = fs.getSize(tArgs[1])
+		local one,two = math.modf(sizBytes/1024)
+		print("Size : "..tostring(one).."."..string.sub(tostring(two),3,4).." KB ("..sizBytes.." bytes )")
+		local where = fs.getDrive(tArgs[1])
+		if where == "hdd" or where == "rom" then
+			print("Location : "..where)
+		else
+			print("Location : "..where.." disk drive")
+		end
+		if fs.isReadOnly(tArgs[1]) then
+			print("File is read only")
+		else
+			print([[Read / write enabled]])
+		end
+	else
+		print("This is a directory")
+	end
+else
+	print("Not file or Folder")
+end
+print("---------------------")

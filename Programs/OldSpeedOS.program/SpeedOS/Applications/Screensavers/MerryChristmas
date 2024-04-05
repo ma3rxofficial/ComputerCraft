@@ -1,0 +1,177 @@
+local flakes = {}
+local deletedFlakes = {}
+local maxX,maxY = term.getSize()
+local tColors = {colors.white,colors.lightBlue,colors.lightGray}
+local textStage = 1
+term.setBackgroundColor(colors.black)
+term.clear()
+function redraw()
+    for i,v in pairs(flakes) do
+        if v.stage == 1 then
+            if v.y < maxY then
+            	paintutils.drawPixel(v.x,v.y,colors.black)
+                v.y = v.y + 1
+                term.setCursorPos(v.x-1,v.y)
+                term.setTextColor(v.color)
+                term.write("*")
+                v.stage = 2
+            else
+                table.insert(deletedFlakes, i)
+            end
+        elseif v.stage == 2 then
+            if v.y < maxY then
+            	paintutils.drawPixel(v.x-1,v.y,colors.black)
+                v.y = v.y + 1
+                term.setCursorPos(v.x,v.y)
+                term.setTextColor(v.color)
+                term.write("*")
+                v.stage = 3
+            else
+                table.insert(deletedFlakes, i)
+            end
+        elseif v.stage == 3 then
+            if v.y < maxY then
+            	paintutils.drawPixel(v.x,v.y,colors.black)
+                v.y = v.y + 1
+                term.setCursorPos(v.x+1,v.y)
+                term.setTextColor(v.color)
+                term.write("*")
+                v.stage = 4
+            else
+                table.insert(deletedFlakes, i)
+            end
+        elseif v.stage == 4 then
+            if v.y < maxY then
+            	paintutils.drawPixel(v.x+1,v.y,colors.black)
+                v.y = v.y + 1
+                term.setCursorPos(v.x,v.y)
+                term.setTextColor(v.color)
+                term.write("*")
+                v.stage = 5
+            else
+                table.insert(deletedFlakes, i)
+            end
+        elseif v.stage == 5 then
+            if v.y < maxY then
+            	paintutils.drawPixel(v.x,v.y,colors.black)
+                v.y = v.y + 1
+                term.setCursorPos(v.x-1,v.y)
+                term.setTextColor(v.color)
+                term.write("*")
+                v.stage = 2
+            else
+                table.insert(deletedFlakes, i)
+            end
+        end
+    end
+    if textStage == 1 then
+    	term.setCursorPos(2,2)
+    	term.setTextColor(colors.green)
+    	term.write("M")
+    	term.setCursorPos(3,2)
+    	term.setTextColor(colors.red)
+    	term.write("e")
+    	term.setCursorPos(4,2)
+    	term.setTextColor(colors.green)
+    	term.write("r")
+    	term.setCursorPos(5,2)
+    	term.setTextColor(colors.red)
+    	term.write("r")
+    	term.setCursorPos(6,2)
+    	term.setTextColor(colors.green)
+    	term.write("y")
+    	term.setCursorPos(8,2)
+    	term.setTextColor(colors.red)
+    	term.write("C")
+    	term.setCursorPos(9,2)
+    	term.setTextColor(colors.green)
+    	term.write("h")
+    	term.setCursorPos(10,2)
+    	term.setTextColor(colors.red)
+    	term.write("r")
+    	term.setCursorPos(11,2)
+    	term.setTextColor(colors.green)
+    	term.write("i")
+    	term.setCursorPos(12,2)
+    	term.setTextColor(colors.red)
+    	term.write("s")
+    	term.setCursorPos(13,2)
+    	term.setTextColor(colors.green)
+    	term.write("t")
+    	term.setCursorPos(14,2)
+    	term.setTextColor(colors.red)
+    	term.write("m")
+    	term.setCursorPos(15,2)
+    	term.setTextColor(colors.green)
+    	term.write("a")
+    	term.setCursorPos(16,2)
+    	term.setTextColor(colors.red)
+    	term.write("s")
+    	textStage = 2
+    elseif textStage == 2 then
+    	term.setCursorPos(2,2)
+    	term.setTextColor(colors.red)
+    	term.write("M")
+    	term.setCursorPos(3,2)
+    	term.setTextColor(colors.green)
+    	term.write("e")
+    	term.setCursorPos(4,2)
+    	term.setTextColor(colors.red)
+    	term.write("r")
+    	term.setCursorPos(5,2)
+    	term.setTextColor(colors.green)
+    	term.write("r")
+    	term.setCursorPos(6,2)
+    	term.setTextColor(colors.red)
+    	term.write("y")
+    	term.setCursorPos(8,2)
+    	term.setTextColor(colors.green)
+    	term.write("C")
+    	term.setCursorPos(9,2)
+    	term.setTextColor(colors.red)
+    	term.write("h")
+    	term.setCursorPos(10,2)
+    	term.setTextColor(colors.green)
+    	term.write("r")
+    	term.setCursorPos(11,2)
+    	term.setTextColor(colors.red)
+    	term.write("i")
+    	term.setCursorPos(12,2)
+    	term.setTextColor(colors.green)
+    	term.write("s")
+    	term.setCursorPos(13,2)
+    	term.setTextColor(colors.red)
+    	term.write("t")
+    	term.setCursorPos(14,2)
+    	term.setTextColor(colors.green)
+    	term.write("m")
+    	term.setCursorPos(15,2)
+    	term.setTextColor(colors.red)
+    	term.write("a")
+    	term.setCursorPos(16,2)
+    	term.setTextColor(colors.green)
+    	term.write("s")
+    	textStage = 1
+    end
+    for i,v in pairs(deletedFlakes) do
+        table.remove(flakes,v)
+    end
+    deletedFlakes = {}
+end    
+ 
+function newflake()
+    local template = {
+        x = 1,
+        y = 0,
+        color = colors.white,
+        stage = 2}
+    template.x = math.random(1,maxX)
+    template.color = tColors[math.random(1,3)]
+    table.insert(flakes,template)
+end
+ 
+while true do
+newflake()
+redraw()
+sleep(0.2)
+end

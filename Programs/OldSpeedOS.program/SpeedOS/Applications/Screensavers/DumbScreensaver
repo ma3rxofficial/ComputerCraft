@@ -1,0 +1,110 @@
+local ssinfo=
+{
+    {x=3,y=1,a={true,true,false,false}},
+    {x=5,y=10,a={false,true,true,false}},
+    {x=20,y=15,a={true,false,false,true}}
+}
+local function screensaver()
+local function inv(q)
+  if q==true then
+    return false
+  end
+  if q==false then
+    return true
+  end
+end
+
+local ball =
+{
+  x=1;
+  y=1;
+  a={false,false,false,false};
+  
+  movefwd = function(self, speed)
+    if self.a[1]==true then
+      self.x=self.x+speed
+    end
+    if self.a[2]==true then
+      self.y=self.y+speed
+    end
+    if self.a[3]==true then
+      self.x=self.x-speed
+    end
+    if self.a[4]==true then
+      self.y=self.y-speed
+    end     
+  end;
+  
+  bounce = function(self,flip)
+    for i=1,4,1 do
+      if flip[i] then
+        self.a[i] = inv(self.a[i])
+      end
+    end
+  end
+}
+
+local function render(obj,char)
+  term.setCursorPos(obj.x,obj.y)
+  write(char)
+end
+
+local function main()
+  
+  w,h=term.getSize()
+  while true do
+  for no=1,3,1 do
+    ball.x=ssinfo[no].x
+    ball.y=ssinfo[no].y
+    ball.a=ssinfo[no].a
+    ball:movefwd(1)
+  
+    local arr={false,false,false,false}
+    if ball.x>w-1 or ball.x<2 then
+      arr[1]=true
+      arr[3]=true
+    end
+    if ball.y>h-1 or ball.y<2 then
+      arr[2]=true
+      arr[4]=true
+    end
+  
+    ball:bounce(arr)
+
+    render(ball,"*")
+    ssinfo[no].x=ball.x
+    ssinfo[no].y=ball.y
+    ssinfo[no].a=ball.a
+  end
+  sleep(0.2--[[1.2]])
+  for no=1,3,1 do
+    ball.x=ssinfo[no].x
+    ball.y=ssinfo[no].y
+    ball.a=ssinfo[no].a
+    render(ball," ")
+  end
+  end
+end
+
+term.clear()
+main()
+end
+
+local function disturb()
+  function reset()
+    os.pullEvent("key")
+  end
+  function wait()
+    term.setCursorBlink(false)
+    screensaver()
+  end
+  while true do
+    parallel.waitForAny(reset,wait)
+    term.clear()
+    term.setCursorPos(1,1)
+    term.setCursorBlink(true)
+    return
+  end
+end
+
+disturb()

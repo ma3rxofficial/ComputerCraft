@@ -1,0 +1,22 @@
+os.loadAPI("SpeedAPI/alphanumeric")
+os.loadAPI("SpeedAPI/SpeedText")
+os.loadAPI("SpeedAPI/windows")
+
+local x, y = term.getSize()
+local zaderzhka = 0.5
+local chastota_prikolov = 5
+local prikols = {"Zaebal", "Idi nahui"}
+
+function draw()
+  windows.clearScreen(colors.gray)
+  term.setTextColor(colors.lightGray)
+  SpeedText.cPrint("Welcome to SpeedOS!", 2)
+  term.setTextColor(colors.white)
+  SpeedText.cPrint(prikols[math.random(1, #prikols)], 18)
+  print(alphanumeric.stringToImg(textutils.formatTime(os.time(), true), colors.white, x/2-13, y/2-2))
+end
+
+while true do
+  draw()
+  sleep(zaderzhka)
+end

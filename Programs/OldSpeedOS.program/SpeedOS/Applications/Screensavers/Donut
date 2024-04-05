@@ -1,0 +1,10 @@
+os.loadAPI("SpeedAPI/peripheral")
+os.loadAPI("SpeedAPI/windows")
+
+if not peripheral.find("monitor", true) then
+    windows.clearScreen(colors.white)
+    windows.error("You need an advanced monitor!")
+    error()
+end
+
+shell.run("monitor "..peripheral.find("monitor", true).." SpeedOS/Applications/Screensavers/Donut_src")

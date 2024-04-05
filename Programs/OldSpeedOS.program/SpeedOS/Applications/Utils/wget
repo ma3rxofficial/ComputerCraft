@@ -1,0 +1,12 @@
+local args = {...}
+
+if args[1] and args[2] then
+  f = http.get(args[1]).readAll()
+  f2 = fs.open(args[2], "w")
+  f2.write(f)
+  f2.close()
+  print("Downloaded "..args[1].." to "..args[2])
+
+else
+  print("Usage: wget <link> <filename>")
+end

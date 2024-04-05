@@ -1,0 +1,62 @@
+freq = .2
+myTimer = os.startTimer(freq)
+width, height = term.getSize()
+
+function draw()
+  term.setBackgroundColor(colors.black)
+  if term.isColor() then term.setTextColor(colors.lightGray) end
+  term.clear()
+  term.setCursorPos(1,1)
+  for i=1, height do
+    for i=1, width do
+      color = math.random(16384)
+      num = math.random(10)
+      if term.isColor() then term.setTextColor(color) end
+      if num == 2 then
+        term.write('*')
+      else
+        term.write(' ')
+      end
+    end
+    cx,cy = term.getCursorPos()
+    term.setCursorPos(1,cy + 1)
+  end
+end
+
+draw()
+
+function stop()
+  term.setBackgroundColor(colors.black)
+  term.setTextColor(colors.white)
+  term.clear()
+  term.setCursorPos(1,1)
+  error()
+end
+function redraw()
+  local x = math.random(width)
+  local y = math.random(height)
+  term.setCursorPos(x,y)
+  color = math.random(16384)
+  if term.isColor() then term.setTextColor(color) end
+  num = math.random(5)
+  if num == 2 then
+    term.write('*')
+  else
+    term.write(' ')
+  end
+end
+while true do
+  event, btn, x, y = os.pullEvent()
+  if event == 'key' then
+    if btn >= 1 then
+      stop()
+    end
+  elseif event == 'mouse_click' then
+    if x >= 1 and y >= 1 then
+      stop()
+    end
+  elseif event == 'timer' then
+    redraw()
+  end
+  myTimer = os.startTimer(freq)
+end
