@@ -1,0 +1,56 @@
+function read(pathToConfig,whatToRead)
+        if not fs.exists(pathToConfig) then error("No such file") end
+        local file = fs.open(pathToConfig,"r")
+        while true do
+                local line = file.readLine()
+                if line ~= nil then
+                        local key, value = string.match(line,"(.*)=(.*)")
+                        if value ~= nil and key == whatToRead then
+                                file.close()
+                                return value
+                        end
+                else
+                        file.close()
+                        break
+                end
+        end
+end
+ 
+function write(pathToConfig,key,value)
+        if not fs.exists(pathToConfig) then
+                local file = fs.open(pathToConfig,"w")
+                file.close()
+        end
+ 
+        local file = fs.open(pathToConfig,"r")
+        local Massiv = {}
+       
+        local lineCounter = 1
+        while true do
+                local line = file.readLine()
+                if line ~= nil then
+                        Massiv[lineCounter] = line
+                else
+                        file.close()
+                        break
+                end
+                lineCounter = lineCounter + 1
+        end
+ 
+        local success = false
+        for i=1,#Massiv do
+                local key1, value1 = string.match(Massiv[i],"(.*)=(.*)")
+                if value1 ~= nil and key1 == key then
+                        Massiv[i] = key.."="..value
+                        success = true
+                end
+        end
+ 
+        if success == false then Massiv[#Massiv+1] = key.."="..value end
+ 
+        local file = fs.open(pathToConfig,"w")
+        for i=1,#Massiv do
+                file.writeLine(Massiv[i])
+        end
+        file.close()
+end

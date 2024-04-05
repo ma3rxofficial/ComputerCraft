@@ -1,0 +1,26 @@
+function find(name,prior)
+  local sides = {
+  "top";
+  "front";
+  "left";
+  "right";
+  "back";
+  "bottom" }
+
+  if prior==nil then
+        p=1
+  else
+        p=prior
+  end
+
+  for n=1,6 do
+        if peripheral.getType(sides[n])==name then
+          if p==1 then
+                return sides[n]
+          else
+                p=p-1
+          end
+        end
+  end
+  return "none"
+end

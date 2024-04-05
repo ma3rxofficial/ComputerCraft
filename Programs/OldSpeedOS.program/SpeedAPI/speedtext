@@ -1,0 +1,42 @@
+--Central Printing--
+function cPrint(string, y2)
+        local tX, tY = term.getSize()
+        local b = string.len(string) / 2
+        local x = (tX / 2) - b
+	local y = tY / 2
+	
+	if y2 then
+	  y = y2
+	end
+
+        term.setCursorPos(x, y)
+        write(string)
+end
+
+--Central Cursoring--
+function cCursor(string)
+        local tX, tY = term.getSize()
+        local b = string.len(string) / 2
+        local x = (tX / 2) - b
+	local y = tY / 2
+	
+	if y2 then
+	  y = y2
+	end
+
+        return {x, y}
+end
+
+--Line of "-" printing--
+function line()
+	print("---------------------------------------------------")
+end
+
+--Extra exiting from program--
+function extraExit()
+	term.setBackgroundColor(colors.black)
+	term.setTextColor(colors.white)
+	term.setCursorPos(1, 1)
+	term.clear()
+	error()
+end

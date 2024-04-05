@@ -1,0 +1,455 @@
+-- valid characters are:
+-- abcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()-=_+[]{};':"\|,./<>?`~
+function charToImg(char,c,x,y)
+  char = tostring(char)
+  local img = {}
+  if char == "a" or char == "A" then
+    img[1] = {0,c,c,c,0}
+    img[2] = {c,0,0,0,c}
+    img[3] = {c,c,c,c,c}
+    img[4] = {c,0,0,0,c}
+    img[5] = {c,0,0,0,c}
+  elseif char == "b" or char == "B" then
+    img[1] = {c,c,c,c,0}
+    img[2] = {c,0,0,0,c}
+    img[3] = {c,c,c,c,0}
+    img[4] = {c,0,0,0,c}
+    img[5] = {c,c,c,c,0}
+  elseif char == "c" or char == "C" then
+    img[1] = {0,c,c,c,c}
+    img[2] = {c,0,0,0,0}
+    img[3] = {c,0,0,0,0}
+    img[4] = {c,0,0,0,0}
+    img[5] = {0,c,c,c,c}
+  elseif char == "d" or char == "D" then
+    img[1] = {c,c,c,c,0}
+    img[2] = {c,0,0,0,c}
+    img[3] = {c,0,0,0,c}
+    img[4] = {c,0,0,0,c}
+    img[5] = {c,c,c,c,0}
+  elseif char == "e" or char == "E" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {c,0,0,0,0}
+    img[3] = {c,c,c,c,0}
+    img[4] = {c,0,0,0,0}
+    img[5] = {c,c,c,c,c}
+  elseif char == "f" or char == "F" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {c,0,0,0,0}
+    img[3] = {c,c,c,c,0}
+    img[4] = {c,0,0,0,0}
+    img[5] = {c,0,0,0,0}
+  elseif char == "g" or char == "G" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {c,0,0,0,0}
+    img[3] = {c,0,0,c,c}
+    img[4] = {c,0,0,0,c}
+    img[5] = {c,c,c,c,c}
+  elseif char == "h" or char == "H" then
+    img[1] = {c,0,0,0,c}
+    img[2] = {c,0,0,0,c}
+    img[3] = {c,c,c,c,c}
+    img[4] = {c,0,0,0,c}
+    img[5] = {c,0,0,0,c}
+  elseif char == "i" or char == "I" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {0,0,c,0,0}
+    img[3] = {0,0,c,0,0}
+    img[4] = {0,0,c,0,0}
+    img[5] = {c,c,c,c,c}
+  elseif char == "j" or char == "J" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {0,0,c,0,0}
+    img[3] = {0,0,c,0,0}
+    img[4] = {c,0,c,0,0}
+    img[5] = {c,c,c,0,0}
+  elseif char == "k" or char == "K" then
+    img[1] = {c,0,0,c,0}
+    img[2] = {c,0,c,0,0}
+    img[3] = {c,c,c,0,0}
+    img[4] = {c,0,0,c,0}
+    img[5] = {c,0,0,0,c}
+  elseif char == "l" or char == "L" then
+    img[1] = {c,0,0,0,0}
+    img[2] = {c,0,0,0,0}
+    img[3] = {c,0,0,0,0}
+    img[4] = {c,0,0,0,0}
+    img[5] = {c,c,c,c,c}
+  elseif char == "m" or char == "M" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {c,0,c,0,c}
+    img[3] = {c,0,c,0,c}
+    img[4] = {c,0,0,0,c}
+    img[5] = {c,0,0,0,c}
+  elseif char == "n" or char == "N" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {c,0,0,0,c}
+    img[3] = {c,0,0,0,c}
+    img[4] = {c,0,0,0,c}
+    img[5] = {c,0,0,0,c}
+  elseif char == "o" or char == "O" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {c,0,0,0,c}
+    img[3] = {c,0,0,0,c}
+    img[4] = {c,0,0,0,c}
+    img[5] = {c,c,c,c,c}
+  elseif char == "p" or char == "P" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {c,0,0,0,c}
+    img[3] = {c,c,c,c,c}
+    img[4] = {c,0,0,0,0}
+    img[5] = {c,0,0,0,0}
+  elseif char == "q" or char == "Q" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {c,0,0,0,c}
+    img[3] = {c,0,c,0,c}
+    img[4] = {c,0,0,c,0}
+    img[5] = {c,c,c,0,c}
+  elseif char == "r" or char == "R" then
+    img[1] = {c,c,c,c,0}
+    img[2] = {c,0,0,0,c}
+    img[3] = {c,c,c,c,0}
+    img[4] = {c,0,0,c,0}
+    img[5] = {c,0,0,0,c}
+  elseif char == "s" or char == "S" then
+    img[1] = {0,c,c,c,c}
+    img[2] = {c,0,0,0,0}
+    img[3] = {0,c,c,c,0}
+    img[4] = {0,0,0,0,c}
+    img[5] = {c,c,c,c,0}
+  elseif char == "t" or char == "T" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {0,0,c,0,0}
+    img[3] = {0,0,c,0,0}
+    img[4] = {0,0,c,0,0}
+    img[5] = {0,0,c,0,0}
+  elseif char == "u" or char == "U" then
+    img[1] = {c,0,0,0,c}
+    img[2] = {c,0,0,0,c}
+    img[3] = {c,0,0,0,c}
+    img[4] = {c,0,0,0,c}
+    img[5] = {c,c,c,c,c}
+  elseif char == "v" or char == "V" then
+    img[1] = {c,0,0,0,c}
+    img[2] = {c,0,0,0,c}
+    img[3] = {0,c,0,c,0}
+    img[4] = {0,c,0,c,0}
+    img[5] = {0,0,c,0,0}
+  elseif char == "w" or char == "W" then
+    img[1] = {c,0,0,0,c}
+    img[2] = {c,0,0,0,c}
+    img[3] = {c,0,c,0,c}
+    img[4] = {c,0,c,0,c}
+    img[5] = {c,c,c,c,c}
+  elseif char == "x" or char == "X" then
+    img[1] = {c,0,0,0,c}
+    img[2] = {0,c,0,c,0}
+    img[3] = {0,0,c,0,0}
+    img[4] = {0,c,0,c,0}
+    img[5] = {c,0,0,0,c}
+  elseif char == "y" or char == "Y" then
+    img[1] = {c,0,0,0,c}
+    img[2] = {0,c,0,c,0}
+    img[3] = {0,0,c,0,0}
+    img[4] = {0,0,c,0,0}
+    img[5] = {0,0,c,0,0}
+  elseif char == "z" or char == "Z" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {0,0,0,c,0}
+    img[3] = {0,0,c,0,0}
+    img[4] = {0,c,0,0,0}
+    img[5] = {c,c,c,c,c}
+  elseif char == "1" then
+    img[1] = {0,c,c,0,0}
+    img[2] = {c,0,c,0,0}
+    img[3] = {0,0,c,0,0}
+    img[4] = {0,0,c,0,0}
+    img[5] = {c,c,c,c,c}
+  elseif char == "2" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {0,0,0,0,c}
+    img[3] = {c,c,c,c,c}
+    img[4] = {c,0,0,0,0}
+    img[5] = {c,c,c,c,c}
+  elseif char == "3" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {0,0,0,0,c}
+    img[3] = {0,c,c,c,c}
+    img[4] = {0,0,0,0,c}
+    img[5] = {c,c,c,c,c}
+  elseif char == "4" then
+    img[1] = {c,0,0,0,c}
+    img[2] = {c,0,0,0,c}
+    img[3] = {c,c,c,c,c}
+    img[4] = {0,0,0,0,c}
+    img[5] = {0,0,0,0,c}
+  elseif char == "5" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {c,0,0,0,0}
+    img[3] = {c,c,c,c,c}
+    img[4] = {0,0,0,0,c}
+    img[5] = {c,c,c,c,c}
+  elseif char == "6" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {c,0,0,0,0}
+    img[3] = {c,c,c,c,c}
+    img[4] = {c,0,0,0,c}
+    img[5] = {c,c,c,c,c}
+  elseif char == "7" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {0,0,0,c,0}
+    img[3] = {0,0,c,0,0}
+    img[4] = {0,c,0,0,0}
+    img[5] = {c,0,0,0,0}
+  elseif char == "8" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {c,0,0,0,c}
+    img[3] = {c,c,c,c,c}
+    img[4] = {c,0,0,0,c}
+    img[5] = {c,c,c,c,c}
+  elseif char == "9" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {c,0,0,0,c}
+    img[3] = {c,c,c,c,c}
+    img[4] = {0,0,0,0,c}
+    img[5] = {c,c,c,c,c}
+  elseif char == "0" then
+    img[1] = {c,c,c,c,c}
+    img[2] = {c,0,0,0,c}
+    img[3] = {c,0,0,0,c}
+    img[4] = {c,0,0,0,c}
+    img[5] = {c,c,c,c,c}
+  elseif char == "!" then
+    img[1] = {0,0,c,0,0}
+    img[2] = {0,0,c,0,0}
+    img[3] = {0,0,c,0,0}
+    img[4] = {0,0,0,0,0}
+    img[5] = {0,0,c,0,0}
+  elseif char == "@" then
+    img[1] = {c,c,c,c,0}
+    img[2] = {c,0,0,c,0}
+    img[3] = {c,0,c,c,0}
+    img[4] = {c,0,0,0,0}
+    img[5] = {c,c,c,c,c}
+  elseif char == "#" then
+    img[1] = {0,c,0,c,0}
+    img[2] = {c,c,c,c,c}
+    img[3] = {0,c,0,c,0}
+    img[4] = {c,c,c,c,c}
+    img[5] = {0,c,0,c,0}
+  elseif char == "$" then
+    img[1] = {0,c,c,c,c}
+    img[2] = {c,0,c,0,0}
+    img[3] = {0,c,c,c,0}
+    img[4] = {0,0,c,0,c}
+    img[5] = {c,c,c,c,0}
+  elseif char == "%" then
+    img[1] = {c,0,0,0,c}
+    img[2] = {0,0,0,c,0}
+    img[3] = {0,0,c,0,0}
+    img[4] = {0,c,0,0,0}
+    img[5] = {c,0,0,0,c}
+  elseif char == "^" then
+    img[1] = {0,0,c,0,0}
+    img[2] = {0,c,0,c,0}
+    img[3] = {c,0,0,0,c}
+    img[4] = {0,0,0,0,0}
+    img[5] = {0,0,0,0,0}
+  elseif char == "&" then
+    img[1] = {0,c,0,0,0}
+    img[2] = {c,0,c,0,0}
+    img[3] = {0,c,c,0,c}
+    img[4] = {c,0,0,c,0}
+    img[5] = {0,c,c,0,c}
+  elseif char == "*" then
+    img[1] = {c,0,c,0,c}
+    img[2] = {0,c,c,c,0}
+    img[3] = {c,c,c,c,c}
+    img[4] = {0,c,c,c,0}
+    img[5] = {c,0,c,0,c}
+  elseif char == "(" then
+    img[1] = {0,0,c,0,0}
+    img[2] = {0,c,0,0,0}
+    img[3] = {0,c,0,0,0}
+    img[4] = {0,c,0,0,0}
+    img[5] = {0,0,c,0,0}
+  elseif char == ")" then
+    img[1] = {0,0,c,0,0}
+    img[2] = {0,0,0,c,0}
+    img[3] = {0,0,0,c,0}
+    img[4] = {0,0,0,c,0}
+    img[5] = {0,0,c,0,0}
+  elseif char == "-" then
+    img[1] = {0,0,0,0,0}
+    img[2] = {0,0,0,0,0}
+    img[3] = {0,c,c,c,0}
+    img[4] = {0,0,0,0,0}
+    img[5] = {0,0,0,0,0}
+  elseif char == "_" then
+    img[1] = {0,0,0,0,0}
+    img[2] = {0,0,0,0,0}
+    img[3] = {0,0,0,0,0}
+    img[4] = {0,0,0,0,0}
+    img[5] = {c,c,c,c,c}
+  elseif char == "=" then
+    img[1] = {0,0,0,0,0}
+    img[2] = {c,c,c,c,c}
+    img[3] = {0,0,0,0,0}
+    img[4] = {c,c,c,c,c}
+    img[5] = {0,0,0,0,0}
+  elseif char == "+" then
+    img[1] = {0,0,c,0,0}
+    img[2] = {0,0,c,0,0}
+    img[3] = {c,c,c,c,c}
+    img[4] = {0,0,c,0,0}
+    img[5] = {0,0,c,0,0}
+  elseif char == "`" then
+    img[1] = {c,0,0,0,0}
+    img[2] = {0,c,0,0,0}
+    img[3] = {0,0,c,0,0}
+    img[4] = {0,0,0,0,0}
+    img[5] = {0,0,0,0,0}
+  elseif char == "~" then
+    img[1] = {0,0,0,0,0}
+    img[2] = {0,c,0,0,0}
+    img[3] = {c,0,c,0,c}
+    img[4] = {0,0,0,c,0}
+    img[5] = {0,0,0,0,0}
+  elseif char == "?" then
+    img[1] = {0,c,c,c,0}
+    img[2] = {c,0,0,0,c}
+    img[3] = {0,0,c,c,0}
+    img[4] = {0,0,0,0,0}
+    img[5] = {0,0,c,0,0}
+  elseif char == "/" then
+    img[1] = {0,0,0,0,c}
+    img[2] = {0,0,0,c,0}
+    img[3] = {0,0,c,0,0}
+    img[4] = {0,c,0,0,0}
+    img[5] = {c,0,0,0,0}
+  elseif char == "<" then
+    img[1] = {0,0,c,0,0}
+    img[2] = {0,c,0,0,0}
+    img[3] = {c,0,0,0,0}
+    img[4] = {0,c,0,0,0}
+    img[5] = {0,0,c,0,0}
+  elseif char == ">" then
+    img[1] = {0,0,c,0,0}
+    img[2] = {0,0,0,c,0}
+    img[3] = {0,0,0,0,c}
+    img[4] = {0,0,0,c,0}
+    img[5] = {0,0,c,0,0}
+  elseif char == "," then
+    img[1] = {0,0,0,0,0}
+    img[2] = {0,0,0,0,0}
+    img[3] = {0,0,0,0,0}
+    img[4] = {0,c,0,0,0}
+    img[5] = {c,0,0,0,0}
+  elseif char == "." then
+    img[1] = {0,0,0,0,0}
+    img[2] = {0,0,0,0,0}
+    img[3] = {0,0,0,0,0}
+    img[4] = {0,0,0,0,0}
+    img[5] = {c,0,0,0,0}
+  elseif char == ":" then
+    img[1] = {0,0,0,0,0}
+    img[2] = {0,0,c,0,0}
+    img[3] = {0,0,0,0,0}
+    img[4] = {0,0,c,0,0}
+    img[5] = {0,0,0,0,0}
+  elseif char == ";" then
+    img[1] = {0,0,0,0,0}
+    img[2] = {0,0,c,0,0}
+    img[3] = {0,0,0,0,0}
+    img[4] = {0,0,c,0,0}
+    img[5] = {0,c,0,0,0}
+  elseif char == "'" then
+    img[1] = {0,0,c,0,0}
+    img[2] = {0,c,0,0,0}
+    img[3] = {0,0,0,0,0}
+    img[4] = {0,0,0,0,0}
+    img[5] = {0,0,0,0,0}
+  elseif char == "\"" then
+    img[1] = {0,0,c,0,c}
+    img[2] = {0,c,0,c,0}
+    img[3] = {0,0,0,0,0}
+    img[4] = {0,0,0,0,0}
+    img[5] = {0,0,0,0,0}
+  elseif char == "{" then
+    img[1] = {0,0,c,c,0}
+    img[2] = {0,0,c,0,0}
+    img[3] = {0,c,0,0,0}
+    img[4] = {0,0,c,0,0}
+    img[5] = {0,0,c,c,0}
+  elseif char == "[" then
+    img[1] = {0,0,c,c,0}
+    img[2] = {0,0,c,0,0}
+    img[3] = {0,0,c,0,0}
+    img[4] = {0,0,c,0,0}
+    img[5] = {0,0,c,c,0}
+  elseif char == "}" then
+    img[1] = {0,c,c,0,0}
+    img[2] = {0,0,c,0,0}
+    img[3] = {0,0,0,c,0}
+    img[4] = {0,0,c,0,0}
+    img[5] = {0,c,c,0,0}
+  elseif char == "]" then
+    img[1] = {0,c,c,0,0}
+    img[2] = {0,0,c,0,0}
+    img[3] = {0,0,c,0,0}
+    img[4] = {0,0,c,0,0}
+    img[5] = {0,c,c,0,0}
+  elseif char == "|" then
+    img[1] = {0,0,c,0,0}
+    img[2] = {0,0,c,0,0}
+    img[3] = {0,0,0,0,0}
+    img[4] = {0,0,c,0,0}
+    img[5] = {0,0,c,0,0}
+  elseif char == "\\" then
+    img[1] = {c,0,0,0,0}
+    img[2] = {0,c,0,0,0}
+    img[3] = {0,0,c,0,0}
+    img[4] = {0,0,0,c,0}
+    img[5] = {0,0,0,0,c}
+  else
+    img[1] = {0,0,0,0,0}
+    img[2] = {0,0,0,0,0}
+    img[3] = {0,0,0,0,0}
+    img[4] = {0,0,0,0,0}
+    img[5] = {0,0,0,0,0}
+  end
+  paintutils.drawImage(img,x,y)
+  term.setBackgroundColor(colors.black)
+end
+function stringToImg(_str,_color,_x,_y)
+  local maxX,maxY = term.getSize()
+  local iterator = 1
+  local _str = tostring(_str)
+  for i = 1, #_str do
+    local _char = _str:sub(i,i)
+    x = _x + ((iterator-1)*6)
+    if x+5 > maxX then
+      x = _x
+      _y = _y + 6
+      iterator = 1
+    end
+    charToImg(_char,_color,x,_y)
+    iterator = iterator + 1
+  end
+end
+
+local args={...}
+local command = args[1]
+if command=="help" then
+  term.clear()
+  term.setCursorPos(1,1)
+  print("This program is a simple api which allows programs to print large characters of text without having to resize the font size.")
+  print("Functions:\n  stringToImg(\"Text Here\",color,x,y)\n  charToImg(\"c\",color,x,y)")
+  print("Characters are 5x5. x and y point to the top left corner of where the characters should appear")
+  print("Supported characters - a-z A-Z 0-9 !@#$%^&*()-=_+[]{};':\"\\|,./<>?~")
+  print(" ")
+  print("stringToImg(\"See It?\",colors.red,2,h-6) = ")
+  local w,h = term.getSize()
+  stringToImg("See It?",colors.red,2,h-5)
+  print(" ")
+end
