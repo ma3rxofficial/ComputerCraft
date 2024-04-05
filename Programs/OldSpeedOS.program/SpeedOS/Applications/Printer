@@ -1,0 +1,102 @@
+os.loadAPI("SpeedAPI/peripheral")
+os.loadAPI("SpeedAPI/SpeedText")
+
+
+term.clear()
+term.setCursorPos(1,1)
+windows.clearScreen(colors.white)
+if not peripheral.find("printer", true) then
+  windows.error("You need printer!")
+  error()
+end
+
+windows.clearScreen(colors.gray)
+term.setTextColor(colors.lightGray)
+
+SpeedText.cPrint("Printer on side "..peripheral.find("printer", true).."!")
+sleep(2)
+
+side = peripheral.find("printer", true)
+p = peripheral.wrap(side)
+term.clear()
+term.setBackgroundColor(colors.black)
+term.clear()
+term.setCursorPos(1,1)
+term.setTextColor(colors.green)
+print("   Welcome to Print! Type \"help\" for help.")
+while true do
+  term.setTextColor(colors.yellow)
+  input = read() 
+  if input == "exit" then
+    term.clear()
+    term.setCursorPos(1, 1)
+    error()
+  elseif input == "help" then
+    term.setTextColor(colors.blue)
+    print("help: Displays this message.")
+    print("exit: Exits the program.")
+    print("new page: Creates a new page.")
+    print("end page: Ends the current page.")
+    print("write: Lets you write text to the page.")
+    print("next line: Moves to the next line.")
+    print("prev line: Moves to the previous line.")
+    print("clear line: Clears the current line.")
+    print("get line: Returns the current line.")
+    print("title: Lets you set the title of the page.")
+    term.setTextColor(colors.yellow)
+  elseif input == "new page" then
+    p.newPage()
+    term.setTextColor(colors.blue)
+    print("Started new page.")
+    term.setTextColor(colors.yellow)
+  elseif input == "end page" then
+    p.endPage()
+    term.setTextColor(colors.blue)
+    print("Ended page.")
+    term.setTextColor(colors.yellow)
+  elseif input == "write" then
+    term.setTextColor(colors.blue)
+    print("What do you want to write?")
+    term.setTextColor(colors.yellow)
+    t = read()
+    p.write(t)
+    term.setTextColor(colors.blue)
+    print("Wrote ".."\""..t.."\"".." to the page.")
+    term.setTextColor(colors.yellow)
+  elseif input == "title" then
+    term.setTextColor(colors.blue)
+    print("What do you want the title to be?")
+    term.setTextColor(colors.yellow)
+    p.setPageTitle(read())
+  elseif input == "next line" then
+    x, y = p.getCursorPos()
+    y = y + 1
+    p.setCursorPos(1, y)
+    term.setTextColor(colors.blue)
+    print("Moved cursor to line "..y..".")
+    term.setTextColor(colors.yellow)
+  elseif input == "prev line" then
+    x, y = p.getCursorPos()
+    y = y - 1
+    p.setCursorPos(1, y)
+    term.setTextColor(colors.blue)
+    print("Moved cursor to line "..y..".")
+    term.setTextColor(colors.yellow)
+  elseif input == "clear line" then
+    x, y = p.getCursorPos()
+    p.setCursorPos(1, y)
+    p.write("                         ")
+    term.setTextColor(colors.blue)
+    print("Cleared line "..y..".")
+    term.setTextColor(colors.yellow)  
+  elseif input == "get line" then
+    x, y = p.getCursorPos()
+    term.setTextColor(colors.blue)
+    print("You are currently on line #"..y..".")
+    term.setTextColor(colors.yellow)        
+  else
+    term.setTextColor(colors.red)
+    print("Unkown command. Type \"help\" for a list of commands.")
+    term.setTextColor(colors.yellow)     
+  end   
+end

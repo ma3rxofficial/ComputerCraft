@@ -1,0 +1,44 @@
+rednet.open("right")
+rednet.open("left")
+rednet.open("front")
+rednet.open("back")
+rednet.open("top")
+rednet.open("bottom")
+
+local radio_id = {576}
+local file = fs.open("/SpeedOS/Applications/Logs/radio.log", "w")
+
+function check(id)
+  for i,v in ipairs(radio_id) do
+
+    if v == id then
+      return true
+    end
+
+  end
+
+end
+
+
+while true do
+    event, id, msg, dist = os.pullEvent()
+
+    if event == "rednet_message" and check(id) then
+    	term.setTextColor(colors.orange)
+     io.write("[Radio ")
+     term.setTextColor(colors.yellow)
+     io.write("#"..tostring(id))
+     term.setTextColor(colors.orange)
+     io.write("] ")
+    	term.setTextColor(colors.lightGray)
+    	io.write(tostring(msg))
+        print("")
+        if file then
+	           local time = os.time()
+            timeFmt = textutils.formatTime(time, false)
+            file.writeLine("["..tostring(timeFmt).."] Radio #"..id..": "..tostring(msg))
+            file.writeLine("")
+            file.flush()
+        end
+    end
+end

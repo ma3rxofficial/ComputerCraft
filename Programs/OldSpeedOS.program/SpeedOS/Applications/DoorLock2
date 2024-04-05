@@ -1,0 +1,372 @@
+
+--rawdownloadcloneembedreportprintLua 10.32 KB
+os.loadAPI("SpeedAPI/windows")
+os.loadAPI("SpeedAPI/peripheral")
+ 
+--????????? ????? ???????
+if peripheral.find("modem") then
+      rednet.open(peripheral.find("modem")) 
+end
+
+--оюпнкэ
+io.write("Enter password: ")
+local password = io.read()
+ 
+--яйнкэйн асдер нрйпшрю дбепэ
+local doorOpenTime = 5
+ 
+--яйнкэйн асдер мюфюрю ймнойю
+local buttonPressTime = 0.2
+ 
+--оепелеммюъ рюилепю
+local changePasswordTimer = nil
+ 
+--пефхл пюанрш дхяокеъ
+local mode = "default"
+ 
+--яйпшбюрэ кх ббндхлши оюпнкэ
+local hidePassword = "false"
+ 
+--нрячдю хгксвюрэ яхцмюк педю, еякх оюпнкэ бепем
+io.write("Enter redstone side: ")
+local redstoneSide = io.read()
+--ю нрячдю, еякх ме бепем
+io.write("Enter alarm side: ")
+local redstoneSideOnWrongPassword = io.read() --"right"
+ 
+--ймнонвйх
+local buttons = {
+        {"1","2","3"},
+        {"4","5","6"},
+        {"7","8","9"},
+        {"C","0","#"},
+}
+ 
+--люяяхб назейрнб
+local Obj = {}
+ 
+--люяяхб яхлбнкнб, ббедеммшу я онлныэч ймнонй
+local inputCode = {}
+ 
+--онксвемхе пюглепю лнмхрнпю
+local xSize, ySize = term.getSize()
+ 
+--онхяй оепхтепхх
+local function findPeripheral(whatToFind)
+      local PeriList = rs.getSides() --peripheral.getNames()
+      for i=1,#PeriList do
+            if peripheral.getType(PeriList[i]) == whatToFind then
+                  return PeriList[i]
+            end
+      end
+end
+ 
+--смхбепяюкэмюъ тсмйжхъ дкъ нрнапюфемхъ рейярю он жемрпс щйпюмю
+local function centerText(how,coord,text,textColor,backColor)
+            term.setTextColor(textColor)
+            term.setBackgroundColor(backColor)
+            if how == "xy" then
+                        term.setCursorPos(math.floor(xSize/2-#text/2),math.floor(ySize/2))
+            elseif how == "x" then
+                        term.setCursorPos(math.floor(xSize/2-#text/2),coord)
+            elseif how == "y" then
+                        term.setCursorPos(coord,math.floor(ySize/2))
+            end
+            term.write(text)
+end
+ 
+--времхе йнмтхцю
+function configRead(pathToConfig,whatToRead)
+            if not fs.exists(pathToConfig) then error("No such file") end
+            local file = fs.open(pathToConfig,"r")
+            while true do
+                        local line = file.readLine()
+                        if line ~= nil then
+                                    local key, value = string.match(line,"(.*)=(.*)")
+                                    if value ~= nil and key == whatToRead then
+                                                file.close()
+                                                return value
+                                    end
+                        else
+                                    file.close()
+                                    break
+                        end
+            end
+end
+ 
+--гюохяэ б йнмтхц
+local function configWrite(pathToConfig,key,value)
+            if not fs.exists(pathToConfig) then
+                        local file = fs.open(pathToConfig,"w")
+                        file.close()
+            end
+     
+            local file = fs.open(pathToConfig,"r")
+            local Massiv = {}
+           
+            local lineCounter = 1
+            while true do
+                        local line = file.readLine()
+                        if line ~= nil then
+                                    Massiv[lineCounter] = line
+                        else
+                                    file.close()
+                                    break
+                        end
+                        lineCounter = lineCounter + 1
+            end
+     
+            local success = false
+            for i=1,#Massiv do
+                        local key1, value1 = string.match(Massiv[i],"(.*)=(.*)")
+                        if value1 ~= nil and key1 == key then
+                                    Massiv[i] = key.."="..value
+                                    success = true
+                        end
+            end
+     
+            if success == false then Massiv[#Massiv+1] = key.."="..value end
+     
+            local file = fs.open(pathToConfig,"w")
+            for i=1,#Massiv do
+                        file.writeLine(Massiv[i])
+            end
+            file.close()
+end
+ 
+--назейрш
+local function newObj(name,x,y)
+            Obj[name]={}
+            Obj[name]["x"]=x
+            Obj[name]["y"]=y
+end
+ 
+--опнярюъ гюкхбйю щйпюмю жбернл
+local function clearScreen(color)
+            term.setBackgroundColor(color)
+            term.clear()
+end
+ 
+--опнярни рейяр
+local function usualText(x,y,text)
+            term.setCursorPos(x,y)
+            term.write(text)
+end
+ 
+--нрпхянбйю бепумеи ьрсвйх
+local function drawTab(textColor,backColor)
+            term.setBackgroundColor(backColor)
+            term.setTextColor(textColor)
+            term.setCursorPos(2,1)
+            term.clearLine()
+            term.write("-----")
+     
+            for i=1,#inputCode do
+                        if hidePassword == "true" then
+                                    usualText(i+1,1,"*")
+                        else
+                                    usualText(i+1,1,inputCode[i])
+                        end
+            end
+end
+ 
+--нрпхянбйю йнмйпермни ймнойх
+local function drawButton(name,textColor,backColor)
+            term.setBackgroundColor(backColor)
+            term.setTextColor(textColor)
+            usualText(Obj[name]["x"],Obj[name]["y"],name)
+end
+ 
+ 
+--нрпхянбйю бяецн хмрептеияю
+local function gui()
+            --нвхярйю щйпюмю
+            term.setCursorBlink(false)
+            clearScreen(colors.white)
+            term.setTextColor(colors.black)
+     
+            --нрпхянбйю ймнонвей
+            for j=1,#buttons do
+                        for i=1,#buttons[j] do
+                                    local xPos = i*2
+                                    local yPos = 1+j
+                                    usualText(xPos,yPos,buttons[j][i])
+                                    newObj(buttons[j][i],xPos,yPos)
+                        end
+            end
+     
+            --нрпхянбйю бепумеи ьмъцх
+            drawTab(colors.white,colors.black)
+end
+ 
+------------------------------Cрюпр опнцпюллш------------------------------------
+ 
+if not term.isColor() then
+            error("This program requires an advanced computer.")
+end
+ 
+--пхясел б йнлое усимч
+clearScreen(colors.white)
+centerText("xy",0,"Program started.",colors.lightGray,colors.white)
+ 
+--ондйкчвемхе лнмхрнпю
+local m = findPeripheral("monitor")
+if m ~= nil then
+            m = peripheral.wrap(m)
+            if not m.isColor() then
+                        windows.error("This program works only with advanced monitor.")
+                    do return end
+        end
+        m.setTextScale(1)
+        term.redirect(m)
+else
+            windows.error("This program requires advanced external monitor.")
+        do return end
+end
+ 
+--времхе йнмтхцю
+if fs.exists("System/CodeDoor.cfg") then
+            password = configRead("System/CodeDoor.cfg","password")
+            redstoneSide = configRead("System/CodeDoor.cfg","redstone side")
+            redstoneSideOnWrongPassword = configRead("System/CodeDoor.cfg","redstone side on wrong password")
+            doorOpenTime = configRead("System/CodeDoor.cfg","door open time")
+            hidePassword = configRead("System/CodeDoor.cfg","hide password")
+else
+            configWrite("System/CodeDoor.cfg","password",password)
+            configWrite("System/CodeDoor.cfg","redstone side",redstoneSide)
+            configWrite("System/CodeDoor.cfg","redstone side on wrong password",redstoneSideOnWrongPassword)
+            configWrite("System/CodeDoor.cfg","door open time",doorOpenTime)
+            configWrite("System/CodeDoor.cfg","hide password",hidePassword)
+end
+ 
+--пхясел бяе
+gui()
+ 
+--юмюкхг йюяюмхи щйпюмю
+while true do
+            --гюйпшбюел дбепэ мю бяъйхи онфюпмши
+            rs.setOutput(redstoneSide,false)
+            rs.setOutput(redstoneSideOnWrongPassword,false)
+     
+            local event,side,x,y = os.pullEvent()
+            if event == "monitor_touch" then
+                        --оепеанп бяеу щкелемрнб люяяхбю назейрнб
+                        for key,val in pairs(Obj) do
+                                    --опнбепйю янбоюдемхъ йннпдхмюр йюяюмхъ х йннпдхмюр назейрнб
+                                    if x==Obj[key]["x"] and y==Obj[key]["y"] then
+                                                --пхясел мюфюрсч ймнонвйс
+                                                drawButton(key,colors.white,colors.green)
+                                                sleep(buttonPressTime)
+                                                drawButton(key,colors.black,colors.white)
+                 
+                                                --опнбепйю, врн гю йкюбхью мюфюрю - жхтпю хкх яхярелмюъ йкюбхью
+                                                if key == "C" then
+                                                            inputCode = {}
+                                                            if mode == "edit" then
+                                                                        drawTab(colors.white,colors.orange)
+                                                            else
+                                                                        drawTab(colors.white,colors.black)
+                                                            end
+                     
+                                                elseif key == "#" then
+                                                            --янблеыемхе бяеу щкелемрнб люяяхбю ббндю б ндмс ярпнйс
+                                                            local inputPass = ""
+                                                            for i=1,#inputCode do
+                                                                        inputPass = inputPass..inputCode[i]
+                                                            end
+                     
+                                                            --опнбепйю пефхлю
+                                                            if mode == "edit" then
+                                                                        --ялемю оюпнкъ
+                                                                        password = inputPass
+                                                                        configWrite("System/CodeDoor.cfg","password",password)
+                                                                        inputCode = {}
+                                                                        term.setCursorPos(3,1)
+                                                                        term.setBackgroundColor(colors.orange)
+                                                                        term.clearLine()
+                                                                        term.setTextColor(colors.white)
+                                                                        term.write("Ok!")
+                         
+                                                                        sleep(2)
+                         
+                                                                        drawTab(colors.white,colors.black)
+                                                                        mode = "default"
+                                                            else
+                                                                        --япюбмемхе ббедеммнцн цнбмю я оепелеммни оюпнкъ
+                                                                        if inputPass == password then
+                                                                                    drawTab(colors.white,colors.green)
+                                                                                    rs.setOutput(redstoneSide,true)
+                                                                                    rs.setOutput(redstoneSideOnWrongPassword,false)
+                             
+                                                                                    --ярюпрсел рюилеп мю сйюгюммне бпелъ
+                                                                                    changePasswordTimer = os.startTimer(tonumber(doorOpenTime))
+                                                                                    while true do
+                                                                                                local event2,side2,x2,y2 = os.pullEvent()
+                                                                                                --еякх мхвецн ме мюфюрн, рн бшунд хг жхйкю
+                                                                                                if event2 == "timer" then
+                                                                                                            if side2 == changePasswordTimer then
+                                                                                                                        break
+                                                                                                            end
+                                                                                                    --еякх мюфюрю йкюбхью "я", рн гюосярхрэ пефхл ялемш оюпнкъ
+                                                                                                elseif event2 == "monitor_touch" then
+                                                                                                            if x2==Obj["C"]["x"] and y2==Obj["C"]["y"] then
+                                                                                                                        drawButton("C",colors.white,colors.green)
+                                                                                                                        sleep(buttonPressTime)
+                                                                                                                        drawButton("C",colors.black,colors.white)
+                                                                                                                        mode = "edit"
+                                                                                                                        os.queueEvent("timer",changePasswordTimer)
+                                                                                                            end
+                                                                                                end    
+                                                                                    end
+                             
+                                                                                    --нвхыюел ббедеммши рейяр х гюйпшбюел дбепэ
+                                                                                    inputCode = {}
+                                                                                    rs.setOutput(redstoneSide,false)
+                             
+                                                                                    --пхясел бепумчч ьмъцс пюгмнцн жберю б гюбхяхлнярх нр пефхлю
+                                                                                    if mode == "edit" then
+                                                                                                drawTab(colors.white,colors.orange)
+                                                                                    else
+                                                                                                drawTab(colors.white,colors.black)
+                                                                                    end
+                                                                            --еякх ббедем мебепмши оюпнкэ
+                                                                        else
+                                                                                    drawTab(colors.white,colors.red)
+                                                                                    rs.setOutput(redstoneSide,false)
+                                                                                    rs.setOutput(redstoneSideOnWrongPassword,true)
+                                                                                    sleep(3)
+                                                                                    rs.setOutput(redstoneSideOnWrongPassword,false)
+                                                                                    inputCode = {}
+                                                                                    drawTab(colors.white,colors.black)
+                                                                        end
+                                                            end
+                                                    --еякх мюфюрю кчаюъ жхтпю
+                                                else
+                                                            if #inputCode < 5 then
+                                                                        inputCode[#inputCode+1] = key
+                                                                        if mode == "edit" then
+                                                                                    drawTab(colors.white,colors.orange)
+                                                                        else
+                                                                                    drawTab(colors.white,colors.black)
+                                                                        end
+                                                            end
+                                                end
+                                                --бшунд хг жхйкю оепеанпю назейрнб
+                                                break
+                                    end
+                        end
+         
+                --еякх мюфюрю йкюбхью ENTER
+            elseif event == "key" and side == 28 then
+                        break
+            end
+end
+ 
+clearScreen(colors.black)
+term.setTextColor(colors.white)
+ 
+term.redirect(term.native())
+ 
+clearScreen(colors.black)
+term.setTextColor(colors.white)
+term.setCursorPos(1,1)

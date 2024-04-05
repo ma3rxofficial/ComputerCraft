@@ -1,0 +1,85 @@
+os.loadAPI("/SpeedAPI/SpeedGUI")
+os.loadAPI("/SpeedAPI/lddfm")
+term.setBackgroundColor(colors.gray)
+term.setCursorPos(18, 2)
+term.clear()
+print("Pastebin client")
+
+function download()
+
+  term.setBackgroundColor(colors.gray)
+  term.setTextColor(colors.white)
+  term.setCursorPos(2, 2)
+  term.clear()
+  
+  print("Enter code: ")
+  term.setCursorPos(25, 2)
+  term.setBackgroundColor(colors.lightGray)
+  term.setTextColor(colors.white)
+  print("          ")
+  
+  term.setTextColor(colors.white)
+  term.setCursorPos(25, 2)
+  code = io.read()
+
+  term.setBackgroundColor(colors.gray)
+  term.setTextColor(colors.white)
+  term.setCursorPos(2, 4)
+  
+  print("Enter filename: ")
+  term.setCursorPos(25, 4)
+  term.setBackgroundColor(colors.lightGray)
+  term.setTextColor(colors.white)
+  print("          ")
+  
+  term.setTextColor(colors.white)
+  term.setCursorPos(25, 4)
+  fn = io.read()
+  
+  term.setBackgroundColor(colors.gray)
+  term.setTextColor(colors.lime)
+  term.setCursorPos(2, 6)
+
+  shell.run("pastebin get "..tostring(code).." /SpeedOS/Downloads/"..tostring(fn))
+  
+  sleep(1)
+  term.setTextColor(colors.white)
+  term.setBackgroundColor(colors.black)
+  term.clear()
+  error()
+end
+
+function upload()
+
+  term.setBackgroundColor(colors.gray)
+  term.setTextColor(colors.white)
+  term.setCursorPos(2, 2)
+  term.clear()
+  
+  print("Enter filename: ")
+  term.setCursorPos(25, 2)
+  term.setBackgroundColor(colors.lightGray)
+  term.setTextColor(colors.white)
+  print("          ")
+  
+  term.setTextColor(colors.white)
+  term.setCursorPos(25, 2)
+  f_n = tostring(lddfm.makeMenu())
+
+  term.setBackgroundColor(colors.gray)
+  term.setTextColor(colors.lime)
+  term.setCursorPos(2, 4)
+  term.clear()
+
+  shell.run("pastebin put "..tostring(f_n))
+  
+  sleep(3)
+  term.setTextColor(colors.white)
+  term.setBackgroundColor(colors.black)
+  term.clear()
+  error()
+end
+
+SpeedGUI.gui.button.add("Upload to pastebin",upload,15,5,2,3,colors.white,colors.orange)
+SpeedGUI.gui.button.add("Download from pastebin",download,13,9,2,3,colors.white,colors.orange)
+SpeedGUI.start()

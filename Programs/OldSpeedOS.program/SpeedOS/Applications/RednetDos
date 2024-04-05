@@ -1,0 +1,14 @@
+-- Opening modem
+
+os.loadAPI("/SpeedAPI/peripheral") -- loading better Peripheral API
+rednet.open(peripheral.find("modem")) -- opening modem
+
+
+rednet.broadcast("-") -- broadcast '-' for everyone
+
+while true do 
+  local id, msg = rednet.receive() -- receive other requests
+  msg = msg .. msg -- copying msg
+  print(msg) -- copying msg
+  rednet.broadcast(msg) -- broadcast copied msg, for ex.: '--'
+end

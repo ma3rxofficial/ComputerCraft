@@ -1,0 +1,19 @@
+rednet.close("top")
+rednet.close("bottom")
+rednet.close("back")
+rednet.close("front")
+rednet.close("right")
+rednet.close("left")
+
+rs.setOutput("top", false)
+rs.setOutput("bottom", false)
+rs.setOutput("back", false)
+rs.setOutput("front", false)
+rs.setOutput("right", false)
+rs.setOutput("left", false)
+
+term.setTextColor(colors.lime)
+print("Sucessfuly fixed redstone & rednet outputs!")
+
+term.setTextColor(colors.white)
+term.setBackgroundColor(colors.black)

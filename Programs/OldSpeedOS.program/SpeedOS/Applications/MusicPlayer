@@ -1,0 +1,180 @@
+--------------------------
+-- Minecraft Music Player with BuildCraft
+-- By: Negeator, 2012
+--------------------------
+-- When set up correcty, this program can automatically play and switch music discs without the player touching the disk drive.
+--------------------------
+--Variables--
+--DO NOT MODIFY THESE--
+local side, title, time
+local state = "none" --What the media player is currently doing
+local stateView = "" --What to display
+local quit = false --Whether to exit the program or not
+local timing = false --Whether the program is timing (Autoplay0
+local currTime = 0 --Current Time
+local visual = 0 --Visualization state variable
+--MODIFY THESE IF YOU WANT--
+local timeAmount = 300 --How long (in seconds) until we switch disks for Autoplay
+--Check for a disk in
+
+term.setBackgroundColor(colors.white)
+term.setTextColor(colors.lightGray)
+term.clear()
+
+function checkSide()
+  if disk.isPresent("top") == true and disk.hasAudio("top") == true then
+        side = "top"
+  elseif disk.isPresent("bottom") == true and disk.hasAudio("bottom") == true  then
+        side = "bottom"
+  elseif disk.isPresent("left") == true and disk.hasAudio("left") == true  then
+        side = "left"
+  elseif disk.isPresent("right") == true and disk.hasAudio("right") == true  then
+        side = "right"
+  elseif disk.isPresent("front") == true and disk.hasAudio("front") == true  then
+        side = "front"
+  elseif disk.isPresent("back") == true and disk.hasAudio("back") == true  then
+        side = "back"
+  else
+side = "No Disc Found"
+  end
+end
+--Clears the Screen
+function clear()
+  term.clear()
+  term.setCursorPos(1,1)
+end
+--Display
+function printInfo()
+  term.setTextColor(colors.black)
+  term.write("Minecraft Music Player")
+  term.setTextColor(colors.lightGray)
+  term.setCursorPos(1,2)
+  term.write(stateView)
+  term.setCursorPos(1,3)
+  io.write("Side: ")
+  term.setTextColor(colors.black)
+  io.write(side)
+  term.setTextColor(colors.lightGray)
+  if side ~= "No Disc Found" and state ~= "play" then
+if disk.hasAudio(side) then
+          term.setCursorPos(1,4)
+          io.write("Disk Inserted: ")
+          term.setTextColor(colors.black)
+          io.write(disk.getAudioTitle(side))          
+          term.setTextColor(colors.lightGray)
+end
+  end
+  term.setCursorPos(1,5)
+  term.setCursorPos(1,6)
+  term.setTextColor(colors.black)
+  term.write("-------------------------------------------------")
+  term.setTextColor(colors.lightGray)
+  term.setCursorPos(1,7)
+  term.setTextColor(colors.gray)
+  term.write("1 - Play | 2 - Stop | 3 - Switch Disk")
+  term.setCursorPos(1,8)
+  term.write("4 - Autoplay | 0 - Quit ")
+  term.setCursorPos(1,9)
+  term.setTextColor(colors.black)
+  term.write("-------------------------------------------------")
+  term.setTextColor(colors.lightGray)
+  term.setCursorPos(1,10)
+end
+--Does stuff based on the state variable
+function musicControl()
+  --Play the disk automatically if in Autoplay mode
+  if timing == true and state ~= "stop" then
+        if state ~= "play" then
+   state = "play"
+end
+  end
+
+  if state == "play" then
+        if side ~= "No Disc Found" then
+   if stateView ~= "<Playing>"  then
+         disk.playAudio(side)
+         stateView = "<Playing>"
+   end
+end
+  elseif state == "stop" then
+        if side ~= "No Disc Found" then
+   timing = false
+   disk.stopAudio(side)
+   stateView = "<Stopped>"
+end
+  end
+
+  --If no disc is present, change the display
+  if side == "No Disc Found" then
+        stateView = "<INSERT DISC>"
+  end
+
+  --Make sure it displays as stopped when a new disc is just inserted
+  if stateView == "<INSERT DISC" and side ~= "No Disc Found" then
+        stateView = "<Stopped>"
+  end
+  state = ""
+
+end
+--Switch Disks
+function cycleDisk()
+  clear()
+  term.write("Switching Disk")
+  rs.setOutput("bottom",true)
+  sleep(5)
+  rs.setOutput("bottom",false)
+  if timing == true then
+        os.startTimer(9) --Wait for new Disc
+currTime = 0
+  end
+end
+--Updates the timer
+function updateTimer()
+  if timing == true then
+        currTime = currTime + 1
+        if currTime >= timeAmount then
+          currTime = 0
+   cycleDisk()
+   os.startTimer(9) --Wait for new Disc
+else
+   os.startTimer(1)
+end
+  end
+end
+--Main Function
+function main()
+  while quit == false do
+        clear()
+        checkSide()
+   musicControl()
+        printInfo()
+        event, p1, p2 = os.pullEvent()
+        if event == "key" then
+          if p1 == 2 then
+         state = "play"
+   elseif p1 == 3 then
+         state = "stop"
+          elseif p1 == 4 then
+                cycleDisk()
+          elseif p1 == 5 then
+                if timing == true then
+        timing = false
+  else
+        timing = true
+        currTime = 0
+        os.startTimer(1)
+  end
+  sleep(.25)
+          elseif p1 == 11 then
+         clear()
+                quit = true
+          end
+        elseif event == "timer" then
+   updateTimer()
+end
+
+  end
+end
+--START PROGRAM--
+main()
+--END PROGRAM--

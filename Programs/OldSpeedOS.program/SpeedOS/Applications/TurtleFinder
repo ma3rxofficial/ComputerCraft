@@ -1,0 +1,51 @@
+--[[
+  Pastebin ID for turtle:
+        NAMSRqWy
+]]--
+
+os.loadAPI("/SpeedAPI/peripheral")
+rednet.open(peripheral.find("modem"))
+
+local turtle_not_found = true
+local running = true
+local turtle_id
+
+term.clear()
+term.setCursorPos(1, 1)
+
+while turtle_not_found do
+  rednet.broadcast("TURTLE FINDING")
+  --sleep(1)
+  
+  event, id, msg, dist = os.pullEvent()
+  
+  if event == "rednet_message" and msg == "TURTLE FOUND" then
+    turtle_not_found = false
+    turtle_id = id
+    print("Turtle found! ID: "..tostring(id))
+  end
+  
+end
+
+while running do
+  io.write("> ")
+  command = io.read()
+  
+  if command then
+    if command == "exit" then
+      rednet.send(id, "exit")
+      
+      term.clear()
+      term.setCursorPos(1, 1)
+      error()  
+    else
+      rednet.send(id, tostring(command))    
+    end
+    
+  else 
+    running = false
+    term.clear()
+    term.setCursorPos(1, 1)
+    
+  end
+end

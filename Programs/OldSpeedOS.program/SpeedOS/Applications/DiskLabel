@@ -1,0 +1,86 @@
+local headerColor = colors.lightGray
+local bodyColor = colors.gray
+local textColor = colors.white
+local exitColor = colors.yellow
+local title = "SpeedOS - Disk labelling utility"
+
+local termw, termh = term.getSize()
+local sides = rs.getSides()
+
+term.setBackgroundColor(bodyColor)
+term.clear()
+term.setTextColor(headerColor)
+term.setBackgroundColor(headerColor)
+term.setCursorPos(1, 1)
+write(string.rep("#", termw * 3))
+term.setCursorPos(math.floor((termw - #title) / 2), 2)
+term.setTextColor(textColor)
+term.write(title)
+
+term.setBackgroundColor(bodyColor)
+
+local yoffset = math.floor((termh - 6) / 2) + 1
+local availableSides = {}
+
+function redrawScreen()
+	term.setCursorPos(2, yoffset)
+	term.clearLine()
+	term.write("Side    | Label")
+	for i = 1, 6 do
+		term.setCursorPos(2, yoffset + i)
+		term.clearLine()
+		local theLabel
+		if availableSides[sides[i]] then
+			theLabel = disk.getLabel(sides[i]) or "[No label]"
+		else
+			if peripheral.getType(sides[i]) == "drive" then
+				theLabel = "[No disk]"
+			else
+				theLabel = "[No drive]"
+			end
+		end
+		term.write(sides[i] .. string.rep(" ", 8 - #sides[i]) .. "| " .. theLabel)
+	end
+	term.setCursorPos(2, termh - 3)
+	term.clearLine()
+	term.write("Click on a label to edit it")
+	term.setCursorPos(2, termh - 2)
+	term.write("Right click on a label to clear it quickly")
+	term.setTextColor(exitColor)
+	term.setCursorPos(2, termh - 1)
+	term.write("Click on this text to exit")
+	term.setTextColor(textColor)
+end
+
+function setDiskLabel(sideID, bclear)
+	local label = ""
+	if not bclear then
+		term.setCursorPos(2, yoffset + sideID)
+		term.clearLine()
+		term.write(sides[sideID] .. string.rep(" ", 8 - #sides[sideID]) .. "|")
+		term.setCursorPos(2, termh - 3)
+		term.clearLine()
+		term.write("Press Enter/Return to save")
+		term.setCursorPos(12, sideID + yoffset)
+		label = read()
+	end
+	disk.setLabel(sides[sideID], label)
+	redrawScreen()
+end
+function updateAvailableSides()
+	for key, value in pairs(sides) do availableSides[value] = disk.isPresent(value) end
+	redrawScreen()
+end
+
+updateAvailableSides()
+while true do
+	local event, p1, p2, p3 = os.pullEvent()
+	if event == "mouse_click" then
+		if p1 == 1 then
+			if p3 == termh - 1 then return end
+			if p3 > yoffset and p3 < yoffset + 7 then if availableSides[sides[p3 - yoffset]] then setDiskLabel(p3 - yoffset) end end
+		end
+		if p1 == 2 and p3 > yoffset and p3 < yoffset + 7 then if availableSides[sides[p3 - yoffset]] then setDiskLabel(p3 - yoffset, true) end end
+	end
+	if event == "disk" or event == "disk_eject" or event == "peripheral" or event == "peripheral_detach" then updateAvailableSides() end
+end

@@ -1,0 +1,1198 @@
+--CONFIGURATION
+	
+server = 110 -- put the server's computer id here
+cursor = "<> " -- this is the cursor for the welcome screen
+cursor2 = "<> " -- this is the cursor for the actual Minebook
+maxUserNameLength = 10 --The max ammount of charecters allowed in a username
+banners = {"|       Only One       |", "|   Multiple Features  |", "|      Admin Added     |", "|    Super Addicting   |", "|  Updates Coming Soon |"} --This is the banners (what it says under RedBook 1.2) to learn how to add custum banners read the Banner ReadMe
+	
+-- |----------------------|
+-- |      RedBook 1.4     |
+-- |  Updates Coming Soon |
+-- |----------------------|
+	
+-- Banner Template ^
+	
+--Do not touch anything below this unless you know what you are doing
+	
+term.setBackgroundColor(colors.black)
+
+function getFrq()
+	rednet.send(server, crntname.."!SP!chck frnd req two")
+	id, msg, d = rednet.receive(2)
+	frndNumTbl = split(msg, "!SP!")
+	if frndNumTbl ~= nil then
+		frndNum = #frndNumTbl
+	else
+		frndNum = 0
+	end
+	textutils.tabulate(frndNumTbl)
+end
+	
+function getMsgNumber()
+	rednet.send(server, crntname.."!SP!getMessages")
+	id, msg, d = rednet.receive(2)
+	t = textutils.unserialize(msg)
+	msgNumber = #t
+end	
+
+function getMessages()
+	rednet.send(server, crntname.."!SP!getMessages")
+	id, msg, d = rednet.receive(2)
+	t = textutils.unserialize(msg)
+	number = #t
+	if number ~= 0 then
+		c = 1
+		while true do
+			shell.run("clear")
+			curent = t[c]
+			rednet.send(server, crntname.."!SP!getMessage!SP!"..curent)
+			id, msg2, d = rednet.receive(2)
+			parts = split(msg2, "!SP!")
+			sender = parts[1]
+			message = parts[2]
+			print("Sender: "..sender)
+			print("Subject: "..t[c])
+			print()
+			print("----------------------Message---------------------")
+			print(message)
+			print("--------------------------------------------------")
+			print(c.." out of "..number)
+			print("Press enter to erase")
+			read()
+			c = c+1
+			if c >= number+1 then
+				msgNumber = 0
+				break
+			end
+		end
+	else
+		shell.run("clear")
+		print("NO NEW MESSAGES")
+		read()
+	end
+	eraseMessages()
+	loadRandomCrap2()
+end
+
+function eraseMessages()
+	rednet.send(server, crntname.."!SP!eraseMessages")
+end
+
+function printMessageLayout()
+	shell.run("clear")
+	print("|------------To------------|")
+	print("|                          |")
+	print("|--------------------------|")
+	print()
+	print("|-------------Subject-------------|")
+	print("|                                 |")
+	print("|---------------------------------|")
+	print()
+	print("|---------------------Message--------------------|")
+	print("|                                                |")
+	print("|                                                |")
+	print("|------------------------------------------------|")
+	print()
+	print("Press ENTER twice to send")
+	composeMessage()
+end
+
+function composeMessage()
+	term.setCursorPos(2,2)
+	recipient = read()
+	term.setCursorPos(2,6)
+	subject = read()
+	term.setCursorPos(2,10)
+	messageP1 = read()
+	term.setCursorPos(2,11)
+	messageP2 = read()
+	message = messageP1.." "..messageP2
+	if recipient ~= "" and subject ~= "" and message ~= "" then
+		message = crntname.."!SP!newMessage!SP!"..recipient.."!SP!"..subject.."!SP!"..message
+		check = split(message, "!SP!")
+		rednet.send(server, message)
+	end
+	loadRandomCrap2()
+end
+
+function uploadScript()
+	shell.run("clear")
+	print("Pick a file to upload")
+	sApp = read()
+	if fs.exists(sApp) then
+			fProgram = fs.open(sApp, "r")
+			program = fProgram.readAll()
+			fProgram.close()
+			s = crntname.."!SP!uploadScript!SP!"..sApp.."!SP!"..program
+			rednet.send(server, s)
+			id, msg, d = rednet.receive(2)
+			if msg ~= nil then
+				print(msg)
+				os.sleep(2)
+			end
+			loadRandomCrap2()
+	else
+			shell.run("clear")
+			print("NOT A PROGRAM")
+			loadRandomCrap2()
+	end
+end
+
+function browseScripts()
+	hj = crntname.."!SP!browseScripts!SP!"
+	rednet.send(server, hj)
+	id, msg, d = rednet.receive(2)
+	if msg == nil then
+		shell.run("Clear")
+		print("SERVER ERROR")
+		os.sleep(2)
+	else
+		t = textutils.unserialize(msg)
+		shell.run("clear")
+		textutils.tabulate(t)
+		print("")
+		print("Pick a software to download. If you dont want to download anything then type none")
+		print("")
+		term.write("Enter software: ")
+		app = read()
+		if app ~= "none" or "None" or "NOne" or "NONe" or "NONE" or "nONE" or "noNE" or "nonE" or "NoNe" or "nOne" or "noNe" or "nonE" or "nONe" or "nOnE" or "NonE" then
+			p = crntname.."!SP!downloadScript!SP!"..app
+			rednet.send(server, p)
+			id, smsg, d = rednet.receive(2)
+			if smsg ~= nil then
+				nScript = fs.open(app, "w")
+				nScript.write(smsg)
+				nScript.close()
+			end
+		end
+	end
+loadRandomCrap2()
+end
+
+function testLogIn()
+	shell.run("clear")
+	if msg1 == "YOU HAVE BEEN LOGGED IN" then
+		print(msg1..": "..crntname)
+		term.setCursorBlink(false)
+		read()
+	else
+		print(msg1)
+		term.setCursorBlink(false)
+		read()
+	end
+	if msg1 == "YOU HAVE BEEN LOGGED IN" then
+		pickNewBanner()
+		mineBook()
+	else
+		pickNewBanner()
+		loadRandomCrap()
+	end
+end
+
+function errorQuit()
+	a = jkfdls+fjdsjfal
+	print(a)
+end
+
+function searchUser()
+	shell.run("clear")
+	term.write("ENTER USER: ")
+	user2 = read()
+	if user2 ~= crntname then
+		sndsrch = crntname.."!SP!search!SP!"..user2
+		rednet.send(server, sndsrch)
+		id3, msg3, d3 = rednet.receive(5)
+		if msg3 ~= nil then
+			srch = split(msg3, "!SP!")
+			nuser = srch[1]
+			nstatus = srch[2]
+			nfriends = srch[3]
+			if nstatus == nil then
+				nstatus = ""
+			end
+			shell.run("clear")
+			print("|||||||||||||||||||||||||||")
+			print("||                       ||")
+			print("||  USER SEARCH RESULTS  ||")
+			print("||                       ||")
+			print("|||||||||||||||||||||||||||")
+			print("")
+			print("")
+			print("User Name: "..nuser)
+			print("")
+			print("Status: "..nstatus)
+			print("")
+			print("")
+			print("PRESS S TO SEND FRIEND REQUEST OR E TO EXIT")
+			while true do
+				event9, param9 = os.pullEvent()
+				if event9 == "key" and param9 == 31 and nuser then
+					sndmsg = crntname.."!SP!sndfrq!SP!"..nuser
+					shell.run("clear")
+					rednet.send(server, sndmsg)
+					id8, msg8, d8 = rednet.receive(1)
+					if msg8 == nil then
+						print("REQUEST SENT")
+						read()
+						pickNewBanner()
+						loadRandomCrap2()
+						break
+					else
+						print("YOU ARE ALREADY FRIENDS WITH THIS PERSON")
+						read()
+						pickNewBanner()
+						loadRandomCrap2()
+						break
+					end
+				elseif event9 == "key" and param9 == 18 then
+					pickNewBanner()
+					loadRandomCrap2()
+					break
+				end
+			end
+		else
+			shell.run("clear")
+			print("SERVER ERROR")
+			read()
+			pickNewBanner()
+			loadRandomCrap2()
+		end
+	else
+		shell.run("clear")
+		print("YOU CAN NOT SEARCH YOURSELF")
+		sleep(1)
+		pickNewBanner()
+		loadRandomCrap2()
+	end
+end
+
+function prntFrq()
+	shell.run("clear")
+	print("FRIEND REQUESTS")
+	print("")
+	print(frq[gcur])
+	print("")
+	print("PRESS A TO ACCEPT OR D TO DECLINE")
+end
+
+function printFrndReq()
+	gcur = 1
+	prntFrq()
+	while true do
+		event2, param2 = os.pullEvent()
+		if event2 == "key" and param2 == 30 then
+			shell.run("clear")
+			print("USER ADDED")
+			ju = crntname.."!SP!add friend!SP!"..frq[gcur]
+			rednet.send(server, ju)
+			gcur = gcur+1
+			read()
+			if gcur > gmax then
+				loadRandomCrap2()
+				break
+			else
+				prntFrq()
+			end
+		elseif event2 == "key" and param2 == 32 then
+			shell.run("clear")
+			print("USER DECLINED")
+			gcur = gcur+1
+			read()
+			if gcur > gmax then
+				pickNewBanner()
+				loadRandomCrap2()
+				break
+			else
+				prntFrq()
+			end
+		end
+	end
+end
+
+function checkFrndReq()
+	jk = crntname.."!SP!chck frnd req"
+	rednet.send(server, jk)
+	id, msg, d = rednet.receive(5)
+	if msg ~= nil then
+		frq = split(msg, "!SP!")
+		gmax = #frq
+		gmin = 1
+		if gmax >= gmin then
+			shell.run("clear")
+			printFrndReq()
+			frndNum = 0
+		else
+			shell.run("clear")
+			print("NO NEW REQUESTS")
+			read()
+		end
+		loadRandomCrap2()
+	end
+end
+
+function updateStatus()
+	shell.run("clear")
+	stat = read()
+	h = crntname.."!SP!status update!SP!"..stat
+	rednet.send(server, h)
+	g = fs.open("/SpeedOS/Applications/MINEBOOK/STATUS", "w")
+	g.write(stat)
+	g.close()
+end
+
+function listFriends()
+	y = "list"
+	x = crntname.."!SP!"..y
+	rednet.send(server, x)
+	id, msg, d = rednet.receive(4)
+	if msg == nil then
+		shell.run("clear")
+		print("ERROR")
+		read()
+		loadRandomCrap2()
+	else
+		shell.run("clear")
+		r = split(msg, "!SP!")
+		print("FRIEND LIST")
+		textutils.tabulate(r)
+		read()
+		loadRandomCrap2()
+	end
+end
+
+function testLogInTwo()
+	shell.run("clear")
+	print(msg2)
+	term.setCursorBlink(false)
+	read()
+end
+
+function OpenAll()
+        for _,side in ipairs(rs.getSides()) do
+                rednet.open("top")
+        end
+end
+
+function gameMenu()
+	
+	g1 = "BlackJack"
+	g2 = "Exit"
+
+	min = 1
+	max = 2
+	cur = min
+
+	function loadRandomCrap3()
+		shell.run("clear")
+		print("|----------------------|")
+		print("|         Games        |")
+		print("|----------------------|")
+		if cur == 1 then 
+			term.setCursorPos(1,8)
+			print(""..cursor2..""..g1.."")
+		else
+			term.setCursorPos(1,8)
+			print(g1)
+		end
+		if cur == 2 then
+			term.setCursorPos(1,9)
+			print(""..cursor2..""..g2.."")
+		else
+			term.setCursorPos(1,9)
+			print(g2)
+		end
+	end
+
+	function runGames()
+		loadRandomCrap3()
+		while true do
+			event, param1 = os.pullEvent()
+			if event == "key" and param1 == 200 then
+				if cur == min then
+					cur = max
+					loadRandomCrap3()
+				else
+					cur = cur-1
+					loadRandomCrap3()
+				end
+			elseif event == "key" and param1 == 208 then
+				if cur == max then
+					cur = min
+					loadRandomCrap3()
+				else
+					cur = cur+1
+					loadRandomCrap3()
+				end
+			elseif event == "key" and param1 == 28 then
+				if cur == 2 then
+					shell.run("clear")
+					min = 1
+					max = 10
+					cur = min
+					pickNewBanner()
+					loadRandomCrap2()
+					break
+				else
+					printMenu()
+				end
+			end
+		end
+	end
+runGames()
+end	
+
+function mineBook()
+	
+	getFrq()
+	getMsgNumber()
+	
+	w1 = "Search"
+	w2 = "Change Status"
+	w3 = "Friends"
+	w4 = "Check Friend Request"
+	w5 = "Upload a Script"
+	w6 = "Browse Scripts"
+	w7 = "Games"
+	w8 = "Send Message"
+	w9 = "Get Messages"
+	w10 = "Exit"
+	
+	min = 1
+	max = 10
+	cur = min
+	
+	function doThings2()
+		if cur == 3 then
+			listFriends()
+		elseif cur == 4 then
+			checkFrndReq()
+		elseif cur == 1 then
+			searchUser()
+		elseif cur == 2 then
+			updateStatus()
+			pickNewBanner()
+			loadRandomCrap2()
+		elseif cur == 5 then
+			uploadScript()
+		elseif cur == 6 then
+			browseScripts()
+		elseif cur == 7 then
+			gameMenu()
+		elseif cur == 8 then
+			printMessageLayout()
+		elseif cur == 9 then
+			getMessages()
+		end
+	end
+
+
+	function loadRandomCrap2()
+		OpenAll()
+		term.clear()
+		term.setCursorPos(1,1)
+		print("***** ")
+		print("*    *")
+		print("***** ")
+		print("*  *  ")
+		print("*   * ")
+		print("*    *")
+		print("")
+		term.setCursorPos(28, 1)
+		print("|----------------------|")
+		term.setCursorPos(28, 2)
+		print(banners[curBanner])
+		term.setCursorPos(28, 3)
+		print("|----------------------|")
+		term.setCursorPos(28, 4)
+		print("|Welcome: "..crntname)
+		term.setCursorPos(28, 5)
+		print("|New Messages: "..msgNumber)
+		term.setCursorPos(28, 6)
+		print("|Friend Requests: "..frndNum)
+		term.setCursorPos(28, 7)
+		print("|----------------------|")
+		term.setCursorPos(51, 1)
+		print("|")
+		term.setCursorPos(51, 3)
+		print("|")
+		term.setCursorPos(51, 4)
+		print("|")
+		term.setCursorPos(51, 5)
+		print("|")
+		term.setCursorPos(51, 6)
+		print("|")
+		if cur == 1 then 
+			term.setCursorPos(1,9)
+			print(""..cursor2..""..w1.."")
+		else
+			term.setCursorPos(1,9)
+			print(w1)
+		end
+		if cur == 2 then
+			term.setCursorPos(1,10)
+			print(""..cursor2..""..w2.."")
+		else
+			term.setCursorPos(1,10)
+			print(w2)
+		end
+		if cur == 3 then 
+			term.setCursorPos(1,11)
+			print(""..cursor2..""..w3.."")
+		else
+			term.setCursorPos(1,11)
+			print(w3)
+		end
+		if cur == 4 then 
+			term.setCursorPos(1,12)
+			print(""..cursor2..""..w4.."")
+		else
+			term.setCursorPos(1,12)
+			print(w4)
+		end
+		if cur == 5 then 
+			term.setCursorPos(1,13)
+			print(""..cursor2..""..w5.."")
+		else
+			term.setCursorPos(1,13)
+			print(w5)
+		end
+		if cur == 6 then 
+			term.setCursorPos(1,14)
+			print(""..cursor2..""..w6.."")
+		else
+			term.setCursorPos(1,14)
+			print(w6)
+		end
+		if cur == 7 then 
+			term.setCursorPos(1,15)
+			print(""..cursor2..""..w7.."")
+		else
+			term.setCursorPos(1,15)
+			print(w7)
+		end
+		if cur == 8 then
+			term.setCursorPos(1,16)
+			print(""..cursor2..""..w8.."")
+		else
+			term.setCursorPos(1,16)
+			print(w8)
+		end
+		if cur == 9 then
+			term.setCursorPos(1,17)
+			print(""..cursor2..""..w9.."")
+		else
+			term.setCursorPos(1,17)
+			print(w9)
+		end
+		if cur == 10 then
+			term.setCursorPos(1,18)
+			print(""..cursor2..""..w10.."")
+		else
+			term.setCursorPos(1,18)
+			print(w10)
+		end
+	end
+
+	function runMineBook()
+		loadRandomCrap2()
+		while true do
+			event, param1 = os.pullEvent()
+			if event == "key" and param1 == 200 then
+				if cur == min then
+					cur = max
+					loadRandomCrap2()
+				else
+					cur = cur-1
+					loadRandomCrap2()
+				end
+			elseif event == "key" and param1 == 208 then
+				if cur == max then
+					cur = min
+					loadRandomCrap2()
+				else
+					cur = cur+1
+					loadRandomCrap2()
+				end
+			elseif event == "key" and param1 == 28 then
+				if cur == 10 then
+					shell.run("clear")
+					min = 1
+					max = 4
+					cur = min
+					pickNewBanner()
+					loadRandomCrap()
+					break
+				end
+				doThings2()
+			end
+		end
+	end
+	runMineBook()
+end
+
+function split(str, pat)
+	local t = { }
+	local fpat = "(.-)"..pat
+	local last_end = 1
+	local s, e, cap = str:find(fpat, 1)
+		while s do
+			if s ~= 1 or cap ~= "" then
+				table.insert(t,cap)
+			end
+			last_end = e+1
+			s, e, cap = str:find(fpat, last_end)
+		end
+		if last_end <= #str then
+			cap = str:sub(last_end)
+			table.insert(t, cap)
+	end
+	return t
+end
+
+min = 1
+max = 4
+cur = min
+
+function makeUser()
+	shell.run("clear")
+	term.write("ENTER DESIRED USERNAME: ")
+	term.setCursorPos(1,3)
+	term.write("ENTER DESIRED PASSWORD: ")
+	term.setCursorPos(1,5)
+	term.write("RE-ENTER DESIRED PASSWORD: ")
+	term.setCursorPos(26,1)
+	dusrnm = read()
+	term.setCursorPos(26,3)
+	dpw = read("*")
+	term.setCursorPos(29,5)
+	rdpw = read("*")
+	if dpw == rdpw then
+		if #dusrnm <= maxUserNameLength then
+			y = dusrnm.."!SP!makeUser!SP!"..dpw
+			rednet.send(server, y)
+			id2, msg2, d2 = rednet.receive(1)
+			if msg2 == nil then
+				shell.run("clear")
+				print("SERVER ERROR")
+				read()
+				loadRandomCrap()
+			else
+				username = dusrnm
+				rednet.send(server, username.."!SP!status update!SP!DEFAULT STATUS")
+				testLogInTwo()
+			end
+		else
+			shell.run("clear")
+			print("USERNAME IS TOO LONG")
+			read()
+		end
+	else
+		shell.run("clear")
+		print("PASSWORDS DO NOT MATCH")
+		read()
+	end
+end
+
+function logIn()
+	shell.run("clear")
+	term.write("ENTER USERNAME: ")
+	term.setCursorPos(1,3)
+	term.write("ENTER PASSWORD: ")
+	term.setCursorPos(17,1)
+	usrnm = read()
+	term.setCursorPos(17,3)
+	pswrd = read("*")
+	x = usrnm.."!SP!logIn!SP!"..pswrd
+	rednet.send(server, x)
+	id1, msg1, d1 = rednet.receive(1)
+	if msg1 == nil then
+		shell.run("clear")
+		print("SERVER ERROR")
+		read()
+		loadRandomCrap()
+	else
+		if msg1 == "YOU HAVE BEEN LOGGED IN" then
+			crntname = usrnm
+			testLogIn()
+		else
+			testLogIn()
+		end
+	end
+end
+
+term.setCursorBlink(false)
+
+s1 = "Log In"
+s2 = "Make Account"
+s3 = "Change Banner"
+s4 = "Exit"
+
+function doThings()
+	if cur == 3 then
+		pickNewBanner()
+		loadRandomCrap()
+	elseif cur == 1 then
+		logIn()
+	elseif cur == 2 then
+		makeUser()
+		pickNewBanner()
+		loadRandomCrap()
+	end
+end
+
+function pickNewBanner()
+	maxBannerNumber = #banners
+	curBanner = math.random(maxBannerNumber)
+end
+
+function loadRandomCrap()
+	OpenAll()
+	term.clear()
+	term.setCursorPos(1,1)       
+	print("***** ")
+	print("*    *")
+	print("***** ")
+	print("*  *  ")
+	print("*   * ")
+	print("*    *")
+	print("")
+	term.setCursorPos(28, 1)
+	print("|----------------------|")
+	term.setCursorPos(28, 2)
+	print(banners[curBanner])
+	term.setCursorPos(28, 3)
+	print("|----------------------|")
+	print()
+	if cur == 1 then 
+		term.setCursorPos(1,11)
+		print(""..cursor..""..s1.."")
+	else
+		term.setCursorPos(1,11)
+		print(s1)
+	end
+	if cur == 2 then
+		term.setCursorPos(1,12)
+		print(""..cursor..""..s2.."")
+	else
+		term.setCursorPos(1,12)
+		print(s2)
+	end
+	if cur == 3 then 
+		term.setCursorPos(1,13)
+		print(""..cursor..""..s3.."")
+	else
+		term.setCursorPos(1,13)
+		print(s3)
+	end
+	if cur == 4 then 
+		term.setCursorPos(1,14)
+		print(""..cursor..""..s4.."")
+	else
+		term.setCursorPos(1,14)
+		print(s4)
+	end
+end
+
+function runProgram()
+	fs.makeDir("/SpeedOS/Applications/MINEBOOK")
+
+	min = 1
+	max = 4
+	cur = min
+
+	loadRandomCrap()
+	while true do
+  		event, param1 = os.pullEvent()
+  		if event == "key" and param1 == 200 then
+  				if cur == min then
+     					cur = max
+	       				loadRandomCrap()
+				else
+					cur = cur-1
+					loadRandomCrap()
+				end
+		elseif event == "key" and param1 == 208 then
+			if cur == max then
+				cur = min
+				loadRandomCrap()
+			else
+				cur = cur+1
+				loadRandomCrap()
+			end
+		elseif event == "key" and param1 == 28 then
+			if cur == 4 then
+				break
+			end
+			doThings()
+		end
+	end
+end
+
+w,h = term.getSize()
+
+function printCentered(height, value)
+  local xpos = w/2 - string.len(value)/2
+  term.setCursorPos(xpos, height)  
+  term.write(value)
+end
+
+function pickCard()
+	pState = 1
+	NumberTens = {"J", "Q", "K"}
+	cTen = math.random(1, 3)
+	AllCards = {"1", "2", "3", "4", "5", "6", "7", "8", "9", NumberTens[cTen], "A"}
+	shell.run("clear")
+	ndCard = math.random(1, 11)
+	ndCard2 = math.random(1, 11)
+	ndCard3 = math.random(1, 11)
+	ndCard4 = math.random(1, 11)
+	ndCard5 = math.random(1, 11)
+	ndCard6 = math.random(1, 11)
+	dCard = AllCards[ndCard]
+	dCard2 = AllCards[ndCard2]
+	dCard3 = AllCards[ndCard3]
+	dCard4 = AllCards[ndCard4]
+	dCard5 = AllCards[ndCard5]
+	dCard6 = AllCards[ndCard6]
+	nCard = math.random(1, 11)
+	nCard2 = math.random(1, 11)
+	nCard3 = math.random(1, 11)
+	nCard4 = math.random(1, 11)
+	nCard5 = math.random(1, 11)
+	nCard6 = math.random(1, 11)
+	cCard = AllCards[nCard]
+	cCard2 = AllCards[nCard2]
+	cCard3 = AllCards[nCard3]
+	cCard4 = AllCards[nCard4]
+	cCard5 = AllCards[nCard5]
+	cCard6 = AllCards[nCard6]
+	print("Money: "..totalMoney)
+	term.write("Enter Bet: ")
+	bet = read()
+	totalMoney = totalMoney-bet
+	shell.run("clear")
+	print("BET: "..bet)
+	print("Your Cards:               Dealers Card:")
+	print()
+	print("|----|                      |----|")
+	print("|"..cCard.."   |                      |"..dCard.."   |")
+	print("|    |                      |    |")
+	print("|    |                      |    |")
+	print("|   "..cCard.."|                      |   "..dCard.."|")
+	print("|----|                      |----|")
+	print()
+	print("|----|                      |----|")
+	print("|"..cCard2.."   |                      ||||||")
+	print("|    |                      ||||||")
+	print("|    |                      ||||||")
+	print("|   "..cCard2.."|                      ||||||")
+	print("|----|                      |----|")
+	tpCard = nCard + nCard2
+	tdCard = ndCard + ndCard2
+	if tdCard == 21 then
+		print("DEALER HAS BLACKJACK")
+		printSubMenu()
+	else
+		print("Your total card number: "..tpCard)
+		printSubMenu()
+	end
+end
+
+function hitOne()
+	pState = 2
+	tpCard = tpCard + nCard3
+	term.setCursorPos(7, 4)
+	print("|----|")
+	term.setCursorPos(7, 5)
+	print("|"..cCard3.."   |")
+	term.setCursorPos(7, 6)
+	print("|    |")
+	term.setCursorPos(7, 7)
+	print("|    |")
+	term.setCursorPos(7, 8)
+	print("|   "..cCard3.."|")
+	term.setCursorPos(7, 9)
+	print("|----|")
+	term.setCursorPos(1, 17)
+	print("Your total card number: "..tpCard)
+end
+
+function hitTwo()
+	pState = 3
+	tpCard = tpCard + nCard4
+	term.setCursorPos(7, 11)
+	print("|----|")
+	term.setCursorPos(7, 12)
+	print("|"..cCard4.."   |")
+	term.setCursorPos(7, 13)
+	print("|    |")
+	term.setCursorPos(7, 14)
+	print("|    |")
+	term.setCursorPos(7, 15)
+	print("|   "..cCard4.."|")
+	term.setCursorPos(7, 16)
+	print("|----|")
+	term.setCursorPos(1, 17)
+	print("Your total card number: "..tpCard)
+end
+
+function hitThree()
+	pState = 4
+	tpCard = tpCard + nCard5
+	term.setCursorPos(13, 4)
+	print("|----|")
+	term.setCursorPos(13, 5)
+	print("|"..cCard5.."   |")
+	term.setCursorPos(13, 6)
+	print("|    |")
+	term.setCursorPos(13, 7)
+	print("|    |")
+	term.setCursorPos(13, 8)
+	print("|   "..cCard5.."|")
+	term.setCursorPos(13, 9)
+	print("|----|")
+	term.setCursorPos(1, 17)
+	print("Your total card number: "..tpCard)
+end
+
+function hitFour()
+	pState = 5
+	tpCard = tpCard + nCard6
+	term.setCursorPos(13, 11)
+	print("|----|")
+	term.setCursorPos(13, 12)
+	print("|"..cCard6.."   |")
+	term.setCursorPos(13, 13)
+	print("|    |")
+	term.setCursorPos(13, 14)
+	print("|    |")
+	term.setCursorPos(13, 15)
+	print("|   "..cCard6.."|")
+	term.setCursorPos(13, 16)
+	print("|----|")
+	term.setCursorPos(1, 17)
+	print("Your total card number: "..tpCard)
+end
+
+function hitDealer()
+	tdCard = tdCard + ndCard3
+	term.setCursorPos(35, 4)
+	print("|----|")
+	term.setCursorPos(35, 5)
+	print("|"..dCard3.."   |")
+	term.setCursorPos(35, 6)
+	print("|    |")
+	term.setCursorPos(35, 7)
+	print("|    |")
+	term.setCursorPos(35, 8)
+	print("|   "..dCard3.."|")
+	term.setCursorPos(35, 9)
+	print("|----|")
+	term.setCursorPos(30, 17)
+	print("DEALER: "..tdCard)
+end
+
+function hitDealerTwo()
+	tdCard = tdCard + ndCard4
+	term.setCursorPos(35, 11)
+	print("|----|")
+	term.setCursorPos(35, 12)
+	print("|"..dCard4.."   |")
+	term.setCursorPos(35, 13)
+	print("|    |")
+	term.setCursorPos(35, 14)
+	print("|    |")
+	term.setCursorPos(35, 15)
+	print("|   "..dCard4.."|")
+	term.setCursorPos(35, 16)
+	print("|----|")
+	term.setCursorPos(30, 17)
+	print("DEALER: "..tdCard)
+end
+
+function hitDealerThree()
+	tdCard = tdCard + ndCard5
+	term.setCursorPos(41, 4)
+	print("|----|")
+	term.setCursorPos(41, 5)
+	print("|"..dCard5.."   |")
+	term.setCursorPos(41, 6)
+	print("|    |")
+	term.setCursorPos(41, 7)
+	print("|    |")
+	term.setCursorPos(41, 8)
+	print("|   "..dCard5.."|")
+	term.setCursorPos(41, 9)
+	print("|----|")
+	term.setCursorPos(30, 17)
+	print("DEALER: "..tdCard)
+end
+
+function revealDealerCard()
+	term.setCursorPos(29, 11)
+	print("|----|")
+	term.setCursorPos(29, 12)
+	print("|"..dCard2.."   |")
+	term.setCursorPos(29, 13)
+	print("|    |")
+	term.setCursorPos(29, 14)
+	print("|    |")
+	term.setCursorPos(29, 15)
+	print("|   "..dCard2.."|")
+	term.setCursorPos(29, 16)
+	print("|----|")
+	term.setCursorPos(30, 17)
+	print("DEALER: "..tdCard)
+end
+
+function printMenu()
+	cur = 1
+	min = 1
+	max = 3
+	while true do
+		drawMenu()
+		event, param1 = os.pullEvent()
+		if event == "key" and param1 == 208 then
+			if cur == max then
+				cur = min
+			else
+				cur = cur + 1
+			end
+		elseif event == "key" and param1 == 200 then
+			if cur == min then
+				cur = max
+			else
+				cur = cur - 1
+			end
+		elseif event == "key" and param1 == 28 then
+			if cur == 2 then
+				totalMoney = 100
+				pickCard()
+			elseif cur == 1 then
+				if totalMoney ~= nil then
+					pickCard()
+				else
+					totalMoney = 100
+					pickCard()
+				end
+			elseif cur == 3 then
+				min = 1
+				max = 2
+				break
+			end
+		break
+		end
+	end
+cur = 1
+loadRandomCrap3()
+end
+
+function printSubMenu()
+	ncur = 1
+	nmax = 4
+	nmin = 1
+	while true do
+		drawSubMenu()
+		event1, param2 = os.pullEvent()
+		if event1 == "key" and param2 == 205 then
+			if ncur == nmax then
+				ncur = nmin
+			else
+				ncur = ncur + 1
+			end
+		elseif event1 == "key" and param2 == 203 then
+			if ncur == nmin then
+				ncur = nmax
+			else
+				ncur = ncur - 1
+			end
+		elseif event1 == "key" and param2 == 28 then
+			if ncur == 1 then
+				if pState == 1 then
+					hitOne()
+				elseif pState == 2 then
+					hitTwo()
+				elseif pState == 3 then
+					hitThree()
+				elseif pState == 4 then
+					hitFour()
+				end
+			elseif ncur == 2 then
+				break
+			elseif ncur == 3 then
+				revealDealerCard()
+				if tdCard < 17 then
+					hitDealer()
+				end
+				if tdCard < 17 then
+					hitDealerTwo()
+				end
+				if tdCard < 17 then
+					hitDealerThree()
+				end
+				read()
+				if tdCard > 21 then
+					tdCard = 0
+				end
+				if tpCard > 21 then
+					shell.run("CLEAR")
+					print("YOU BUST")
+					read()
+					break
+				elseif tpCard > tdCard then
+					shell.run("clear")
+					print("YOU WIN")
+					tBet = bet * 2
+					totalMoney = totalMoney + tBet
+					read()
+					break
+				elseif tpCard < tdCard then
+					shell.run("clear")
+					print("YOU LOOSE :(")
+					read()
+					break
+				end
+			elseif ncur == 4 then
+				break
+			end
+		end
+	end
+printMenu()
+end
+
+function drawMenu()
+	shell.run("clear")
+	printCentered(1, "|-------------------------|")
+	printCentered(2, "| RedBook Black Jack v1.0 |")
+	printCentered(3, "|-------------------------|")
+	if cur == 1 then
+		printCentered(7, "[ CONTINUE GAME ]")
+	else
+		printCentered(7, "  CONTINUE GAME  ")
+	end
+	if cur == 2 then
+		printCentered(8, "[ NEW GAME ]")
+	else
+		printCentered(8, "  NEW GAME  ")
+	end
+	if cur == 3 then
+		printCentered(9, "[ EXIT ]")
+	else
+		printCentered(9, "  EXIT  ")
+	end
+end
+
+function drawSubMenu()
+  local ws = string.rep(" ", 4)
+  local pr, ba, de, ne
+  if ncur==1 then pr = "[ HIT ]" else pr = "  HIT  " end
+  if ncur==2 then ba = "[ FOLD ]" else ba = "  FOLD  " end
+  if ncur==3 then de = "[ STAND ]" else de = "  STAND  " end
+  if ncur==4 then ne = "[ EXIT ]" else ne = "  EXIT  " end
+  term.setCursorPos(1,h)
+  printCentered(h, ws..pr..ws..ba..ws..de..ws..ne)
+end
+
+pickNewBanner()
+runProgram()

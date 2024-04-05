@@ -1,0 +1,46 @@
+os.loadAPI("SpeedAPI/SpeedText")
+os.loadAPI("SpeedAPI/windows")
+
+term.setTextColor(colors.lightGray)
+term.setBackgroundColor(colors.white)
+term.clear()
+term.setCursorPos(1, 1)
+
+term.setTextColor(colors.black)
+SpeedText.line()
+term.setTextColor(colors.lightGray)
+
+while true do  
+  local event, character = os.pullEvent()
+  if event == "char" then
+    print(character.." was pressed")
+    
+    term.setTextColor(colors.black)
+    SpeedText.line()
+    term.setTextColor(colors.lightGray)
+           
+  elseif event == "mouse_click" then
+    print(character.." was pressed on mouse")
+    
+    term.setTextColor(colors.black)
+    SpeedText.line()
+    term.setTextColor(colors.lightGray)
+  
+  elseif event == "mouse_scroll" then
+    print("Scrolling mouse "..character)
+    
+    term.setTextColor(colors.black)
+    SpeedText.line()
+    term.setTextColor(colors.lightGray)
+  
+  elseif event == "key" then
+    print("ID of key is "..character)
+    
+  else 
+    print(event.." event has happened")
+    
+    term.setTextColor(colors.black)
+    SpeedText.line()
+    term.setTextColor(colors.lightGray)
+  end
+end

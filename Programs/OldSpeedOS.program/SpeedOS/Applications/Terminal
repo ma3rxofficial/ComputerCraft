@@ -1,0 +1,59 @@
+--t = {}
+--s = "from=world, to=Lua"
+--for k, v in string.gmatch(s, "(%w+)=(%w+)") do
+--  t[k] = v
+--end
+--print(t)
+
+if true then
+local function writeColored( sColor, sText, newLine )
+  if newLine == nil then
+    newLine = true
+  end
+  
+  local oc = colors.white
+  
+  if term.isColor and term.isColor() then
+    term.setTextColor(sColor)
+  else
+    term.setTextColor(colors.white)
+  end
+    
+  write(sText)
+    
+  if newLine then
+    print()
+  end  
+  term.setTextColor(oc)
+end
+
+-- Aliases
+
+shell.setAlias("sp", "/SpeedOS/Applications/Utils/sp")
+shell.setAlias("ping", "/SpeedOS/Applications/Utils/ping")
+shell.setAlias("compress", "/SpeedOS/Applications/Utils/compress")
+shell.setAlias("decompress", "/SpeedOS/Applications/Utils/decompress")
+
+writeColored(colors.orange, "SpeedOS Shell 1.0", true)
+term.setTextColor(colors.white)
+
+
+while true do
+  writeColored(colors.lime, "@root> ", false)
+  term.setTextColor(colors.lightGray)
+  com = read()
+  term.setTextColor(colors.white)
+
+  if com == "exit" then error() 
+  elseif com == "quit" then error() 
+  elseif com == "goodbye" then error()
+
+  elseif com == "help" then 
+	writeColored(colors.yellow, "Welcome to Shell!", true)
+	writeColored(colors.lightBlue, "This is just shell specially for SpeedOS operating system, which can be found on TechWorld(TechnoMir) server. Minecraft 1.4.7, CraftOS 1.5.", true)
+
+  else
+	shell.run(tostring(com))
+  end
+end
+end

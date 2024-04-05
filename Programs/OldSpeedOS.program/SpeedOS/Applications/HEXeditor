@@ -1,0 +1,219 @@
+local guideBar = "|Pos.|00|01|02|03|04|05|06|07|ASCIIRep|"
+local sepBar =   "|----|--|--|--|--|--|--|--|--|--------|"
+local horizBar = string.rep("-", 39)
+local sX, sY = term.getSize()
+
+local args = {...}
+os.loadAPI("/SpeedAPI/lddfm")
+args[1] = tostring(lddfm.makeMenu())
+
+if not term.isColor() then
+	print("Sorry, but you must an Advanced Computer is required to use this program.")
+	return
+end
+
+
+local function writeScreen(bytes, offsetLines, fileName)
+	local byteLines = {}
+	
+	local function writeLine(bLine, offset, y)
+		term.setCursorPos(1, y)
+		local line = "|"
+		local strOffset = string.format("%X", offset)
+		for i=#strOffset, 3 do
+			strOffset = "0"..strOffset
+		end
+		line = line..strOffset.."|"
+		local asciiRep = ""
+		for i=1, 8 do
+			if bLine[i] ~= nil then
+				local t = string.format("%X", bLine[i])
+				if #t == 1 then
+					t = "0"..t
+				end
+				line = line..t.."|"
+				if bLine[i] >= 0x20 and bLine[i] <= 0x7E then
+					asciiRep = asciiRep..string.char(bLine[i])
+				else
+					asciiRep = asciiRep.."."
+				end
+			else
+				line = line.."  ".."|"
+				asciiRep = asciiRep.." "
+			end
+		end
+		line = line..asciiRep.."|"
+		term.clearLine()
+		term.write(line)
+	end
+	
+	for i=1, math.ceil(#bytes / 8) do
+		byteLines[i] = { --[[ ["offset"] = (i-1)*8 ]] }
+		for j=1, 8 do
+			byteLines[i][j] = bytes[ ((i-1)*8)+j ]
+		end
+	end
+	
+	term.clear()
+	term.setCursorPos(1,1)
+
+	term.write("Current File: \""..fileName.."\" Size: "..#bytes.." bytes") -- Better to cut off the filename rather than completely wrecking the UI
+	print(guideBar)
+	print(sepBar)
+	for i=4, sY do
+		if byteLines[(i-3)+offsetLines] then
+			writeLine( byteLines[(i-3)+offsetLines], ((i-4)+offsetLines)*8, i )
+		else
+			writeLine( {}, ((i-4)+offsetLines)*8, i )
+		end
+	end
+	term.setCursorPos(41, 2)
+	term.write("E to exit")
+	term.setCursorPos(41, 3)
+	term.write("(and save)")
+	term.setCursorPos(41, 5)
+	term.write("Q to quit")
+	term.setCursorPos(41, 6)
+	term.write("(no save)")
+	term.setCursorPos(41, 8)
+	term.write("S to save")
+	term.setCursorPos(41, 9)
+	term.write("(no quit)")
+end
+
+local handle = fs.open(args[1], "rb")
+local bytes = {}
+while true do
+	local byte = handle.read()
+	if byte then
+		table.insert(bytes, byte)
+	else
+		break
+	end
+	term.setCursorPos(1, 1)
+	term.clear()
+	print("Loading file.")
+	print(#bytes.." out of approximately "..fs.getSize(args[1]).." bytes loaded.")
+	print(math.ceil((#bytes / fs.getSize(args[1]))*100).."% complete.")
+	os.queueEvent("")
+	os.pullEvent()
+end
+handle.close()
+
+local function save(b)
+	local handle = fs.open(args[1], "wb")
+	for i=1, #bytes do
+		term.setCursorPos(1, 1)
+		term.clearLine()
+		term.write("Writing: "..i.." of "..#b.." ("..math.ceil((i/#b)*100).."%)")
+		handle.write(b[i])
+		os.queueEvent("")
+		os.pullEvent()
+	end
+	handle.close()
+end
+
+local lineOffset = 0
+while true do
+	--local byteOffset = lineOffset * 8
+	writeScreen(bytes, lineOffset, args[1])
+	local event, a1, x, y = os.pullEvent()
+	if event == "char" then
+		if a1 == "e" or a1 == "E" then
+			save(bytes)
+			break
+		elseif a1 == "q" or a1 == "Q" then
+			break
+		elseif a1 == "s" or a1 == "S" then
+			save(bytes)
+		end
+	elseif event == "mouse_click" then
+		if (not (y >= 1 and y <= 3)) and (x >6 and x < 39) then
+			term.setCursorPos(1,1)
+			term.write("Current File: \""..args[1].."\" Size: "..#bytes.." bytes !EDITING!")
+			-- Get clicked cell:
+			if x > 30 then
+				local cell = x - 30
+				term.setCursorPos(((cell-1)*3)+7, y)
+				term.setBackgroundColor(colors.blue)
+				term.write("  ")
+				term.setCursorPos(x, y)
+				term.setBackgroundColor(colors.red)
+				term.write(" ")
+				term.setBackgroundColor(colors.black)
+				term.setCursorPos(x, y)
+				term.setCursorBlink(true)
+				local b = 0
+				while true do
+					local event, c = os.pullEvent()
+					if event == "char" then
+						b = string.byte(c)
+						break
+					elseif event == "key" then
+						if c == keys.backspace or c == keys.delete then
+							b = nil
+							break
+						end
+					end
+				end
+				bytes[ (lineOffset+(y-4))*8+cell ] = b
+				term.setCursorBlink(false)
+			else--[[if x > 6 and x < 39 then]]
+				local cell = math.ceil((x-5)/3)
+				term.setCursorPos(((cell-1)*3)+7, y)
+				term.setBackgroundColor(colors.red)
+				term.write("  ")
+				term.setCursorPos(30+cell, y)
+				term.setBackgroundColor(colors.blue)
+				term.write(" ")
+				term.setBackgroundColor(colors.black)
+				term.setCursorPos(((cell-1)*3)+7, y)
+				term.setCursorBlink(true)
+				local st = ""
+				while true do
+					local event, c = os.pullEvent()
+					if event == "char" and tonumber(c, 16) then
+						st = st..c
+					elseif event == "key" and (c == keys.backspace or c == keys.delete) then
+						if #st == 0 then
+							break
+						else
+							st = string.sub(st, 1, #st-1)
+						end
+					end
+					term.setCursorPos(((cell-1)*3)+7, y)
+					term.write(st)
+					if #st >= 2 then
+						break
+					end
+				end
+				bytes[ (lineOffset+(y-4))*8+cell ] = tonumber(st, 16)
+				term.setCursorBlink(false)
+			end
+			term.setCursorPos(1,1)
+			term.write("Current File: \""..args[1].."\" Size: "..#bytes.." bytes")
+		end
+		-- > 30, < 39
+	elseif event == "mouse_scroll" then
+		lineOffset = lineOffset+a1
+		if lineOffset < 0 then
+			lineOffset = 0
+		end
+	end
+end
+
+--[[
+term.setCursorPos(1,1)
+term.write("Current File: \""..args[1].."\" Size: "..#bytes.." bytes !WRITING!")
+
+local handle = fs.open(args[1], "wb")
+for i=1, #bytes do
+	handle.write(bytes[i])
+	os.queueEvent("")
+	os.pullEvent()
+end
+handle.close()
+]]
+
+term.clear()
+term.setCursorPos(1,1)

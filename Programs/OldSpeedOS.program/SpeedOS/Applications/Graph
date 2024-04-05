@@ -1,0 +1,168 @@
+os.loadAPI("SpeedAPI/windows")
+os.loadAPI("SpeedAPI/config")
+ 
+--[[local Args = {...}
+local formula = Args[1]
+local scale = Args[2]
+]]
+ 
+local function findMonitor()
+        local PeriList = peripheral.getNames()
+        for i=1,#PeriList do
+                if peripheral.getType(PeriList[i]) == "monitor" then
+                        return PeriList[i]
+                end
+        end
+end
+ 
+windows.clearScreen(colors.lightBlue)
+m = findMonitor()
+if m == nil then windows.error("This program requires external advanced monitor.") end
+m = peripheral.wrap(m)
+if not m.isColor() then windows.error("This program will work only with ADVANCED monitor.") end
+m.setTextScale(0.5)
+ 
+local termxSize,termySize = term.getSize()
+local xSize,ySize = m.getSize()
+local centerX = math.floor(xSize/2)
+local centerY = math.floor(ySize/2)
+ 
+local function drawPixelOnMonitor(x,y,color)
+        m.setCursorPos(x,y)
+        m.setBackgroundColor(color)
+        m.write(" ")
+end
+ 
+local function drawLine(xStart,yStart,xEnd,yEnd,color)
+ 
+        local L = math.max(math.abs(xEnd - xStart),math.abs(yEnd - yStart))
+       
+        local PixelsX = {}
+        local PixelsY = {}
+        PixelsX[1] = xStart
+        PixelsY[1] = yStart
+ 
+        local prirashenieX = (xEnd - xStart)/L
+        local prirashenieY = (yEnd - yStart)/L
+       
+        for i=2,L do
+                PixelsX[i] = PixelsX[i-1] + prirashenieX
+                PixelsY[i] = PixelsY[i-1] + prirashenieY
+        end
+       
+        --paintutils.drawPixel(PixelsX[1],PixelsY[1],color)
+        for i=1,#PixelsX do
+                drawPixelOnMonitor(math.floor(PixelsX[i]),math.floor(PixelsY[i]),color)
+        end
+       
+end
+ 
+-------------------------            -------------------------------------
+ 
+local pathToConfig = "System/Graph/userdata.cfg"
+ 
+local loadedFormula = "x*math.sin(x)"
+local loadedScale = "2"
+local loadedStep = "0.1"
+ 
+if fs.exists(pathToConfig) then
+        loadedFormula = config.read(pathToConfig,"formula")
+        loadedScale = config.read(pathToConfig,"scale")
+        loadedStep = config.read(pathToConfig,"step")
+else
+        config.write(pathToConfig,"formula",loadedFormula)
+        config.write(pathToConfig,"scale",loadedScale)
+        config.write(pathToConfig,"step",loadedStep)
+end
+ 
+--windows.clearScreen(colors.lightBlue)
+local data = windows.input(math.floor(termxSize/2-12),math.floor(termySize/2-4),"Graph",15,{"y =",loadedFormula},{"Scale",loadedScale},{"Step",loadedStep})
+local formula = tostring(data[1])
+local scale = tonumber(data[2])
+local step = tonumber(data[3])
+windows.clearScreen(colors.lightBlue)
+ 
+config.write(pathToConfig,"formula",formula)
+config.write(pathToConfig,"scale",scale)
+config.write(pathToConfig,"step",step)
+ 
+ 
+ 
+---------------------------------------------------------------------------
+ 
+m.setBackgroundColor(colors.white)
+m.clear()
+ 
+for i=1,ySize do
+        drawPixelOnMonitor(centerX,i,colors.black)
+end
+ 
+for i=1,xSize do
+        drawPixelOnMonitor(i,centerY,colors.black)
+end
+ 
+m.setBackgroundColor(colors.white)
+m.setTextColor(colors.black)
+m.setCursorPos(centerX+2,1)
+m.write("y")
+m.setCursorPos(xSize,centerY-1)
+m.write("x")
+ 
+ 
+local x = 0
+local y = 0
+ 
+        --[[local str =
+                "local function a(x)\n"..
+                "local y = "..scale.."*("..formula..")\n"..
+ 
+                "end\n"..
+                "a("..x..")\n"..
+                "return "]]
+ 
+local errorPoints = {}
+ 
+local Massiv = {}
+ 
+local i = 1
+local x = (0-centerX)/scale
+while (x<=(centerX+2)/scale) do
+        local scaledX = x*scale
+ 
+        if x > -(step) and x < (step) then x=0 end
+ 
+        local str =
+        "local x = "..x.."\n"..
+        "local y = "..scale.."*("..formula..")\n"..
+        "return y"
+ 
+        y = assert(loadstring(str))()
+ 
+        if tostring(y) == "inf" or tostring(y) == "nan" then
+                y = 0
+                errorPoints[#errorPoints+1]={x,y}
+        end
+        --print("x = "..x)
+        --print("y = "..y)
+ 
+        Massiv[i] = math.floor(centerX+scaledX)
+        Massiv[i+1] = math.floor(tonumber(centerY)-tonumber(y))
+        i = i+2
+ 
+        x = x + step
+        --drawPixelOnMonitor(math.floor(centerX+scaledX),math.floor(centerY-y),colors.green)
+end
+ 
+for i=1,(#Massiv-2),2 do
+        drawLine(Massiv[i],Massiv[i+1],Massiv[i+2],Massiv[i+3],colors.green)
+end
+ 
+for i=1,#errorPoints do
+        drawPixelOnMonitor(math.floor(centerX+errorPoints[i][1]),math.floor(centerY-errorPoints[i][2]),colors.red)
+end
+ 
+windows.attention({"Done!"},{"Thanks to Harch from","youtube.com/SquareTeamChannel"})
+windows.clearScreen(colors.black)
+m.setBackgroundColor(colors.black)
+m.clear()
+term.setCursorPos(1,1)
