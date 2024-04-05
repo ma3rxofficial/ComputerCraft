@@ -1,0 +1,33 @@
+shell.run ("/SpeedOS/Applications/Movies/headshot/format")
+local w,h = term.getSize()
+while loop do
+local sPath = shell.resolve( "/SpeedOS/Applications/Movies/headshot/frames")
+tLines = {}
+if fs.exists( sPath ) then
+local file = io.open( sPath, "r" )
+local sLine = file:read()
+shell.run( "clear" )
+line = 0
+while sLine do
+local startX = math.floor( (w - vw) / 2 )
+local startY = math.floor( (h - vh) / 2 )
+if sLine == "<new frame>" or string.find(sLine, "<change rate ") then
+if string.find(sLine, "<change rate ") then
+newrate = string.gsub(sLine, "<change rate ", "")
+newrate = string.gsub(newrate, ">", "")
+rate = newrate * 1
+end
+line = 0
+sleep(rate)
+           else
+                term.setCursorPos(startX, startY + line)
+term.write( sLine )
+line = line + 1
+end
+sLine = file:read()
+
+end
+file:close()
+end
+end
+shell.run( "clear" )
