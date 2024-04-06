@@ -1,0 +1,91 @@
+--[[Skynet Nuclear ABM Defense Program by Andrew2060]]--
+--[[This Tracks Missiles from a Radar and displays them]]--
+
+function findRadar()
+    local dolbaeb = {'top', 'bottom', 'front', 'back', 'left', 'right', 'top:white', 'top:orange', 'top:magenta', 'top:lightBlue', 'top:yellow', 'top:lime', 'top:pink', 'top:gray', 'top:cyan', 'top:purple', 'top:blue', 'top:brown', 'top:green', 'top:red', 'top:black', 'bottom:white', 'bottom:orange', 'bottom:magenta', 'bottom:lightBlue', 'bottom:yellow', 'bottom:lime', 'bottom:pink', 'bottom:gray', 'bottom:cyan', 'bottom:purple', 'bottom:blue', 'bottom:brown', 'bottom:green', 'bottom:red', 'bottom:black', 'front:white', 'front:orange', 'front:magenta', 'front:lightBlue', 'front:yellow', 'front:lime', 'front:pink', 'front:gray', 'front:cyan', 'front:purple', 'front:blue', 'front:brown', 'front:green', 'front:red', 'front:black', 'back:white', 'back:orange', 'back:magenta', 'back:lightBlue', 'back:yellow', 'back:lime', 'back:pink', 'back:gray', 'back:cyan', 'back:purple', 'back:blue', 'back:brown', 'back:green', 'back:red', 'back:black', 'left:white', 'left:orange', 'left:magenta', 'left:lightBlue', 'left:yellow', 'left:lime', 'left:pink', 'left:gray', 'left:cyan', 'left:purple', 'left:blue', 'left:brown', 'left:green', 'left:red', 'left:black', 'right:white', 'right:orange', 'right:magenta', 'right:lightBlue', 'right:yellow', 'right:lime', 'right:pink', 'right:gray', 'right:cyan', 'right:purple', 'right:blue', 'right:brown', 'right:green', 'right:red', 'right:black'}
+
+    for _,value in pairs(dolbaeb) do
+        if peripheral.getType(value) == "ICBMRadar" then
+            return value
+        end
+    end
+
+    return nil
+end
+
+os.loadAPI("loader")
+
+SpeedOS = loader.OS()
+io = SpeedOS.IO
+
+SpeedOS.ToolBarColour = colours.lightGrey
+SpeedOS.ToolBarTextColour = colours.white
+
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+
+windows.clearScreen(colors.black)
+term.setCursorPos(1, 1)
+
+if not findRadar() then
+    windows.error("Ebana! U tebya net radara blyat!")
+    SpeedOS.Close()
+end
+
+term.setTextColor(colors.lime)
+SpeedText.slowWrite("Welcome to Tracker!")
+term.setCursorPos(1, 2)
+term.setTextColor(colors.lightBlue)
+print("Enter your computer's coordinates:")
+term.setTextColor(colors.white)
+io.write("X: ")
+local x2 = tonumber(io.read())
+
+io.write("Y: ")
+local y2 = tonumber(io.read())
+
+
+io.write("Z: ")
+local z2 = tonumber(io.read())
+
+radarSide = findRadar()
+
+
+--[[Radar Target Handler Display]]--        
+term.setBackgroundColor(colors.blue)
+term.clear()
+term.setCursorPos(1, 1)
+print("===================================================")
+print("         REDNET AERIAL DEFENSE SYSTEMS             ")
+print("===================================================")
+print("===================================================")
+print("        ENHANCED RADAR HANDLING ENABLED            ")
+print("===================================================")
+while true do
+    if true then
+maptab = peripheral.call(radarSide,"getEntities")
+        maptxt = textutils.serialize(maptab)
+        if maptxt ~= "{}" then
+                allDat = 0
+                for num in pairs(maptab) do
+                        allDat = allDat+1
+                end
+                targets = allDat/3
+                for i=0,targets-1 do
+
+                   --Do not Touch, these create the Distance of the Missiles--
+                      local x1 = math.floor(tonumber(maptab["x_"..i])/1)
+                      local y1 = math.floor(tonumber(maptab["y_"..i])/1)
+                      local z1 = math.floor(tonumber(maptab["z_"..i])/1)
+                      local d = math.sqrt((x2-x1)^2 + (y2-y1)^2 + (z2-z1)^2)
+ 
+                          print("Incoming Missile #"..i.." Distance:"..d)
+ 
+    end
+sleep(0)
+end
+sleep(0)
+end
+sleep(0)
+end
