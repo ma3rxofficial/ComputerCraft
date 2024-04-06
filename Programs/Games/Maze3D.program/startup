@@ -39,6 +39,12 @@
 	See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.ToolBarColour = colours.grey
+SpeedOS.ToolBarTextColour = colours.white
+
 -- The color check
 if (not term.isColor()) or turtle then
 	print("This program has to be run on advanced computer.")
