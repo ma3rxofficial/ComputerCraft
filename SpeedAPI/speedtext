@@ -41,6 +41,104 @@ function time()
 	return formattedTime
 end
 
+--Time & date--
+
+function getDate()
+
+local worldDays = os.day()
+local month = 1
+local day = worldDays
+local year = 1
+local leap = 28
+
+-- get Year
+i = 1
+daysInYear = 365
+while day > daysInYear do
+if 1 < 4 then
+daysInYear = 365
+i = i + 1
+leap = 28
+else
+daysInYear = 366
+i = 1
+leap = 29
+end
+year = year + 1
+day = day - daysInYear
+end
+
+-- get Month
+-- January
+if day > 31 then
+day = day - 31
+month = month + 1
+end
+-- February
+if day > leap then
+day = day - leap
+month = month + 1
+end
+-- March
+if day > 31 then
+day = day - 31
+month = month + 1
+end
+-- April
+if day > 30 then
+day = day - 30
+month = month + 1
+end
+-- May
+if day > 31 then
+day = day - 31
+month = month + 1
+end
+-- June
+if day > 30 then
+day = day - 30
+month = month + 1
+end
+-- July
+if day > 31 then
+day = day - 31
+month = month + 1
+end
+-- August
+if day > 31 then
+day = day - 31
+month = month + 1
+end
+-- September
+if day > 30 then
+day = day - 30
+month = month + 1
+end
+-- October
+if day > 31 then
+day = day - 31
+month = month + 1
+end
+-- November
+if day > 30 then
+day = day - 30
+month = month + 1
+end
+-- December
+if day > 31 then
+day = day - 31
+month = 1
+year = year + 1
+end
+
+return day,month,year
+end
+
+function time_and_date() 
+	den, mesyac, god = getDate()
+	return tostring(den).."/"..tostring(mesyac).."/"..tostring(god).." "..time()
+end
+
 --Extra exiting from program--
 function extraExit()
 	term.setBackgroundColor(colors.black)
@@ -282,3 +380,4 @@ function slowPrint( sText, nRate )
     slowWrite( sText, nRate )
     print()
 end
+
