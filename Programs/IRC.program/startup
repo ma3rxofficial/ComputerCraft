@@ -7,6 +7,8 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 
 io = SpeedOS.IO
 
+log_file = fs.open("Resources/Chat.log", "a")
+
 if not peripheral.find("adventure map interface", true) then
 	windows.clearScreen(colors.white)
 	windows.error("You need adventure map interface!")
@@ -50,6 +52,8 @@ while true do
 		io.write(user)
 		term.setTextColor(colors.white)
 		print(": "..msg)
+		log_file.writeLine("["..SpeedText.time_and_date().."] "..user..": "..msg)
+		log_file.flush()
 	elseif event == "player_login" then
 		term.setTextColor(colors.orange)
 		io.write("<")
@@ -61,6 +65,7 @@ while true do
 		io.write(user)
 		term.setTextColor(colors.lime)
 		print(" joined the game")
+		log_file.writeLine("["..SpeedText.time_and_date().."] "..user.." joined the game")
 	elseif event == "player_logout" then
 		term.setTextColor(colors.orange)
 		io.write("<")
@@ -72,6 +77,8 @@ while true do
 		io.write(user)
 		term.setTextColor(colors.red)
 		print(" left the game")
+		log_file.writeLine("["..SpeedText.time_and_date().."] "..user.." left the game")
+		log_file.flush()
 	elseif event == "player_respawn" then
 		term.setTextColor(colors.orange)
 		io.write("<")
@@ -83,6 +90,8 @@ while true do
 		io.write(user)
 		term.setTextColor(colors.lightBlue)
 		print(" respawned")
+		log_file.writeLine("["..SpeedText.time_and_date().."] "..user.." respawned")
+		log_file.flush()
 	elseif event == "player_change_world" then
 		term.setTextColor(colors.orange)
 		io.write("<")
@@ -94,6 +103,8 @@ while true do
 		io.write(user)
 		term.setTextColor(colors.purple)
 		print(" changed world")
+		log_file.writeLine("["..SpeedText.time_and_date().."] "..user.." changed world")
+		log_file.flush()
 	elseif event == "char" then
 		term.setTextColor(colors.lightGray)
 		io.write("> ")
@@ -101,15 +112,18 @@ while true do
 		msg2 = io.read()
 
 		if msg2 == "/exit" or msg2 == "/quit" then
+			log_file.close()
 			SpeedOS.Close()
-			error()
-		end
+		else
 		for _, value in pairs(p.getPlayerUsernames()) do
 			pl = p.getPlayerByName(value)
 
 			if Blacklist(value) then
 				pl.sendChat(msg2)
 			end
+		end
+		log_file.writeLine("["..SpeedText.time_and_date().."] "..os.getComputerID().." sended from IRC: "..msg2)
+		log_file.flush()
 		end
 	end
 
