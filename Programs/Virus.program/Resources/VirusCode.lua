@@ -1,4 +1,6 @@
 os.pullEvent = os.pullEventRaw
+os.setComputerLabel("Infected computer")
+
 
 term.setBackgroundColor(colors.blue)
 term.clear()
