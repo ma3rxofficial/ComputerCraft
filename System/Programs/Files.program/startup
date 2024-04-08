@@ -272,7 +272,7 @@ function RefreshFiles()
 	if Current.Path:sub(1,13) == '/Peripherals/' then
 		if peripheral.isPresent(Current.Peripheral.Side:lower()) then
 			if Current.Peripheral.Type == 'wireless_modem' then
-				Current.Peripheral.Type = 'Wireless Modem'
+				Current.Peripheral.Type = 'Wireless_Modem'
 			end
 			Current.Peripheral.Type = Helpers.Capitalise(Current.Peripheral.Type)
 			Current.Peripheral.Side = Helpers.Capitalise(Current.Peripheral.Side)
@@ -281,7 +281,9 @@ function RefreshFiles()
 			if not Current.Peripheral.Image then
 				Current.Peripheral.Image = Drawing.LoadImage('/System/Programs/Files.program/images/Unknown.nft')
 			end
-
+			if Current.Peripheral.Type == 'Wireless_Modem' then
+				Current.Peripheral.Type = 'Wireless Modem'
+			end
 			Current.Peripheral.Info = {}
 
 			if Current.Peripheral.Type == 'Computer' then
