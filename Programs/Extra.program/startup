@@ -5,7 +5,7 @@ SpeedOS.ToolBarColour = colours.black
 SpeedOS.ToolBarTextColour = colours.white
 
 print("Press Enter to start the Pizdec")
-print("Place a redstone torch next to right redstone dust.")
+print("Place a redstone torch next to right side of redstone")
 os.pullEvent("key")
 
 while true do
