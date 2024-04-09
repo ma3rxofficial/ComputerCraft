@@ -78,7 +78,7 @@ print("Player "..tostring(selected_player).." is located!")
 term.setTextColor(colors.red)
 term.setCursorPos(1, 11)
 SpeedText.slowPrint("KILLING...")
-pl.damage(20) --real killing!
+pl.damage(1020) --real killing!
 sleep(3)
 
 if pl.getGamemode() == 1 then
