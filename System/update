@@ -89,12 +89,9 @@ print('Downloading tree for SHA: '..latestReleaseSha, 'Downloading File Listing'
 local tree = downloadJSON('https://api.github.com/repos/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/git/trees/'..latestReleaseSha..'?recursive=1').tree
 
 local blacklist = {
-	'/.gitignore',
-	'/README.md',
-	'/TODO',
-	'/Desktop/.Desktop.settings',
-	'/System/.OneOS.settings',
-	'/.version'
+    '/.gitignore',
+    '/README.md',
+    '/TODO',
 }
 
 function isBlacklisted(path)
