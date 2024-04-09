@@ -1,0 +1,25 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+
+SpeedOS.LoadAPI("SpeedAPI/config")
+
+pathToConfig = "System/Offer.settings"
+
+markdown = config.read(pathToConfig, "markdown")
+
+if markdown == "true" then
+	shell.run("Resources/offerGenerator.lua --enable-markdown Resources/tmp")
+else
+	shell.run("Resources/offerGenerator.lua Resources/tmp")
+end
+
+while true do
+	event, govno = os.pullEvent()
+
+	if event == "key" or event == "mouse_drag" or event == "mouse_click" then
+		SpeedOS.Close()
+	end
+end
