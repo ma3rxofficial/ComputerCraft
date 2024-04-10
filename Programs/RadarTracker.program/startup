@@ -1,6 +1,3 @@
---[[Skynet Nuclear ABM Defense Program by Andrew2060]]--
---[[This Tracks Missiles from a Radar and displays them]]--
-
 function findRadar()
     local dolbaeb = {'top', 'bottom', 'front', 'back', 'left', 'right', 'top:white', 'top:orange', 'top:magenta', 'top:lightBlue', 'top:yellow', 'top:lime', 'top:pink', 'top:gray', 'top:cyan', 'top:purple', 'top:blue', 'top:brown', 'top:green', 'top:red', 'top:black', 'bottom:white', 'bottom:orange', 'bottom:magenta', 'bottom:lightBlue', 'bottom:yellow', 'bottom:lime', 'bottom:pink', 'bottom:gray', 'bottom:cyan', 'bottom:purple', 'bottom:blue', 'bottom:brown', 'bottom:green', 'bottom:red', 'bottom:black', 'front:white', 'front:orange', 'front:magenta', 'front:lightBlue', 'front:yellow', 'front:lime', 'front:pink', 'front:gray', 'front:cyan', 'front:purple', 'front:blue', 'front:brown', 'front:green', 'front:red', 'front:black', 'back:white', 'back:orange', 'back:magenta', 'back:lightBlue', 'back:yellow', 'back:lime', 'back:pink', 'back:gray', 'back:cyan', 'back:purple', 'back:blue', 'back:brown', 'back:green', 'back:red', 'back:black', 'left:white', 'left:orange', 'left:magenta', 'left:lightBlue', 'left:yellow', 'left:lime', 'left:pink', 'left:gray', 'left:cyan', 'left:purple', 'left:blue', 'left:brown', 'left:green', 'left:red', 'left:black', 'right:white', 'right:orange', 'right:magenta', 'right:lightBlue', 'right:yellow', 'right:lime', 'right:pink', 'right:gray', 'right:cyan', 'right:purple', 'right:blue', 'right:brown', 'right:green', 'right:red', 'right:black'}
 
@@ -24,6 +21,7 @@ SpeedOS.ToolBarTextColour = colours.white
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/config")
 
 windows.clearScreen(colors.black)
 term.setCursorPos(1, 1)
@@ -33,21 +31,41 @@ if not findRadar() then
     SpeedOS.Close()
 end
 
-term.setTextColor(colors.lime)
-SpeedText.slowWrite("Welcome to Tracker!")
-term.setCursorPos(1, 2)
-term.setTextColor(colors.lightBlue)
-print("Enter your computer's coordinates:")
-term.setTextColor(colors.white)
-io.write("X: ")
-local x2 = tonumber(io.read())
+local use_distance
+local x2
+local y2
+local z2
+local test_govna = config.read("System/RadarTracker.settings", "Use_Distance")
 
-io.write("Y: ")
-local y2 = tonumber(io.read())
+if test_govna == "true" then
+    use_distance = true
+
+else
+    use_distance = false
+end
+
+if use_distance then
+    term.setTextColor(colors.lime)
+    SpeedText.slowWrite("Welcome to Tracker!")
+    term.setCursorPos(1, 2)
+    term.setTextColor(colors.lightBlue)
+    print("Enter your computer's coordinates:")
+    term.setTextColor(colors.white)
+    io.write("X: ")
+    x2 = tonumber(io.read())
+
+    io.write("Y: ")
+    y2 = tonumber(io.read())
 
 
-io.write("Z: ")
-local z2 = tonumber(io.read())
+    io.write("Z: ")
+    z2 = tonumber(io.read())
+
+    if x2 == nil or y2 == nil or z2 == nil then
+        windows.error("idi nahui")
+        SpeedOS.Close()
+    end
+end
 
 radarSide = findRadar()
 
@@ -78,9 +96,13 @@ maptab = peripheral.call(radarSide,"getEntities")
                       local x1 = math.floor(tonumber(maptab["x_"..i])/1)
                       local y1 = math.floor(tonumber(maptab["y_"..i])/1)
                       local z1 = math.floor(tonumber(maptab["z_"..i])/1)
-                      local d = math.sqrt((x2-x1)^2 + (y2-y1)^2 + (z2-z1)^2)
- 
-                          print("Incoming Missile #"..i.." Distance:"..d)
+
+                      if use_distance then
+                        local d = math.sqrt((x2-x1)^2 + (y2-y1)^2 + (z2-z1)^2)
+                        print("Incoming Missile #"..i.." Distance: "..d)
+                      else
+                        print("Incoming Missile #"..i.." Coords: "..tostring(x1).." "..tostring(y1).." "..tostring(z1))
+                      end
  
     end
 sleep(0)
