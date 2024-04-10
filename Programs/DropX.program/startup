@@ -40,19 +40,23 @@ function Get()
 	windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Enter ID, where file is:", 6)
 	id = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
+	if id == "" then windows.clearScreen(colors.white) windows.error("Idi nahui") Menu() end
 	windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Enter filename(on server):", 6)
 	filename = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
+	if filename == "" then windows.clearScreen(colors.white) windows.error("Idi nahui") Menu() end
 	windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Enter filename(to save):", 6)
 	filename2 = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
+	if id2 == "" then windows.clearScreen(colors.white) windows.error("Idi nahui") Menu() end
 	rednet.send(serverid,"@get~!DSX!~"..tostring(id).."~!DSX!~"..filename)
 	repeat
           id,msg = rednet.receive(5)
         until id == serverid or id == nil
-        if not id or not msg then error("Cannot Reach Server",0) end
+        if not id or not msg then windows.clearScreen(colors.white) windows.error("Cannot Reach Server",0) SpeedOS.Close() end
+        if msg == "DOLBAEB" then windows.clearScreen(colors.white) windows.error("FAILA NET BLYAT!") Menu() end
         theirFile=fs.open(filename2,"w")
-        if not theirFile then error("Could not open "..filename2.."! Try rebooting the computer.",0) end
+        if not theirFile then windows.clearScreen(colors.white) windows.error("Could not open "..filename2.."! Try rebooting the computer.",0) SpeedOS.Close() end
         theirFile.write(msg)
         theirFile.close()
 	windows.clearScreen(colors.gray)
@@ -65,7 +69,7 @@ function Delete()
 	windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Enter filename:", 6)
 	filename = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
-
+  if filename == "" then windows.clearScreen(colors.white) windows.error("Idi nahui") Menu() end
 	rednet.send(serverid,"@delete~!DSX!~"..filename)
     windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Sucessfuly deleted!")
