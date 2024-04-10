@@ -5,7 +5,7 @@ os.loadAPI("Resources/Core")
 SpeedOS.ToolBarColour = colours.black
 SpeedOS.ToolBarTextColour = colours.white
 
-Core.loading()
+Core.loading(3)
 
 Core.clear()
 Core.cursor(1, 1)
