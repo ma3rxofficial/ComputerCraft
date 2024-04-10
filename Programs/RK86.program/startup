@@ -1,0 +1,17 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+os.loadAPI("Resources/Core")
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+
+Core.loading()
+
+Core.clear()
+Core.cursor(1, 1)
+Core.logo()
+
+while true do
+	command = Core.waitForCommand()
+	Core.run(command)
+end

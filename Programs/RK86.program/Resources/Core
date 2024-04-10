@@ -1,0 +1,115 @@
+local supportedList = {"dir", "ls", "help"}
+
+function isFileExists(fn)
+    for _, suka in pairs(fs.list("/")) do
+        if suka == fn then
+            return true
+        end
+    end
+
+    return false
+end
+
+function isFileOk(filename)
+    local ok, err = pcall(loadfile(filename))
+        if not ok then
+            if err and err ~= "" then
+                return false
+            end
+            return false
+       end
+       return true
+end
+
+function supportedCommand(comm)
+    for _, blyad in pairs(supportedList) do
+        if blyad == comm then
+            return true
+        end
+    end
+
+    return false
+end
+
+function clear()
+    term.setBackgroundColor(colors.black)
+    term.clear()
+end
+
+function cursor(posX, posY)
+    term.setCursorPos(posX, posY)
+end
+
+function getSize()
+    return term.getSize()
+end
+
+function getCommandList()
+    return supportedList
+end
+
+function programError()
+    print("FILE HAS ERROR")
+end
+
+function programNotFound()
+    print("FILE NOT FOUND")
+end
+
+function logo()
+    print("RADIO-86RK")
+end
+
+function loading(num)
+    cursor(1, 1)
+    print("Loading...")
+    sleep(num)
+end
+
+function _print(string)
+    term.setTextColor(colors.white)
+    term.setBackgroundColor(colors.black)
+
+    print(string)
+end
+
+function line()
+    print("---------------------------------------------------")
+end
+
+function cPrint(string, y2)
+        local tX, tY = term.getSize()
+        local b = string.len(string) / 2
+        local x = (tX / 2) - b
+    local y = tY / 2
+    
+    if y2 then
+      y = y2
+    end
+
+        cursor(x, y)
+        write(string)
+end
+
+function waitForCommand()
+    term.write("-->")
+    comanda = io.read()
+
+    return comanda
+end
+
+function run(filename)
+    if isFileExists(filename) then
+        if isFileOk(filename) then
+            print("\nPROGRAM FINISHED")
+        else
+            programError()
+        end
+    else
+        if supportedCommand(filename) then
+            shell.run("Resources/Commands/"..filename..".lua")
+        else
+            programNotFound()
+        end
+    end
+end
