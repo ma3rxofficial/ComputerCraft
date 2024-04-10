@@ -4,6 +4,13 @@ SpeedOS = loader.OS()
 SpeedOS.ToolBarColour = colours.black
 SpeedOS.ToolBarTextColour = colours.white
 
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+
+term.clear()
+SpeedText.cPrint("Hazard Reactor")
+SpeedText.cPrint("A. Ksensov. Moscow (c) 1987", 10)
+sleep(3)
+
 --hueta
 term.clear()
 term.setCursorPos(1,1)
