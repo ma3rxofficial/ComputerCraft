@@ -109,7 +109,11 @@ function run(filename)
         if supportedCommand(filename) then
             shell.run("Resources/Commands/"..filename..".lua")
         else
-            programNotFound()
+            if filename == "" or filename == " " then
+                filename = ""
+            else
+                programNotFound()
+            end
         end
     end
 end
