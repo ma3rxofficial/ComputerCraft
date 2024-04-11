@@ -1,0 +1,419 @@
+
+--ComputerCraft
+--Tetris v 1.0
+--© dzanis 12.07.12
+
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+
+
+local w,h = term.getSize()
+local sX = w / 2 - 10/2 -- X позиция стакана
+local sY = 1 -- Y позиция стакана
+local iX = 2 -- X позиция инфы
+local iY = 2 -- Y позиция инфы
+
+local matrix = {} -- стакан 10x20
+for p = 1 ,200 do -- инициализирую 200 ячеек
+matrix[p] = 0 
+end
+
+ local figurePosX = 4 -- позиция фигуры в стакане
+ local figurePosY = 1 --позиция фигуры в стакане
+ local figureNum = 1 -- номер  фигуры
+ local figureNextNum = math.random(1,7) -- случайный выбор  фигуры 
+ local figureRotateNumber = 1 --номер положения фигуры
+
+ --координаты квадратиков фигур по осям (x,y)
+   local figure = {
+        {{0,0,1,0,0,1,1,1}},--фигура квадрат
+        {{0,1,1,1,2,1,1,2},{1,0,0,1,1,1,1,2},{1,0,0,1,1,1,2,1},{1,0,1,1,2,1,1,2}},--фигура по форме буквы "Т"
+        {{1,0,1,1,1,2,2,2},{0,1,1,1,2,1,0,2},{0,0,1,0,1,1,1,2},{2,0,0,1,1,1,2,1}},--фигура по форме буквы "L"
+        {{1,0,1,1,1,2,0,2},{0,0,0,1,1,1,2,1},{1,0,2,0,1,1,1,2},{0,1,1,1,2,1,2,2}},--фигура по форме буквы "L" зеркально
+        {{0,1,1,1,1,2,2,2},{1,0,0,1,1,1,0,2}},--фигура по форме буквы "Z"
+        {{1,1,2,1,0,2,1,2},{0,0,0,1,1,1,1,2}},--фигура по форме буквы "Z" зеркально
+        {{0,2,1,2,2,2,3,2},{1,0,1,1,1,2,1,3}} --фигура по форме буквы "I"
+    }
+	
+local run = true
+local FIRST = 1
+local PAUSE = 2
+local GAME_OVER = 3
+local GAME = 4
+local gameState = FIRST -- выключатель режимов 1 начало,2 пауза , 3 проигрыш
+local speed = 1.0 -- скорость игры	
+local SCORE = 0 --очки
+local LINES = 0 --счётчик линий
+local LEVEL = 0 --уровень игры 
+
+	
+--прорисовка инфы
+local function paintInfa()
+	
+
+	y = iY
+	
+	--прорисовка информации
+	term.setCursorPos(iX,y)
+	term.write("Score : " .. SCORE)
+	y = y + 1
+	term.setCursorPos(iX,y)
+	term.write("Lines : " .. LINES)
+	y = y + 1
+	term.setCursorPos(iX,y)
+	term.write("Level : " .. LEVEL)
+	term.setCursorPos(iX,h - 2)
+	term.write("ComputerCraft")
+	term.setCursorPos(iX,h - 1)
+	term.write("Tetris")
+	term.setCursorPos(iX,h)
+	term.write("dzanis 12.07.12")
+	
+--прорисовка следуюшей фигуры
+
+        for i = 1,8,2 do 
+            term.setCursorPos(sX - 5 + figure[figureNextNum][1][i], iY + figure[figureNextNum][1][i + 1])
+			term.write("0")
+        end
+
+
+ return	
+end
+
+local helpText = {	"",
+					"------HELP-----", 
+					"",
+					"Right:  -> or D",
+					"---------------",
+					"Left: <- or A",
+					"---------------",
+					"Rotate:",
+					" space or enter",
+					"---------------",
+					"Pause: P",
+					"---------------",
+					"Exit game:",
+					"     back space",
+					"",
+					"---------------",
+					}
+
+--прорисовка хелпа управления
+local function paintText()
+	
+	y = 1
+	x = sX + 14
+	
+	--прорисовка информации
+	while #helpText > y - 1 do
+	term.setCursorPos(x,y)
+	term.write(helpText[y])
+	y = y + 1
+	end
+ return
+end
+
+
+	
+--прорисовка фигур в стакане
+local function paintMatrix()
+
+
+-- прорисовка фона стакана
+for y = 0,17 do
+term.setCursorPos(sX,sY + y)
+term.write("|..........|")
+end
+
+local pos = 21 --начинаю прорисовывать с 21-го (эфект вылезания фигур из потолка)
+
+--прорисовка стакана с кубиками
+	for y = sY,18 do
+			for x = 1 + sX , 10 + sX do
+				if matrix[pos] ~= 0 then --если не пусто 
+				term.setCursorPos(x,y)
+				term.write("0")	
+				end
+				if  matrix[pos] == -1 then matrix[pos] = 0 end -- обнуление ячейки падаюшей фигуры				
+				
+				
+			pos = pos + 1
+		end
+
+	end
+	
+
+end
+
+
+--даём добро на передвижение-поворот фигуры если:
+    --1.фигура не выходит за пределы стакана
+    --2.фигуре не мешают кубики
+    --так же используется для проверки на упор фигуры в дно стакана или в замороженные кубики
+local function canMove()
+
+  for i = 1,8,2 do 
+            x = figurePosX + figure[figureNum][figureRotateNumber][i];
+            y = figurePosY + (figure[figureNum][figureRotateNumber][i+1] * 10);
+            if x < 0 or x > 9 or x+y > 200 or x+y < 1 then --не выходит ли фигура за пределы стакана
+                return false
+            end
+			
+            if matrix[x+y] == 1 then --не мешают ли фигуре кубики
+                return false;
+				end
+        end
+		
+      return true
+end
+
+local function newFigure()
+	 
+	figurePosX = 4 -- позиция фигуры в стакане
+	figurePosY = 1 --позиция фигуры в стакане
+	figureRotateNumber = 1 --номер положения фигуры	
+ 
+	figureNum = figureNextNum
+	figureNextNum = math.random(1,7) -- случайный выбор следуюшей фигуры
+
+return 
+end
+
+
+--записываю фигуру в массив поля
+    --(kube = 1)- замороженная фигура(достигшая дна), (kube = -1) - падающая фигура
+ local function    insertFigureToMatrix() 
+      local kube,pos, linesCount, count,len = 0
+      if canMove() then  
+		kube = -1
+		else --если фигура уперается то замораживаю её
+            figurePosY = figurePosY - 10 --позицию возврашяю для исключения выхода за пределы массива или наложения фигуры на замороженные кубики
+            kube = 1;
+       end
+		
+        --записываю фигуру в массив поля
+        for i = 1,8,2 do  
+		
+		  pos = figurePosX + figure[figureNum][figureRotateNumber][i] + figurePosY + (figure[figureNum][figureRotateNumber][i+1] * 10)
+            matrix[pos] = kube
+			--print(pos)
+        end
+        
+		
+		pos = 21 --начинаю проверять с 21-й ячейки
+		linesCount = 0 -- счётчик удалённых линий
+		--проверка есть ли полные горизонтальные линии
+	for y = 1,18 do
+			count = 0 -- счётчик замороженных ячеек
+			
+		for x = 1 , 10  do
+		
+				if(matrix[pos] == 1) then --если ячейка заморожена то увеличиваем счётчик
+                        count = count + 1
+				end
+				
+				
+			if y == 1  and count > 0 then --если есть замороженая ячейка в самой верхней линии то игра закончена
+						gameState = GAME_OVER
+					end
+   
+   
+						if count == 10 then  --если в линии 10-ть замороженных ячеек то она  заполнена и её надо удалить
+							linesCount = linesCount + 1 
+							--удаление линии из стакана путём перезаписывания ячеек верхней линии в нижнию
+							len = pos
+							while len > 31 do
+								for i = len,len - 10,-1 do  matrix[i] = matrix[i - 10] end
+								len = len - 10								
+							end	
+								--перерисовываю стакан с задержкой							
+								paintMatrix()
+								sleep(0.1)
+						end
+		pos = pos + 1
+			
+		end	
+			
+		
+	end
+		
+		
+			
+			
+        -- если были стёрты линии обновляем инфу
+		if linesCount > 0 then 
+			LINES = LINES + linesCount --увеличиваем счётчик линий
+			LEVEL = math.floor (LINES / 10) --уровень игры зависит от количества стёртых линий  ,10 линий 1 уровень ,20 линий 2й уровень и т.д.
+			--присуждаем очки за количество удалённых линий,и уровня
+			--очки за количество удалённых линий за раз,за одну 10,за две 50 и т.д
+				local bonus = {10,50,100,200}
+				SCORE = SCORE + bonus[linesCount]
+		end
+         
+        if kube == 1 then --если фигура зоморожена создаю новую
+				newFigure()
+			end
+			
+        return
+    end
+
+
+	
+
+local timer = os.startTimer(0)
+local event, p1, p2 = nil
+
+local function game()
+
+ --временно сохраняю текущую позицию фигуры
+         previosfigureRotateNumber = figureRotateNumber;
+         previosfigurePosX = figurePosX;
+         previosfigurePosY = figurePosY;
+
+	
+	
+		if event == "key" then -- если нажата какая либо кнопка
+			local key = p1
+	
+			if key == 30 or key == 203 then -- движение фигуры влево
+				figurePosX = figurePosX - 1
+		
+			elseif key == 32 or key == 205 then --движение фигуры вправо
+			figurePosX = figurePosX + 1
+		
+			--end	
+			elseif key == 57 or key == 28 or key == 200 then -- поворот фигуры
+			figureRotateNumber =  ((#figure[figureNum] > figureRotateNumber  ) and figureRotateNumber + 1) or 1 -- если массив фигур больше figureRotateNumber,то увеличеваем его на 1,если нет то сбрасываем на 1
+			elseif key == 31 or key == 208 then  -- вниз 
+			figurePosY = figurePosY + 10
+			end
+			
+			
+				
+				
+		end
+		
+	
+	
+	
+			if canMove() ~= true then -- если двигать крутить нельзя то возврашяю прежнию позицию фигуры
+				figureRotateNumber = previosfigureRotateNumber 
+				figurePosX = previosfigurePosX
+				figurePosY = previosfigurePosY
+			end
+		
+		
+			-- 1 уровень speed = 1.0    2  speed = 0.9   чем меньше тем быстрее фигуры падают,и недаю скорости уменьшится меньше 0.3 
+			speed =  ((speed > 0.1) and 1.0 - LEVEL/10) or 0.1
+			
+	
+		if event == "timer" and p1 == timer then -- здесь задаётся скорость падения фигур в зависимости от уровня
+			timer = os.startTimer(speed)
+			 figurePosY = figurePosY + 10 			
+		end		
+	
+		
+	
+	return
+end
+
+
+ -- новая игра
+local function newGame()
+	SCORE = 0 
+	LINES = 0 
+	LEVEL = 0
+	for p = 1 ,200 do matrix[p] = 0  end -- очистка 
+	newFigure()
+	return
+end
+
+-- диалог предлагаюший продолжить 
+flashing = true
+local function paintDialog()
+	local text = {	
+				{" WELKOME TETRIS",
+				 "   P A U S E",
+				"G A M E  O V E R",
+				 "  PLAY TETRIS" },	
+				 
+				{"   to start",
+				 "   to rezume",
+				 "   to start",
+				 "" },	 
+				
+			}
+				
+	term.setCursorPos(iX,h/2)
+	term.write(text[1][gameState])
+
+	if flashing and gameState ~= GAME  then
+	term.setCursorPos(iX,h/2 + 2)
+	term.write(" Press any key")
+	term.setCursorPos(iX,h/2 + 3)
+	term.write(text[2][gameState])
+	end
+	if event == "timer" and p1 == timer then -- здесь задаётся скорость моргалки
+			timer = os.startTimer(0.5)
+			 flashing = flashing ~= true				
+		end	
+	
+	return
+	end
+
+	
+-- здесь начинается игра
+newGame()
+
+while run do
+
+
+	event, p1, p2 = os.pullEvent()
+	
+	
+	if event == "key" then -- если нажата какая либо кнопка
+			local key = p1		
+	if  key == 25 then -- кнопка P
+		gameState = PAUSE
+	elseif  key == 14 then -- кнопка back space
+		run = false	
+	elseif key > 1 and gameState ~= GAME then -- если нажата любая кнопка  кроме Escape
+				if gameState == GAME_OVER then newGame()  end 
+				gameState = GAME 
+				timer = os.startTimer(0)	
+		end
+	end
+	
+	if gameState == GAME then  	
+		game()
+	end
+
+	insertFigureToMatrix() 
+	term.clear() --очистка терминала
+	paintMatrix()
+	paintInfa()
+	paintText()	
+	paintDialog() 
+	
+	
+	
+	
+		
+
+end
+
+term.clear() --очистка терминала
+term.setCursorPos(1,1)
+
+
+
+
+
+
+
+
+
+
