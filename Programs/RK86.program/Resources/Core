@@ -31,6 +31,63 @@ function supportedCommand(comm)
     return false
 end
 
+function isLuaFunction(comanda)
+    x = string.sub(comanda, 1, 1)
+
+    if x == "=" then
+        return true
+    else
+        return false
+    end
+end
+
+function makeLuaFunction(comanda)
+    return string.sub(comanda, 2)
+end
+
+function runLuaFunction(s) 
+    local tCommandHistory = {}
+    local tEnv = {
+        ["exit"] = function()
+            bRunning = false
+        end,
+    }
+    setmetatable( tEnv, { __index = getfenv() } )
+
+    local nForcePrint = 0
+    local func, e = loadstring( s, "lua" )
+    local func2, e2 = loadstring( "return "..s, "lua" )
+    if not func then
+        if func2 then
+            func = func2
+            e = nil
+            nForcePrint = 1
+        end
+    else
+        if func2 then
+            func = func2
+        end
+    end
+    
+    if func then
+        setfenv( func, tEnv )
+        local tResults = { pcall( function() return func() end ) }
+        if tResults[1] then
+            local n = 1
+            while (tResults[n + 1] ~= nil) or (n <= nForcePrint) do
+                print( tostring( tResults[n + 1] ) )
+                n = n + 1
+            end
+        else
+            print( tResults[2] )
+        end
+    else
+        print( e )
+    end
+
+    print("\nPROGRAM FINISHED")
+end
+
 function clear()
     term.setBackgroundColor(colors.black)
     term.clear()
