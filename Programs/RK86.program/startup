@@ -5,7 +5,7 @@ os.loadAPI("Resources/Core")
 SpeedOS.ToolBarColour = colours.black
 SpeedOS.ToolBarTextColour = colours.white
 
-Core.loading(3)
+Core.loading(0)
 
 Core.clear()
 Core.cursor(1, 1)
@@ -13,5 +13,10 @@ Core.logo()
 
 while true do
 	command = Core.waitForCommand()
-	Core.run(command)
+
+	if Core.isLuaFunction(command) then
+		Core.runLuaFunction(Core.makeLuaFunction(command))
+	else
+		Core.run(command)
+	end
 end
