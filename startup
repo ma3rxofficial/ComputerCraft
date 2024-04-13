@@ -156,6 +156,8 @@ if not term.isColour() then
 
 elseif LoadingScreen() then
 
+	if fs.exists("System/startup_script") then shell.run("System/startup_script") end
+
 	if fs.exists('/.update/') and fs.isDir('/.update/') then
 		if not fs.exists('/.update/.version') then
 			fs.delete('/.update/')
