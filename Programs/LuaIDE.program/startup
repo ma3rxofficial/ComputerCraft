@@ -755,7 +755,10 @@ term.setTextColor(colors.white)
 f("Press any key to return to LuaIDE...")
 while true do
 local e=os.pullEvent()
-if e=="key"then break end
+if e=="key"then break
+elseif e=="mouse_click"then break 
+elseif e=="mouse_drag"then break 
+end
 end
 os.queueEvent(S)
 os.pullEvent()
