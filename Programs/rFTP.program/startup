@@ -53,6 +53,12 @@ function SendMenu()
   local govno = windows.input("auto", "auto", "Send", 10, {"ID", ""}, {"Filename", ""})
   dest=tonumber(govno[1])
   sfile=govno[2]
+  if dest == nil then
+    windows.clearScreen(colors.white)
+    windows.error("Idi nahui")
+    SpeedOS.Close()
+  end
+
   if fs.exists(sfile)==true then
     windows.clearScreen(colors.black)
     term.setTextColor(colors.white)
