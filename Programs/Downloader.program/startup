@@ -5,18 +5,26 @@ fs = SpeedOS.fs
 SpeedOS.LoadAPI("SpeedAPI/windows")
 
 function downloadFile(l, p)
+  if not string.find(l, "https://") then
+    l = "https://"..l
+  end
+
   data = http.get(l)
 
-  f = fs.open("/SpeedOS/Downloads/" ..tostring(p), "w")
+  if not data then
+    windows.clearScreen(colors.cyan)
+    windows.error("Can't connect to URL!")
+    SpeedOS.Close()
+  end
+  f = fs.open("" ..tostring(p), "w")
   f.write(data.readAll())
   f.close()
 end
 
-windows.clearScreen(colors.white)
+windows.clearScreen(colors.cyan)
 local vvedeno = windows.input("auto","auto","Download",20,{"Link",""},{"Save as",""})
 
-term.setBackgroundColor(colors.black)
-term.clear()
-term.setCursorPos(1, 1)
-print(vvedeno[1])
 downloadFile(vvedeno[1], vvedeno[2])
+windows.clearScreen(colors.cyan)
+windows.attention({"Sucessfuly downloaded!"}, {"File was saved as", vvedeno[2].."!"})
+SpeedOS.Close()
