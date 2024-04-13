@@ -5,11 +5,17 @@ os.loadAPI("Resources/Core")
 SpeedOS.ToolBarColour = colours.black
 SpeedOS.ToolBarTextColour = colours.white
 
-Core.loading(3)
+local tArgs = {...}
+
+Core.loading(0)
 
 Core.clear()
 Core.cursor(1, 1)
 Core.logo()
+
+if #tArgs > 0 then
+	Core.run(tArgs[1])
+end
 
 while true do
 	command = Core.waitForCommand()
