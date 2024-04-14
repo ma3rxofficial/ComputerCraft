@@ -82,6 +82,8 @@ repeat
 	term.clearLine()
 
 	cwrite("Enter maze size (5-99):")
+	eblox, ebloy = term.getCursorPos()
+	term.setCursorPos(eblox, ebloy)
 	size = read()
 	
 	size = tonumber(size)
