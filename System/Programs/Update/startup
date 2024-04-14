@@ -37,7 +37,7 @@ function Initialise()
 
 	updaterEnvironment = {}
 	setmetatable( updaterEnvironment, { __index = getfenv() } )
-	local fnAPI, err = OneOS.LoadFile('/System/update')
+	local fnAPI, err = OneOS.LoadFile('/System/update.lua')
 	if fnAPI then
 		setfenv( fnAPI, updaterEnvironment)
 		local ok, err = pcall(fnAPI, UpdaterRefresh)
