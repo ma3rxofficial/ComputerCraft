@@ -118,16 +118,17 @@ function AutoUpdateRespose(event, url, data)
 	if OneOSVersion == latestReleaseTag then
 		--using latest version
 		if checkAutoUpdateArg then
-			ButtonDialogueWindow:Initialise("Up to date!", "OneOS is up to date!", 'Ok', nil, function(success)end):Show()
+			ButtonDialogueWindow:Initialise("Up to date!", "SpeedOS is up to date!", 'Ok', nil, function(success)end):Show()
 		end
 		return
 	elseif SematicVersionIsNewer(GetSematicVersion(latestReleaseTag), GetSematicVersion(OneOSVersion)) then
 		--using old version
-		LaunchProgram('/System/Programs/Update OneOS/startup', {}, 'Update OneOS')
+		LaunchProgram('/System/Programs/Update/startup', {}, 'Update SpeedOS')
 	end
 end
 
 function LaunchProgram(path, args, title)
+	Log.i("Starting program: "..title.." ("..path..")")
 	Animation.RectangleSize(Drawing.Screen.Width/2, Drawing.Screen.Height/2, 1, 1, Drawing.Screen.Width, Drawing.Screen.Height, colours.grey, 0.3, function()
 		if Current.Menu then
 			Current.Menu:Close()
