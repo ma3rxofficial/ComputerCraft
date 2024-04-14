@@ -42,7 +42,12 @@ function line(_term)
 	if _term == nil then
 		_term = term
 	end
-	_term.write("---------------------------------------------------")
+
+	if _term == term then
+		print("---------------------------------------------------")
+	else
+		_term.write("---------------------------------------------------")
+	end
 end
 
 --Normal time returning-
