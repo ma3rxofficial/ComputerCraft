@@ -1,4 +1,9 @@
-fs=OneOS.fs
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+fs = SpeedOS.fs
+
+
 ver = "beta 1.0 build 04"
 aF = true
 betatesting = true
@@ -164,12 +169,14 @@ function game2()
     end
     term.setCursorPos(2,ppos)
     --term.setBackgroundColor(colors.yellow)
-    term.setTextColor(colors.yellow)
+    term.setBackgroundColor(colors.yellow)
     if aF then
-    term.write("@")
+    term.write(" ")
+    term.setBackgroundColor(colors.lightBlue)
     aF = false
     else
-    term.write("@")
+    term.write(" ")
+    term.setBackgroundColor(colors.lightBlue)
     aF = true
     end
 --    pp = pp+1
