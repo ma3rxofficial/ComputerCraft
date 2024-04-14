@@ -1,5 +1,7 @@
+local _term = term
+
 --Central Printing--
-function cPrint(string, _term, y2)
+function cPrint(string, y2, _term)
 		if _term == nil then
 			_term = term
 		end
