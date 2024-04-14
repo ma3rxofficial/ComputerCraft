@@ -5,6 +5,7 @@ fs = SpeedOS.fs
 
 
 ver = "beta 1.0 build 04"
+bird_icon = " "
 aF = true
 betatesting = true
 
@@ -62,13 +63,13 @@ end
   for i=1,26 do
     if j == 1 then
       term.setCursorPos(qp,i)
-      term.write(" ")
+      term.write(bird_icon)
     elseif j == 2 then
       term.setCursorPos(wp,i)
-      term.write(" ")
+      term.write(bird_icon)
     elseif j == 3 then
       term.setCursorPos(ep,i)
-      term.write(" ")
+      term.write(bird_icon)
     end
   end  
   end
