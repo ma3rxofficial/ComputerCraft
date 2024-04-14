@@ -1,5 +1,3 @@
-local w, h = term.getSize()
-
 --Central Printing--
 function cPrint(string, _term, y2)
 		if _term == nil then
@@ -164,8 +162,12 @@ function extraExit(_term)
 end
 
 --HUY--
-local function modRead(properties)
-	local w, h = term.getSize()
+local function modRead(properties, _term)
+	if _term == nil then
+			_term = term
+	end
+
+	local w, h = _term.getSize()
 	local defaults = {replaceChar = nil, history = nil, visibleLength = nil, textLength = nil, 
 		liveUpdates = nil, exitOnKey = nil}
 	if not properties then properties = {} end
@@ -173,7 +175,7 @@ local function modRead(properties)
 	if properties.replaceChar then properties.replaceChar = properties.replaceChar:sub(1, 1) end
 	if not properties.visibleLength then properties.visibleLength = w end
 
-	local sx, sy = term.getCursorPos()
+	local sx, sy = _term.getCursorPos()
 	local line = ""
 	local pos = 0
 	local historyPos = nil
@@ -184,16 +186,16 @@ local function modRead(properties)
 			scroll = (sx + pos) - (properties.visibleLength + 1)
 		end
 
-		term.setCursorPos(sx, sy)
+		_term.setCursorPos(sx, sy)
 		local a = repl or properties.replaceChar
 		if a then term.write(string.rep(a, line:len() - scroll))
 		else term.write(line:sub(scroll + 1, -1)) end
-		term.setCursorPos(sx + pos - scroll, sy)
+		_term.setCursorPos(sx + pos - scroll, sy)
 	end
 
 	local function sendLiveUpdates(event, ...)
 		if type(properties.liveUpdates) == "function" then
-			local ox, oy = term.getCursorPos()
+			local ox, oy = _term.getCursorPos()
 			local a, data = properties.liveUpdates(line, event, ...)
 			if a == true and data == nil then
 				term.setCursorBlink(false)
@@ -316,15 +318,15 @@ end
 
 --Better version of inputs--
 function centerRead(wid, begt, buttonColor, buttonTextColor, buttonTextInputColor, cancelEnabled, cancelColor, cancelTextColor, _term)
+	if _term == nil then
+			_term = term
+	end
+	local w, h = _term.getSize()
 	local function liveUpdate(line, e, but, x, y, p4, p5)
 		if _term.isColor() and e == "mouse_click" and x >= w/2 - wid/2 and x <= w/2 - wid/2 + 10 
 				and y >= 13 and y <= 15 then
 			return true, ""
 		end
-	end
-
-	if _term == nil then
-			_term = term
 	end
 
 	if not buttonColor then
