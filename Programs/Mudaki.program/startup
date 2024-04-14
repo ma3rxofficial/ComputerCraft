@@ -19,7 +19,7 @@ os.pullEvent("key")
 
 -- animation
 
-local picsDir = "Programs/Ebateli.program/Resources"
+local picsDir = "Programs/Mudaki.program/Resources"
 local kadr = 1
 local kadr_quantity = #fs.list(picsDir)
 
