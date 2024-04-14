@@ -7,8 +7,18 @@ SpeedOS.ToolBarTextColour = colours.white
 fs=SpeedOS.fs
 os.loadAPI("SpeedAPI/graph")
 os.loadAPI("SpeedAPI/peripheral")
+os.loadAPI("SpeedAPI/config")
 
 local tab = 0
+local use_mon_default
+
+huy = config.read("System/GraphTest.settings", "use_monitor_by_default")
+
+if huy == "true" then
+  use_mon_default = true
+else
+  use_mon_default = false
+end
 
 --our update function
 function update()
@@ -19,7 +29,7 @@ end
 --our graph declaration.  We use nil as the gradientTable parameter, so it will use the default red-green gradient.
 local graphInstance
 
-if peripheral.find("monitor", true) then
+if peripheral.find("monitor", true) and use_mon_default then
   graphInstance = graph.new(peripheral.wrap(peripheral.find("monitor", true)), update, "Testing", nil, 0, 100)
   print("Running graph on monitor(side "..peripheral.find("monitor", true)..")")
 
