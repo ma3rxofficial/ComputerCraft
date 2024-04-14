@@ -22,10 +22,10 @@ SpeedOS.ToolBarTextColour = colours.white
 term.clear()
 SpeedText.cPrint("Battleship")
 
-cx, cy = SpeedText.cCursor("RIGA (c) 1987")
+cx, cy = SpeedText.cCursor("RIGA (c) 1983")
 
-term.setCursorPos(SpeedText.cCursor("RIGA (c) 1987")[1], 10)
-SpeedText.slowPrint("RIGA (c) 1987")
+term.setCursorPos(SpeedText.cCursor("RIGA (c) 1983")[1], 10)
+SpeedText.slowPrint("RIGA (c) 1983")
 
 os.pullEvent("key")
 
