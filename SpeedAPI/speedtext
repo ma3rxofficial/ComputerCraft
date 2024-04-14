@@ -1,8 +1,12 @@
 local w, h = term.getSize()
 
 --Central Printing--
-function cPrint(string, y2)
-        local tX, tY = term.getSize()
+function cPrint(string, _term, y2)
+		if _term == nil then
+			_term = term
+		end
+
+        local tX, tY = _term.getSize()
         local b = string.len(string) / 2
         local x = (tX / 2) - b
 	local y = tY / 2
@@ -11,13 +15,17 @@ function cPrint(string, y2)
 	  y = y2
 	end
 
-        term.setCursorPos(x, y)
-        write(string)
+        _term.setCursorPos(x, y)
+        _term.write(string)
 end
 
 --Central Cursoring--
-function cCursor(string)
-        local tX, tY = term.getSize()
+function cCursor(string, _term)
+		if _term == nil then
+			_term = term
+		end
+
+        local tX, tY = _term.getSize()
         local b = string.len(string) / 2
         local x = (tX / 2) - b
 	local y = tY / 2
@@ -30,8 +38,11 @@ function cCursor(string)
 end
 
 --Line of "-" printing--
-function line()
-	print("---------------------------------------------------")
+function line(_term)
+	if _term == nil then
+		_term = term
+	end
+	_term.write("---------------------------------------------------")
 end
 
 --Normal time returning-
@@ -140,11 +151,15 @@ function time_and_date()
 end
 
 --Extra exiting from program--
-function extraExit()
-	term.setBackgroundColor(colors.black)
-	term.setTextColor(colors.white)
-	term.setCursorPos(1, 1)
-	term.clear()
+function extraExit(_term)
+	if _term == nil then
+			_term = term
+	end
+
+	_term.setBackgroundColor(colors.black)
+	_term.setTextColor(colors.white)
+	_term.setCursorPos(1, 1)
+	_term.clear()
 	error()
 end
 
@@ -300,12 +315,16 @@ end
 
 
 --Better version of inputs--
-function centerRead(wid, begt, buttonColor, buttonTextColor, buttonTextInputColor, cancelEnabled, cancelColor, cancelTextColor)
+function centerRead(wid, begt, buttonColor, buttonTextColor, buttonTextInputColor, cancelEnabled, cancelColor, cancelTextColor, _term)
 	local function liveUpdate(line, e, but, x, y, p4, p5)
-		if term.isColor() and e == "mouse_click" and x >= w/2 - wid/2 and x <= w/2 - wid/2 + 10 
+		if _term.isColor() and e == "mouse_click" and x >= w/2 - wid/2 and x <= w/2 - wid/2 + 10 
 				and y >= 13 and y <= 15 then
 			return true, ""
 		end
+	end
+
+	if _term == nil then
+			_term = term
 	end
 
 	if not buttonColor then
@@ -325,35 +344,39 @@ function centerRead(wid, begt, buttonColor, buttonTextColor, buttonTextInputColo
 	end		
 
 	if not begt then begt = "" end
-	term.setTextColor(buttonTextColor)
-	term.setBackgroundColor(buttonColor)
+	_term.setTextColor(buttonTextColor)
+	_term.setBackgroundColor(buttonColor)
 	for i = 8, 10 do
-		term.setCursorPos(w/2 - wid/2, i)
-		term.write(string.rep(" ", wid))
+		_term.setCursorPos(w/2 - wid/2, i)
+		_term.write(string.rep(" ", wid))
 	end
 
-	if term.isColor() and cancelEnabled then
-		term.setBackgroundColor(cancelColor)
-		term.setTextColor(cancelTextColor)
+	if _term.isColor() and cancelEnabled then
+		_term.setBackgroundColor(cancelColor)
+		_term.setTextColor(cancelTextColor)
 		for i = 13, 15 do
 			term.setCursorPos(w/2 - wid/2 + 1, i)
 			term.write(string.rep(" ", 10))
 		end
-		term.setCursorPos(w/2 - wid/2 + 2, 14)
-		term.write("> Cancel")
+		_term.setCursorPos(w/2 - wid/2 + 2, 14)
+		_term.write("> Cancel")
 	end
 
-	term.setBackgroundColor(buttonColor)
-	term.setTextColor(buttonTextColor)
-	term.setCursorPos(w/2 - wid/2 + 1, 9)
-	term.write("> " .. begt)
-	term.setTextColor(buttonTextInputColor)
+	_term.setBackgroundColor(buttonColor)
+	_term.setTextColor(buttonTextColor)
+	_term.setCursorPos(w/2 - wid/2 + 1, 9)
+	_term.write("> " .. begt)
+	_term.setTextColor(buttonTextInputColor)
 	return modRead({visibleLength = w/2 + wid/2, liveUpdates = liveUpdate})
 end
 
 --Slow printing--
 
-function slowWrite( sText, nRate )
+function slowWrite( sText, nRate, _term )
+	if _term == nil then
+			_term = term
+	end
+
     if nRate ~= nil and type( nRate ) ~= "number" then
         error( "bad argument #2 (expected number, got " .. type( nRate ) .. ")", 2 )
     end
@@ -364,11 +387,11 @@ function slowWrite( sText, nRate )
     local nSleep = 1 / nRate
         
     sText = tostring( sText )
-    local x,y = term.getCursorPos()
+    local x,y = _term.getCursorPos()
     local len = string.len( sText )
     
     for n=1,len do
-        term.setCursorPos( x, y )
+        _term.setCursorPos( x, y )
         sleep( nSleep )
         local nLines = write( string.sub( sText, 1, n ) )
         local newX, newY = term.getCursorPos()
@@ -376,8 +399,11 @@ function slowWrite( sText, nRate )
     end
 end
 
-function slowPrint( sText, nRate )
-    slowWrite( sText, nRate )
+function slowPrint( sText, nRate, _term)
+	if _term == nil then
+			_term = term
+	end
+    slowWrite( sText, nRate , _term)
     print()
 end
 
