@@ -1,5 +1,7 @@
 oldTerm = term
 os.loadAPI("SpeedAPI/SpeedText")
+os.loadAPI("System/API/Log")
+
 
 local install_files = {"installer", "dN2gMnV9"}
 
@@ -18,7 +20,15 @@ term.clear()
 --local _, err = pcall(function()
 
 local tAPIsLoading = {}
+doLog = true
 
+ver_f = fs.open(".version", "r")
+ver_f2 = ver_f.readAll()
+ver_f.close()
+
+Log.Initialise()
+Log.i(os.version())
+Log.i("SpeedOS Version: "..ver_f2)
 
 function LoadAPI(_sPath)
 	local sName = fs.getName( _sPath )
@@ -105,9 +115,11 @@ function LoadingScreen()
 			if not LoadAPI(root .. 'System/API/' .. file) then
 				term.setTextColour(colours.red)
 				PrintCentered('Error While Loading API '..file, y + 11)
+				Log.e('Error While Loading API '..file)
 				term.setCursorPos(1, 1)
 				return false
 			end
+			Log.i('Loading: '..file)
 		end
 	end
 
@@ -116,6 +128,7 @@ function LoadingScreen()
 			os.unloadAPI('SpeedAPI/'..file)
   			if not value == "SpeedText" then
 			    os.loadAPI('SpeedAPI/'..file)
+			    Log.i('Loading: '..file)
 			end
 			SpeedText.cPrint("API "..file.." loaded!")
 			sleep(0.1)
@@ -127,6 +140,7 @@ function LoadingScreen()
 		if string.sub(file,1,1) ~= "." then
 			os.unloadAPI('System/Alias/'..file)
   			shell.setAlias(file, 'System/Alias/'..file)
+  			Log.i('Making alias: '..file)
 			SpeedText.cPrint("Alias "..file.." set!")
 			sleep(0.1)
 		        term.clear()
@@ -135,6 +149,7 @@ function LoadingScreen()
  os.loadAPI("SpeedAPI/peripheral")
  if peripheral.find("modem") then
    rednet.open(peripheral.find("modem"))
+   Log.i('Opened modem on side '..peripheral.find("modem"))
  end
 
 	sleep(0.1)
@@ -156,7 +171,11 @@ if not term.isColour() then
 
 elseif LoadingScreen() then
 
-	if fs.exists("System/startup_script") then shell.run("System/startup_script") end
+	if fs.exists("System/startup_script") then 
+		Log.i("Running startup script!")
+		shell.run("System/startup_script") 
+		Log.i("Startup script finished.")
+	end
 
 	if fs.exists('/.update/') and fs.isDir('/.update/') then
 		if not fs.exists('/.update/.version') then
@@ -186,6 +205,7 @@ elseif LoadingScreen() then
 		fs.delete('/.update/')
 	end
 
+	Log.i("Starting Desktop...")
 	os.run(getfenv(), '/System/main')
 	
 
@@ -214,6 +234,7 @@ elseif LoadingScreen() then
 		    end
 		    term.setCursorPos(x, i+12)
 		    print(v)
+		    Log.e(v)
 		end
 
 		PrintCentered('Please report this on the forum.', Drawing.Screen.Height)
