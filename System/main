@@ -70,7 +70,7 @@ local checkAutoUpdateArg = nil
 function CheckAutoUpdate(arg)
 	checkAutoUpdateArg = arg
 	if http then
-		http.request('https://api.github.com/repos/oeed/OneOS/releases#')
+		http.request('https://api.github.com/repos/ma3rxofficial/ComputerCraft/releases#')
 	elseif arg then
 		ButtonDialogueWindow:Initialise("HTTP Not Enabled!", "Turn on the HTTP API to update.", 'Ok', nil, function(success)end):Show()
 	end
@@ -98,7 +98,7 @@ function AutoUpdateFail(event, url, data)
 end
 
 function AutoUpdateRespose(event, url, data)
-	if url ~= 'https://api.github.com/repos/oeed/OneOS/releases#' then
+	if url ~= 'https://api.github.com/repos/ma3rxofficial/ComputerCraft/releases#' then
 		return false
 	end
 	os.loadAPI('/System/JSON')
