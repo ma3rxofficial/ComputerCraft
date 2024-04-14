@@ -11,11 +11,13 @@ windows.clearScreen(colors.lightBlue)
 local m = peripheral.find("monitor", true)
 if m == nil then
         windows.error("This program requires external advanced monitor.")
+        SpeedOS.Close()
         return 0
 end
 m=peripheral.wrap(m)
 if not m.isColor() then
         windows.error("This program will work only with ADVANCED monitor.")
+        SpeedOS.Close()
         return 0
 end
  
