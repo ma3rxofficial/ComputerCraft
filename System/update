@@ -154,3 +154,7 @@ parallel.waitForAll(unpack(downloads))
 local h = fs.open('/.update/.version', 'w')
 h.write(latestReleaseTag)
 h.close()
+
+local h = fs.open('/.update/System/.version', 'w')
+h.write(latestReleaseTag)
+h.close()
