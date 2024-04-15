@@ -82,7 +82,7 @@ function LoadSettings()
 end
 
 function SaveSettings()
-	local h = fs.open('.Desktop/Desktop.settings', 'w')
+	local h = fs.open('.Desktop/.Desktop.settings', 'w')
 	h.write(textutils.serialize(settings))
 	h.close()
 end
