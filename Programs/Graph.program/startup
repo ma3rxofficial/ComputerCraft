@@ -1,10 +1,10 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
 
-fs=SpeedOS.fs
-os.loadAPI("SpeedAPI/windows")
-os.loadAPI("SpeedAPI/config")
-os.loadAPI("SpeedAPI/peripheral")
+
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/config")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
  
 --[[local Args = {...}
 local formula = Args[1]
@@ -20,11 +20,11 @@ local function findMonitor()
         end
 end
  
-windows.clearScreen(colors.lightBlue)
+windows.clearScreen(colors.cyan)
 m = peripheral.find("monitor", true)
-if m == nil then windows.error("This program requires external advanced monitor.") end
+if m == nil then windows.clearScreen(colors.cyan) windows.error("This program requires external advanced monitor.") end
 m = peripheral.wrap(m)
-if not m.isColor() then windows.error("This program will work only with ADVANCED monitor.") end
+if not m.isColor() then windows.clearScreen(colors.cyan) windows.error("This program will work only with ADVANCED monitor.") end
 m.setTextScale(0.5)
  
 local termxSize,termySize = term.getSize()
@@ -85,7 +85,7 @@ local data = windows.input(math.floor(termxSize/2-12),math.floor(termySize/2-4),
 local formula = tostring(data[1])
 local scale = tonumber(data[2])
 local step = tonumber(data[3])
-windows.clearScreen(colors.lightBlue)
+windows.clearScreen(colors.cyan)
  
 config.write(pathToConfig,"formula",formula)
 config.write(pathToConfig,"scale",scale)
@@ -95,19 +95,19 @@ config.write(pathToConfig,"step",step)
  
 ---------------------------------------------------------------------------
  
-m.setBackgroundColor(colors.white)
+m.setBackgroundColor(colors.gray)
 m.clear()
  
 for i=1,ySize do
-        drawPixelOnMonitor(centerX,i,colors.black)
+        drawPixelOnMonitor(centerX,i,colors.lightGray)
 end
  
 for i=1,xSize do
-        drawPixelOnMonitor(i,centerY,colors.black)
+        drawPixelOnMonitor(i,centerY,colors.lightGray)
 end
  
-m.setBackgroundColor(colors.white)
-m.setTextColor(colors.black)
+m.setBackgroundColor(colors.gray)
+m.setTextColor(colors.white)
 m.setCursorPos(centerX+2,1)
 m.write("y")
 m.setCursorPos(xSize,centerY-1)
@@ -159,7 +159,7 @@ while (x<=(centerX+2)/scale) do
 end
  
 for i=1,(#Massiv-2),2 do
-        drawLine(Massiv[i],Massiv[i+1],Massiv[i+2],Massiv[i+3],colors.green)
+        drawLine(Massiv[i],Massiv[i+1],Massiv[i+2],Massiv[i+3],colors.lime)
 end
  
 for i=1,#errorPoints do
