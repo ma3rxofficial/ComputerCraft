@@ -5,27 +5,51 @@ SpeedOS.ToolBarColour = colours.grey
 SpeedOS.ToolBarTextColour = colours.white
 
 SpeedOS.LoadAPI("SpeedAPI/config")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/windows")
 
-rednet.open("right")
-rednet.open("left")
-rednet.open("front")
-rednet.open("back")
-rednet.open("top")
-rednet.open("bottom")
+if not peripheral.find("modem") then
+  windows.clearScreen(colors.cyan)
+  windows.error("You need wireless modem!")
+  SpeedOS.Close()
+end
+
+rednet.open(peripheral.find("modem"))
 
 term.setCursorPos(1, 2)
 
-huy = config.read("System/Radio.settings", "radios")
-local radio_id = textutils.unserialize(huy)
+huy_ = config.read("System/Radio.settings", "radios")
+local radio_id = textutils.unserialize(huy_)
+
+huy = config.read("System/Radio.settings", "listen_everyone")
+local listen_everyone
+
+if huy == "true" then
+  listen_everyone = true
+
+else
+  listen_everyone = false
+end
+
+if huy_ == "{}" or huy_ == "" then
+  if not listen_everyone then
+    windows.clearScreen(colors.cyan)
+    windows.attention({"Empty list"}, {"Your radios list is", "empty!"})
+    SpeedOS.Close()
+  end
+end
+
 local file = fs.open("Resources/radio.log", "a")
 
 function check(id)
-  for i,v in ipairs(radio_id) do
+  if listen_everyone then
+    return true
+  end
 
+  for i,v in ipairs(radio_id) do
     if v == id then
       return true
     end
-
   end
 
 end
