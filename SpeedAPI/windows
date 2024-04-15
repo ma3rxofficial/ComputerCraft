@@ -49,7 +49,7 @@
 -- Отображение окна ошибки по центру экрана.
  
  
--- attention(table текст_заголовка, table текст_подзаголовка)
+-- attention(table текст_заголовка, table текст_подзаголовка, int цвет(по желанию))
 -- Отображение окна "Внимание!" с какой-то информацией.
 -- Каждый элемент массива - это строка заголовка или подзаголовка, а количество строк не ограничено.
 --
@@ -666,7 +666,11 @@ end
  
 ---------------------------------------------------------------------------------------------------------------
  
-function attention(text1,text2)
+function attention(text1,text2, addPidor)
+
+        if addPidor == nil then
+                addPidor = colors.lightBlue
+        end
  
         local sizeOfText1 = #text1
         local sizeOfText2 = #text2
@@ -715,7 +719,7 @@ function attention(text1,text2)
                 end
                 colorText(xStart+xWindowSize-6,yStart+yWindowSize-2,"OK",color2)
         end
-        drawButton(colors.lightBlue,colors.black)
+        drawButton(addPidor,colors.black)
        
         while true do
                 local event,side,x,y = os.pullEvent()
