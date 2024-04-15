@@ -5,9 +5,11 @@ SpeedOS.ToolBarColour = colours.grey
 SpeedOS.ToolBarTextColour = colours.white
 
 fs=SpeedOS.fs
-os.loadAPI("SpeedAPI/windows")
-os.loadAPI("SpeedAPI/peripheral")
-os.loadAPI("SpeedAPI/lddfm")
+
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/lddfm")
+SpeedOS.LoadAPI("SpeedAPI/config")
 
 term.setCursorPos(1, 1)
 term.clear()
@@ -16,6 +18,7 @@ term.clear()
 local args = {...}
 local use_monitor = false
 local monitor
+local monitor_scale
 
 if peripheral.find("monitor", true) then
   term.setCursorPos(1, 1)
@@ -26,35 +29,61 @@ if peripheral.find("monitor", true) then
     monitor = peripheral.wrap(peripheral.find("monitor", true))   
     windows.clearScreen(colors.black) 
 
+    monitor_scale = tonumber(config.read("System/PicViewer.settings", "monitor_scale"))
+
   else
     use_monitor = false  
     windows.clearScreen(colors.black) 
   end
 end
 
+local function drawPixelInternal( xPos, yPos, __object )
+  __object.setCursorPos(xPos, yPos)
+  __object.write(" ")
+end
+
+function drawImg( tImage, xPos, yPos, __object )
+  for y=1,#tImage do
+    local tLine = tImage[y]
+    for x=1,#tLine do
+      if tLine[x] > 0 then
+        __object.setBackgroundColor( tLine[x] )
+        drawPixelInternal( x + xPos - 1, y + yPos - 1, __object )
+      end
+    end
+  end
+end
+
+
 function draw_picture(filename)
   term.clear()
   if use_monitor then
-    term.redirect(monitor)  
+    monitor.setTextScale(monitor_scale)
     monitor.clear()
+    local mx, my = monitor.getSize()
+    SpeedText.cPrint("Your monitor scale is "..tostring(mx).."x"..tostring(my))
+    SpeedText.cPrint("Click anywhere to quit", 10)
   end
   
   image = paintutils.loadImage(filename) 
-  paintutils.drawImage(image, 1,1)
-  while true do
-    event, key = os.pullEvent()
-    if event == "key" or event == "mouse_click" or event == "mouse_drag" or event == "monitor_touch" then break end
+
+  if use_monitor then
+    drawImg(image, 1, 1, monitor)
+
+  else
+    paintutils.drawImage(image, 1, 1)
   end
+
+  os.pullEvent("mouse_click")
   if use_monitor then
     monitor.setTextColor(colors.white)
     monitor.setBackgroundColor(colors.black)
     monitor.clear()
     monitor.setCursorPos(1, 1)
-    term.restore()
-    OneOS.Close()
+    SpeedOS.Close()
 
   else
-    OneOS.Close()
+    SpeedOS.Close()
   end
 end
 
