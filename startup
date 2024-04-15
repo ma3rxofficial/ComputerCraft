@@ -1,4 +1,4 @@
-oldTerm = term
+oldTerm = term 
 os.loadAPI("SpeedAPI/SpeedText")
 os.loadAPI("System/API/Log")
 
