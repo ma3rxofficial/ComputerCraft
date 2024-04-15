@@ -374,6 +374,7 @@ function Shutdown(restart)
 		windows.tv(0)
 		os.shutdown()
 	elseif success then
+		Log.i("Rebooting...")
 		os.reboot()
 	else
 		Current.Program = nil
@@ -396,7 +397,6 @@ function Shutdown(restart)
 end
 
 function Restart()
-	Log.i("Rebooting computer...")
 	Shutdown(true)
 end
 
