@@ -206,7 +206,7 @@ elseif LoadingScreen() then
 	end
 
 	Log.i("Starting Desktop...")
-	os.run(getfenv(), '/System/main')
+	os.run(getfenv(), '/System/main.lua')
 	
 
 	local ok = {pcall(Initialise)}
