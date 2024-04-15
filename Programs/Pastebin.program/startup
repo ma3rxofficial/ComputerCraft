@@ -48,13 +48,20 @@ function download()
   term.setBackgroundColor(colors.gray)
   term.setTextColor(colors.lime)
   term.setCursorPos(2, 6)
+
+  term.setBackgroundColor(colors.gray)
+  term.setTextColor(colors.lime)
+  term.setCursorPos(2, 4)
+  term.clear()
+
+  term.setCursorPos(1, 1)
   shell.run("pastebin get "..tostring(code).." "..tostring(fn))
   
   sleep(1)
   term.setTextColor(colors.white)
   term.setBackgroundColor(colors.black)
   term.clear()
-  OneOS.Close()
+  SpeedOS.Close()
 end
 
 function upload()
@@ -79,15 +86,16 @@ function upload()
   term.setCursorPos(2, 4)
   term.clear()
 
+  term.setCursorPos(1, 1)
   shell.run("pastebin put "..tostring(f_n))
   
-  sleep(3)
+  os.pullEvent("key")
   term.setTextColor(colors.white)
   term.setBackgroundColor(colors.black)
   term.clear()
-  OneOS.Close()
+  SpeedOS.Close()
 end
 
-SpeedGUI.gui.button.add("Upload to pastebin",upload,15,5,2,3,colors.white,colors.orange)
-SpeedGUI.gui.button.add("Download from pastebin",download,13,9,2,3,colors.white,colors.orange)
+SpeedGUI.gui.button.add("Upload to pastebin", upload, 15, 5, 2, 3, colors.white, colors.orange)
+SpeedGUI.gui.button.add("Download from pastebin", download, 13, 9, 2, 3, colors.white, colors.orange)
 SpeedGUI.start()
