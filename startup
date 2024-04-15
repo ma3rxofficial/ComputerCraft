@@ -206,6 +206,8 @@ elseif LoadingScreen() then
 	end
 
 	Log.i("Starting Desktop...")
+	os.loadAPI("SpeedAPI/windows")
+	windows.fadeIn(0.1)
 	os.run(getfenv(), '/System/main.lua')
 	
 
