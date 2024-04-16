@@ -82,7 +82,7 @@ function LoadingScreen()
 		term.setTextColor(colours.lightGrey)
 
 		PrintCentered('Try to free up some space, open \'About SpeedOS\'' , 9)
-		PrintCentered('in the One menu for more information.' , 10)
+		PrintCentered('in the OS menu for more information.' , 10)
 		term.setTextColor(colours.white)
 
 		PrintCentered('Click anywhere to continue.', 12)
@@ -95,6 +95,8 @@ function LoadingScreen()
 	local x = (screenWidth - 14) / 2
 	local y = (screenHeight - 9) / 2
 
+	local rs_s = false
+
 	local text = 'SpeedOS by Ma3rX'
 	term.setCursorPos((screenWidth - #text) / 2, y + 13)
 	term.setTextColour(colours.blue)
@@ -102,6 +104,31 @@ function LoadingScreen()
 
 	local currentImage = -1
 	local totalAPIs = #fs.list(root .. 'System/API/')
+
+	os.loadAPI('System/API/Settings')
+
+	if Settings.GetValues('UseRedstoneElectrity')['UseRedstoneElectrity'] == true then
+		for _, storona in pairs(rs.getSides()) do
+			if rs.getInput(storona) == true then
+				rs_s = true
+			end
+		end
+
+		if not rs_s then
+			os.loadAPI("SpeedAPI/SpeedText")
+			term.setBackgroundColor(colors.blue)
+			term.clear()
+			term.setTextColor(colors.blue)
+			term.setBackgroundColor(colors.white)
+			SpeedText.cPrint("You don't have electricity!")
+			term.setTextColor(colors.white)
+			term.setBackgroundColor(colors.blue)
+			SpeedText.cPrint("Click anywhere to reboot", 10)
+
+			os.pullEvent("mouse_click")
+			os.reboot()
+		end
+	end
 
 	term.setBackgroundColor(colors.gray)
 	term.clear()
