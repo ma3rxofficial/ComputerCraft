@@ -90,17 +90,12 @@ function LoadingScreen()
 		os.pullEvent('mouse_click')
 	end
 	local screenWidth, screenHeight = term.getSize()
-	term.setBackgroundColour(colours.white)	
-	term.clear()
 	local x = (screenWidth - 14) / 2
 	local y = (screenHeight - 9) / 2
 
 	local rs_s = false
 
 	local text = 'SpeedOS by Ma3rX'
-	term.setCursorPos((screenWidth - #text) / 2, y + 13)
-	term.setTextColour(colours.blue)
-	term.write(text)
 
 	local currentImage = -1
 	local totalAPIs = #fs.list(root .. 'System/API/')
