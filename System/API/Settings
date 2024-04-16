@@ -19,7 +19,12 @@
 			Type = 'Bool',
 			Label = 'Use Animations',
 			Default = true,
-		}	
+		},
+		UseRedstoneElectrity = {
+			Type = 'Bool',
+			Label = 'Use Electrity',
+			Default = true,
+		}		
 	}
 
 	function WriteDefaults(self)
@@ -40,7 +45,7 @@
 
 		local file = fs.open('/System/.SpeedOS.settings','r')
 		local values = textutils.unserialize(file.readAll())
-		for k, v in pairs(self.Defaults) do
+		for k, v in pairs(Defaults) do
 			if values[k] == nil then
 				values[k] = v.Default
 			end
