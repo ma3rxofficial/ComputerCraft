@@ -17,7 +17,7 @@ SpeedOS.ToolBarColour = colours.black
 SpeedOS.ToolBarTextColour = colours.white
 
 local pathToConfig = "System/DiceBlock.settings"
-local bundleSide = config.read(pathToConfig, "bundleOutput")
+local bundleSide = config.read(pathToConfig, "bundleOutputSide")
 
 while true do
 i, s = rednet.receive()
