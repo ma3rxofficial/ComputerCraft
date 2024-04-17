@@ -4,12 +4,13 @@ SpeedOS = loader.OS()
 SpeedOS.ToolBarColour = colours.grey
 SpeedOS.ToolBarTextColour = colours.white
 
-fs=SpeedOS.fs
+fs = SpeedOS.fs
 
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/lddfm")
 SpeedOS.LoadAPI("SpeedAPI/config")
+SpeedOS.LoadAPI("System/API/Settings")
 
 term.setCursorPos(1, 1)
 term.clear()
@@ -80,6 +81,7 @@ function draw_picture(filename)
     monitor.setBackgroundColor(colors.black)
     monitor.clear()
     monitor.setCursorPos(1, 1)
+    monitor.setTextScale(tonumber(Settings.GetValues('MonitorTextScale')['MonitorTextScale']))
     SpeedOS.Close()
 
   else
