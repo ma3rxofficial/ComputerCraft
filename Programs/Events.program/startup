@@ -14,7 +14,7 @@ SpeedText.line()
 term.setTextColor(colors.lightGray)
 
 while true do  
-  local event, character = os.pullEvent()
+  local event, character, p1, p2, p3, p4, p5, p6 = os.pullEvent()
   if event == "char" then
     print(character.." was pressed")
     
@@ -41,7 +41,35 @@ while true do
     
   else 
     print(event.." event has happened")
-    
+    print("Info: ")
+    if character then
+      print(character)
+    end
+
+    if p1 then
+      print(p1)
+    end
+
+    if p2 then
+      print(p1)
+    end
+
+    if p3 then
+      print(p1)
+    end
+
+    if p4 then
+      print(p1)
+    end
+
+    if p5 then
+      print(p1)
+    end
+
+    if p6 then
+      print(p1)
+    end
+
     term.setTextColor(colors.black)
     SpeedText.line()
     term.setTextColor(colors.lightGray)
