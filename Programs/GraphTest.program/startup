@@ -1,9 +1,6 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
 
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
-
 fs=SpeedOS.fs
 os.loadAPI("SpeedAPI/graph")
 os.loadAPI("SpeedAPI/peripheral")
@@ -31,11 +28,19 @@ local graphInstance
 
 if peripheral.find("monitor", true) and use_mon_default then
   graphInstance = graph.new(peripheral.wrap(peripheral.find("monitor", true)), update, "Testing", nil, 0, 100)
-  print("Running graph on monitor(side "..peripheral.find("monitor", true)..")")
 
 else
   graphInstance = graph.new(term, update, "Testing", nil, 0, 100)
 
+end
+
+if peripheral.find("monitor", true) and use_mon_default then
+  windows.clearScreen(colors.white)
+  term.setTextColor(colors.lightGray)
+  SpeedText.cPrint("Running graph on monitor(side "..peripheral.find("monitor", true)..")")
+else
+  SpeedOS.ToolBarColour = colours.black
+  SpeedOS.ToolBarTextColour = colours.white
 end
 
 while true do
