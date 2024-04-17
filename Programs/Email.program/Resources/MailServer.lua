@@ -1,5 +1,16 @@
+local side
+
+for _, siduha in pairs(rs.getSides()) do
+  if peripheral.getType(siduha) == "modem" then
+    side = siduha
+  end
+end
+
+if side == nil then
+  error("You need wireless modem!")
+end
+
 umail = {}
-side = "bottom"
 
 function split(str, pat)
   local t = { }
