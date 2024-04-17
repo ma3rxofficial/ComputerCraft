@@ -1,10 +1,13 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
+
 SpeedOS.ToolBarColour = colours.grey
 SpeedOS.ToolBarTextColour = colours.white
+
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/config")
 
 local monitor = nil
 
@@ -35,6 +38,10 @@ if govno == "Yes" then
 	SpeedText.cPrint("Use your mouse to zoom!")
 end
 
+if toMonitor then
+  monitor.setTextScale(tonumber(config.read("System/Minedelbrot.settings", "monitor_scale")))
+end
+
 if not toMonitor then
 w,h = term.getSize()
 else
@@ -44,7 +51,7 @@ end
 originX, originY, zoom = w/2,h/2,1
 
 function debugLog(message)
-  local file = fs.open("debug.log","a")
+  local file = fs.open("Resources/debug.log","a")
   file.writeLine(message)
   file.close()
 end
