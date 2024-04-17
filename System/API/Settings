@@ -27,7 +27,7 @@
 		},
 		MonitorTextScale = {
 			Type = 'Text',
-			Label = 'Monitor scale',
+			Label = 'Monitor Scale',
 			Default = "1",
 		},		
 	}
