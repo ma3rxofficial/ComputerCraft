@@ -15,7 +15,7 @@ SpeedOS.ToolBarColour = colours.grey
 SpeedOS.ToolBarTextColour = colours.white
 
 fs=SpeedOS.fs
-os.loadAPI("/System/API/lddfm")
+SpeedOS.LoadAPI("/System/API/lddfm")
 
 local function loadAPIString(name, str)
 	local env = {}
