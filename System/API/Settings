@@ -4,6 +4,11 @@
 			Label = 'Computer Name',
 			Default = 'SpeedOS Computer'
 		},
+		MonitorTextScale = {
+			Type = 'Text',
+			Label = 'Monitor Scale',
+			Default = "1",
+		},
 		DesktopColour = {
 			Type = 'Colour',
 			Label = 'Desktop Colour',
@@ -24,11 +29,6 @@
 			Type = 'Bool',
 			Label = 'Use Electrity',
 			Default = true,
-		},
-		MonitorTextScale = {
-			Type = 'Text',
-			Label = 'Monitor Scale',
-			Default = "1",
 		},		
 	}
 
