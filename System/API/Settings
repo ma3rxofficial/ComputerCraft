@@ -24,7 +24,12 @@
 			Type = 'Bool',
 			Label = 'Use Electrity',
 			Default = true,
-		}		
+		},
+		MonitorTextScale = {
+			Type = 'Text',
+			Label = 'Monitor scale',
+			Default = "1",
+		},		
 	}
 
 	function WriteDefaults(self)
