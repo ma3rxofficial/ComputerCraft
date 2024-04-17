@@ -94,6 +94,7 @@ function LoadingScreen()
 	local y = (screenHeight - 9) / 2
 
 	local rs_s = false
+	local listen_energy
 
 	local text = 'SpeedOS by Ma3rX'
 
@@ -106,6 +107,7 @@ function LoadingScreen()
 		for _, storona in pairs(rs.getSides()) do
 			if rs.getInput(storona) == true then
 				rs_s = true
+				listen_energy = storona
 			end
 		end
 
@@ -123,6 +125,8 @@ function LoadingScreen()
 			os.pullEvent("mouse_click")
 			os.reboot()
 		end
+
+		Log.i("Getting energy from side "..listen_energy)
 	end
 
 	term.setBackgroundColor(colors.gray)
