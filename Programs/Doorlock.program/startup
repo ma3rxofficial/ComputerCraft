@@ -9,7 +9,7 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 
 if not peripheral.find("modem") then
-  windows.clearScreen(colors.white)
+  windows.clearScreen(colors.cyan)
   windows.error("You need wireless modem!")
   SpeedOS.Close()
 end
@@ -30,7 +30,7 @@ end
 function wait()
 	term.setCursorPos(1, 1)
 	term.setTextColor(colors.green)
- windows.clearScreen(colors.white)
+ windows.clearScreen(colors.cyan)
  term.setCursorPos(1, 1)
 	print("["..SpeedText.time().."] Waiting for clients...")
 	while true do
@@ -57,7 +57,7 @@ function PDA()
 	PDA_s = config.read(pathToConfig, "PDA")
 	term.setCursorPos(1, 18)
 	term.setTextColor(colors.green)
-	term.setBackgroundColor(colors.white)
+	term.setBackgroundColor(colors.cyan)
 	term.write("Sucessfuly saved to config!")
 	sleep(1)
 	draw()
@@ -66,12 +66,12 @@ end
 
 function draw()
 	windows.fadeIn(0)
-	--windows.clearScreen(colors.white)
+	--windows.clearScreen(colors.cyan)
 	term.setTextColor(colors.black)
 	SpeedText.cPrint("DoorLock")
 	sleep(0.5)
-	windows.clearScreen(colors.white)
-	pizda = windows.select({"Welcome to DoorLock!"},{"What you will do?"},{"Wait",colors.lightGray,colors.black},{"New PDA",colors.lightBlue,colors.black})
+	windows.clearScreen(colors.cyan)
+	pizda = windows.select({"Welcome to DoorLock!"},{"What you will do?"},{"Wait",colors.orange,colors.white},{"New PDA",colors.gray,colors.white})
 	if pizda == "Wait" then
 		wait()
 	else
