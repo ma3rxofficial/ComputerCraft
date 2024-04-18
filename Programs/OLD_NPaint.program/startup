@@ -801,10 +801,10 @@ local function runFileMaker()
 
 	--This is done on top of the logo, so it backpedals a bit.
 	term.setCursorPos(tlx, tly)
-	term.clearLine()
+	--term.clearLine()
 	term.write("Name: ")
 	term.setCursorPos(tlx, tly + 1)
-	term.clearLine()
+	--term.clearLine()
 	term.write("Filetype:   Sprite")
 	term.setCursorPos(tlx + 12, tly + 2)
 	term.write("Animation")
