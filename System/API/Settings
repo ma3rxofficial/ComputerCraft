@@ -4,11 +4,6 @@
 			Label = 'Computer Name',
 			Default = 'SpeedOS Computer'
 		},
-		MonitorTextScale = {
-			Type = 'Text',
-			Label = 'Monitor Scale',
-			Default = "1",
-		},
 		DesktopColour = {
 			Type = 'Colour',
 			Label = 'Desktop Colour',
@@ -24,12 +19,12 @@
 			Type = 'Bool',
 			Label = 'Use Animations',
 			Default = true,
-		},
+		},	
 		UseRedstoneElectrity = {
 			Type = 'Bool',
 			Label = 'Use Electrity',
-			Default = true,
-		},		
+			Default = false,
+		},	
 	}
 
 	function WriteDefaults(self)
