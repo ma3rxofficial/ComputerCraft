@@ -1,7 +1,10 @@
-if OneOS then
-	--running under OneOS
-	OneOS.ToolBarColour = colours.grey
-	OneOS.ToolBarTextColour = colours.white
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+if SpeedOS then
+	--running under SpeedOS
+	SpeedOS.ToolBarColour = colours.grey
+	SpeedOS.ToolBarTextColour = colours.white
 end
 
 colours.transparent = -1
@@ -9,7 +12,7 @@ colors.transparent = -1
 
 --APIS--
 
---This is my drawing API, is is pretty much identical to what drives OneOS, PearOS, etc.
+--This is my drawing API, is is pretty much identical to what drives SpeedOS, PearOS, etc.
 local _w, _h = term.getSize()
 
 local round = function(num, idp)
@@ -53,8 +56,8 @@ Clipboard = {
 	end
 }
 
-if OneOS and OneOS.Clipboard then
-	Clipboard = OneOS.Clipboard
+if SpeedOS and SpeedOS.Clipboard then
+	Clipboard = SpeedOS.Clipboard
 end
 
 Drawing = {
@@ -116,13 +119,13 @@ Drawing = {
 			textcol = {}
 		}
 		local _fs = fs
-		if OneOS then
-			_fs = OneOS.FS
+		if SpeedOS then
+			_fs = SpeedOS.FS
 		end
 		if _fs.exists(path) then
 			local _open = io.open
-			if OneOS then
-				_open = OneOS.IO.open
+			if SpeedOS then
+				_open = SpeedOS.IO.open
 			end
 	        local file = _open(path, "r")
 	        local sLine = file:read()
@@ -312,15 +315,15 @@ end
 
 function Close()
 	if isQuitting or not Current.Artboard or not Current.Modified then
-		if not OneOS then
+		if not SpeedOS then
 			DoVanillaClose()
 		end
 		return true
 	else
 		local _w = ButtonDialougeWindow:Initialise('Quit Sketch?', 'You have unsaved changes, do you want to quit anyway?', 'Quit', 'Cancel', function(window, success)
 			if success then
-				if OneOS then
-					OneOS.Close(true)
+				if SpeedOS then
+					SpeedOS.Close(true)
 				else
 					DoVanillaClose()
 				end
@@ -334,8 +337,8 @@ function Close()
 	end
 end
 
-if OneOS then
-	OneOS.CanClose = function()
+if SpeedOS then
+	SpeedOS.CanClose = function()
 		return Close()
 	end
 end
@@ -766,8 +769,8 @@ Artboard = {
 		Current.Artboard = self
 		path = path or self.Path
 		local _open = io.open
-		if OneOS then
-			_open = OneOS.IO.open
+		if SpeedOS then
+			_open = SpeedOS.IO.open
 		end
         local file = _open(path, "w", true)
 		if self.Format == '.skch' then
@@ -1937,8 +1940,8 @@ NewDocumentWindow = {
 			new.NameLabelHighlight = false
 			new.SizeLabelHighlight = false
 			local _fs = fs
-			if OneOS then
-				_fs = OneOS.FS
+			if SpeedOS then
+				_fs = SpeedOS.FS
 			end
 			if path:sub(-1) == '/' or _fs.isDir(path) or #path == 0 then
 				ok = false
@@ -2068,8 +2071,8 @@ NewDocumentWindow = {
 local TidyPath = function(path)
 	path = '/'..path
 	local _fs = fs
-	if OneOS then
-		_fs = OneOS.FS
+	if SpeedOS then
+		_fs = SpeedOS.FS
 	end
 	if _fs.isDir(path) then
 		path = path .. '/'
@@ -2137,8 +2140,8 @@ OpenDocumentWindow = {
 		self:DrawFiles()
 
 		local _fs = fs
-		if OneOS then
-			_fs = OneOS.FS
+		if SpeedOS then
+			_fs = SpeedOS.FS
 		end
 		if (_fs.exists(self.PathTextBox.TextInput.Value)) or (self.SelectedFile and #self.SelectedFile > 0 and _fs.exists(self.CurrentDirectory .. self.SelectedFile)) then
 			self.OpenButton.TextColour = colours.black
@@ -2154,8 +2157,8 @@ OpenDocumentWindow = {
 
 	DrawFiles = function(self)
 		local _fs = fs
-		if OneOS then
-			_fs = OneOS.FS
+		if SpeedOS then
+			_fs = SpeedOS.FS
 		end
 		for i, file in ipairs(self.Files) do
 			if i > self.Scroll and i - self.Scroll <= 11 then
@@ -2186,12 +2189,12 @@ OpenDocumentWindow = {
 		new.Visible = true
 		new.CurrentDirectory = '/'
 		new.SelectedFile = nil
-		if OneOS then
+		if SpeedOS then
 			new.CurrentDirectory = '/Desktop/'
 		end
 		local _fs = fs
-		if OneOS then
-			_fs = OneOS.FS
+		if SpeedOS then
+			_fs = SpeedOS.FS
 		end
 		new.OpenButton = Button:Initialise(new.Width - 6, new.Height - 1, nil, nil, colours.white, new, function(self, side, x, y, toggle)
 			if _fs.exists(new.PathTextBox.TextInput.Value) and self.TextColour == colours.black and not _fs.isDir(new.PathTextBox.TextInput.Value) then
@@ -2234,8 +2237,8 @@ OpenDocumentWindow = {
 		self.Typed = false
 		self.PathTextBox.TextInput.Value = path
 		local _fs = fs
-		if OneOS then
-			_fs = OneOS.FS
+		if SpeedOS then
+			_fs = SpeedOS.FS
 		end
 		self.Files = _fs.list(self.CurrentDirectory)
 		Draw()
@@ -2268,8 +2271,8 @@ OpenDocumentWindow = {
 		if not found then
 			if y <= 12 then
 				local _fs = fs
-				if OneOS then
-					_fs = OneOS.FS
+				if SpeedOS then
+					_fs = SpeedOS.FS
 				end
 				self.SelectedFile = _fs.list(self.CurrentDirectory)[y-1]
 				self.PathTextBox.TextInput.Value = TidyPath(self.CurrentDirectory .. '/' .. self.SelectedFile)
@@ -2779,8 +2782,8 @@ function DisplayNewDocumentWindow()
 			Current.Window = nil
 			makeDocument = function()oldWindow:Close()NewDocument(path, width, height, format, backgroundColour)end
 			local _fs = fs
-			if OneOS then
-				_fs = OneOS.FS
+			if SpeedOS then
+				_fs = SpeedOS.FS
 			end
 			if _fs.exists(path) then
 				ButtonDialougeWindow:Initialise('File Exists', path..' already exists! Use a different name and try again.', 'Ok', nil, function(window, ok)
@@ -2819,8 +2822,8 @@ end
 
 function NewDocument(path, width, height, format, backgroundColour)
 	local _fs = fs
-	if OneOS then
-		_fs = OneOS.FS
+	if SpeedOS then
+		_fs = SpeedOS.FS
 	end
 	ab = Artboard:New(_fs.getName(path), path, width, height, format, backgroundColour)
 	Current.Tool = Tools[2]
@@ -2832,8 +2835,8 @@ local function Extension(path, addDot)
 	if not string.find(path, '%.') then
 		if not addDot then
 			local _fs = fs
-			if OneOS then
-				_fs = OneOS.FS
+			if SpeedOS then
+				_fs = SpeedOS.FS
 			end
 			return _fs.getName(path)
 		else
@@ -2876,8 +2879,8 @@ end
 ]]--
 function GetFormat(path)
 	local _fs = fs
-	if OneOS then
-		_fs = OneOS.FS
+	if SpeedOS then
+		_fs = SpeedOS.FS
 	end
 	local file = _fs.open(path, 'r')
 	local content = file.readAll()
@@ -2908,8 +2911,8 @@ end
 ]]--
 function OpenDocument(path)
 	local _fs = fs
-	if OneOS then
-		_fs = OneOS.FS
+	if SpeedOS then
+		_fs = SpeedOS.FS
 	end
 	if _fs.exists(path) and not _fs.isDir(path) then
 		local format = Extension(path, true)
@@ -2954,8 +2957,8 @@ function OpenDocument(path)
 
 		Current.Artboard = nil
 		local _fs = fs
-		if OneOS then
-			_fs = OneOS.FS
+		if SpeedOS then
+			_fs = SpeedOS.FS
 		end
 		ab = Artboard:New(_fs.getName('Image'), path, width, height, format, nil, layers)
 		Current.Tool = Tools[2]
@@ -3220,7 +3223,7 @@ function LoadMenuBar()
 						Title = 'Quit',
 						Click = function()
 							if Close() then
-								OneOS.Close()
+								SpeedOS.Close()
 							end
 						end
 					},
@@ -3493,7 +3496,7 @@ function Timer(event, timer)
 end
 
 function Initialise(arg)
-	if not OneOS then
+	if not SpeedOS then
 		SplashScreen()
 	end
 	EventRegister('mouse_click', TryClick)
@@ -3517,8 +3520,8 @@ function Initialise(arg)
 	LoadMenuBar()
 
 	local _fs = fs
-	if OneOS then
-		_fs = OneOS.FS
+	if SpeedOS then
+		_fs = SpeedOS.FS
 	end
 	if arg and _fs.exists(arg) then
 		OpenDocument(arg)
@@ -3856,8 +3859,8 @@ end
 function ReadNFP(path)
 	local pixels = {}
 	local _fs = fs
-	if OneOS then
-		_fs = OneOS.FS
+	if SpeedOS then
+		_fs = SpeedOS.FS
 	end
 	local file = _fs.open(path, 'r')
 	local line = file.readLine()
@@ -3881,8 +3884,8 @@ end
 ]]--
 function ReadNFT(path)
 	local _fs = fs
-	if OneOS then
-		_fs = OneOS.FS
+	if SpeedOS then
+		_fs = SpeedOS.FS
 	end
 	local file = _fs.open(path, 'r')
 	local line = file.readLine()
@@ -3940,8 +3943,8 @@ end
 ]]--
 function ReadSKCH(path)
 	local _fs = fs
-	if OneOS then
-		_fs = OneOS.FS
+	if SpeedOS then
+		_fs = SpeedOS.FS
 	end
 	local file = _fs.open(path, 'r')
 	local _layers = textutils.unserialize(file.readAll())
