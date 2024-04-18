@@ -142,6 +142,7 @@ function LaunchProgram(path, args, title)
 end
 
 function SwitchToProgram(newProgram, currentIndex, newIndex)
+	Log.i("Switching to program "..newProgram["Title"].." from "..Current.Program["Title"])
 	if Current.Program then
 		local direction = 1
 		if newIndex < currentIndex then
