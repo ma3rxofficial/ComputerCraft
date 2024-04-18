@@ -2,7 +2,7 @@
 		Gold Runner
 		Inspired by the game by Doug Smith
 
-		Written by: ---
+		Written by: NitrogenFingers
 ]]--
 w,h = term.getSize()
 
