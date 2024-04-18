@@ -30,6 +30,30 @@ ver_f2 = ver_f.readAll()
 ver_f.close()
 
 Log.Initialise()
+Log.i("Loading BIOS...")
+
+os.run(getfenv(), '/System/bios.lua')
+local okBios = {pcall(InitDaun)}
+if not okBios[1] then
+	os.loadAPI("SpeedAPI/SpeedText")
+	term.setBackgroundColor(colors.blue)
+	term.clear()
+	term.setBackgroundColor(colors.white)
+	term.setTextColor(colors.blue)
+	SpeedText.cPrint("BIOS can't load!")
+	term.setBackgroundColor(colors.blue)
+	term.setTextColor(colors.white)
+
+	SpeedText.cPrint("Click anywhere to reboot", 10)
+	Log.e("BIOS ERROR!")
+	os.pullEvent("mouse_click")
+
+	os.reboot()
+end
+
+Log.i("BIOS loaded!")
+Log.i("BIOS Info: "..InitDaun())
+
 Log.i(os.version())
 Log.i("SpeedOS Version: "..ver_f2)
 
