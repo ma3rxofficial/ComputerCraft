@@ -1,14 +1,16 @@
-if OneOS then
-OneOS.ToolBarColour=colours.grey
-OneOS.ToolBarTextColour=colours.white
+os.loadAPI("loader")
+SpeedOS=loader.OS()
+if SpeedOS then
+SpeedOS.ToolBarColour=colours.grey
+SpeedOS.ToolBarTextColour=colours.white
 end
 local l=io
-if OneOS then
-l=OneOS.IO
+if SpeedOS then
+l=SpeedOS.IO
 end
 local c=fs
-if OneOS then
-c=OneOS.FS
+if SpeedOS then
+c=SpeedOS.FS
 end
 local F="1.0"
 local G={...}
@@ -564,7 +566,7 @@ return e
 else return s.lua.parseError(nil)end
 end
 s.lua.run=function(e,a)
-local t,e=OneOS.LoadFile(e)
+local t,e=SpeedOS.LoadFile(e)
 setfenv(t,getfenv())
 if not e then
 _,e=pcall(function()t(unpack(a))end)
@@ -624,7 +626,7 @@ if type(e)=="string"then return s.brainfuck.parseError(e)
 else return s.brainfuck.parseError(nil)end
 end
 s.brainfuck.run=function(e)
-local e=OneOS.IO.open(e,"r")
+local e=SpeedOS.IO.open(e,"r")
 local h=e:read("*a")
 e:close()
 local t={}
