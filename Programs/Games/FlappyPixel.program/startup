@@ -38,6 +38,9 @@ function kpress()
     elseif event2 == "mouse_click" then
       hmD = 0
       ppos = ppos-3
+    elseif event2 == "mouse_drag" then
+      hmD = 0
+      ppos = ppos-3
     end 
     
   end
