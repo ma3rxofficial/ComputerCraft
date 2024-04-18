@@ -1,9 +1,12 @@
 tArgs = {...}
 
-if OneOS then
-	--running under OneOS
-	OneOS.ToolBarColour = colours.grey
-	OneOS.ToolBarTextColour = colours.white
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+if SpeedOS then
+	--running under SpeedOS
+	SpeedOS.ToolBarColour = colours.grey
+	SpeedOS.ToolBarTextColour = colours.white
 end
 
 local _w, _h = term.getSize()
@@ -271,8 +274,8 @@ Clipboard = {
 	end
 }
 
-if OneOS and OneOS.Clipboard then
-	Clipboard = OneOS.Clipboard
+if SpeedOS and SpeedOS.Clipboard then
+	Clipboard = SpeedOS.Clipboard
 end
 
 Drawing = {
@@ -334,13 +337,13 @@ Drawing = {
 			textcol = {}
 		}
 		local fs = fs
-		if OneOS then
-			fs = OneOS.FS
+		if SpeedOS then
+			fs = SpeedOS.FS
 		end
 		if fs.exists(path) then
 			local _open = io.open
-			if OneOS then
-				_open = OneOS.IO.open
+			if SpeedOS then
+				_open = SpeedOS.IO.open
 			end
 	        local file = _open(path, "r")
 	        local sLine = file:read()
@@ -1718,8 +1721,8 @@ function LoadMenuBar()
 					{
 						Title = 'Quit',
 						Click = function()
-							if Close() and OneOS then
-								OneOS.Close()
+							if Close() and SpeedOS then
+								SpeedOS.Close()
 							end
 						end,
 						Keys = {
@@ -2005,11 +2008,11 @@ function SplashScreen()
 end
 
 function Initialise(arg)
-	if OneOS then
-		fs = OneOS.FS
+	if SpeedOS then
+		fs = SpeedOS.FS
 	end
 
-	if not OneOS then
+	if not SpeedOS then
 		SplashScreen()
 	end
 	EventRegister('mouse_click', TryClick)
@@ -2266,10 +2269,9 @@ end
 
 local acknowledgedColour = false
 function PrintDocument()
-	if OneOS then
-		OneOS.LoadAPI('/System/API/Helpers.lua')
-		OneOS.LoadAPI('/System/API/Peripheral.lua')
-		OneOS.LoadAPI('/System/API/Printer.lua')
+	if SpeedOS then
+		SpeedOS.LoadAPI('/System/API/Helpers')
+		SpeedOS.LoadAPI('/System/API/Peripheral')
 	end
 
 	local doPrint = function()
@@ -2371,8 +2373,8 @@ end
 local TidyPath = function(path)
 	path = '/'..path
 	local fs = fs
-	if OneOS then
-		fs = OneOS.FS
+	if SpeedOS then
+		fs = SpeedOS.FS
 	end
 	if fs.isDir(path) then
 		path = path .. '/'
@@ -2460,7 +2462,7 @@ OpenDocumentWindow = {
 		new.Visible = true
 		new.CurrentDirectory = '/'
 		new.SelectedFile = nil
-		if OneOS and fs.exists('/Desktop/Documents/') then
+		if SpeedOS and fs.exists('/Desktop/Documents/') then
 			new.CurrentDirectory = '/Desktop/Documents/'
 		end
 		new.OpenButton = Button:Initialise(new.Width - 6, new.Height - 1, nil, nil, colours.white, new, function(self, side, x, y, toggle)
@@ -2504,8 +2506,8 @@ OpenDocumentWindow = {
 		self.Typed = false
 		self.PathTextBox.TextInput.Value = path
 		local fs = fs
-		if OneOS then
-			fs = OneOS.FS
+		if SpeedOS then
+			fs = SpeedOS.FS
 		end
 		self.Files = fs.list(self.CurrentDirectory)
 		Draw()
@@ -2538,8 +2540,8 @@ OpenDocumentWindow = {
 		if not found then
 			if y <= 12 then
 				local fs = fs
-				if OneOS then
-					fs = OneOS.FS
+				if SpeedOS then
+					fs = SpeedOS.FS
 				end
 				self.SelectedFile = fs.list(self.CurrentDirectory)[y-1]
 				self.PathTextBox.TextInput.Value = TidyPath(self.CurrentDirectory .. '/' .. self.SelectedFile)
@@ -2780,7 +2782,7 @@ SaveDocumentWindow = {
 		new.Title = 'Save Document'
 		new.Visible = true
 		new.CurrentDirectory = '/'
-		if OneOS and fs.exists('/Desktop/Documents/') then
+		if SpeedOS and fs.exists('/Desktop/Documents/') then
 			new.CurrentDirectory = '/Desktop/Documents/'
 		end
 		new.SaveButton = Button:Initialise(new.Width - 6, new.Height - 1, nil, nil, colours.white, new, function(self, side, x, y, toggle)
@@ -2826,8 +2828,8 @@ SaveDocumentWindow = {
 		self.Scroll = 0
 		self.Typed = false
 		local fs = fs
-		if OneOS then
-			fs = OneOS.FS
+		if SpeedOS then
+			fs = SpeedOS.FS
 		end
 		self.Files = fs.list(self.CurrentDirectory)
 		Draw()
@@ -3122,15 +3124,15 @@ end
 
 function Close()
 	if isQuitting or not Current.Document or not Current.Modified then
-		if not OneOS then
+		if not SpeedOS then
 			DoVanillaClose()
 		end
 		return true
 	else
 		local _w = ButtonDialougeWindow:Initialise('Quit Ink?', 'You have unsaved changes, do you want to quit anyway?', 'Quit', 'Cancel', function(window, success)
 			if success then
-				if OneOS then
-					OneOS.Close(true)
+				if SpeedOS then
+					SpeedOS.Close(true)
 				else
 					DoVanillaClose()
 				end
@@ -3144,8 +3146,8 @@ function Close()
 	end
 end
 
-if OneOS then
-	OneOS.CanClose = function()
+if SpeedOS then
+	SpeedOS.CanClose = function()
 		return Close()
 	end
 end
