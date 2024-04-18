@@ -4,6 +4,9 @@
     @author Hellkid98, HK98
 --]]
 
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
 local w,h = term.getSize()
 
 local oldPullEvent = os.pullEvent
@@ -133,7 +136,7 @@ local languages = {
 }
 
 local function rebootGame()
-    shell.run(shell.getRunningProgram()) error()
+    SpeedOS.Close()
 end
 
 
