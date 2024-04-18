@@ -81,7 +81,6 @@ function draw_picture(filename)
     monitor.setBackgroundColor(colors.black)
     monitor.clear()
     monitor.setCursorPos(1, 1)
-    monitor.setTextScale(tonumber(Settings.GetValues('MonitorTextScale')['MonitorTextScale']))
     SpeedOS.Close()
 
   else
