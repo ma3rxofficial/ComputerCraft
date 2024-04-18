@@ -9,8 +9,14 @@ SpeedOS.ToolBarTextColour = colours.white
 windows.clearScreen(colors.gray)
 term.setTextColor(colors.white)
 
-local test = http.get("https://api.ipify.org/?format=raw")
-SpeedText.cPrint("Your IP is "..test.readAll())
+local ip_request = http.get("https://api.ipify.org/?format=raw")
+
+if not ip_request then
+  windows.error("Can't connect to IP server!")
+  SpeedOS.Close()
+end
+
+SpeedText.cPrint("Your IP is "..ip_request.readAll())
 
 while true do
   event, key = os.pullEvent()
