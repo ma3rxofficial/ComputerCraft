@@ -4,6 +4,7 @@ os.loadAPI("System/API/Log")
 os.loadAPI("SpeedAPI/peripheral")
 os.loadAPI('System/API/Settings')
 
+local tArgs = {...}
 
 local install_files = {"installer", "dN2gMnV9"}
 
@@ -32,13 +33,6 @@ Log.Initialise()
 Log.i(os.version())
 Log.i("SpeedOS Version: "..ver_f2)
 
-if peripheral.find("monitor", true) then
-	if tonumber(Settings.GetValues('MonitorTextScale')['MonitorTextScale']) then
-		peripheral.wrap(peripheral.find("monitor", true)).setTextScale(tonumber(Settings.GetValues('MonitorTextScale')['MonitorTextScale']))
-		local mx, my = peripheral.wrap(peripheral.find("monitor", true)).getSize()
-		Log.i("Monitor scale is now "..tostring(mx).."x"..tostring(my))
-	end
-end
 
 function LoadAPI(_sPath)
 	local sName = fs.getName( _sPath )
