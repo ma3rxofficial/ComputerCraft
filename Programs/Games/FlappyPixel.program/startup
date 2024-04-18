@@ -1,15 +1,19 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
 
-fs = SpeedOS.fs
-
 
 ver = "beta 1.0 build 04"
-bird_icon = " "
 aF = true
 betatesting = true
 
-os.loadAPI("/SpeedAPI/speedtext")
+SpeedOS.LoadAPI("/SpeedAPI/speedtext")
+
+-- GUI
+bird_icon = " "
+bird_color = colors.yellow
+bird_text_color = colors.white
+bg_color = colors.lightBlue
+pipe_color = colors.lime
 
 function drawMenu()
   game()
@@ -58,22 +62,22 @@ end
   qp = qp - 1
   wp = wp-1
   ep = ep - 1 
-  term.setBackgroundColor(colors.lime)
+  term.setBackgroundColor(pipe_color)
   for j = 1,3 do
   for i=1,26 do
     if j == 1 then
       term.setCursorPos(qp,i)
-      term.write(bird_icon)
+      term.write(" ")
     elseif j == 2 then
       term.setCursorPos(wp,i)
-      term.write(bird_icon)
+      term.write(" ")
     elseif j == 3 then
       term.setCursorPos(ep,i)
-      term.write(bird_icon)
+      term.write(" ")
     end
   end  
   end
-  term.setBackgroundColor(colors.lightBlue)
+  term.setBackgroundColor(bg_color)
   for j=1,3 do
   for i=-2,0,1 do
     if j==1 then
@@ -95,7 +99,7 @@ function game()
 end
 function lose(text)
   sleep(2)
-  term.setBackgroundColor(colors.lightBlue)
+  term.setBackgroundColor(bg_color)
   term.setTextColor(colors.red)
   term.setCursorPos(1,5)
   term.clear()
@@ -110,7 +114,7 @@ function lose(text)
   return
 end
 function game2()
-  term.setBackgroundColor(colors.lightBlue)
+  term.setBackgroundColor(bg_color)
   term.clear()
   function simu()
   ppos = 10
@@ -170,14 +174,15 @@ function game2()
     end
     term.setCursorPos(2,ppos)
     --term.setBackgroundColor(colors.yellow)
-    term.setBackgroundColor(colors.yellow)
+    term.setBackgroundColor(bird_color)
+    term.setTextColor(bird_text_color)
     if aF then
-    term.write(" ")
-    term.setBackgroundColor(colors.lightBlue)
+    term.write(bird_icon)
+    term.setBackgroundColor(bg_color)
     aF = false
     else
-    term.write(" ")
-    term.setBackgroundColor(colors.lightBlue)
+    term.write(bird_icon)
+    term.setBackgroundColor(bg_color)
     aF = true
     end
 --    pp = pp+1
