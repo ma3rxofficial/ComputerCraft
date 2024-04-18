@@ -8,6 +8,7 @@ SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/config")
+SpeedOS.LoadAPI("System/API/Settings")
 
 local monitor = nil
 
@@ -36,6 +37,7 @@ if govno == "Yes" then
 	windows.clearScreen(colors.white)
 	term.setTextColour(colours.lightGrey)
 	SpeedText.cPrint("Use your mouse to zoom!")
+  SpeedText.cPrint("You can exit by Q", 10)
 end
 
 if toMonitor then
@@ -116,18 +118,32 @@ clearMon()
 drawMandelbrot()
 
 while true do
-  event, button, mx, my = os.pullEvent("mouse_click")
+  event, button, mx, my = os.pullEvent()
 
-  if button == 1 then
+  if event == "mouse_click" and button == 1 then
         zoom = zoom + 1
-  elseif button == 2 then
+  elseif event == "mouse_click" and button == 2 then
         zoom = zoom - 1
   end
 
-  originX, originY = mx/zoom,my/zoom
+  if event == "char" and button == "q" then
+    if toMonitor then
+      monitor.setBackgroundColor(colors.black)
+      monitor.setTextColor(colors.white)
+      monitor.clear()
+      monitor.setCursorPos(1, 1)
+      monitor.setTextScale(1)
+    end
 
-  if zoom < 1 then zoom = 1 end
+    SpeedOS.Close()
+  end
 
-  clearMon()
-  drawMandelbrot()
+  if event == "mouse_click" then
+    originX, originY = mx/zoom,my/zoom
+
+    if zoom < 1 then zoom = 1 end
+
+    clearMon()
+    drawMandelbrot()
+  end
 end
