@@ -41,6 +41,7 @@ function GetProgram(selected)
   end  
 
   if not fs.exists(selected) then
+    windows.clearScreen(colors.white)
     button = windows.select({"New program!"},{"Do you want to download it?"},{"No",colors.lightGray,colors.black}, {"Yes",colors.lightBlue,colors.black})
 
     if button == "No" then
