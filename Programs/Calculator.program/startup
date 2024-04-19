@@ -276,9 +276,7 @@ while true do
     if events[1] == "mouse_click" and events[2] == 1 then
         if events[3] >= 44 and events[3] <= 48 then
             if events[4] >= 7 and events[4] <= 9 then
-                term.setBackgroundColor(colors.black)
-                term.clear()
-                term.setCursorPos(1,1)
+                SpeedOS.Close()
                 break
             end
         elseif events[3] >= 39 and events[3] <= 43 then
