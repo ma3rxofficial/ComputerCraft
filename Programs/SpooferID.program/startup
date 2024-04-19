@@ -4,6 +4,8 @@ SpeedOS = loader.OS()
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/SpeedGUI")
 
+local w, h = term.getSize()
+
 term.setBackgroundColor(colors.white)
 term.setTextColor(colors.blue)
 term.clear()
@@ -15,7 +17,7 @@ term.setTextColor(colors.gray)
 
 SpeedText.line()
 
-term.setCursorPos(51-7, 19)
+term.setCursorPos(w-7, h)
 term.setTextColor(colors.lightGray)
 term.write("by Ma3rX")
 
