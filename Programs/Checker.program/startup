@@ -8,22 +8,22 @@ SpeedOS.ToolBarColour = colours.lightGrey
 SpeedOS.ToolBarTextColour = colours.white
 
 fs = SpeedOS.fs
-
-windows.clearScreen(colors.white)
-
 local w, h = term.getSize()
 
-if not http then
-  windows.error("You need to have HTTP API to be enabled!")
+if not http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup") then
+  windows.clearScreen(colors.cyan)
+  windows.error("Can't connect to Github!")
   SpeedOS.Close()
-end
+end  
 
+windows.clearScreen(colors.white)
 
 function Menu()
   windows.clearScreen(colors.gray)
   term.setTextColor(colors.white)
   SpeedText.cPrint("Enter program path:", 6)
   selected_path = SpeedText.centerRead(w - 13, "", colors.lightGray, colors.white, colors.white, false)
+
   if not selected_path then
     SpeedOS.Close()
   end
