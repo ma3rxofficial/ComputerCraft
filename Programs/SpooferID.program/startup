@@ -63,9 +63,10 @@ function spoofer()
   term.setBackgroundColor(colors.black)
   term.setCursorPos(1, 1)
   term.clear()
-  error()
+  
+  SpeedOS.Close()
 end
 
 SpeedGUI.gui.button.add("Spoof ID",spoofer,SpeedText.cCursor("SpoofID")[1]-3,5,2,3,colors.white,colors.gray)
-SpeedGUI.gui.button.add("Exit",SpeedText.extraExit,SpeedText.cCursor("Exit")[1]-2,9,2,3,colors.white,colors.red)
+SpeedGUI.gui.button.add("Exit",SpeedOS.Close,SpeedText.cCursor("Exit")[1]-2,9,2,3,colors.white,colors.red)
 SpeedGUI.start()
