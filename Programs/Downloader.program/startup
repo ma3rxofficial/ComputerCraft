@@ -1,5 +1,6 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
+
 fs = SpeedOS.fs
 
 SpeedOS.LoadAPI("SpeedAPI/windows")
