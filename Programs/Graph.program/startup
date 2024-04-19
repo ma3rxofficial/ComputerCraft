@@ -169,7 +169,6 @@ for i=1,#errorPoints do
 end
  
 windows.attention({"Done!"},{"Thanks to Harch from","youtube.com/SquareTeamChannel"})
-windows.clearScreen(colors.black)
 m.setBackgroundColor(colors.black)
 m.clear()
-term.setCursorPos(1,1)
+SpeedOS.Close()
