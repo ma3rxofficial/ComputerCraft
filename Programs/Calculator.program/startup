@@ -2,6 +2,7 @@
 
 os.loadAPI("loader")
 SpeedOS = loader.OS()
+
 SpeedOS.ToolBarColour = colours.black
 SpeedOS.ToolBarTextColour = colours.white
  
