@@ -18,7 +18,7 @@ if not peripheral.find("adventure map interface", true) then
   SpeedOS.Close()
 
 else
-	p = peripheral.wrap(peripheral.find("adventure map interface", true))
+  p = peripheral.wrap(peripheral.find("adventure map interface", true))
 end
 
 w = p.getWorld(0)
@@ -89,7 +89,6 @@ end
 
 term.setTextColor(colors.red)
 print("KILLED!")
-
 
 while true do
   event, key = os.pullEvent()
