@@ -5,9 +5,6 @@ local rs_enabled = false
 local routing_enabled = false
 local blacklisted = {}
 
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
-
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 
@@ -28,6 +25,8 @@ if not peripheral.find("LAN NIC") then
   SpeedOS.Close()
 end
 
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
 
 button = windows.select({"Hello!"},{"Do you want to use","your computer as router?"},{"No",colors.gray,colors.white}, {"Yes",colors.orange,colors.white})
 
