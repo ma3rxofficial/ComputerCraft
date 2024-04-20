@@ -1,9 +1,6 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
 
-SpeedOS.ToolBarColour = colours.grey
-SpeedOS.ToolBarTextColour = colours.white
-
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
@@ -32,6 +29,9 @@ if not peripheral.find("modem") then
   windows.clearScreen(colors.white)
   windows.error("You need wireless modem!")
 end
+
+SpeedOS.ToolBarColour = colours.grey
+SpeedOS.ToolBarTextColour = colours.white
 
 rednet.open(peripheral.find("modem"))
 
