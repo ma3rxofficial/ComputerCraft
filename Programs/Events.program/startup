@@ -4,37 +4,36 @@ SpeedOS = loader.OS()
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 
-term.setTextColor(colors.lightGray)
-term.setBackgroundColor(colors.white)
-term.clear() 
+SpeedOS.ToolBarColour = colours.lightGrey
+SpeedOS.ToolBarTextColour = colours.white
+
+windows.clearScreen(colors.gray)
 term.setCursorPos(1, 1)
 
-term.setTextColor(colors.black)
-SpeedText.line()
-term.setTextColor(colors.lightGray)
+term.setTextColor(colors.white)
 
 while true do  
   local event, character, p1, p2, p3, p4, p5, p6 = os.pullEvent()
   if event == "char" then
     print(character.." was pressed")
     
-    term.setTextColor(colors.black)
-    SpeedText.line()
     term.setTextColor(colors.lightGray)
+    SpeedText.line()
+    term.setTextColor(colors.white)
            
   elseif event == "mouse_click" then
     print(character.." was pressed on mouse")
     
-    term.setTextColor(colors.black)
-    SpeedText.line()
     term.setTextColor(colors.lightGray)
+    SpeedText.line()
+    term.setTextColor(colors.white)
   
   elseif event == "mouse_scroll" then
     print("Scrolling mouse "..character)
     
-    term.setTextColor(colors.black)
-    SpeedText.line()
     term.setTextColor(colors.lightGray)
+    SpeedText.line()
+    term.setTextColor(colors.white)
   
   elseif event == "key" then
     print("ID of key is "..character)
@@ -70,8 +69,8 @@ while true do
       print(p1)
     end
 
-    term.setTextColor(colors.black)
-    SpeedText.line()
     term.setTextColor(colors.lightGray)
+    SpeedText.line()
+    term.setTextColor(colors.white)
   end
 end
