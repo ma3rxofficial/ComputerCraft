@@ -45,9 +45,6 @@ if routing_enabled then
   rednet.open(peripheral.find("modem"))
   modem = peripheral.wrap(peripheral.find("LAN NIC", true))
 
-  SpeedOS.ToolBarColour = colours.black
-  SpeedOS.ToolBarTextColour = colours.white
-
   windows.clearScreen(colors.black)
   term.setCursorPos(1, 1)
 
@@ -61,22 +58,18 @@ if routing_enabled then
 
 else
 
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
+  windows.clearScreen(colors.black)
+  term.setCursorPos(1, 1)
 
-windows.clearScreen(colors.black)
-term.setCursorPos(1, 1)
-
-while true do
-  event, side, id, channel, msg = os.pullEvent()
-  if event == "lan_message" then 
-    print(msg) 
-    if rs_enabled then
-      rs.setOutput(redstone_side, true) 
-      sleep(0.5) 
-      rs.setOutput(redstone_side, false) 
+  while true do
+    event, side, id, channel, msg = os.pullEvent()
+    if event == "lan_message" then 
+      print(msg) 
+      if rs_enabled then
+        rs.setOutput(redstone_side, true) 
+        sleep(0.5) 
+        rs.setOutput(redstone_side, false) 
+      end
     end
   end
-end
-
 end
