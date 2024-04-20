@@ -25,9 +25,6 @@ if not peripheral.find("LAN NIC") then
   SpeedOS.Close()
 end
 
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
-
 button = windows.select({"Hello!"},{"Do you want to use","your computer as router?"},{"No",colors.gray,colors.white}, {"Yes",colors.orange,colors.white})
 
 if button == "Yes" then
@@ -43,7 +40,10 @@ if routing_enabled then
 
   rednet.open(peripheral.find("modem"))
   modem = peripheral.wrap(peripheral.find("LAN NIC"))
-  
+
+  SpeedOS.ToolBarColour = colours.black
+  SpeedOS.ToolBarTextColour = colours.white
+
   windows.clearScreen(colors.black)
   term.setCursorPos(1, 1)
 
@@ -56,6 +56,9 @@ if routing_enabled then
   end
 
 else
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
 
 windows.clearScreen(colors.black)
 term.setCursorPos(1, 1)
