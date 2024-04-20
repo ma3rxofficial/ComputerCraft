@@ -1,0 +1,47 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.ToolBarColour = colours.grey
+SpeedOS.ToolBarTextColour = colours.white
+
+SpeedOS.LoadAPI("SpeedAPI/windows")
+
+windows.clearScreen(colors.cyan)
+
+button = windows.select({"Recovery OS!"},{"Do you want to recover your OS?"},{"No",colors.gray,colors.white}, {"Yes",colors.orange,colors.white})
+
+if button == "No" then
+	SpeedOS.Close()
+end
+
+windows.clearScreen(colors.gray)
+term.setTextColor(colors.lightGray)
+SpeedText.cPrint("Connecting to Pastebin.com...")
+
+recovery_result = http.get("https://pastebin.com/raw/dN2gMnV9")
+
+if not recovery_result then
+	windows.error("Can't reach Pastebin.com! Check your connection")
+	SpeedOS.Close()
+end
+
+sleep(0.5)
+
+windows.clearScreen(colors.gray)
+SpeedText.cPrint("Writing data to installer...")
+
+installer_file = fs.open("installer", "w")
+installer_file.write(recovery_result.readAll())
+installer_file.close()
+
+sleep(1)
+
+windows.clearScreen(colors.gray)
+SpeedText.cPrint("Done!")
+
+sleep(0.5)
+SpeedText.cPrint("Running installer...", 10)
+
+sleep(1)
+
+SpeedOS.OSRun(getfenv(), 'installer')
