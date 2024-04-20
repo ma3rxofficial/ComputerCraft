@@ -1,4 +1,3 @@
-
 function getDate()
 
 local worldDays = os.day()
