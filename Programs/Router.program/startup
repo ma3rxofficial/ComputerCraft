@@ -7,6 +7,10 @@ local blacklisted = {}
 
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/config")
+
+pathToConfig = "System/Router.settings"
+redstone_side = config.read(pathToConfig, "output")
 
 function blacklist(id)
   for _, value in pairs(blacklisted) do
@@ -68,9 +72,9 @@ while true do
   if event == "lan_message" then 
     print(msg) 
     if rs_enabled then
-      rs.setOutput("top", true) 
+      rs.setOutput(redstone_side, true) 
       sleep(0.5) 
-      rs.setOutput("top", false) 
+      rs.setOutput(redstone_side, false) 
     end
   end
 end
