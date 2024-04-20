@@ -35,15 +35,15 @@ while true do
       kadr = 1
     end
   elseif event == "key" and key == keys.left then
-    if kadr > kadr_quantity then
-      kadr = kadr - 1
+    if kadr == 1 then
+      kadr = kadr_quantity
     else
-      kadr = 4
+      kadr = kadr - 1
     end
   end
   
   if event == "mouse_click" then
-    if kadr < 4 then
+    if kadr < kadr_quantity then
       kadr = kadr + 1
     else
       kadr = 1
