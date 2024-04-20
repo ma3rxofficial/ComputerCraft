@@ -7,7 +7,24 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 
 fs = SpeedOS.fs
+
+use_old_pallete = false
  
+local bg_color = colors.gray
+local xy_color = colors.white
+local graph_color = colors.lime
+local error_color = colors.red
+local lines_color = colors.lightGray
+
+if use_old_pallete then
+        bg_color = colors.white
+        xy_color = colors.black
+        graph_color = colors.green
+        error_color = colors.red
+        lines_color = colors.black
+end
+
+
 --[[local Args = {...}
 local formula = Args[1]
 local scale = Args[2]
@@ -97,19 +114,19 @@ config.write(pathToConfig,"step",step)
  
 ---------------------------------------------------------------------------
  
-m.setBackgroundColor(colors.gray)
+m.setBackgroundColor(bg_color)
 m.clear()
  
 for i=1,ySize do
-        drawPixelOnMonitor(centerX,i,colors.lightGray)
+        drawPixelOnMonitor(centerX,i,lines_color)
 end
  
 for i=1,xSize do
-        drawPixelOnMonitor(i,centerY,colors.lightGray)
+        drawPixelOnMonitor(i,centerY,lines_color)
 end
  
-m.setBackgroundColor(colors.gray)
-m.setTextColor(colors.white)
+m.setBackgroundColor(bg_color)
+m.setTextColor(xy_color)
 m.setCursorPos(centerX+2,1)
 m.write("y")
 m.setCursorPos(xSize,centerY-1)
@@ -161,11 +178,11 @@ while (x<=(centerX+2)/scale) do
 end
  
 for i=1,(#Massiv-2),2 do
-        drawLine(Massiv[i],Massiv[i+1],Massiv[i+2],Massiv[i+3],colors.lime)
+        drawLine(Massiv[i],Massiv[i+1],Massiv[i+2],Massiv[i+3],graph_color)
 end
  
 for i=1,#errorPoints do
-        drawPixelOnMonitor(math.floor(centerX+errorPoints[i][1]),math.floor(centerY-errorPoints[i][2]),colors.red)
+        drawPixelOnMonitor(math.floor(centerX+errorPoints[i][1]),math.floor(centerY-errorPoints[i][2]),error_color)
 end
  
 windows.attention({"Done!"},{"Thanks to Harch from","youtube.com/SquareTeamChannel"})
