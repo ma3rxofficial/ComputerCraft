@@ -2,7 +2,7 @@
 function getDate()
 
 local worldDays = os.day()
-local month = 1
+local month = 1 
 local day = worldDays
 local year = 1
 local leap = 28
