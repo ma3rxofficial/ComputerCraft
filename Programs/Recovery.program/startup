@@ -45,4 +45,4 @@ sleep(0.5)
 SpeedText.cPrint("Running installer...", 10)
 
 sleep(1)
-os.reboot()
+SpeedOS.Reboot()
