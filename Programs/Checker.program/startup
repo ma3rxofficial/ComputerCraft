@@ -129,16 +129,6 @@ function GetProgram(selected)
   Menu()
 end
 
-windows.clearScreen(colors.gray)
-SpeedText.cPrint("Connecting.")
-sleep(0.5)
-windows.clearScreen(colors.gray)
-SpeedText.cPrint(" Connecting..")
-sleep(0.5)
-windows.clearScreen(colors.gray)
-SpeedText.cPrint("  Connecting...")
-sleep(1)
-
 if not http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup") then
   FancyError()
 end
