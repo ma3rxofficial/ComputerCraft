@@ -8,22 +8,49 @@ SpeedOS.ToolBarColour = colours.lightGrey
 SpeedOS.ToolBarTextColour = colours.white
 
 fs = SpeedOS.fs
-local w, h = term.getSize()
-
-if not http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup") then
-  windows.clearScreen(colors.cyan)
-  windows.error("Can't connect to Github!")
-  SpeedOS.Close()
-end  
 
 windows.clearScreen(colors.white)
+
+local w, h = term.getSize()
+
+function FancyError()
+  term.setBackgroundColor(colours.grey)
+  term.setTextColor(colours.white)
+  term.clear()
+  term.setCursorPos(2,2)
+
+  print("Failed to connect to the GitHub!\n\n")
+  term.setTextColour(colours.lightGrey)
+  term.setCursorPos(2,4)
+
+  print("An error occured while trying to")
+  term.setCursorPos(2,5)
+  print("connect to the server.")
+
+  term.setCursorPos(2,6)
+  print("Check the following things then try again:")
+
+  term.setTextColour(colours.white)
+  term.setCursorPos(1,8)
+  print(" - Check that your internet is online and working")
+  print(" - Ensure that the HTTP API is on")
+  print(" - Ensure that github.com is whitelisted")
+  print(" - Try accesing github.com in your browser")
+
+  term.setCursorPos(2,18-1)
+  term.setTextColour(colours.white)
+  print(" Click anywhere to exit...")
+  os.pullEvent("mouse_click")
+  SpeedOS.Close()
+end
+
 
 function Menu()
   windows.clearScreen(colors.gray)
   term.setTextColor(colors.white)
   SpeedText.cPrint("Enter program path:", 6)
   selected_path = SpeedText.centerRead(w - 13, "", colors.lightGray, colors.white, colors.white, false)
-
+  
   if not selected_path then
     SpeedOS.Close()
   end
@@ -48,9 +75,6 @@ function GetProgram(selected)
       Menu()
     end  
 
-    fs.makeDir(selected)
-    fs.delete(selected)
-
     file_New = fs.open(selected, "w")
     file_New.write(result.readAll())
     file_New.close()
@@ -72,9 +96,6 @@ function GetProgram(selected)
     windows.clearScreen(colors.white)
     term.setTextColor(colors.lightGray)
     SpeedText.cPrint("Program is up to date!")
-
-    selected_file.close()
-
     sleep(3)
     Menu()
   end
@@ -106,6 +127,20 @@ function GetProgram(selected)
   selected_file2.close()
 
   Menu()
+end
+
+windows.clearScreen(colors.gray)
+SpeedText.cPrint("Connecting.")
+sleep(0.5)
+windows.clearScreen(colors.gray)
+SpeedText.cPrint(" Connecting..")
+sleep(0.5)
+windows.clearScreen(colors.gray)
+SpeedText.cPrint("  Connecting...")
+sleep(1)
+
+if not http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup") then
+  FancyError()
 end
 
 Menu()
