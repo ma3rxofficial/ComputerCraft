@@ -69,6 +69,9 @@ function GetProgram(selected)
     windows.clearScreen(colors.white)
     term.setTextColor(colors.lightGray)
     SpeedText.cPrint("Program is up to date!")
+
+    selected_file.close()
+
     sleep(3)
     Menu()
   end
