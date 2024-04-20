@@ -77,8 +77,9 @@ end
  
 local function govno()
         windows.attention({"Program started!"},{"Press OK to quit."})
+        m.setBackgroundColor(colors.black)
         m.clear()
-	m.setTextScale(1)
+        m.setTextScale(1)
         SpeedOS.Close()
 end
  
