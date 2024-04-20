@@ -24,7 +24,7 @@ end
 
 windows.clearScreen(colors.white)
 
-if not peripheral.find("LAN NIC") then
+if not peripheral.find("LAN NIC", true) then
   windows.error("You need wired modem!")
   SpeedOS.Close()
 end
@@ -43,7 +43,7 @@ if routing_enabled then
   end
 
   rednet.open(peripheral.find("modem"))
-  modem = peripheral.wrap(peripheral.find("LAN NIC"))
+  modem = peripheral.wrap(peripheral.find("LAN NIC", true))
 
   SpeedOS.ToolBarColour = colours.black
   SpeedOS.ToolBarTextColour = colours.white
