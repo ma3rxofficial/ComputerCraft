@@ -75,7 +75,14 @@ function draw_picture(filename)
     paintutils.drawImage(image, 1, 1)
   end
 
-  os.pullEvent("mouse_click")
+  while true do
+    event, _ = os.pullEvent()
+
+    if event == "mouse_click" or event == "monitor_touch" then
+      break
+    end
+  end
+  
   if use_monitor then
     monitor.setTextColor(colors.white)
     monitor.setBackgroundColor(colors.black)
