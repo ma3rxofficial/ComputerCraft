@@ -1,1 +1,12 @@
 markdown=false
+products={"graphics card","CPU","16 GB RAM","8 GB RAM","harddrive","2TB HDD","Tablet","Smartphone"}
+productModifiers={"top class","Kingston","nVidia","AMD","ATX","overclocked","limited edition","core i9","DDR4","brand new","flagship"}
+productFeatures={"4K streaming","full-HD streaming","remote connectibility","SSH","updates","WiFi","Bluetooth","LTE","Dual SIM","USB 3.0","Qualcomm Snapdragon processor","DolbyDigital Surround Sound","headphones","LAN","FireWire","Thunderbird","eSATA","CD-ROM","HDMI","VGA","OLED display","AMOLED display","Android 5.0","Android 5.1","iOS 7"}
+free={"*FREE*","one-month FREE","completely *free* of charge","**free**"}
+sales={"90% OFF","50% Off","75% OFF"}
+catchPhrases={"Order yours today","Order yours right now","Claim this prize","Don't hesitate and get yours"}
+waysToOrder={"calling 800-11-BESTBUY","visiting the website www.100-percent-legit.com","calling 911-I-WANT-ONE","checking in on our FREE web www.all-free.com"}
+callForTwoPack={"Call 911 and introduce yourself as Antonio Murdrio to get a *second one* for FREE.","Email us your credit card number, photo and other personally identifying information to registrations@steal-data.com and get a second one _Free of Charge_."}
+callForSpecial={"Call 200-100-000 within 1 hour and get a %PRODUCT% for free!","Visit www.best-store-ever.com in the following 5 minutes to receive a **FREE** %PRODUCT% with your order.","Call 1234-GIMME-FREE-STUFF right now to order a %PRODUCT% absolutely *free of charge*.","Order a %PRODUCT% as well and you will get a 40% extra sale on your order."}
+offerModifiers={"Premium","VIP","Secret","Limited","One-time"}
+authors={"Google","Apple","Samsung","Lenovo","Acer","Asus"}
