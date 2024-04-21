@@ -1,0 +1,11 @@
+--[[
+This example is a great way to check what event is being passed through the pullEvent() statement. It uses a while loop that continually checks the pull event until the q key is pressed.--]]
+term.clear() 
+term.setCursorPos(1,1)
+while true do
+event, param1, param2 = os.pullEvent()
+print ("Event "..event)
+print ("P1 "..param1)
+print ("P2 "..param2)
+if event == "char" and param1 == "q" then break end
+end

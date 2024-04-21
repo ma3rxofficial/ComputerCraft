@@ -1,0 +1,9 @@
+--[[
+This tutorial is very basic, but is a very powerful function as well. The shell.run command allows us to run a command from within our program as if we were at the terminal.--]]
+shell.run("programname")
+shell.run("mkdir", "testing")
+This would create a testing directory
+shell.run("copy", "disk/hello", "world")
+This would copy the program hello from the disk directory
+and place it as a program called world in your root
+directory.

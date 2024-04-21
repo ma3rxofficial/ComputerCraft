@@ -1,0 +1,17 @@
+--[[
+This tutorial will go over some of the basic floppy functions. We will check to see if a floppy is inserted using the pullEvent() loop, we will then make sure the floppy doesn't have a label, and if it's label is empty we will label it Blank and exit the program. We can learn more about the disk functions by typing help disk at the terminal.--]]
+while true do
+event, param1 = os.pullEvent()
+if event == "disk" then
+	if disk.getLabel(param1) == nil then
+	disk.setLabel(param1, "Blank")
+	print ("Disk labeled to Blank")
+	print ("Disk is in the "..param1.." side")
+	break
+	else
+	print ("Disk already has a label.")
+	print ("Disk is in the "..param1.." side")
+	break
+	end
+end
+end
