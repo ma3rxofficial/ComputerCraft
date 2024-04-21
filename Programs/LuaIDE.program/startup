@@ -1,5 +1,11 @@
 os.loadAPI("loader")
 SpeedOS=loader.OS()
+
+_fs=fs
+fs=SpeedOS.fs
+_io=io
+io=SpeedOS.io
+
 if SpeedOS then
 SpeedOS.ToolBarColour=colours.grey
 SpeedOS.ToolBarTextColour=colours.white
@@ -216,7 +222,7 @@ local D={
 {"Original","https://raw.github.com/GravityScore/LuaIDE/master/themes/original.txt"},
 }
 local function L(e)
-local t=io.open(e)
+local t=_io.open(e)
 local e=t:read("*l")
 local a={}
 while e~=nil do
@@ -1736,7 +1742,7 @@ term.setCursorPos(3,3)
 term.clearLine()
 term.write("LuaIDE - Loaded Theme!")
 sleep(1.6)
-fs.delete(z)
+_fs.delete(z)
 t=N
 return"menu"
 end
@@ -1751,7 +1757,7 @@ term.setCursorPos(3,3)
 term.clearLine()
 if e then
 term.write("LuaIDE - Loaded Theme!")
-fs.delete(z)
+_fs.delete(z)
 fs.move("/.LuaIDE_temp_theme_file",z)
 t=e
 sleep(1.6)
@@ -1802,7 +1808,7 @@ end if e=="exit"then break end
 if e=="edit"and t then e=H(t)end
 end
 end
-if fs.exists(z)then t=L(z)end
+if _fs.exists(z)then t=L(z)end
 if not t and b()then t=N
 elseif not t then t=U end
 local a,e=pcall(function()
