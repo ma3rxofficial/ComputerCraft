@@ -12,6 +12,7 @@ term.setTextColor(colors.white)
 local ip_request = http.get("https://api.ipify.org/?format=raw")
 
 if not ip_request then
+  windows.clearScreen(colors.white)
   windows.error("Can't connect to IP server!")
   SpeedOS.Close()
 end
