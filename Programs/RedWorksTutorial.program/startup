@@ -4,6 +4,8 @@ SpeedOS = loader.OS()
 SpeedOS.ToolBarColour = colours.black
 SpeedOS.ToolBarTextColour = colours.white
 
+--FUZZY FUCK U
+
 -- BaseLine Variables
 CurrentChapter = 1
 CurrentSection = 1
