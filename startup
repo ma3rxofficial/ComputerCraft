@@ -200,10 +200,36 @@ if not term.isColour() then
 
 elseif LoadingScreen() then
 
-	if fs.exists("System/startup_script") then 
-		Log.i("Running startup script!")
-		shell.run("System/startup_script") 
-		Log.i("Startup script finished.")
+	Log.i("Checking for startup scripts...")
+
+	if not fs.exists("System/autorun") then
+		Log.w("No autorun directory!")
+		
+		Log.i("Making autorun directory...")
+		fs.makeDir("System/autorun")
+		Log.i("Done!")
+
+	else
+		if fs.isDir("System/autorun") then
+			Log.i("Autorun directory found!")
+
+			if fs.list("System/autorun") == "" then
+				Log.i("No startup scripts found!")
+			else
+				Log.i("Running all startup scripts...")
+
+				for _, script in pairs(fs.list("System/autorun")) do
+					Log.i("Running script "..script.."...")
+					shell.run("System/autorun/"..script)
+					Log.i("Startup script "..script.." finished!")
+				end
+
+				Log.i("All startup scripts have been launched!")
+			end
+		else
+			Log.w("Autorun isn't directory!")
+		end
+
 	end
 
 	if fs.exists('/.update/') and fs.isDir('/.update/') then
