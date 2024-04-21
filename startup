@@ -1,4 +1,4 @@
-oldTerm = term 
+oldTerm = term -- пиздец блять
 os.loadAPI("SpeedAPI/SpeedText")
 os.loadAPI("System/API/Log")
 os.loadAPI("SpeedAPI/peripheral")
