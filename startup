@@ -213,7 +213,7 @@ elseif LoadingScreen() then
 		if fs.isDir("System/autorun") then
 			Log.i("Autorun directory found!")
 
-			if fs.list("System/autorun") == "" then
+			if #fs.list("System/autorun") == 0 then
 				Log.i("No startup scripts found!")
 			else
 				Log.i("Running all startup scripts...")
