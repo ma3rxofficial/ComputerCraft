@@ -3,6 +3,11 @@ SpeedOS = loader.OS()
 
 SpeedOS.ToolBarColour = colours.black
 SpeedOS.ToolBarTextColour = colours.white
+
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/windows")
+
 --(c) 2013 Felix Maxwell
 --License: CC BY-SA 3.0
 
@@ -159,16 +164,41 @@ function setup( w, h )
 	end
 	return retTab
 end
+
 function run()
-	local monitor = peripheral.wrap( askMonitor() )
+	if not peripheral.find("monitor", true) then
+		windows.clearScreen(colors.white)
+		windows.error("This program requires monitor!")
+		SpeedOS.Close()
+	end
+
+	windows.clearScreen(colors.white)
+	term.setTextColor(colors.lightGray)
+	SpeedText.cPrint("Running on monitor "..peripheral.find("monitor", true))
+
+	local monitor = peripheral.wrap( peripheral.find("monitor", true) )
 	local color = monitor.isColor()
 	local w, h = monitor.getSize()
 	local screen = setup( w, h )
+
 	while true do
+		event, _ = os.pullEvent()
+
+		if event == "mouse_click" or event == "mouse_drag" or event == "key" then
+			break
+		end
+
 		screen = tick( screen )
 		printGrid( monitor, screen, color )
 		os.sleep(1/fps)
 	end
+
+	monitor.clear()
+	monitor.setTextColor(colors.white)
+	monitor.setCursorPos(1, 1)
+
+	SpeedOS.Close()
+
 end
 
 run()
