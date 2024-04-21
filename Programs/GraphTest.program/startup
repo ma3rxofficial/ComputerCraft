@@ -1,10 +1,9 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
 
-fs=SpeedOS.fs
-os.loadAPI("SpeedAPI/graph")
-os.loadAPI("SpeedAPI/peripheral")
-os.loadAPI("SpeedAPI/config")
+SpeedOS.LoadAPI("SpeedAPI/graph")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/config")
 
 local tab = 0
 local use_mon_default
