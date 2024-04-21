@@ -3,6 +3,11 @@
 -- Copyright 2015 - 2016 viluon (Andrew Kvapil), licensed under the MIT license (http://opensource.org/licenses/MIT)
 -- Version 1.2
 
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.LoadAPI("SpeedAPI/config")
+
 local m_rnd = math.random
 
 local args = { ... }
@@ -18,71 +23,20 @@ local filename = ( #args == 1 and args[ 1 ] or args[ 2 ] )
 
 local usedNumbers = {}
 
-local products = {
-	"graphics card",
-	"CPU",
-	"16 GB RAM",
-	"8 GB RAM",
-	"harddrive",
-	"2TB HDD",
-	"Tablet",
-	"Smartphone",
-}
+huy_ = config.read("System/Offer.settings", "products")
+local products = textutils.unserialize(huy_)
 
-local productModifiers = {
-	"top class",
-	"Kingston",
-	"nVidia",
-	"AMD",
-	"ATX",
-	"overclocked",
-	"limited edition",
-	"core i9",
-	"DDR4",
-	"brand new",
-	"flagship",
-}
+huy_ = config.read("System/Offer.settings", "productModifiers")
+local productModifiers = textutils.unserialize(huy_)
 
-local productFeatures = {
-	"4K streaming",
-	"full-HD streaming",
-	"remote connectibility",
-	"SSH",
-	"updates",
-	"WiFi",
-	"Bluetooth",
-	"LTE",
-	"Dual SIM",
-	"USB 3.0",
-	"Qualcomm Snapdragon processor",
-	"DolbyDigital Surround Sound",
-	"headphones",
-	"LAN",
-	"FireWire",
-	"Thunderbird",
-	"eSATA",
-	"CD-ROM",
-	"HDMI",
-	"VGA",
-	"OLED display",
-	"AMOLED display",
-	"Android 5.0",
-	"Android 5.1",
-	"iOS 7",
-}
+huy_ = config.read("System/Offer.settings", "productFeatures")
+local productFeatures = textutils.unserialize(huy_) 
 
-local free = {
-	"*FREE*",
-	"one-month FREE",
-	"completely *free* of charge",
-	"**free**",
-}
+huy_ = config.read("System/Offer.settings", "free")
+local free = textutils.unserialize(huy_) 
 
-local sales = {
-	"90% OFF",
-	"50% Off",
-	"75% OFF",
-}
+huy_ = config.read("System/Offer.settings", "sales")
+local sales = textutils.unserialize(huy_) 
 
 local easterEggs = {
 	[ "squiddev" ] = "a free all-natural British octopus with C# skills.";
@@ -100,48 +54,23 @@ Really now, I am @viluon, nice to meet you. Most people say I am crazy. I am. Th
 	[ "" ] = "";
 }
 
-local catchPhrases = {
-	"Order yours today",
-	"Order yours right now",
-	"Claim this prize",
-	"Don't hesitate and get yours",
-}
+huy_ = config.read("System/Offer.settings", "catchPhrases")
+local catchPhrases = textutils.unserialize(huy_) 
 
-local waysToOrder = {
-	"calling 800-11-BESTBUY",
-	"visiting the website www.100-percent-legit.com",
-	"calling 911-I-WANT-ONE",
-	"checking in on our FREE web www.all-free.com",
-}
+huy_ = config.read("System/Offer.settings", "waysToOrder")
+local waysToOrder = textutils.unserialize(huy_) 
 
-local callForTwoPack = {
-	"Call 911 and introduce yourself as Antonio Murdrio to get a *second one* for FREE.",
-	"Email us your credit card number, photo and other personally identifying information to registrations@steal-data.com and get a second one _Free of Charge_.",
-}
+huy_ = config.read("System/Offer.settings", "callForTwoPack")
+local callForTwoPack = textutils.unserialize(huy_) 
 
-local callForSpecial = {
-	"Call 200-100-000 within 1 hour and get a %PRODUCT% for free!",
-	"Visit www.best-store-ever.com in the following 5 minutes to receive a **FREE** %PRODUCT% with your order.",
-	"Call 1234-GIMME-FREE-STUFF right now to order a %PRODUCT% absolutely *free of charge*.",
-	"Order a %PRODUCT% as well and you will get a 40% extra sale on your order.",
-}
+huy_ = config.read("System/Offer.settings", "callForSpecial")
+local callForSpecial = textutils.unserialize(huy_) 
 
-local offerModifiers = {
-	"Premium",
-	"VIP",
-	"Secret",
-	"Limited",
-	"One-time",
-}
+huy_ = config.read("System/Offer.settings", "offerModifiers")
+local offerModifiers = textutils.unserialize(huy_)
 
-local authors = {
-	"Google",
-	"Apple",
-	"Samsung",
-	"Lenovo",
-	"Acer",
-	"Asus",
-}
+huy_ = config.read("System/Offer.settings", "authors")
+local authors = textutils.unserialize(huy_)
 
 if not markdownEnabled and #args == 2 then
 	if easterEggs[ args[ 1 ]:lower() ] then
