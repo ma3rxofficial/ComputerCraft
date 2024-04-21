@@ -7,7 +7,7 @@ for _, value in pairs(rs.getSides()) do
 end
 
 if not side then
-	print("You need wireless modem to work with Door Lock!")
+	print("Door Lock requires wireless modem!")
 
 else
 	rednet.broadcast("DOORLOCK%OPEN")
