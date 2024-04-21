@@ -895,7 +895,13 @@ print "You don't need to thank me."
 print "Thank yourself for learning!"
 print "To learn more search online!"
 
-os.pullEvent("key")
+while true do
+	event = os.pullEvent()
+	
+	if event == "key" or event == "mouse_click" or event == "mouse_drag" then
+		break
+	end
+end
 
 if SpeedOS then
 	SpeedOS.Close()
