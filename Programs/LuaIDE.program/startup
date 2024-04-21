@@ -1,11 +1,9 @@
 os.loadAPI("loader")
 SpeedOS=loader.OS()
-
 _fs=fs
 fs=SpeedOS.fs
 _io=io
 io=SpeedOS.io
-
 if SpeedOS then
 SpeedOS.ToolBarColour=colours.grey
 SpeedOS.ToolBarTextColour=colours.white
