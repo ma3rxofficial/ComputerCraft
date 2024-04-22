@@ -14,7 +14,11 @@ Core.cursor(1, 1)
 Core.logo()
 
 if #tArgs > 0 then
-	Core.run(tArgs[1])
+	if not tArgs[1] == "run" then
+		Core.run(tArgs[1])
+	else
+		Core.run(tArgs[2])
+	end
 end
 
 while true do
