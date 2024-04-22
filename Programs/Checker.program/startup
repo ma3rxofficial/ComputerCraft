@@ -75,6 +75,9 @@ function GetProgram(selected)
       Menu()
     end  
 
+    fs.makeDir(selected)
+    fs.delete(selected)
+
     file_New = fs.open(selected, "w")
     file_New.write(result.readAll())
     file_New.close()
