@@ -1,9 +1,11 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
 
-fs=SpeedOS.fs
-SpeedOS.LoadAPI("/SpeedAPI/SpeedGUI")
-SpeedOS.LoadAPI("/SpeedAPI/lddfm")
+fs = SpeedOS.fs
+
+SpeedOS.LoadAPI("SpeedAPI/SpeedGUI")
+SpeedOS.LoadAPI("SpeedAPI/lddfm")
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 SpeedOS.ToolBarColour = colours.lightGrey
 SpeedOS.ToolBarTextColour = colours.white
@@ -50,18 +52,14 @@ function download()
   term.setCursorPos(2, 6)
 
   term.setBackgroundColor(colors.gray)
-  term.setTextColor(colors.lime)
+  term.setTextColor(colors.lightGray)
   term.setCursorPos(2, 4)
   term.clear()
 
   term.setCursorPos(1, 1)
   shell.run("pastebin get "..tostring(code).." "..tostring(fn))
-  
-  sleep(1)
-  term.setTextColor(colors.white)
-  term.setBackgroundColor(colors.black)
-  term.clear()
-  SpeedOS.Close()
+
+  Menu()
 end
 
 function upload()
@@ -82,20 +80,34 @@ function upload()
   f_n = tostring(lddfm.makeMenu())
 
   term.setBackgroundColor(colors.gray)
-  term.setTextColor(colors.lime)
+  term.setTextColor(colors.lightGray)
   term.setCursorPos(2, 4)
   term.clear()
 
   term.setCursorPos(1, 1)
   shell.run("pastebin put "..tostring(f_n))
   
-  os.pullEvent("key")
-  term.setTextColor(colors.white)
-  term.setBackgroundColor(colors.black)
-  term.clear()
-  SpeedOS.Close()
+  while true do
+    event = os.pullEvent()
+
+    if event == "mouse_click" or event == "mouse_drag" or event == "key" then
+      break
+    end
+  end
+  
+  Menu()
 end
 
-SpeedGUI.gui.button.add("Upload to pastebin", upload, 15, 5, 2, 3, colors.white, colors.orange)
-SpeedGUI.gui.button.add("Download from pastebin", download, 13, 9, 2, 3, colors.white, colors.orange)
-SpeedGUI.start()
+function Menu()
+  term.setTextColor(colors.white)
+  term.setBackgroundColor(colors.gray)
+  term.clear()
+
+  SpeedText.cPrint("Pastebin client", 2)
+
+  SpeedGUI.gui.button.add("Upload to pastebin", upload, 15, 5, 2, 3, colors.white, colors.orange)
+  SpeedGUI.gui.button.add("Download from pastebin", download, 13, 9, 2, 3, colors.white, colors.orange)
+  SpeedGUI.start()
+end
+
+Menu()
