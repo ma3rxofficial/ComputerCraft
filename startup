@@ -38,11 +38,14 @@ if http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/
 	pidor = http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup").readAll()
 	pidor2 = fs.open("startup", "r")
 	pidor3 = pidor2.readAll()
-	pidor2.close()
 
-	if not pidor == pidor3 then
-		Log.w("Modified startup detected!")
+	if pidor == pidor3 then
+		pidor = nil
+	else
+		Log.w("Modified startup file detected!")
 	end
+
+	pidor2.close()
 end
 
 function LoadAPI(_sPath)
