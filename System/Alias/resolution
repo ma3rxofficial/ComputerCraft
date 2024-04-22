@@ -1,4 +1,4 @@
-local args = {...}
+local args = {...} 
 
 if tonumber(args[1]) and tonumber(args[2]) then
   term.getSize = function() return tonumber(args[1]), tonumber(args[2]) end
