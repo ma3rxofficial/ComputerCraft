@@ -14,7 +14,7 @@ local version = "Version 1.3.0pr1"
 ------------Variable Declarations------------
 ---------------------------------------------
 
-if not bbpack then os.loadAPI("/SpeedAPI/bbpack") end
+if not bbpack then os.loadAPI("SpeedAPI/bbpack") end
 
 local CCPal = io.lines and  -- CC 1.55 adds this function, and also changes the colours, so...
 		{[0] = {240,240,240},{242,178, 51},{229,127,216},{153,178,242},
