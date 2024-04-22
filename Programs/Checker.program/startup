@@ -105,7 +105,7 @@ function GetProgram(selected)
 
   windows.clearScreen(colors.white)
 
-  button = windows.select({"Program have new version!"},{"Do you want to update it?"},{"No",colors.lightGray,colors.black}, {"Yes",colors.lightBlue,colors.black})
+  button = windows.select({"Program has new version!"},{"Do you want to update it?"},{"No",colors.lightGray,colors.black}, {"Yes",colors.lightBlue,colors.black})
 
   if button == "No" then
     Menu()
