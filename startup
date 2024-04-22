@@ -35,6 +35,7 @@ Log.i(os.version())
 Log.i("SpeedOS Version: "..ver_f2)
 
 if http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup") then
+	Log.i("nado")
 	pidor = http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup").readAll()
 	pidor2 = fs.open("startup", "r")
 	pidor3 = pidor2.readAll()
