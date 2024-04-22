@@ -1,6 +1,5 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
-
 fs = SpeedOS.fs
 
 SpeedOS.LoadAPI("SpeedAPI/windows")
@@ -15,17 +14,23 @@ function downloadFile(l, p)
   if not data then
     windows.clearScreen(colors.cyan)
     windows.error("Can't connect to URL!")
-    SpeedOS.Close()
+    Menu()
   end
+  
   f = fs.open("" ..tostring(p), "w")
   f.write(data.readAll())
   f.close()
 end
 
-windows.clearScreen(colors.cyan)
-local vvedeno = windows.input("auto","auto","Download",20,{"Link",""},{"Save as",""})
+function Menu()
+  windows.clearScreen(colors.cyan)
+  local vvedeno = windows.input("auto","auto","Download",20,{"Link",""},{"Save as",""})
 
-downloadFile(vvedeno[1], vvedeno[2])
-windows.clearScreen(colors.cyan)
-windows.attention({"Sucessfuly downloaded!"}, {"File was saved as", vvedeno[2].."!"})
-SpeedOS.Close()
+  downloadFile(vvedeno[1], vvedeno[2])
+  windows.clearScreen(colors.cyan)
+  windows.attention({"Sucessfuly downloaded!"}, {"File was saved as", vvedeno[2].."!"})
+end
+
+while true do
+  Menu()
+end
