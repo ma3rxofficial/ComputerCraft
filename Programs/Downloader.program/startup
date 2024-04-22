@@ -5,7 +5,7 @@ fs = SpeedOS.fs
 SpeedOS.LoadAPI("SpeedAPI/windows")
 
 function downloadFile(l, p)
-  if not string.find(l, "https://") then
+  if not string.find(l, "https://") then 
     l = "https://"..l
   end
 
