@@ -1,5 +1,5 @@
 os.loadAPI("loader")
-SpeedOS = loader.OS()
+SpeedOS = loader.OS() 
 
 SpeedOS.LoadAPI("SpeedAPI/bsod")
 
