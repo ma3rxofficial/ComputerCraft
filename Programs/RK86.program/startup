@@ -7,7 +7,7 @@ SpeedOS.ToolBarTextColour = colours.white
 
 local tArgs = {...}
 
-Core.loading(0)
+Core.loading(3)
 
 Core.clear()
 Core.cursor(1, 1)
