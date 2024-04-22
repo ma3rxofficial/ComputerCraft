@@ -39,8 +39,8 @@ if http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/
 	pidor2 = fs.open("startup", "r")
 	pidor3 = pidor2.readAll()
 
-	if pidor == pidor3 then
-		pidor = nil
+	if pidor3 == pidor then
+		Log.i("OK")
 	else
 		Log.w("Modified startup file detected!")
 	end
