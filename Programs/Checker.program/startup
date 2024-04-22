@@ -9,7 +9,7 @@ SpeedOS.ToolBarTextColour = colours.white
 
 fs = SpeedOS.fs
 
-windows.clearScreen(colors.white)
+windows.clearScreen(colors.white) 
 
 local w, h = term.getSize()
 
