@@ -1,4 +1,4 @@
-local supportedList = {"dir", "ls", "help"}
+local supportedList = fs.list("Resources/Commands")
 
 function isFileExists(fn)
     for _, suka in pairs(fs.list("/")) do
