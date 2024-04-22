@@ -57,7 +57,7 @@ function download()
   term.clear()
 
   term.setCursorPos(1, 1)
-  shell.run("pastebin get "..tostring(code).." "..tostring(fn))
+  shell.run("Resources/pastebin get "..tostring(code).." "..tostring(fn))
 
   Menu()
 end
@@ -85,7 +85,7 @@ function upload()
   term.clear()
 
   term.setCursorPos(1, 1)
-  shell.run("pastebin put "..tostring(f_n))
+  shell.run("Resources/pastebin put "..tostring(f_n))
   
   while true do
     event = os.pullEvent()
