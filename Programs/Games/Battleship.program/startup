@@ -27,7 +27,7 @@ cx, cy = SpeedText.cCursor("RIGA (c) 1983")
 term.setCursorPos(SpeedText.cCursor("RIGA (c) 1983")[1], 10)
 SpeedText.slowPrint("RIGA (c) 1983")
 
-os.pullEvent("key")
+SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
 
 local monSide = "none"
 local turn, selectX, selectY
