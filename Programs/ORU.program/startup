@@ -5,6 +5,15 @@ SpeedOS = loader.OS()
 SpeedOS.ToolBarColour = colours.black
 SpeedOS.ToolBarTextColour = colours.white
 
+SpeedOS.LoadAPI("SpeedAPI/config")
+
+pathToConfig = "System/ORU.settings"
+
+local z_t = tonumber(config.read(pathToConfig, "t"))
+local z_y = tonumber(config.read(pathToConfig, "y"))
+local z_u = tonumber(config.read(pathToConfig, "u"))
+local z_i = tonumber(config.read(pathToConfig, "i"))
+
 os.pullEvent = os.pullEventRaw
 term.clear()
 term.setCursorPos(1,1)
@@ -23,7 +32,7 @@ print("=========================================")
 local event, param1 = os.pullEvent("char") 
 if param1 == "t" then
 print("128")
-rs.setBundledOutput("bottom", 1)
+rs.setBundledOutput("bottom", z_t)
 sleep(0.3)
 rs.setBundledOutput("bottom",0)
 print("OK")
@@ -36,7 +45,7 @@ end
 local event, param1 = os.pullEvent("char") 
 if param1 == "y" then
 print("32")
-rs.setBundledOutput("bottom", 2)
+rs.setBundledOutput("bottom", z_y)
 sleep(0.3)
 rs.setBundledOutput("bottom", 0)
 print("OK")
@@ -49,7 +58,7 @@ end
 local event, param1 = os.pullEvent("char") 
 if param1 == "u" then
 print("k eng1")
-rs.setBundledOutput("bottom", 4)
+rs.setBundledOutput("bottom", z_u)
 sleep(0.3)
 rs.setBundledOutput("bottom",0)
 print("OK")
@@ -62,7 +71,7 @@ end
 local event, param1 = os.pullEvent("char") 
 if param1 == "i" then
 print("k eng2")
-rs.setBundledOutput("bottom", 8)
+rs.setBundledOutput("bottom", z_i)
 sleep(0.3)
 rs.setBundledOutput("bottom",0)
 print("OK")
