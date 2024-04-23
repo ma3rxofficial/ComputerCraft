@@ -332,7 +332,4 @@ parallel.waitForAny(
 	function() term.setBackgroundColor(colors.white); term.setTextColor(colors.black) while true do term.setCursorPos(18, 14); term.write("Press any key.."); sleep(0.5); term.clearLine(); sleep(0.5) end end
 )
 
-term.setBackgroundColor(colors.black)
-term.setTextColor(colors.white)
-term.clear()
-term.setCursorPos(1, 1)
+SpeedOS.Close()
