@@ -1,0 +1,69 @@
+os.pullEvent = os.pullEventRaw
+term.clear()
+term.setCursorPos(1,1)
+
+while true do
+
+print("=========================================")
+print("ELECTRIC C I R C U I T     PROGRAM MCB   ")
+print("=========================================")
+print("[T]-INPUT 128 KEY")
+print("[Y]-INPUT 32 KEY")
+print("[U]-KEY ENGINE1")
+print("[I]-KEY ENGINE2")
+print("=========================================")
+
+local event, param1 = os.pullEvent("char") 
+if param1 == "t" then
+print("128")
+rs.setBundledOutput("bottom", 1)
+sleep(0.3)
+rs.setBundledOutput("bottom",0)
+print("OK")
+sleep(0.3)
+term.clear()
+term.setCursorPos(1,1)
+os.reboot()
+end
+
+local event, param1 = os.pullEvent("char") 
+if param1 == "y" then
+print("32")
+rs.setBundledOutput("bottom", 2)
+sleep(0.3)
+rs.setBundledOutput("bottom",0)
+print("OK")
+sleep(0.3)
+term.clear()
+term.setCursorPos(1,1)
+os.reboot()
+end
+
+local event, param1 = os.pullEvent("char") 
+if param1 == "u" then
+print("k eng1")
+rs.setBundledOutput("bottom", 4)
+sleep(0.3)
+rs.setBundledOutput("bottom",0)
+print("OK")
+sleep(0.3)
+term.clear()
+term.setCursorPos(1,1)
+os.reboot()
+end
+
+local event, param1 = os.pullEvent("char") 
+if param1 == "i" then
+print("k eng2")
+rs.setBundledOutput("bottom", 8)
+sleep(0.3)
+rs.setBundledOutput("bottom",0)
+print("OK")
+sleep(0.3)
+term.clear()
+term.setCursorPos(1,1)
+os.reboot()
+end
+
+
+end
