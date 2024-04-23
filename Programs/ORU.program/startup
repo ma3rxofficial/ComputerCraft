@@ -3,7 +3,7 @@ os.loadAPI("loader")
 SpeedOS = loader.OS()
 
 SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarColour = colours.white
+SpeedOS.ToolBarTextColour = colours.white
 
 os.pullEvent = os.pullEventRaw
 term.clear()
@@ -38,11 +38,12 @@ if param1 == "y" then
 print("32")
 rs.setBundledOutput("bottom", 2)
 sleep(0.3)
-rs.setBundledOutput("bottom",0)
+rs.setBundledOutput("bottom", 0)
 print("OK")
 sleep(0.3)
 term.clear()
 term.setCursorPos(1,1)
+os.reboot()
 end
 
 local event, param1 = os.pullEvent("char") 
@@ -55,6 +56,7 @@ print("OK")
 sleep(0.3)
 term.clear()
 term.setCursorPos(1,1)
+os.reboot()
 end
 
 local event, param1 = os.pullEvent("char") 
@@ -67,6 +69,7 @@ print("OK")
 sleep(0.3)
 term.clear()
 term.setCursorPos(1,1)
+os.reboot()
 end
 
 
