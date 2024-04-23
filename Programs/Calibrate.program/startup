@@ -13,7 +13,7 @@ end
 
 if not term.isColor then error("This program requires advanced computer and advanced monitors to work.") end
  
-local termXSize,termYSize = term.getSize()
+local termXSize,termYSize = term.getSize() 
 local countOfMonitors=0
 local totalMonitorSizeX=0
 local totalMonitorSizeY=0
