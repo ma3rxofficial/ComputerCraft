@@ -1,3 +1,10 @@
+
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarColour = colours.white
+
 os.pullEvent = os.pullEventRaw
 term.clear()
 term.setCursorPos(1,1)
@@ -36,7 +43,6 @@ print("OK")
 sleep(0.3)
 term.clear()
 term.setCursorPos(1,1)
-os.reboot()
 end
 
 local event, param1 = os.pullEvent("char") 
@@ -49,7 +55,6 @@ print("OK")
 sleep(0.3)
 term.clear()
 term.setCursorPos(1,1)
-os.reboot()
 end
 
 local event, param1 = os.pullEvent("char") 
@@ -62,7 +67,6 @@ print("OK")
 sleep(0.3)
 term.clear()
 term.setCursorPos(1,1)
-os.reboot()
 end
 
 
