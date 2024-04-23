@@ -1,8 +1,8 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
 
-SpeedOS.LoadAPI("/SpeedAPI/alphanumeric")
-SpeedOS.LoadAPI("/SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/alphanumeric")
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 SpeedOS.ToolBarColour = colours.lightGrey
 SpeedOS.ToolBarTextColour = colours.white
@@ -11,14 +11,10 @@ local workingTime = 0
 local x, y = term.getSize()
 local last_score = fs.open("Resources/nothing.score", "r").readAll()
 
-term.setBackgroundColor(colors.gray)
-term.setTextColor(colors.lightGray)
-term.clear()
-
 while true do
-  term.setBackgroundColor(colors.gray)
-  term.setTextColor(colors.lightGray)
-  term.clear()
+  event = os.pullEvent()
+
+  windows.clearScreen(colors.gray)
 
   workingTime = workingTime + 1
   
@@ -61,4 +57,17 @@ while true do
   file.write(tostring(workingTime))  
   file.flush()
   file.close()
+
+  if event == "mouse_click" or event == "mouse_drag" or event == "mouse_scroll" or event == "key" then
+    windows.clearScreen(colors.gray)
+    term.setTextColor(colors.white)
+    SpeedText.cPrint("YOU LOSE!", 6)
+    term.setTextColor(colors.lightGray)
+    SpeedText.cPrint("You did SOMETHING, so game over D:", 8)
+    SpeedText.cPrint("Click anywhere to restart...", 9)
+
+    os.pullEvent("mouse_click")
+    os.reboot()
+  end
+
 end
