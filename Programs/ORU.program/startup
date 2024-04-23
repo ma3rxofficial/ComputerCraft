@@ -1,3 +1,5 @@
+-- видос смотри сука https://www.youtube.com/watch?v=Sb9OyWo1P2s
+-- там про эту хуйню
 
 os.loadAPI("loader")
 SpeedOS = loader.OS()
