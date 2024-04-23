@@ -2,7 +2,7 @@ os.loadAPI("loader")
 SpeedOS = loader.OS()
 
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
-SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/windows") 
 
 if not peripheral.find("monitor", true) then
   windows.clearScreen(colors.white)
