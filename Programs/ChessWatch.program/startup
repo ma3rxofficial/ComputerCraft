@@ -258,6 +258,13 @@ function prepareMonitor()
 	local number = tonumber(io.read())
 	if not number then
 		print("Bad input!")
+		while true do
+			event = os.pullEvent()
+
+			if event == "mouse_click" or event == "mouse_drag" or event == "key" then 
+				SpeedOS.Close()
+			end
+		end
 		return
 	end
 
