@@ -268,16 +268,6 @@ function prepareMonitor()
 		return
 	end
 
-	if not openModem() then
-		print("No modem on your computer!")
-		return
-	end
-
-	if not findMonitor() then
-		print("No monitor on your computer!")
-		return
-	end
-
 	rednet.send(number, "#M")
 	local key,msg = rednet.receive(5)
 
