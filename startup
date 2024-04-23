@@ -215,25 +215,25 @@ elseif LoadingScreen() then
 
 	Log.i("Checking for startup scripts...")
 
-	if not fs.exists("System/autorun") then
+	if not fs.exists("System/.autorun") then
 		Log.w("No autorun directory!")
 		
 		Log.i("Making autorun directory...")
-		fs.makeDir("System/autorun")
+		fs.makeDir("System/.autorun")
 		Log.i("Done!")
 
 	else
-		if fs.isDir("System/autorun") then
+		if fs.isDir("System/.autorun") then
 			Log.i("Autorun directory found!")
 
-			if #fs.list("System/autorun") == 0 then
+			if #fs.list("System/.autorun") == 0 then
 				Log.i("No startup scripts found!")
 			else
 				Log.i("Running all startup scripts...")
 
-				for _, script in pairs(fs.list("System/autorun")) do
+				for _, script in pairs(fs.list("System/.autorun")) do
 					Log.i("Running script "..script.."...")
-					shell.run("System/autorun/"..script)
+					shell.run("System/.autorun/"..script)
 					Log.i("Startup script "..script.." finished!")
 				end
 
