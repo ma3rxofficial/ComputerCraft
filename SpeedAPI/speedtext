@@ -472,6 +472,7 @@ function slowWrite( sText, nRate, _term )
     end
 end
 
+-- I recommend you to use this!
 function slowPrint( sText, nRate, _term)
 	if _term == nil then
 			_term = term
@@ -480,3 +481,28 @@ function slowPrint( sText, nRate, _term)
     print()
 end
 
+--Wait for some events--
+function waitForEvent(event_list)
+	local function pizda(ivent)
+		for _, ivent2 in pairs(event_list) do
+			if ivent2 == ivent then
+				return true
+			end
+		end
+
+		return false
+	end
+
+	local result_dolbaeba
+
+	while true do
+		event = os.pullEvent()
+
+		if pizda(event) then
+			result_dolbaeba = event
+			break
+		end
+	end
+
+	return result_dolbaeba
+end
