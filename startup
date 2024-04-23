@@ -14,14 +14,6 @@ for _, value in pairs(install_files) do
   end
 end
 
---[[
-term.setBackgroundColour(colours.white)
-term.setTextColour(colours.black)
-term.clear()
-]]--
-
---local _, err = pcall(function()
-
 local tAPIsLoading = {}
 doLog = true
 
