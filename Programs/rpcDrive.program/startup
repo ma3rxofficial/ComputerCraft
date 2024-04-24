@@ -283,3 +283,6 @@ else
     print("  rpc/drive about")
     printWithColors(colors.lightGray, "  Show about information.")
 end
+
+SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
+SpeedOS.Close()
