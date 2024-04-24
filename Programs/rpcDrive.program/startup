@@ -264,7 +264,9 @@ elseif pidor[1] == "info" then
         printWithColors(colors.lightGray, "|    _    |  ", colors.lightGray, line4)
         printWithColors(colors.lightGray, "|___| |___|")
     else
-        print("No disk detected.")
+        windows.clearScreen(colors.cyan)
+        windows.error("No disk detected!")
+        SpeedOS.Close()
     end
 else
     print("Usage:")
