@@ -247,6 +247,9 @@ frametimer = os.startTimer(frametime)
 local pmousex, pmousey
 sensitivity = 2
 
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
 while true do
   px,py=clampCollision(px,py,.25)
   local e={os.pullEvent()}
