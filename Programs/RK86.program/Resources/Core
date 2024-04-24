@@ -1,5 +1,9 @@
 local supportedList = {"ls", "dir", "help"}
 
+function getCommands()
+    return supportedList
+end
+
 function isFileExists(fn)
     for _, suka in pairs(fs.list("/")) do
         if suka == fn then
