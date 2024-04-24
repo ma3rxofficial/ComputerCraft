@@ -472,16 +472,6 @@ local function main()
 			end
 			if opt == "Exit" then
 				-- Cleaup
-				term.setBackgroundColour( colours.black )
-				term.setTextColour( colours.white )
-				term.clear()
-				term.setCursorPos( 1, 1 )
-				colorW( tColours["info"], "Last set GMT: ", tColours["left"], tostring( cur_gmt_pos ) )
-				term.setCursorPos( 1, 2 )
-				colorW( tColours["info"], "        DATE: ", tColours["left"], ( #tostring(month) == 1 and "0" or "") .. tostring( month ), tColours["error"], '/', tColours["left"], ( #tostring(d) == 1 and "0" or "") .. tostring( d ), tColours["error"], '/', tColours["left"], tostring( y ) )
-				term.setCursorPos( 1, 3 )
-				colorW( tColours["info"], "        TIME: ", tColours["left"], ( #tostring(h) == 1 and "0" or "") .. tostring( h ), tColours["error"], ':', tColours["left"], ( #tostring(m) == 1 and "0" or "") .. tostring( m ), tColours["error"], ':', tColours["left"], ( #tostring(s) == 1 and "0" or "") .. tostring( s ) )
-				term.setCursorPos( 1, 5 )
 				break
 			elseif opt == "Help" then
 				drawHelpScreen()
@@ -525,3 +515,5 @@ end
 drawMain()
 
 parallel.waitForAny( updateTime, main )
+
+SpeedOS.Close()
