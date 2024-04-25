@@ -162,7 +162,7 @@ elseif args[1] == "erase" then
         print("Disk erase failed!")
     end
 elseif args[1] == "about" then
-    printWithColors(colors.red, "r", colors.yellow, "p", colors.lightBlue, "c", colors.white, "/", colors.lightGray, "drive", colors.white, " 0.1.0")
+    print("idi nahui")
 elseif args[1] == "info" then
     if drive == nil then
         error("drive not detected on side " .. (args[2] or "nil"))
