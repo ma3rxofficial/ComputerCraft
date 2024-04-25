@@ -37,6 +37,8 @@ if http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/
 	end
 
 	pidor2.close()
+else
+	Log.w("Can't check for startup modifies!")
 end
 
 function LoadAPI(_sPath)
