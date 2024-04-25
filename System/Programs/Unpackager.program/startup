@@ -1,18 +1,21 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
 tArgs = {...}
 
-if not tArgs[1] or not OneOS.FS.exists(tArgs[1]) then
-	OneOS.Close()
+if not tArgs[1] or not SpeedOS.FS.exists(tArgs[1]) then
+	SpeedOS.Close()
 end
 
-OneOS.LoadAPI('/System/API/Helpers')
-OneOS.LoadAPI('/System/API/Drawing')
+SpeedOS.LoadAPI('/System/API/Helpers')
+SpeedOS.LoadAPI('/System/API/Drawing')
 
 Drawing.Clear(colours.white)
 Drawing.DrawCharactersCenter(nil, nil, nil, nil, 'Extracting Package...', colours.black, colours.white)
 Drawing.DrawBuffer()
 
 
-local packrun, err = OneOS.LoadFile(tArgs[1])
+local packrun, err = SpeedOS.LoadFile(tArgs[1])
 local env = getfenv()
 env['installLocation'] = Helpers.RemoveFileName(tArgs[1])..'/'
 setfenv( packrun, env)
@@ -29,4 +32,4 @@ Drawing.DrawCharactersCenter(nil, nil, nil, nil, 'Package Extracted', colours.bl
 Drawing.DrawBuffer()
 
 sleep(1)
-OneOS.Close()
+SpeedOS.Close()
