@@ -8,6 +8,4 @@ windows.clearScreen(colors.white)
 term.setTextColor(colors.lightGray)
 SpeedText.cPrint("You can close this window now")
 
-SpeedOS.Run("System/Village/Village")
-
-SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
+SpeedOS.OSRun(getfenv(), "System/Village/Village")
