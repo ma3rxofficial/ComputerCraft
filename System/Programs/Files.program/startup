@@ -1,16 +1,19 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
 tArgs = {...}
 
-OneOS.LoadAPI('/System/API/Drawing')
-OneOS.LoadAPI('/System/API/Button')
-OneOS.LoadAPI('/System/API/Helpers')
-OneOS.LoadAPI('/System/API/Menu')
-OneOS.LoadAPI('/System/API/Peripheral')
-OneOS.LoadAPI('/System/API/TextInput')
-OneOS.LoadAPI('/System/API/ListView')
-OneOS.LoadAPI('/System/API/TextDialogueWindow')
-OneOS.LoadAPI('/System/API/ButtonDialogueWindow')
-OneOS.LoadAPI('/System/API/OpenWithDialougeWindow')
-OneOS.LoadAPI('/SpeedAPI/windows')
+SpeedOS.LoadAPI('/System/API/Drawing')
+SpeedOS.LoadAPI('/System/API/Button')
+SpeedOS.LoadAPI('/System/API/Helpers')
+SpeedOS.LoadAPI('/System/API/Menu')
+SpeedOS.LoadAPI('/System/API/Peripheral')
+SpeedOS.LoadAPI('/System/API/TextInput')
+SpeedOS.LoadAPI('/System/API/ListView')
+SpeedOS.LoadAPI('/System/API/TextDialogueWindow')
+SpeedOS.LoadAPI('/System/API/ButtonDialogueWindow')
+SpeedOS.LoadAPI('/System/API/OpenWithDialougeWindow')
+SpeedOS.LoadAPI('/SpeedAPI/windows')
 
 local startPath = tArgs[1] or '/Desktop/'
 local dragRelPos = nil
@@ -39,7 +42,7 @@ Current = {
 	Menu = nil,
 	Window = nil,
 	IconCache = {},
-	Clipboard = OneOS.Clipboard,
+	Clipboard = SpeedOS.Clipboard,
 	ScrollBarDragStartY = nil,
 	CursorPos = {1,1},
 	CursorColour = colours.black,
@@ -85,8 +88,8 @@ function Initialise()
 	EventRegister('char', HandleKey)
 	EventRegister('timer', Update)
 
-	OneOS.ToolBarColour = colours.lightGrey
-	OneOS.ToolBarTextColour = colours.white
+	SpeedOS.ToolBarColour = colours.lightGrey
+	SpeedOS.ToolBarTextColour = colours.white
 
 	BackButton = Button:Initialise(2, 2, nil, 1, colours.white, colours.lightGrey, colours.lightBlue, colours.white, nil, function(self)
 		if Current.History[Current.HistoryItem-1] then
@@ -362,7 +365,7 @@ function RefreshFiles()
 			Current.Path = '/Desktop/'
 		end
 	end
-	for i, v in ipairs(OneOS.FS.list(Current.Path)) do
+	for i, v in ipairs(SpeedOS.FS.list(Current.Path)) do
 		Current.Peripheral = nil
 		if Settings.ShowHidden or string.sub( v, 1, 1 ) ~= '.' then
 			local path = Current.Path .. '/' .. v
@@ -370,10 +373,10 @@ function RefreshFiles()
 				break
 			end
 			table.insert(Current.FileList,{
-				name = OneOS.FS.getName(path),
-				shortName = Helpers.RemoveExtension(OneOS.FS.getName(path)),
-				size = OneOS.FS.getSize(path),
-				isDirectory = OneOS.FS.isDir(path),
+				name = SpeedOS.FS.getName(path),
+				shortName = Helpers.RemoveExtension(SpeedOS.FS.getName(path)),
+				size = SpeedOS.FS.getSize(path),
+				isDirectory = SpeedOS.FS.isDir(path),
 				path = Helpers.TidyPath(path)
 			})
 		end
@@ -489,10 +492,10 @@ MainDraw = Draw
 function OpenFile(file, ignoreProgram)
 	local extension = Helpers.Extension(file.path)
 	if extension == 'shortcut' then
-		h = OneOS.FS.open(file.path, 'r')
+		h = SpeedOS.FS.open(file.path, 'r')
 		local shortcutPointer = h.readLine()
 		h.close()
-		if OneOS.FS.isDir(shortcutPointer) then
+		if SpeedOS.FS.isDir(shortcutPointer) then
 			OpenFile({path = shortcutPointer, isDirectory = true}, ignoreProgram)
 			return
 		end
@@ -500,10 +503,10 @@ function OpenFile(file, ignoreProgram)
 	if file.isDirectory and (ignoreProgram or extension ~= 'program') then
 		GoToPath(file.path)
 	elseif not ignoreProgram and extension == 'program' then
-		if OneOS.FS.isDir(file.path) and OneOS.FS.exists(file.path..'/startup') then
-			OneOS.OpenFile(file.path)
-		elseif not OneOS.FS.isDir(file.path) or (OneOS.FS.isDir(file.path) and OneOS.FS.exists(file.path..'/startup')) then
-			OneOS.OpenFile(file.path)
+		if SpeedOS.FS.isDir(file.path) and SpeedOS.FS.exists(file.path..'/startup') then
+			SpeedOS.OpenFile(file.path)
+		elseif not SpeedOS.FS.isDir(file.path) or (SpeedOS.FS.isDir(file.path) and SpeedOS.FS.exists(file.path..'/startup')) then
+			SpeedOS.OpenFile(file.path)
 		else
 			GoToPath(file.path)
 		end
@@ -512,11 +515,11 @@ function OpenFile(file, ignoreProgram)
 			if Helpers.IconForFile(file.path) == Helpers.ReadIcon('System/Images/Icons/unknown.nft') then
 				OpenWithDialougeWindow:Initialise("Select Program", "Choose a program to open the file with.", "Ok", "Cancel", function(success, value)
 					if success and #value ~= 0 then
-						OneOS.Run(value, file.path)
+						SpeedOS.Run(value, file.path)
 					end
 				end):Show()
 			else
-				OneOS.OpenFile(file.path)
+				SpeedOS.OpenFile(file.path)
 			end
 			Current.SelectedFile = nil
 		else
@@ -586,7 +589,7 @@ function FilesClick(event, x, y, side)
 						Click = function()
 							TextDialogueWindow:Initialise("Create a Folder", function(success, value)
 								if success then
-									OneOS.FS.makeDir(Current.Path..'/'..value)
+									SpeedOS.FS.makeDir(Current.Path..'/'..value)
 									Update()
 								end
 							end):Show()
@@ -597,7 +600,7 @@ function FilesClick(event, x, y, side)
 						Click = function()
 							TextDialogueWindow:Initialise("Create a File", function(success, value)
 								if success then
-									local h = OneOS.FS.open(Current.Path..'/'..value, 'w')
+									local h = SpeedOS.FS.open(Current.Path..'/'..value, 'w')
 									h.close()
 									RefreshFiles()
 								end
@@ -610,20 +613,20 @@ function FilesClick(event, x, y, side)
 					{
 						Title = 'Paste',
 						Click = function()							
-							local destName = OneOS.FS.getName(Current.Clipboard.Content)
+							local destName = SpeedOS.FS.getName(Current.Clipboard.Content)
 							local copyNumber = 1
-							while OneOS.FS.exists(Current.Path..'/'..destName) do
-								destName = Helpers.RemoveExtension(OneOS.FS.getName(Current.Clipboard.Content)).. ' ' .. copyNumber .. Helpers.Extension(OneOS.FS.getName(Current.Clipboard.Content), true)
+							while SpeedOS.FS.exists(Current.Path..'/'..destName) do
+								destName = Helpers.RemoveExtension(SpeedOS.FS.getName(Current.Clipboard.Content)).. ' ' .. copyNumber .. Helpers.Extension(SpeedOS.FS.getName(Current.Clipboard.Content), true)
 								copyNumber = copyNumber + 1
 							end
 							local destPath = Helpers.TidyPath(Current.Path..'/'..destName)
 
 							if not Current.Clipboard.IsCut then
-								OneOS.FS.copy(Current.Clipboard.Content, destPath)
+								SpeedOS.FS.copy(Current.Clipboard.Content, destPath)
 								Update()
 							elseif Current.Clipboard.IsCut then
 								local content = Current.Clipboard.Paste()
-								OneOS.FS.move(content, destPath)
+								SpeedOS.FS.move(content, destPath)
 								Update()
 							end
 						end
@@ -656,7 +659,7 @@ function RightClickFile(file, absX, absY)
 					for match in string.gmatch( value, "[^ \t]+" ) do
 						table.insert( tWords, match )
 					end
-					OneOS.Run(file.path, unpack(tWords))
+					SpeedOS.Run(file.path, unpack(tWords))
 				end
 			end):Show()
 		end
@@ -666,14 +669,14 @@ function RightClickFile(file, absX, absY)
 			Click = function()
 				OpenWithDialougeWindow:Initialise("Select Program", "Choose a program to open the file with.", "Ok", "Cancel", function(success, value)
 					if success and #value ~= 0 then
-						OneOS.Run(value, file.path)
+						SpeedOS.Run(value, file.path)
 					end
 				end):Show()
 			end
 		}
 
 	local extension = Helpers.Extension(file.path)
-	if not extension == 'program' or not OneOS.FS.isDir(file.path) then
+	if not extension == 'program' or not SpeedOS.FS.isDir(file.path) then
 		openContent = nil
 	else
 		openWith = nil
@@ -698,7 +701,7 @@ function RightClickFile(file, absX, absY)
 				else
 					local tdw = TextDialogueWindow:Initialise("Rename '"..Helpers.TruncateString(file.name, 17).."'", function(success, value)
 						if success and #value ~= 0 then
-							OneOS.FS.move(file.path, Helpers.RemoveFileName(file.path)..value)
+							SpeedOS.FS.move(file.path, Helpers.RemoveFileName(file.path)..value)
 							Update()
 						end
 					end):Show()
@@ -713,7 +716,7 @@ function RightClickFile(file, absX, absY)
 				else
 					ButtonDialogueWindow:Initialise("Delete '"..Helpers.TruncateString(Helpers.RemoveExtension(file.name), 16).."'?", "Are you sure you want to delete '"..file.name.."'?", 'Yes', 'Cancel', function(success)
 						if success then
-							OneOS.FS.delete(file.path)
+							SpeedOS.FS.delete(file.path)
 							Update()
 						end
 					end):Show()
@@ -749,7 +752,7 @@ function RightClickFile(file, absX, absY)
 			Click = function()
 				TextDialogueWindow:Initialise("Create a folder", function(success, value)
 					if success then
-						OneOS.FS.makeDir('Desktop/'..value)
+						SpeedOS.FS.makeDir('Desktop/'..value)
 						RefreshFiles()
 					end
 				end):Show()
@@ -760,7 +763,7 @@ function RightClickFile(file, absX, absY)
 			Click = function()
 				TextDialogueWindow:Initialise("Create a Folder", function(success, value)
 					if success then
-						local h = OneOS.FS.open(Current.Path..'/'..value, 'w')
+						local h = SpeedOS.FS.open(Current.Path..'/'..value, 'w')
 						h.close()
 						RefreshFiles()
 					end
@@ -777,7 +780,7 @@ function RightClickFile(file, absX, absY)
 				local env = getfenv()
 				setfenv( packrun, env)
 				local path = file.path:sub(1,#file.path-1)
-				packrun(file.path, Helpers.RemoveFileName(path)..Helpers.RemoveExtension(OneOS.FS.getName(path))..'.pkg')
+				packrun(file.path, Helpers.RemoveFileName(path)..Helpers.RemoveExtension(SpeedOS.FS.getName(path))..'.pkg')
 				Update()
 			end
 		})
@@ -939,7 +942,7 @@ function HandleKey(...)
 				if file then
 					ButtonDialogueWindow:Initialise("Delete '"..Helpers.TruncateString(Helpers.RemoveExtension(file.name), 16).."'?", "Are you sure you want to delete '"..file.name.."'?", 'Yes', 'Cancel', function(success)
 						if success then
-							OneOS.FS.delete(file.path)
+							SpeedOS.FS.delete(file.path)
 							Update()
 						end
 					end):Show()
