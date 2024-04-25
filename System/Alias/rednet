@@ -1,0 +1,103 @@
+local args = {...}
+
+function open(side)
+  if peripheral.getType(side) == "modem" then
+    if not rednet.isOpen(side) then
+      rednet.open(side)
+      print("Modem on the "..side.." side is open now")
+    else
+      print("Modem on the "..side.." side already open!")
+    end
+  else
+    print("No modem on side "..side.."!")
+  end
+end
+
+function close(side)
+  if peripheral.getType(side) == "modem" then
+    if rednet.isOpen(side) then
+      rednet.close(side)
+      print("Modem on the "..side.." side is closed now")
+    else
+      print("Modem on the "..side.." side already closed!")
+    end
+  else
+    print("No modem on side "..side.."!")
+  end
+end
+
+function broadcast(message)
+  rednet.broadcast(message)
+  print("Broadcasted "..message.." to everyone!")
+end
+
+function send(id, message)
+  rednet.send(id, message)
+  print("Message "..message.." has been sent to computer #"..tostring(id).."!")
+end
+
+if not args then
+  print("Usages: ")
+  print("   rednet open <side>")
+  print("   rednet close <side>")
+  print("   rednet broadcast <message>")
+  print("   rednet send <id> <message>")
+else
+  if args[1] == "open" then
+    if not args[2] then
+      print("Usage: ")
+      print("   rednet open <side>")
+      error()
+    end
+
+    if args[2] == "left" or args[2] == "right" or args[2] == "back" or args[2] == "top" or args[2] == "front" or args[2] == "bottom" then
+      open(args[2])
+    else
+      print("Invalid side!")
+      error()
+    end
+
+  elseif args[1] == "close" then
+    if not args[2] then
+      print("Usage: ")
+      print("   rednet close <side>")
+      error()
+    end
+
+    if args[2] == "left" or args[2] == "right" or args[2] == "back" or args[2] == "top" or args[2] == "front" or args[2] == "bottom" then
+      close(args[2])
+    else
+      print("Invalid side!")
+      error()
+    end
+
+  elseif args[1] == "broadcast" then
+    if not args[2] then
+      print("Usage: ")
+      print("   rednet broadcast <message>")
+      error()
+    end
+
+    broadcast(args[2])
+
+  elseif args[1] == "send" then
+    if not args[2] or not args[3] then
+      print("Usage: ")
+      print("   rednet send <id> <message>")
+      error()
+    end
+
+    if not tonumber(args[2]) then
+      print("Invalid ID!")
+      error()
+    end
+
+    send(tonumber(args[2]), args[3])
+  else
+    print("Usages: ")
+    print("   rednet open <side>")
+    print("   rednet close <side>")
+    print("   rednet broadcast <message>")
+    print("   rednet send <id> <message>")
+  end
+end
