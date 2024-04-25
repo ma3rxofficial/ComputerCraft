@@ -11,8 +11,8 @@ graphics.drawBuffer(var1) -- draw all
 --]]
 
 function addBuffer()
-term.setBackgroundColor(colors.black)
-local buffer = {image = {}, text = {}} 
+ term.setBackgroundColor(colors.black)
+ local buffer = {image = {}, text = {}} 
  for y = 1, sch do
   buffer.image[y] = {}
   buffer.text[y] = {}
