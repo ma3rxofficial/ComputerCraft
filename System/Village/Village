@@ -1,7 +1,6 @@
 local scw, sch = term.getSize()
 
 os.loadAPI("System/Village/graphics")
---OneOS.LoadAPI("SpeedAPI/_paintutils")
 
 term.clear()
 buffer1 = graphics.addBuffer()
