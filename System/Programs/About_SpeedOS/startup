@@ -1,14 +1,11 @@
 tArgs = {...}
 
-OneOS.LoadAPI('/System/API/Drawing')
-OneOS.LoadAPI('/System/API/Button')
-OneOS.LoadAPI('/System/API/Helpers')
---[[
-os.loadAPI('/System/API/Menu')
-os.loadAPI('/System/API/Peripheral')
-os.loadAPI('/System/API/TextDialogueWindow')
-os.loadAPI('/System/API/ButtonDialogueWindow')
-]]--
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.LoadAPI('/System/API/Drawing')
+SpeedOS.LoadAPI('/System/API/Button')
+SpeedOS.LoadAPI('/System/API/Helpers')
 
 Current = {
 	Clicks = {},
@@ -32,7 +29,7 @@ function Initialise()
 	EventRegister('timer', Update)
 
 
-	systemSize = FolderSize('/System/') + OneOS.FS.getSize('startup')
+	systemSize = FolderSize('/System/') + SpeedOS.FS.getSize('startup')
 	desktopSize = FolderSize('/Desktop/')
 	programsSize = FolderSize('/Programs/')
 	totalSize = FolderSize('/')
@@ -123,11 +120,11 @@ function FolderSize(path)
 		return 0
 	end
 	local totalSize = 0
-	for i, v in ipairs(OneOS.FS.list(path)) do
-		if OneOS.FS.isDir(path..'/'..v) and path..'/'..v ~= '//rom' then
+	for i, v in ipairs(SpeedOS.FS.list(path)) do
+		if SpeedOS.FS.isDir(path..'/'..v) and path..'/'..v ~= '//rom' then
 			totalSize = totalSize + FolderSize(path..'/'..v)
 		else
-			totalSize = totalSize + OneOS.FS.getSize(path..'/'..v)
+			totalSize = totalSize + SpeedOS.FS.getSize(path..'/'..v)
 		end
 	end
 	return totalSize
@@ -166,7 +163,7 @@ end
 
 function TryClick(event, side, x, y)
 	if y == 5 and x >= 10 and x <= 44 then
-		OneOS.OpenFile('/License')
+		SpeedOS.OpenFile('License')
 		return
 	end
 
