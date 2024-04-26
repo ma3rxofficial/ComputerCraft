@@ -1,3 +1,7 @@
+if not peripheral.getType("right") == "modem" then
+  error("You need wireless modem!")
+end
+
 rednet.open("right")
 term.clear()
 
