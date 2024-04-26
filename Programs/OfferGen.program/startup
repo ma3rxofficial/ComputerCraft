@@ -4,6 +4,7 @@ SpeedOS = loader.OS()
 SpeedOS.ToolBarColour = colours.black
 SpeedOS.ToolBarTextColour = colours.white
 
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/config")
 
 pathToConfig = "System/Offer.settings"
