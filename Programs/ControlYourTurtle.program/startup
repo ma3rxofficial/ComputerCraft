@@ -1,0 +1,56 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/windows")
+
+if not peripheral.find("modem") then
+  windows.clearScreen(colors.cyan)
+  windows.error("You need wireless modem!")
+  SpeedOS.Close()
+end
+
+rednet.open(peripheral.find("modem"))
+
+term.setCursorPos(1, 1)
+print("Your ID: "..os.getComputerID())
+io.write("Please enter Turtle ID: ")
+turtle_id = io.read()
+
+if not tonumber(turtle_id) then
+  windows.error("Poshel nahuy")
+  SpeedOS.Close()
+end
+
+term.clear()
+term.setCursorPos(1, 1)
+print("Welcome to Turtle Control!")
+print("Your ID: "..os.getComputerID())
+print(" W - move forward")
+print(" S - move back")
+print(" A - move left")
+print(" D - move right")
+print(" UP - move up")
+print(" DOWN - move down")
+print(" FUEL - get fuel level")
+print(" REFUEL - refuel turtle")
+print(" ATTACK - attack everything near to turtle")
+print(" DIG or DIG(D, U) - dig block in front(or up, down)")
+print(" USE or USE(D, U) - uses item in selected slot(front, up, down")
+print(" 1-16 - select slot of turtle")
+print("")
+
+while true do
+  event, id, msg, dist = os.pullEvent()
+  if event == "rednet_message" and id == tonumber(turtle_id) then
+    print(msg)
+  end
+  
+  io.write(">> ")
+  command = io.read()
+  rednet.send(tonumber(turtle_id), command)
+end 
+   
