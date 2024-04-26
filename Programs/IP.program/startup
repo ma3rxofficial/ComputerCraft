@@ -12,5 +12,5 @@ term.setTextColor(colors.white)
 local test = http.get("https://api.ipify.org/?format=raw")
 SpeedText.cPrint("Your IP is "..test.readAll())
 
-SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
+SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
 SpeedOS.Close()
