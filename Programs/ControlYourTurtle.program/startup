@@ -1,3 +1,8 @@
+-- get receiver for turtle by 
+-- pastebin get QQZTJ51z receiver.lua
+-- receiver.lua
+
+
 os.loadAPI("loader")
 SpeedOS = loader.OS()
 
