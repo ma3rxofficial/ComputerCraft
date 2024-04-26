@@ -60,6 +60,10 @@ while true do
         print("Created folder for: "..sender)
     end
     if sMsg[1] == "@put" and sMsg[2] and sMsg[3] then
+        if not fs.exists(path..sender.."/"..sMsg[2]) then
+            fs.makeDir(path..sender.."/"..sMsg[2])
+            fs.delete(path..sender.."/"..sMsg[2])
+        end
         file=fs.open(path..sender.."/"..sMsg[2],"w")
         if file then
             file.write(sMsg[3])
