@@ -1,0 +1,59 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("System/API/Drawing")
+
+fs = SpeedOS.fs
+
+local pathToPics = "Programs/PowerPointTest.program/Resources"
+local sleep_per_time = 5
+local enable_monitor = false
+local mon_scale = 0.5
+local monitor
+
+function howManyPics(path)
+	local kartinki = {}
+
+	for _, samFile in pairs(fs.list(path)) do
+		if windows.getFileFormat(samFile) == ".nfp" or windows.getFileFormat(samFile) == ".nft" or windows.getFileFormat(samFile) == ".pidoras" then
+			table.insert(kartinki, samFile)
+		end
+	end
+
+	return kartinki
+end
+
+if peripheral.find("monitor", true) and peripheral.wrap(peripheral.find("monitor", true)).isColor() then
+	monitor = peripheral.wrap(peripheral.find("monitor", true))
+	monitor.setTextScale(mon_scale)
+	monitor.setCursorPos(1, 1)
+
+	enable_monitor = true
+end
+
+if enable_monitor then
+	windows.clearScreen(colors.white)
+	term.setTextColor(colors.lightGray)
+	SpeedText.cPrint("Running on monitor on side")
+	SpeedText.cPrint(peripheral.find("monitor", true), 10)
+
+	term.redirect(monitor)
+end
+
+for _, kartinka in pairs(howManyPics(pathToPics)) do
+
+	if windows.getFileFormat(kartinka) == ".nfp" then
+		paintutils.drawImage(paintutils.loadImage(pathToPics.."/"..kartinka), 1, 1)
+	else
+		Drawing.DrawImage(1, 1, Drawing.LoadImage(pathToPics.."/"..kartinka), 164, 81)
+  		Drawing.DrawBuffer()
+  	end
+
+  	sleep(sleep_per_frame)
+end
+
+term.restore()
+print("idi nahui")
