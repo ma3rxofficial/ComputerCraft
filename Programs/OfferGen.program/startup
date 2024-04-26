@@ -16,10 +16,4 @@ else
 	shell.run("Resources/offerGenerator.lua Resources/tmp")
 end
 
-while true do
-	event, govno = os.pullEvent()
-
-	if event == "key" or event == "mouse_drag" or event == "mouse_click" then
-		SpeedOS.Close()
-	end
-end
+SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
