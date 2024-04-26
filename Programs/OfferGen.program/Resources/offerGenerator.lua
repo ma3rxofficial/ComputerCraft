@@ -18,7 +18,14 @@ if #args == 0 then
 	error( "  Usage:\n" .. path .. " [--enable-markdown] <output path>", 0 )
 end
 
-local markdownEnabled = ( args[ 1 ] == "--enable-markdown" and #args == 2 )
+local markdownEnabled
+
+if config.read("System/Offer.settings", "enable markdown") == "true" then
+	markdownEnabled = true
+else
+	markdownEnabled = false
+end
+
 local filename = ( #args == 1 and args[ 1 ] or args[ 2 ] )
 
 local usedNumbers = {}
