@@ -1,0 +1,14 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+
+term.setTextColour(2^math.random(0,15))
+SpeedText.slowPrint("Hello World!")
+term.setTextColour(colours.white)
+
+SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
+SpeedOS.Close()
