@@ -50,6 +50,19 @@ function line(_term)
 	end
 end
 
+--Line of " " printing--
+function line2(_term)
+	if _term == nil then
+		_term = term
+	end
+
+	if _term == term then
+		print("                                                  ")
+	else
+		_term.write("                                                  ")
+	end
+end
+
 --Normal time returning-
 function time()
         local time = os.time()
