@@ -1,5 +1,7 @@
+avialableSides = rs.getSides()
+
 function proverka() 
-  for _, side in pairs(rs.getSides()) do
+  for _, side in pairs(avialableSides) do
     if peripheral.getType(side) == "modem" then
       return true
     end
