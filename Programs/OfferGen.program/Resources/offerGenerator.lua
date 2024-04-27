@@ -1,4 +1,3 @@
-
 -- Internet Offer Generator
 -- Copyright 2015 - 2016 viluon (Andrew Kvapil), licensed under the MIT license (http://opensource.org/licenses/MIT)
 -- Version 1.2
