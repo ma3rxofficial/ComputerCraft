@@ -18,8 +18,10 @@ end
 
 rednet.open("right")
 
+term.setBackgroundColor(colors.black)
 term.clear()
 term.setCursorPos(1, 1)
+term.setTextColor(colors.white)
 
 print("Your ID: "..os.getComputerID())
 io.write("Please enter Computer ID: ")
