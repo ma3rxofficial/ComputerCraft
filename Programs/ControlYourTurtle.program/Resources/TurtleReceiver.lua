@@ -39,11 +39,19 @@ while true do
       turtle.turnRight()
       rednet.send(id, "Turtle turned right!")
     elseif msg == "UP" then
-      turtle.up()
-      rednet.send(id, "Turtle moved up!")
+      if turtle.getFuelLevel() == 0 then
+        rednet.send(id, "No fuel!")
+      else
+        turtle.up()
+        rednet.send(id, "Turtle moved up!")
+      end
     elseif msg == "DOWN" then
-      turtle.down()
-      rednet.send(id, "Turned moved down!")
+       if turtle.getFuelLevel() == 0 then
+        rednet.send(id, "No fuel!")
+      else
+        turtle.down()
+        rednet.send(id, "Turned moved down!")
+      end
     elseif msg == "REFUEL" then
       turtle.refuel()
       rednet.send(id, "Turtle refueled! Fuel level: "..turtle.getFuelLevel())
@@ -57,19 +65,19 @@ while true do
     elseif msg == "DIG" then
       turtle.dig()
       rednet.send(id, "Turtle digged!")
-    elseif msg == "DIGU" then
+    elseif msg == "DIGU"  or msg == "DIG U" then
       turtle.digUp()
       rednet.send(id, "Tutle digged block in up!")
-    elseif msg == "DIGD" then
+    elseif msg == "DIGD"  or msg == "DIG D"then
       turtle.digDown()
       rednet.send(id, "Turtle digged block in down!")
     elseif msg == "USE" then
       turtle.place()
       rednet.send(id, "Turtle used item!")
-    elseif msg == "USEU" then
+    elseif msg == "USEU" or msg == "USE U" then
       turtle.placeUp()
       rednet.send(id, "Turtle used item in up!")
-    elseif msg == "USED" then
+    elseif msg == "USED" or msg == "USE D" then
       turtle.placeDown()
       rednet.send(id, "Turtle used item in down!")
     elseif msg == "RS" then
