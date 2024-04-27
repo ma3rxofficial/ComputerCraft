@@ -26,5 +26,5 @@ while true do
     end
   end
   
-  print("FRAME "..tostring(kadr)) -- печатаем какой щас кадр
+  print("FRAME #"..tostring(kadr)) -- печатаем какой щас кадр
 end
