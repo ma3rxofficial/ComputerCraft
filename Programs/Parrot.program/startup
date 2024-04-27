@@ -4,7 +4,10 @@ io = SpeedOS.IO
 
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+
+pathToConfig = "System/Parrot.settings"
 
 if not peripheral.find("modem") then
   windows.clearScreen(colors.white)
@@ -12,15 +15,31 @@ if not peripheral.find("modem") then
   SpeedOS.Close()
 end
 
+function checkForBlacklist(id) 
+  huy_ = config.read(pathToConfig, "blacklist")
+  local blacklistIds = textutils.unserialize(huy_)
+
+  for _, _id in pairs(blacklistIds) do
+    if _id == id then
+      return false
+    end
+  end
+
+  return true
+end
+
 rednet.open(peripheral.find("modem"))
+
 windows.clearScreen(colors.white)
 term.setTextColor(colors.green)
 term.setCursorPos(1, 1)
+
 io.write("["..SpeedText.time().."] ") 
 print("Waiting for clients...")
+
 while true do
   event, id, msg, dist = os.pullEvent()
-  if event == "rednet_message" then
+  if event == "rednet_message" and checkForBlacklist(id) then
     rednet.send(id, msg) -- sosi suka
     term.setTextColor(colors.blue)
     io.write("["..SpeedText.time().."] ") 
