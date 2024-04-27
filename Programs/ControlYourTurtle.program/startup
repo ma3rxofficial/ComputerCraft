@@ -57,5 +57,16 @@ while true do
   io.write(">> ")
   command = io.read()
   rednet.send(tonumber(turtle_id), command)
+
+  if command == "exit" or command == "EXIT" or command == "quit" or command == "QUIT" then
+    SpeedOS.Close()
+  end
+
+  id, msg = rednet.receive(5)
+  if id == tonumber(turtle_id) then
+    print(msg)
+  else
+    print("Can't reach your turtle!")
+  end
 end 
    
