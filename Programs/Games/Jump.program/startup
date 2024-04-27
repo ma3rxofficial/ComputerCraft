@@ -121,5 +121,13 @@ while true do
       isJumping = true
       jumpValue = 2.5
     end
+  elseif event[ 1 ] == "mouse_click" or event[ 1 ] == "mouse_drag" then
+    if isJumping and not doubleJump then
+      doubleJump = true
+      jumpValue = jumpValue + 1.5
+    elseif not isJumping then
+      isJumping = true
+      jumpValue = 2.5
+    end
   end
 end
