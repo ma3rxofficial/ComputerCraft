@@ -1,16 +1,4 @@
-availableSides  = rs.getSides()
-
-function proverka() 
-  for _, side in pairs(availableSides) do
-    if peripheral.getType(side) == "modem" then
-      return true
-    end
-  end
-
-  return false
-end
-
-if not proverka() then
+if not peripheral.getType("right") == "modem" then
   error("You need wireless modem!")
 end
 
@@ -31,11 +19,19 @@ while true do
   if event == "rednet_message" and id == tonumber(comp_id) then
     print(msg)
     if msg == "W" then
-       turtle.forward()
-       rednet.send(id, "Turtle moved forward!")
+      if turtle.getFuelLevel() == 0 then
+        rednet.send(id, "No fuel!")
+      else
+        turtle.forward()
+        rednet.send(id, "Turtle moved forward!")
+      end
     elseif msg == "S" then
-      turtle.back()
-      rednet.send(id, "Turtle moved backward!")
+      if turtle.getFuelLevel() == 0 then
+        rednet.send(id, "No fuel!")
+      else
+        turtle.back()
+        rednet.send(id, "Turtle moved backward!")
+      end
     elseif msg == "A" then
       turtle.turnLeft()
       rednet.send(id, "Turtle turned left!")
@@ -130,7 +126,10 @@ while true do
     elseif msg == "16" then
       turtle.select(tonumber(msg))
       rednet.send(id, "Turtle's slot is now "..tostring(msg))
+    elseif msg == "exit" or msg == "EXIT" or msg == "quit" or msg == "QUIT" then
+      break
     end
   end  
 end
 
+print("Turtle stopped.")
