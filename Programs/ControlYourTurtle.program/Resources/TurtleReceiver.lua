@@ -11,6 +11,8 @@ function proverka()
 end
 
 if not proverka() then
+  term.clear()
+  term.setCursorPos(1, 1)
   error("You need wireless modem!")
 end
 
