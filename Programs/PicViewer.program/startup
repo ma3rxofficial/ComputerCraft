@@ -10,7 +10,9 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/lddfm")
 SpeedOS.LoadAPI("SpeedAPI/config")
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("System/API/Settings")
+SpeedOS.LoadAPI("System/API/Drawing")
 
 term.setCursorPos(1, 1)
 term.clear()
@@ -55,10 +57,10 @@ function drawImg( tImage, xPos, yPos, __object )
   end
 end
 
-
 function draw_picture(filename)
   term.clear()
-  if use_monitor then
+
+  if use_monitor and not windows.getFileFormat(filename) == ".nft" then
     monitor.setTextScale(monitor_scale)
     monitor.clear()
     local mx, my = monitor.getSize()
@@ -66,28 +68,31 @@ function draw_picture(filename)
     SpeedText.cPrint("Click anywhere to quit", 10)
   end
   
-  image = paintutils.loadImage(filename) 
-
-  if use_monitor then
-    drawImg(image, 1, 1, monitor)
-
+  if windows.getFileFormat(filename) == ".nft" then
+    Drawing.DrawImage(1, 1, Drawing.LoadImage(filename), 164, 81)
+    Drawing.DrawBuffer()
   else
-    paintutils.drawImage(image, 1, 1)
-  end
+    image = paintutils.loadImage(filename) 
 
-  while true do
-    event, _ = os.pullEvent()
+    if use_monitor then
+      drawImg(image, 1, 1, monitor)
 
-    if event == "mouse_click" or event == "monitor_touch" then
-      break
+    else
+      paintutils.drawImage(image, 1, 1)
     end
   end
+
+  SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "monitor_touch", "key"})
   
   if use_monitor then
     monitor.setTextColor(colors.white)
     monitor.setBackgroundColor(colors.black)
     monitor.clear()
     monitor.setCursorPos(1, 1)
+
+    if windows.getFileFormat(filename) == "nft" then
+      term.restore()
+    end
     SpeedOS.Close()
 
   else
