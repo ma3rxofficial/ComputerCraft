@@ -17,9 +17,10 @@ if not proverka() then
 end
 
 rednet.open("right")
-term.clear()
 
+term.clear()
 term.setCursorPos(1, 1)
+
 print("Your ID: "..os.getComputerID())
 io.write("Please enter Computer ID: ")
 comp_id = io.read()
@@ -28,6 +29,7 @@ term.clear()
 term.setCursorPos(1, 1)
 print("Welcome to Turtle Receiver!")
 print("Your ID: "..os.getComputerID())
+
 while true do
   event, id, msg, dist = os.pullEvent()
   if event == "rednet_message" and id == tonumber(comp_id) then
