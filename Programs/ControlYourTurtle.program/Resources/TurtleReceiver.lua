@@ -27,11 +27,13 @@ comp_id = io.read()
 
 term.clear()
 term.setCursorPos(1, 1)
+
 print("Welcome to Turtle Receiver!")
 print("Your ID: "..os.getComputerID())
 
 while true do
   event, id, msg, dist = os.pullEvent()
+  
   if event == "rednet_message" and id == tonumber(comp_id) then
     print(msg)
     if msg == "W" then
