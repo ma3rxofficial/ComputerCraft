@@ -8,9 +8,21 @@ os.loadAPI("loader")
 SpeedOS = loader.OS()
 
 local w,h = term.getSize()
+local radios = {352, 664}
+
 
 local oldPullEvent = os.pullEvent
 os.pullEvent = os.pullEventRaw
+
+function isRadio(__id)
+	for _, id in pairs(radios) do
+		if id == __id then
+			return true
+		end
+	end
+
+	return false
+end
 
 local player = {
 
@@ -136,7 +148,7 @@ local languages = {
 }
 
 local function rebootGame()
-    SpeedOS.Close()
+    os.reboot()
 end
 
 
@@ -468,7 +480,8 @@ end
 		    drawScreen("Searching for clients",nil)
 		    rednet.broadcast("lasers_multiplayer_host")
 			repeat
-			    rID, msg = rednet.receive(1.5)
+			    rID, msg = rednet.receive(15)
+			    if isRadio(rID) then rID = nil end
 			until rID ~= os.getComputerID()
 			if rID ~= nil then
 			    if msg == "lasers_multiplayer_client" then
@@ -484,7 +497,7 @@ end
 			gui.centerPrint(bar.y - 1,colors.black,colors.white,"No clients found")
 			gui.centerPrint(bar.y + 1,colors.black,colors.white,"Request timed out")
 			os.pullEvent("key")
-			shell.run(shell.getRunningProgram()) error()
+			rebootGame()
 			
 		else
 		
@@ -496,7 +509,7 @@ end
 			local rID
 			repeat
 			    rNet.sendTable(player2.id, player)
-			    rID, msg = rednet.receive(.5)
+			    rID, msg = rednet.receive(5)
 			until rID == player2.id
 			
 			local rID
@@ -522,7 +535,8 @@ end
 	     drawScreen("Searching for hosts", nil)
 	     local rID, msg
 	     for i = 1,5 do
-		     rID, msg = rednet.receive(1.5)
+		     rID, msg = rednet.receive(15)
+		     if isRadio(rID) then rID = nil end
 		     if msg == "lasers_multiplayer_host" then
 			     break
 			 end
@@ -554,7 +568,7 @@ end
 			gui.centerPrint(bar.y - 1,colors.black,colors.white,"No hosts found")
 			gui.centerPrint(bar.y + 1,colors.black,colors.white,"Request timed out")
 			os.pullEvent("key")
-			shell.run(shell.getRunningProgram()) error()
+			rebootGame()
 		end
 		
 	end
