@@ -4,7 +4,7 @@ SpeedOS = loader.OS()
 SpeedOS.ToolBarColour = colours.lightGrey
 SpeedOS.ToolBarTextColour = colours.white
 
-fs=SpeedOS.fs
+fs = SpeedOS.fs
 
 local bRunning = true
 local tCommandHistory = {}
