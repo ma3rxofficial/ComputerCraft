@@ -7,9 +7,10 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
 
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+
 local w,h = term.getSize()
 local radios = {352, 664}
-
 
 local oldPullEvent = os.pullEvent
 os.pullEvent = os.pullEventRaw
@@ -496,7 +497,7 @@ end
 			gui.drawBar(bar, barTexture)
 			gui.centerPrint(bar.y - 1,colors.black,colors.white,"No clients found")
 			gui.centerPrint(bar.y + 1,colors.black,colors.white,"Request timed out")
-			os.pullEvent("key")
+			SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
 			rebootGame()
 			
 		else
@@ -567,7 +568,7 @@ end
 			gui.drawBar(bar, barTexture)
 			gui.centerPrint(bar.y - 1,colors.black,colors.white,"No hosts found")
 			gui.centerPrint(bar.y + 1,colors.black,colors.white,"Request timed out")
-			os.pullEvent("key")
+			SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
 			rebootGame()
 		end
 		
