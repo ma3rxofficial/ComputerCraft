@@ -1,0 +1,157 @@
+-- Thanks to 1Ridav for this program!
+-- https://www.youtube.com/watch?v=G3v15PD4p2Y
+
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/config")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+
+if not peripheral.find("modem") then
+	windows.clearScreen(colors.white)
+	windows.error("This program requires wireless modem!")
+	SpeedOS.Close()
+end
+
+function Initialise()
+	windows.clearScreen(colors.white)
+	choosed = windows.select({"Choose!"},{"What is your computer?"}, {"Client", colors.gray, colors.white}, {"Server", colors.orange, colors.white}, {"Energy", colors.red, colors.white})
+
+	if choosed == "Client" then
+		Client()
+	elseif choosed == "Server" then
+		Server()
+	elseif choosed == "Energy" then
+		Energy()
+	end
+end
+
+function Client()
+	windows.clearScreen(colors.black)
+	term.setCursorPos(1, 1)
+
+	rednet.open(peripheral.find("modem"))
+
+	io.write("Enter server ID: ")
+
+	term.setTextColor(colors.magenta)
+	term.setCursorPos(18, 1)
+
+	serverID = tonumber(io.read())
+	term.setTextColor(colors.white)
+
+	if not serverID then
+		windows.error("Idi nahuy")
+		Initialise()
+	end
+
+	rednet.send(serverID, "batstat")
+
+	sender, answer = rednet.receive(10)
+
+	if sender == serverID then 
+		print(answer)
+	else 
+		sender = nil 
+	end
+
+	if not sender then
+		term.setTextColor(colors.red)
+		print("Can't reach server!")
+
+		SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
+		Initialise()
+	end
+end
+
+function Server()
+	windows.clearScreen(colors.black)
+	term.setCursorPos(1, 1)
+	
+	rednet.open(peripheral.find("modem"))
+
+
+	huy_ = config.read("System/RidavMFSU.settings", "EnergyIDS")
+	id = textutils.unserialize(huy_)
+
+	local function bin(element)
+		if element == "1" then 
+			return "true" 
+		end
+
+		return false
+	end
+
+	local function format(str)
+		local form = ""
+
+		for i = 1, string.len(str) do
+			form = form.."#"..i.." - "..bin(string.sub(str, i, i))
+		end
+
+		return form
+	end
+
+	while true do
+		sender, msg = rednet.receive()
+
+		if msg == "batstat" then
+			concat = ""
+
+			for i = 1, #id do
+				rednet.send(id[i], "")
+				thisId, thisIdAnswer = rednet.receive(5)
+				concat = concat..thisIdAnswer
+			end
+
+			rednet.send(sender, format(concat))
+		end
+	end
+end
+
+function Energy()
+	windows.clearScreen(colors.black)
+	term.setCursorPos(1, 1)
+	
+	rednet.open(peripheral.find("modem"))
+
+	side = rs.getSides()
+	io.write("Enter server ID: ")
+
+	term.setTextColor(colors.magenta)
+	term.setCursorPos(18, 1)
+
+	host = tonumber(io.read())
+	term.setTextColor(colors.white)
+
+	if not host then
+		windows.error("Idi nahuy")
+		Initialise()
+	end
+
+	local function bin(s)
+		if rs.getInput(s) then
+			return 1
+		end
+
+		return 0
+	end
+
+	while true do
+		sender, msg = rednet.receive()
+
+		if sender == host then
+			concat = ""
+
+			for i = 1, #side do
+				concat = concat..bin(side[i])
+			end
+
+			rednet.send(sender, concat)
+		end
+	end
+end
+
+Initialise()
