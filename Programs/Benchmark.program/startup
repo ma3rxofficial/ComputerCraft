@@ -1,0 +1,711 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+
+local s={
+App="0.2.3",
+DebugID="REL",
+}
+local m=false
+local i,r=term.getSize()
+term.setBackgroundColor(colors.black)
+term.clear()
+term.setCursorPos(1,1)
+local function t(e,o,a)
+if not fs.exists("/"..(a and e..".lua"or e))and not _G[e]then
+printError("No "..e.." API found, downloading one...")
+shell.run("pastebin get "..o.." /"..(a and e..".lua"or e))
+error()
+end
+return true
+end
+t("sha256","P3KBjR3M")
+t("aes","DMx8M0LP")
+t("crc32","x52gQYWp")
+t("json","jK22eUfn")
+t("Test","wZbpA1Gy",true)
+local t={
+["Test.lua"]=dofile,
+["sha256"]=os.loadAPI,
+["aes"]=os.loadAPI,
+["crc32"]=os.loadAPI,
+["json"]=os.loadAPI,
+}
+
+--fs = SpeedOS.FS
+
+for t,e in pairs(t)do
+local t,e=pcall(e,"/"..t)
+if not t then print(e)sleep(2)end
+end
+pcall(fs.delete,"/.vBenchmarkUpdater.lua")
+s.Library=Test.Version
+local function y()
+local e=tostring({})
+os.queueEvent(e)
+coroutine.yield(e)
+end
+local function v(a,o)
+local e={}
+for t in pairs(a)do table.insert(e,t)end
+table.sort(e,o)
+local t=0
+local e=function()
+t=t+1
+if e[t]==nil then return nil
+else return e[t],a[e[t]]
+end
+end
+return e
+end
+local n
+local l={
+["ow"]="Optimized write test",
+["uw"]="Unoptimized write test",
+["tb"]="term.blit write test",
+["ct"]="Color swap/rainbow test",
+["lc"]="Line clear speed test",
+["cs"]="Clear speed test",
+["scr"]="Buffer scroll test",
+["aa"]="Anti-aliasing test",
+["hsh"]="SHA256 hash test",
+["aese"]="AES Encryption perf. test",
+["aesd"]="AES Decryption perf. test",
+["tec"]="Table entry creation",
+["ted"]="Table entry deletion",
+["tea"]="Table entry access",
+["dhke"]="Diffie-Hellman key exchange",
+["crc"]="CRC32 hash test",
+["cmpl1"]="Simple compilation",
+["cmpl2"]="Medium compilation",
+}
+local d={}
+for e,t in pairs(l)do
+d[e]=true
+end
+local o="/System/benchmark.txt"
+local a=2
+local t=1e4
+local function u(e)
+if type(e)~="string"then error("(1)Expected string, got "..type(e),2)end
+if e:sub(#e,#e)~=","then e=e..","end
+local t={}
+for e in e:gmatch("(%a+),")do
+table.insert(t,e)
+end
+return t
+end
+local function f(e)
+local t=[[
+
+Welcome to vBenchmark!
+     
+  vBenchmark is a complex benchmarking program for ComputerCraft 1.6+, made by viluon (a.k.a. Andy73)
+
+  [Usage] 
+    vBenchmark -option value --flag -option2 list,of,values
+    
+    
+
+    NOTE: Options and flags are executed in the order they're supplied in
+      
+    <required value> [optional value] (name)
+
+    Available options:
+    =================
+      update (update) updates the program
+      =====
+      help OR ? OR /? ['light'] (help/usage) displays this page, optionally using black text on white background (this option stops the execution automatically)
+      =====
+      -o <path> (output) sets the output file to <path>
+      =====
+      -list [path] (list) lists the names and corresponding codes of available benchmark functions, optionally saving them to [path]
+      =====
+      -maxtime <seconds> (maximum time limit) sets the time limit per ONE benchmark function to <seconds> - default: 2
+      =====
+      -maxcalls <calls> (maximum function calls) sets the maximum amount of function calls per ONE benchmark function to <calls> - default: 10 000
+      =====
+      -exclude <tests> (exclude) excludes a list of tests from the benchmark, <tests> is a list of test codes
+      =====
+      -testonly <tests> (test only) sets the test list for the benchmark to <tests>
+      =====
+
+    Available flags:
+    ===============
+      --test (test) prints some debug text on the screen
+      =====
+      --stop (stop) stops the execution of the benchmark
+      =====
+      --version (version info) displays the version information of the program and used libraries
+      =====
+      --SUICIDE (suicidal mode) Enables the suicidal mode:
+          Suicidal mode is intended for debugging, evaluating and precision testing of CC emulators or SINGLEPLAYER CC. Do NOT use the suicidal benchmark in multiplayer!!! Suicidal benchmark does not yield to produce the most relevant results. As such, it should NOT be used for regular benchmarking. The suicidal mode can corrupt files and do IRREVERSIBLE HARM!!! Use at your own risk.
+      =====
+      --safe (safe mode) enables safety features:
+          -output file backup
+          -visible error reports - launches the benchmark in a temporary handler (/.vBenchmarkSafe) that pauses after crashing => errors visible
+          -does not intersect with suicidal mode
+      ]]
+term.setBackgroundColor(e and colors.white or colors.black)
+term.setTextColor(e and colors.black or colors.white)
+term.clear()
+term.setCursorPos(1,1)
+textutils.pagedPrint(t)
+end
+local c={...}
+local h={}
+for e,t in pairs(c)do
+h[e]=t
+end
+local m={
+["test"]=function()
+print"This is a test"
+sleep(3)
+end,
+["stop"]=function()
+error()
+end,
+["version"]=function()
+print(textutils.serialize(s))
+end,
+["suicide"]=function()
+m=true
+end,
+["safe"]=function()
+if fs.exists(o)then
+local e,t=".bkp1",2
+while fs.exists(o..e)do
+e=".bkp"..t
+t=t+1
+end
+local t,e=pcall(fs.copy,o,o..e)
+if not t then
+print"[ERROR] Failed to create backup"
+print(e)
+print"Press ENTER to exit"
+read" "
+end
+end
+local t=fs.open("/.vBenchmarkSafe","w")
+if not t then print"[ERROR] Failed to open file for writing: /.vBenchmarkSafe"print(e)sleep(5)error()end
+t.write([[
+print"Launching vBenchmark in safe mode"
+sleep(2)
+local path,args="]]..shell.getRunningProgram()..[[",{...}
+local f=fs.open(path,"r")
+local fn=f.readAll()
+f.close()
+fn=loadstring(fn,"vBenchmark [SAFE MODE]")
+if not fn then error("Failed to execute safe mode: file is corrupt!",0) end
+setfenv(fn,setmetatable({shell=setmetatable({getRunningProgram=function()return path end},{__index=_G})},{__index=_G}))
+local ok,err=pcall(fn,unpack(args)) --line 10
+if not ok then
+ printError"vBenchmark has crashed." 
+ print""
+ print(err)
+ print"Enter to continue..."
+ read" "
+end
+return true
+
+--line 20
+]])
+t.close()
+local e=c
+for t,a in pairs(e)do
+if a:lower()=="--safe"then table.remove(e,t)end
+if#e<1 or#e==t then break end
+end
+shell.run("/.vBenchmarkSafe",unpack(e))
+error()
+end,
+}
+local u={
+["o"]={
+function(e)
+if type(e)~="string"then error("Expected string as output path, got "..type(e),0)end
+o=e
+end,
+1,
+1,
+},
+["list"]={
+function(e)
+for e,t in pairs(l)do
+print(t.."="..e)
+end
+if type(e)=="string"then
+if fs.exists(e)then
+local e=fs.open(e,"w")
+e.write(textutils.serialize(l))
+e.close()
+end
+end
+end,
+1,
+0,
+},
+["maxcalls"]={
+function(e)
+if not tonumber(e)then error("Expected number for the maximum amount of calls, got "..type(e),0)end
+t=tonumber(e)
+end,
+1,
+1,
+},
+["maxtime"]={
+function(e)
+if not tonumber(e)then error("Expected number for the maximum time, got "..type(e),0)end
+a=tonumber(e)
+end,
+1,
+1,
+},
+["testonly"]={
+function(e)
+if type(e)~="string"then error("Expected string as a list of tests, got "..type(e),0)end
+d={}
+for t,e in pairs(u(e))do
+d[e]=true
+end
+end,
+1,
+1,
+},
+["exclude"]={
+function(e)
+for t,e in pairs(u(e))do
+d[e]=false
+end
+end,
+1,
+1,
+},
+}
+for a,e in pairs(h)do
+if e:sub(1,2)=="--"then
+if not m[e:sub(3,#e):lower()]then print("Hint: use '"..shell.getRunningProgram().." help' to see the proper usage")error("Unknown flag: "..e:sub(3,#e),0)end
+m[e:sub(3,#e):lower()]()
+elseif e:sub(1,1)=="-"then
+if not u[e:sub(2,#e):lower()]then print("Hint: use '"..shell.getRunningProgram().." help' to see the proper usage")error("Unknown option: "..e:sub(2,#e),0)end
+local t={}
+for e=a+1,a+u[e:sub(2,#e):lower()][2]do
+if not h[e]then break end
+if h[e]:sub(1,1)=="-"then break end
+t[#t+1]=h[e]
+h[e]=nil
+end
+u[e:sub(2,#e):lower()][1](unpack(t))
+elseif e:lower()=="help"or e=="?"or e=="/?"then
+if h[a+1]=="light"then return f(true)end
+return f()
+elseif e:lower()=="update"then
+local e=fs.open("/.vBenchmarkUpdater.lua","w")
+e.write("shell.run'rm "..shell.getRunningProgram().."'shell.run'pastebin get nCEk57MH "..shell.getRunningProgram().."'print'Update complete'sleep(3)return shell.run'"..shell.getRunningProgram().." --stop'")
+e.close()
+return shell.run"/.vBenchmarkUpdater.lua"
+end
+end
+Test.SetTaskList(d)
+local function b()
+local i,o=term.getSize()
+local function e(e,t,a)
+term.setBackgroundColor(t or colors.black)
+term.setTextColor(e or colors.white)
+term.clear()
+for e=1,o do
+term.setCursorPos(1,e)
+term.write(string.rep(a or"X",i))
+end
+end
+local n=Test.New("ow",nil,t,a,true,e)
+n.Run()
+print(unpack(unpack({n.GetResults()})))
+local function n(e,t,a)
+term.setBackgroundColor(t or colors.black)
+term.setTextColor(e or colors.white)
+term.clear()
+for t=1,o do
+for e=1,i do
+term.setCursorPos(e,t)
+term.write(a or"X")
+end
+end
+end
+local n=Test.New("uw",nil,t,a,true,n)
+n.Run()
+local function n()
+for e=1,o do
+term.setCursorPos(1,e)
+term.write("asd")
+end
+end
+local function n()
+for e=0,15 do
+term.setBackgroundColor(2^e)
+term.clear()
+end
+end
+local n=Test.New("ct",nil,t,a,true,n)
+n.Run()
+local function n(e)
+term.setBackgroundColor(e or colors.black)
+for e=1,o do
+term.setCursorPos(1,e)
+term.clearLine()
+end
+end
+local n=Test.New("lc",nil,t,a,true,n)
+n.Run()
+term.setBackgroundColor(colors.black)
+local n=term.clear
+local n=Test.New("cs",nil,t,a,true,n)
+n.Run()
+local function n()
+e()
+for e=1,o do
+term.scroll(1)
+end
+end
+local e=Test.New("scr",nil,t,a,true,n)
+e.Run()
+local n=function(t,a,e)
+alphaStep=255/4
+if e>255-alphaStep then
+term.setBackgroundColor(colors.white)
+elseif e>255-alphaStep*2 then
+term.setBackgroundColor(colors.lightGray)
+elseif e>255-alphaStep*3 then
+term.setBackgroundColor(colors.gray)
+else
+term.setBackgroundColor(colors.black)
+return
+end
+term.setCursorPos(t,a)
+term.write(" ")
+end
+local r=function(e,t,a,o)
+dx=math.abs(a-e)
+if e<a then sx=1 else sx=-1 end
+dy=math.abs(o-t)
+if t<o then sy=1 else sy=-1 end
+err=dx-dy
+if dx+dy==0 then
+ed=1
+else
+ed=math.sqrt(dx*dx+dy*dy)
+end
+while true do
+n(e,t,255-(255*math.abs(err-dx+dy)/ed));
+e2=err
+x2=e
+if(2*e2>=-dx)then
+if(e==a)then break end
+if(e2+dy<ed)then n(e,t+sy,255-(255*(e2+dy)/ed))end
+err=err-dy;
+e=e+sx;
+end
+if(2*e2<=dy)then
+if(t==o)then break end
+if(dx-e2<ed)then n(x2+sx,t,255-(255*(dx-e2)/ed))end
+err=err+dx;
+t=t+sy;
+end
+end
+end
+local e,e=math.floor(i/4),math.floor(o/2)
+local function d()
+local o,n=1,1
+local s,h=15,15
+local e,a,t,i=o,n,o+1,n+1
+return function()
+r(e,a,t,i)
+if t>s then t=o i=i+1
+elseif i>h then
+elseif e>s then e=o a=a+1
+elseif a>h then a=n t=t+1
+else e=e+1 end
+end
+end
+local e=Test.New("aa",nil,t,a,true,d())
+e.Run()
+end
+local function g()
+local o=256
+local e=""
+for t=1,o do
+e=e..
+string.char(math.random(128))
+end
+local o=sha256.sha256
+term.setBackgroundColor(colors.black)
+term.clear()
+term.setCursorPos(1, 1)
+local e=Test.New("hsh","Math",t,a,true,o,e)
+e.Run()
+local e=crc32.Hash
+local o,n,i=false
+local function s(s,a)
+local e=""
+local t=""
+for t=1,s do
+e=e.."b"
+end
+for e=1,a do
+t=t..string.char(math.random(128))
+end
+o=aes.encrypt(e,t)
+n=e
+i=true
+end
+term.setBackgroundColor(colors.black)
+term.clear()
+term.setCursorPos(1, 1)
+local e=Test.New("aese","Math",t,a,true,s,32,2048)
+e.Run()
+local e=aes.decrypt
+if i then
+  term.setBackgroundColor(colors.black)
+  term.clear()
+  term.setCursorPos(1, 1)
+local e=Test.New("aesd","Math",t,a,true,e,n,o)
+e.Run()
+end
+local function s()
+local function t(e,a,t)
+for a=1,a-1 do
+e=e*e
+if e>=t then
+e=e%t
+end
+end
+return e
+end
+local o,e=11,625210769
+local i=math.random(1e5,999999)
+local a=math.random(1e5,999999)
+local n=t(o,i,e)
+local o=t(o,a,e)
+t(o,i,e)
+t(n,a,e)
+end
+term.setBackgroundColor(colors.black)
+term.clear()
+term.setCursorPos(1, 1)
+local e=Test.New("dhke","Math",t,a,true,s)
+e.Run()
+local function o()
+local e=[[
+  do end
+  ]]
+loadstring(e)
+end
+term.setBackgroundColor(colors.black)
+term.clear()
+term.setCursorPos(1, 1)
+local e=Test.New("cmpl1","Math",t,a,true,o)
+e.Run()
+local function e()
+local e=[[
+  local function asd()
+    while true do end
+  end
+  for i=1,10 do
+    print(i)
+  end
+  return _G.x or asd
+  ]]
+loadstring(e)
+end
+term.setBackgroundColor(colors.black)
+term.clear()
+term.setCursorPos(1, 1)
+local e=Test.New("cmpl2","Math",t,a,true,e)
+e.Run()
+local function e()
+end
+end
+local function u()
+end
+local function m()
+end
+local function f()
+end
+local function h()
+local function o()
+local e={}
+for t=1,4e4 do
+e[#e+1]=true
+end
+e=nil
+end
+term.setBackgroundColor(colors.black)
+term.clear()
+term.setCursorPos(1, 1)
+local e=Test.New("tec","Memory Allocation",t,a,true,o)
+e.Run()
+local function o()
+local e={}
+for t=1,4e4 do
+e[#e+1]=true
+end
+for t,a in ipairs(e)do
+e[t]=nil
+end
+e=nil
+end
+term.setBackgroundColor(colors.black)
+term.clear()
+term.setCursorPos(1, 1)
+local e=Test.New("ted","Memory Allocation",t,a,true,o)
+e.Run()
+local function e()
+local e={true}
+local t=false
+for a=1,4e4 do
+t=e[1]
+end
+end
+term.setBackgroundColor(colors.black)
+term.clear()
+term.setCursorPos(1, 1)
+local e=Test.New("tea","Memory Allocation",t,a,true,e)
+e.Run()
+end
+local t,a={},1
+--t[1]=window.create(term.native(),1,1,i,r-5,true)
+local function w()
+for e,a in pairs(t)do
+t[e].setVisible(false)
+end
+end
+local function p()
+n=Test.GetResults()
+local e
+if fs.exists(o)then
+local t=fs.open(o,"r")
+e=t.readAll()
+t.close()
+e=textutils.unserialize(e)
+if not e then
+local t=o.."-unsupported.txt"
+local e=1
+while fs.exists(t)do
+t=o.."-unsupported"..e..".txt"
+e=e+1
+end
+fs.move(o,t)
+end
+n["Last"]=e
+end
+term.setBackgroundColor(colors.black)
+term.setTextColor(colors.white)
+term.clear()
+term.setCursorPos(1,1)
+local a={}
+for e,t in pairs(n)do
+if e~="Last"and e~="Version"and e~="Median"then
+if not a[t["g"]]then a[t["g"]]={}end
+table.insert(a[t["g"]],e)
+end
+end
+for a,o in pairs(a)do
+term.setTextColor(colors.yellow)
+print(a)
+local a={}
+for t,e in pairs(o)do
+a[l[e]]=e
+end
+for o,a in v(a)do
+if d[a]then
+term.setTextColor(colors.white)
+term.write("  "..o..": ")
+term.setTextColor(colors.lightGray)
+term.write((n[a]["mark"]).."")
+if e and e[a]and type(e[a]["mark"])=="number"and(e.Version and(e.Version.Library and(Test.Version and(e.Version.Library.Matrix==Test.Version.Matrix))))then
+term.setTextColor((e[a]["mark"]>n[a]["mark"]and colors.red or colors.lime))
+term.write(" "..(e[a]["mark"]>n[a]["mark"]and"v"or"^"))
+term.setTextColor(colors.lightGray)
+print(" ("..(e[a]["mark"])..")")
+else
+print()
+end
+local a,e=term.getCursorPos()
+if e>r-9 then
+--t[#t+1]=window.create(term.native(),1,1,i,r-5,false)
+--term.redirect(t[#t])
+end
+end
+end
+end
+--term.redirect(term.native())
+end
+local function l()
+w()
+t[a].setVisible(true)
+t[a].redraw()
+local o,e=term.getCursorPos()
+term.setBackgroundColor(colors.black)
+term.setTextColor(colors.gray)
+term.setCursorPos(i-10,r-5)
+term.write("page ")
+term.setTextColor(colors.lightGray)
+term.write(a.."/"..#t.."    ")
+term.setCursorPos(o,e)
+end
+local function e()
+b()
+g()
+u()
+m()
+f()
+h()
+end
+e()
+term.setBackgroundColor(colors.black)
+term.clear()
+--term.redirect(t[1])
+p()
+term.setCursorPos(1,r-5)
+local h,e=term.getCursorPos()
+term.setCursorPos(i/2-5,e+2)
+term.setTextColor(colors.gray)
+term.write"Loading..."
+term.setTextColor(colors.white)
+term.setCursorPos(h,e)
+local h=fs.open("startup","r")
+local e="''"
+if http then
+local t=http.get"http://acos.bluefile.cz/Utilities/Online/ip.php"
+if t then
+e=t.readAll()
+t.close()
+end
+end
+e=textutils.unserialize(e)
+local d=h.readAll()
+h.close()
+s.Hash=sha256.sha256(d)
+s.Fingerprint=sha256.sha256(s.Hash.."Fingerprint"..os.getComputerID()..e)
+n["Version"]=s
+fs = SpeedOS.fs
+local e=fs.open(o,"w")
+e.write("--viluon's Ultimate Benchmark output, os.time()="..os.time()..", os.day()="..os.day().."\n\n")
+e.write(textutils.serialize(n))
+y""
+e.close()
+local n,e=0,n.Last
+while true do
+n=n+1
+if e==nil then break end
+e=(e and e.Last or nil)
+end
+print""
+print("Total runs:"..n)
+print("Results were logged (see "..o.."). Would you like to re-run the benchmark now?")
+print""
+
+SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
+os.reboot()
