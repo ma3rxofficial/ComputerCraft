@@ -193,11 +193,20 @@ function LoadingScreen()
 				SpeedText.cPrint("Alias "..file.." set!")
 		end
 	end
- os.loadAPI("SpeedAPI/peripheral")
- if peripheral.find("modem") then
+
+	sleep(1)
+	term.clear()
+	term.setTextColor(colors.black)
+	SpeedText.cPrint("SpeedOS", 7)
+	term.setTextColor(colors.lightGray)
+	SpeedText.cPrint("Initializing components")
+	sleep(3)
+
+ 	os.loadAPI("SpeedAPI/peripheral")
+ 	if peripheral.find("modem") then
    rednet.open(peripheral.find("modem"))
    Log.i('Opened modem on side '..peripheral.find("modem"))
- end
+ 	end
 
 	sleep(0.1)
 	return true
