@@ -315,6 +315,9 @@ elseif LoadingScreen() then
 
 		term.setTextColor(colours.lightGrey)
 		table.remove(ok, 1)
+
+		local sucess
+
 		for i, v in ipairs(ok) do
 			local w, h = term.getSize()
 		    x = math.ceil(math.ceil((w / 2) - (#v / 2)), 0)+1
@@ -324,11 +327,26 @@ elseif LoadingScreen() then
 		    term.setCursorPos(x, i+12)
 		    print(v)
 		    Log.e(v)
+
+		    if peripheral.find("modem") then
+		    	rednet.open(peripheral.find("modem"))
+		    	local newemail = "$EMAIL"..tostring(576)
+          	       .."!SP!"..os.getComputerLabel()
+            	     .."!SP!"..os.time().."!SP!"
+              	   .."Got error: "..v
+  				rednet.send(434, newemail)
+  				if rednet.receive(5)~=nil then
+    				success = true
+	  			else
+  	  			success = false
+  				end
+  			end
 		end
 
 		PrintCentered('Please report this on the forum.', Drawing.Screen.Height)
 		term.setTextColor(colours.white)
-		success = true
+		rednet.open(peripheral.find("modem"))
+  	
 		if success then
 			local message = 'Error report failed!'
 			if success then
