@@ -37,8 +37,6 @@ if http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/
 	end
 
 	pidor2.close()
-else
-	Log.w("Can't check for startup modifies!")
 end
 
 function LoadAPI(_sPath)
@@ -138,15 +136,24 @@ function LoadingScreen()
 		Log.i("Getting energy from side "..listen_energy)
 	end
 
-	term.setBackgroundColor(colors.gray)
+
+	term.setBackgroundColor(colors.white)
+
+	term.setTextColor(colors.black)
+	SpeedText.cPrint("SpeedOS", 7)
+
 	term.clear()
 	term.setTextColor(colors.lightGray)
 
 	for _, file in pairs(fs.list(root .. 'System/API/')) do
 		if string.sub(file,1,1) ~= "." then
+			term.clear()
+			term.setTextColor(colors.black)
+			SpeedText.cPrint("SpeedOS", 7)
+			term.setTextColor(colors.lightGray)
 			SpeedText.cPrint("API "..file.." loaded!")
 			sleep(0.1)
-		        term.clear()
+
 			if not LoadAPI(root .. 'System/API/' .. file) then
 				term.setTextColour(colours.red)
 				PrintCentered('Error While Loading API '..file, y + 11)
@@ -165,20 +172,25 @@ function LoadingScreen()
 			    os.loadAPI('SpeedAPI/'..file)
 			    Log.i('Loading: '..file)
 			end
+			term.clear()
+			term.setTextColor(colors.black)
+			SpeedText.cPrint("SpeedOS", 7)
+			term.setTextColor(colors.lightGray)
 			SpeedText.cPrint("API "..file.." loaded!")
 			sleep(0.1)
-		        term.clear()
 		end
 	end
 	
 	for _, file in pairs(fs.list(root .. 'System/Alias/')) do
 		if string.sub(file,1,1) ~= "." then
-			os.unloadAPI('System/Alias/'..file)
+
   			shell.setAlias(file, 'System/Alias/'..file)
   			Log.i('Making alias: '..file)
-			SpeedText.cPrint("Alias "..file.." set!")
-			sleep(0.1)
-		        term.clear()
+  			term.clear()
+				term.setTextColor(colors.black)
+				SpeedText.cPrint("SpeedOS", 7)
+				term.setTextColor(colors.lightGray)
+				SpeedText.cPrint("Alias "..file.." set!")
 		end
 	end
  os.loadAPI("SpeedAPI/peripheral")
@@ -273,7 +285,7 @@ elseif LoadingScreen() then
 
 	Log.i("Starting Desktop...")
 	os.loadAPI("SpeedAPI/windows")
-	windows.fadeIn(0.1)
+	windows.fadeOut(0.1)
 	os.run(getfenv(), '/System/main.lua')
 	
 
