@@ -21,17 +21,17 @@ error()
 end
 return true
 end
-t("sha256","P3KBjR3M")
-t("aes","DMx8M0LP")
-t("crc32","x52gQYWp")
-t("json","jK22eUfn")
+t("Resources/sha256","P3KBjR3M")
+t("Resources/aes","DMx8M0LP")
+t("Resources/crc32","x52gQYWp")
+t("Resources/json","jK22eUfn")
 t("Test","wZbpA1Gy",true)
 local t={
 ["Test.lua"]=dofile,
-["sha256"]=os.loadAPI,
-["aes"]=os.loadAPI,
-["crc32"]=os.loadAPI,
-["json"]=os.loadAPI,
+["Resources/sha256"]=os.loadAPI,
+["Resources/aes"]=os.loadAPI,
+["Resources/crc32"]=os.loadAPI,
+["Resources/json"]=os.loadAPI,
 }
 
 --fs = SpeedOS.FS
@@ -584,6 +584,7 @@ end
 local function p()
 n=Test.GetResults()
 local e
+fs = SpeedOS.fs
 if fs.exists(o)then
 local t=fs.open(o,"r")
 e=t.readAll()
