@@ -2,6 +2,7 @@ os.loadAPI("loader")
 SpeedOS = loader.OS()
 
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/config")
 
 if not peripheral.find("modem") then
   windows.clearScreen(colors.cyan)
@@ -20,7 +21,7 @@ w,h = term.getSize()
 umail = { }
 rmail = { }
 slc = 1
-serverid = 434
+serverid = tonumber(config.read("System/Email.settings", "serverID"))
 side = peripheral.find("modem")
 
 confirmmsg = ""
