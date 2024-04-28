@@ -97,6 +97,8 @@ function Server()
 		return form
 	end
 
+	print("Server started")
+
 	while true do
 		sender, msg = rednet.receive()
 
