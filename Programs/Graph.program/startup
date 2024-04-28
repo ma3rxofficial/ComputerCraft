@@ -1,7 +1,6 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
 
-
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
@@ -23,12 +22,6 @@ if use_old_pallete then
         error_color = colors.red
         lines_color = colors.black
 end
-
-
---[[local Args = {...}
-local formula = Args[1]
-local scale = Args[2]
-]]
  
 local function findMonitor()
         local PeriList = peripheral.getNames()
