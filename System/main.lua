@@ -141,9 +141,13 @@ function LaunchProgram(path, args, title)
 
 	Log.i("Program "..title.." ("..path..") finished")
 
-	for _, apishnik in pairs(fs.list("SpeedAPI")) do
-		os.unloadAPI("SpeedAPI/"..apishnik)
-		Log.i("API "..apishnik.." unloaded")
+	os.loadAPI("System/API/Settings")
+	if Settings.GetValues('AutoAPIUnloading')['AutoAPIUnloading'] == true then
+
+		for _, apishnik in pairs(fs.list("SpeedAPI")) do
+			os.unloadAPI("SpeedAPI/"..apishnik)
+			Log.i("API "..apishnik.." unloaded")
+		end
 	end
 
 end
