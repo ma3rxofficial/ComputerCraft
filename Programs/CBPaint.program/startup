@@ -1,0 +1,137 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.LoadAPI("SpeedAPI/context")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+
+if peripheral.find("modem") then
+        rednet.close(peripheral.find("modem"))
+end
+ 
+---------------------ондйкчвемхе оепхтепхх---------------------------
+local CommandBlock = peripheral.wrap("bottom")
+ 
+---------------------назъбкемхе оепелеммшу---------------------------
+local xSize, ySize = term.getSize()
+ 
+--янгдюмхе люяяхбю CURRENTID, оепбши щкелемр - щрн ID акнйю, брнпни - ецн DATA, рперхи - жбер, нрнапюфюелши мю щйпюме. он слнквюмхч бшапюм педярнсм-акнй
+local currentID = {
+        [1]="redstone_block",
+        [2]="0",
+        [3]=colors.red
+}
+ 
+--янгдюмхе люяяхбю PIXELS, упюмъыецн бяе мюпхянбюммше охйяекх мю щйпюме х ху жбер
+--ецн ярпсйрспю рюйнбю: Pixels[ЙННПДХМЮРЮ ОН Y][ЙННПДХМЮРЮ ОН X] = ЖБЕР (ОЕПЕЛЕММЮЪ РХОЮ number)
+local Pixels = {}
+--гюонкмемхе люяяхбю охйяекълх аекнцн жберю
+for j=1,(ySize-1) do
+        Pixels[j] = {}
+        for i=1,xSize do
+                Pixels[j][i] = colors.white
+        end
+end
+ 
+-----------------------назъбкемхе тсмйжхи----------------------------
+local function cb(command)
+        
+end
+ 
+local function setBlock(x,y,id,data)
+        cb("/setblock ~"..(x-1-math.floor(xSize/2)).." ~"..(ySize+3-y).." ~0 minecraft:"..id.." "..data)
+end
+ 
+local function clearAll()
+        for x=1,xSize do
+                for y=1,ySize do
+                        setBlock(x,y,"air","0")
+                end
+        end
+end
+ 
+--------------------тсмйжхъ нрпхянбйх хмрептеияю----------------------
+local function gui()
+        --вхрюел люяяхб х пхясел охйяекх
+        for j=1,#Pixels do
+                for i=1,#Pixels[j] do
+                        if Pixels[j][i] ~= nil then
+                                paintutils.drawPixel(i,j+1,Pixels[j][i])
+                        end
+                end
+        end
+       
+        --пхясел бепумхи рскаюп
+        for i=1,xSize do
+                paintutils.drawPixel(i,1,colors.gray)
+        end
+ 
+        --пхясел рейсыхи бшапюммши жбер
+        paintutils.drawPixel(1,1,currentID[3])
+ 
+        --охьел нярюбьхеяъ мюдохях мю рскаюпе
+        term.setTextColor(colors.lightGray)
+        term.setBackgroundColor(colors.gray)
+        term.setCursorPos(xSize,1)
+        term.write("x")
+        local text = "Command Block Paint by ECS"
+        term.setCursorPos(math.floor(xSize/2-#text/2),1)
+        term.write(text)
+end
+ 
+--бшгшбюел тсмйжхч хмрептеияю пюгнбн опх ярюпре опнцпюллш (мюпхясчряъ аекше охйяекх, р.й хгмювюкэмн лш бахкх б люяяхб PIXELS аекши жбер)
+gui()
+ 
+--------------------нрякефхбюмхе йкхйю лшьх---------------------
+while true do
+        local event,button,x,y = os.pullEvent()
+        if event == "mouse_click" or event == "mouse_drag" then
+ 
+                --еякх мюфюрю кебюъ йкюбхью, рн
+                if button == 1 and y > 1 then
+ 
+                        --пхясел охйяекэ рейсыецн жберю мю щйпюме
+                        paintutils.drawPixel(x,y,currentID[3])
+                        --гюахбюел гмювемхе рейсыецн жберю б люяяхб PIXELS (y-1 ХГ-ГЮ ЯЛЕЫЕМХЪ ЙННПДХМЮРШ y ХГ-ГЮ БЕПУМЕЦН РСКАЮПЮ)
+                        Pixels[y-1][x] = currentID[3]
+                        --сярюмюбкхбюел акнй б лхпе он йннпдхмюре я рейсыхлх оюпюлерпюлх CURRENTID
+                        setBlock(x,y,currentID[1],currentID[2])
+ 
+                --еякх мюфюрю опюбюъ йкюбхью, рн
+                elseif button == 2 and y > 1 then
+ 
+                        --бшгбюрэ йнмрейярмне лемч х гюохяюрэ б оепелеммсч ACTION пегскэрюр деиярбхи я лемч
+                        local action = context.menu(x,y,{"Redstone block",false},{"Orange wool",false},{"Gold block",false},{"Emerald block",false},{"Blue wool",false},"-",{"Air",false})
+ 
+                        --юмюкхг деиярбхъ йнмрейярмнцн лемч
+                        --гюохяэ б люяяхб CURRENTID хмтнплюжхх оняке ядекюммнцн бшанпю б йнмрейярмнл лемч
+                        if action == "Redstone block" then
+                                currentID = {[1]="redstone_block",[2]="0",[3]=colors.red}
+                        elseif action == "Orange wool" then
+                                currentID = {[1]="wool",[2]="1",[3]=colors.orange}
+                        elseif action == "Gold block" then
+                                currentID = {[1]="gold_block",[2]="0",[3]=colors.yellow}
+                        elseif action == "Emerald block" then
+                                currentID = {[1]="emerald_block",[2]="0",[3]=colors.green}
+                        elseif action == "Blue wool" then
+                                currentID = {[1]="wool",[2]="11",[3]=colors.blue}
+                        elseif action == "Air" then
+                                currentID = {[1]="air",[2]="0",[3]=colors.white}
+                        end
+ 
+                        --оепепхянбюрэ хмрептеия, врнаш сапюрэ лемч я щйпюмю
+                        gui()
+ 
+                --еякх мюфюр йпеярхй яопюбю ббепус, рн сдюкхрэ бяе акнйх, пюгнпбюрэ жхйк WHILE х бширх хг опнцпюллш
+                elseif x == xSize and y == 1 then
+                        clearAll()
+                        break
+                end
+        end
+end
+ 
+------------------------------бшунд---------------------
+if peripheral.find("modem") then
+        rednet.open(peripheral.find("modem"))
+end
+
+SpeedOS.Close()
