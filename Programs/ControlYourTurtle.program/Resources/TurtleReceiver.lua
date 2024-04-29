@@ -154,6 +154,8 @@ while true do
     elseif msg == "16" then
       turtle.select(tonumber(msg))
       rednet.send(id, "Turtle's slot is now "..tostring(msg))
+    elseif msg == "HELP" or msg == "help" then
+      rednet.send(id, " ")
     elseif msg == "exit" or msg == "EXIT" or msg == "quit" or msg == "QUIT" then
       break
     end
