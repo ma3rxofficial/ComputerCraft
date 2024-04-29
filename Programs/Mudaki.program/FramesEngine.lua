@@ -4,7 +4,7 @@ kadr = 1 -- с какого кадра начнем воспрозведение
 while true do
   event, key = os.pullEvent()
   
-  if event == "key" and key == keys.right then -- следующий кадр
+  if event == "key" and key == keys.right or event == "mouse_click" or event == "mouse_drag" then -- следующий кадр
     if kadr < kadr_quantity then
       kadr = kadr + 1
     else
@@ -15,14 +15,6 @@ while true do
       kadr = kadr_quantity
     else
       kadr = kadr - 1
-    end
-  end
-  
-  if event == "mouse_click" then  -- следующий кадр но с мышки
-    if kadr < kadr_quantity then
-      kadr = kadr + 1
-    else
-      kadr = 1
     end
   end
   
