@@ -15,7 +15,7 @@ SpeedText.cPrint("This is a little .nft images demonstration", 8)
 sleep(2)
 SpeedText.cPrint("Press any key to continue...", 10)
 
-os.pullEvent("key")
+SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
 
 -- animation
 
