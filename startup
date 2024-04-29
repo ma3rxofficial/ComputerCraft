@@ -339,23 +339,24 @@ elseif LoadingScreen() then
     				success = true
 	  			else
   	  			success = false
+  	  			Log.w("Error sending report!")
   				end
   			end
 		end
 
 		PrintCentered('Please report this on the forum.', Drawing.Screen.Height)
 		term.setTextColor(colours.white)
-		rednet.open(peripheral.find("modem"))
   	
+  	local message = 'Error report failed!'
+
 		if success then
-			local message = 'Error report failed!'
-			if success then
-				message = 'Error report sent!'
-			end
-			term.setCursorPos(1, Drawing.Screen.Height-3)
-			term.clearLine()
-			PrintCentered(message..' Click to reboot.', Drawing.Screen.Height-3)
+			Log.i("Error report sent to Ma3rX's mail!")
+			message = 'Error report sent!'
 		end
+
+		term.setCursorPos(1, Drawing.Screen.Height-3)
+		term.clearLine()
+		PrintCentered(message..' Click to reboot.', Drawing.Screen.Height-3)
 
 		os.pullEvent('mouse_click')
 		os.reboot()
