@@ -28,25 +28,17 @@ local kadr_quantity = #fs.list(picsDir)
 while true do
   event, key = os.pullEvent()
   
-  if event == "key" and key == keys.right then
+  if event == "key" and key == keys.right or event == "mouse_click" and key == 1 or event == "mouse_drag" and key == 1 or event == "mouse_scroll" and key == -1 then -- следующий кадр
     if kadr < kadr_quantity then
       kadr = kadr + 1
     else
       kadr = 1
     end
-  elseif event == "key" and key == keys.left then
+  elseif event == "key" and key == keys.left or event == "mouse_click" and key == 2 or event == "mouse_drag" and key == 2 or event == "mouse_scroll" and key == 1 then -- предыдущий кадр
     if kadr == 1 then
       kadr = kadr_quantity
     else
       kadr = kadr - 1
-    end
-  end
-  
-  if event == "mouse_click" then
-    if kadr < kadr_quantity then
-      kadr = kadr + 1
-    else
-      kadr = 1
     end
   end
   
