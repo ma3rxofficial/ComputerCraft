@@ -477,13 +477,12 @@ end
 		player.y = math.ceil(h/2)
 		gui.updateBar(bar, bar.currentProgress + 1, barTexture)
 		local rID, msg
-	    for i = 1, 5 do
+	    for i = 1, 105 do
 		    drawScreen("Searching for clients",nil)
 		    rednet.broadcast("lasers_multiplayer_host")
 			repeat
-			    rID, msg = rednet.receive(15)
-			    if isRadio(rID) then rID = nil end
-			until rID ~= os.getComputerID()
+			    rID, msg = rednet.receive(1.5)
+			until rID ~= os.getComputerID() or not isRadio(rID)
 			if rID ~= nil then
 			    if msg == "lasers_multiplayer_client" then
 				break
@@ -510,7 +509,7 @@ end
 			local rID
 			repeat
 			    rNet.sendTable(player2.id, player)
-			    rID, msg = rednet.receive(5)
+			    rID, msg = rednet.receive(1.5)
 			until rID == player2.id
 			
 			local rID
@@ -536,8 +535,7 @@ end
 	     drawScreen("Searching for hosts", nil)
 	     local rID, msg
 	     for i = 1,5 do
-		     rID, msg = rednet.receive(15)
-		     if isRadio(rID) then rID = nil end
+		     rID, msg = rednet.receive(5)
 		     if msg == "lasers_multiplayer_host" then
 			     break
 			 end
