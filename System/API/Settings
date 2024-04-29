@@ -25,6 +25,11 @@
 			Label = 'Use Electrity',
 			Default = false,
 		},	
+		AutoAPIUnloading = {
+			Type = 'Bool',
+			Label = 'API unloading ',
+			Default = false,
+		},	
 	}
 
 	function WriteDefaults(self)
