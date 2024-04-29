@@ -139,6 +139,13 @@ function LaunchProgram(path, args, title)
 		Current.Program.AppRedirect:Draw()
 	end)
 
+	Log.i("Program "..title.." ("..path..") finished")
+
+	for _, apishnik in pairs(fs.list("SpeedAPI")) do
+		os.unloadAPI("SpeedAPI/"..apishnik)
+		Log.i("API "..apishnik.." unloaded")
+	end
+
 end
 
 function SwitchToProgram(newProgram, currentIndex, newIndex)
