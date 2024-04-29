@@ -1,7 +1,7 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
 
-SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/windows") 
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 SpeedOS.ToolBarColour = colours.lightGrey
