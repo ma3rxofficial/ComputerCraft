@@ -405,13 +405,7 @@ while run do
 
 end
 
-term.clear() --очистка терминала
-term.setCursorPos(1,1)
-
-
-
-
-
+SpeedOS.Close()
 
 
 
