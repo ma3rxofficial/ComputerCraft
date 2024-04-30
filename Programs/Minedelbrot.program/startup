@@ -126,7 +126,7 @@ while true do
         zoom = zoom - 1
   end
 
-  if event == "char" and button == "q" then
+  if event == "key" and button == keys.q then
     if toMonitor then
       monitor.setBackgroundColor(colors.black)
       monitor.setTextColor(colors.white)
