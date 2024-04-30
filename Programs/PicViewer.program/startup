@@ -4,18 +4,13 @@ SpeedOS = loader.OS()
 SpeedOS.ToolBarColour = colours.grey
 SpeedOS.ToolBarTextColour = colours.white
 
-fs = SpeedOS.fs
-
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/lddfm")
 SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
-SpeedOS.LoadAPI("System/API/Drawing")
 
-term.setCursorPos(1, 1)
-term.clear()
-
+fs = SpeedOS.fs
 
 local args = {...}
 local use_monitor = false
@@ -23,8 +18,8 @@ local monitor
 local monitor_scale
 
 if peripheral.find("monitor", true) then
-  term.setCursorPos(1, 1)
   windows.clearScreen(colors.white)
+
   button = windows.select({"Detected monitor!"},{"Do you want to use it?"},{"No",colors.gray,colors.white}, {"Yes",colors.orange,colors.white})
   if button == "Yes" then
     use_monitor = true
@@ -57,7 +52,7 @@ function drawImg( tImage, xPos, yPos, __object )
 end
 
 function draw_picture(filename)
-  term.clear()
+  windows.clearScreen(colors.white)
 
   if use_monitor then
     monitor.setTextScale(monitor_scale)
