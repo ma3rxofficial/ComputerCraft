@@ -59,7 +59,7 @@ end
 function draw_picture(filename)
   term.clear()
 
-  if use_monitor and not windows.getFileFormat(filename) == ".nft" then
+  if use_monitor then
     monitor.setTextScale(monitor_scale)
     monitor.clear()
     local mx, my = monitor.getSize()
