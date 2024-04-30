@@ -358,7 +358,7 @@ local tColors = {
 	  gui.centerPrint(h/2 - 2,theme.headerTextCol,theme.headerBackCol,"Alert!")
 	  gui.centerPrint(h/2,theme.defaultTextCol,theme.bColor,"Currently no highscores")
 	  gui.centerPrint(h/2+ 1,theme.defaultTextCol,theme.bColor,"Press any key to continue")
-	  os.pullEvent("key")
+	  SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_click", "key"})
   end
 end
 
@@ -496,7 +496,7 @@ end
 			gui.drawBar(bar, barTexture)
 			gui.centerPrint(bar.y - 1,colors.black,colors.white,"No clients found")
 			gui.centerPrint(bar.y + 1,colors.black,colors.white,"Request timed out")
-			SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
+			SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_click", "key"})
 			rebootGame()
 			
 		else
@@ -1007,7 +1007,7 @@ end
 	
 	    evt, p1, mX, mY = os.pullEvent()
 		    if evt == "key" then
-			    if p1 == keys.up then
+			    if p1 == keys.up or p1 == keys.w then
 				  if not inMenu then
 				    player.side = "up"
 					player.y = player.y - 1
@@ -1025,7 +1025,7 @@ end
 			          end					  
 				  end
 				
-				elseif p1 == keys.down then
+				elseif p1 == keys.down or p1 == keys.s then
 				  if not inMenu then
 				    player.side = "down"
 					player.y = player.y + 1
@@ -1046,7 +1046,7 @@ end
 						
 					
 				
-				elseif p1 == keys.left then
+				elseif p1 == keys.left or p1 == keys.a then
 				  if not inMenu then
 				    player.side = "left"
 					player.x = player.x - 1
@@ -1060,7 +1060,7 @@ end
                       end	
 				  end
 				
-				elseif p1 == keys.right then
+				elseif p1 == keys.right or p1 == keys.d then
 				  if not inMenu then
 				    player.side = "right"
 					player.x = player.x + 1
@@ -1461,7 +1461,7 @@ else
 end
 
 sleep(1)
-os.pullEvent("key")
+SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
 
 rebootGame()
 		
