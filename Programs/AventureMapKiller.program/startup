@@ -26,6 +26,7 @@ w = p.getWorld(0)
 windows.clearScreen(colors.gray)
 SpeedText.cPrint("Enter victim's username here:", 6)
 selected_player = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
+
 if not selected_player then
   SpeedOS.Close()
 end
