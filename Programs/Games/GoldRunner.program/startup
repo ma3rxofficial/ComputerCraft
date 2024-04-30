@@ -5,8 +5,11 @@
 		Written by: Nitrogen Fingers
 ]]--
 
-OneOS.ToolBarColour = colours.black
-OneOS.ToolBarTextColour = colours.white
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
 
 w,h = term.getSize()
 if not term.isColour() then
@@ -1312,7 +1315,4 @@ while menSel ~= "Quit" do
 	menIndex = 1
 end
 
-term.setBackgroundColour(colours.black)
-shell.run("clear")
-term.setTextColour(colours.white)
-print("Thanks for playing Gold Runner!")
+SpeedOS.Close()
