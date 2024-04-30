@@ -76,7 +76,7 @@ end
  
 -------------------------            -------------------------------------
  
-local pathToConfig = "System/Graph/userdata.cfg"
+local pathToConfig = "System/Graph.settings"
  
 local loadedFormula = "x*math.sin(x)"
 local loadedScale = "2"
