@@ -417,7 +417,7 @@ function EventRegister(event, func)
 	if not Events[event] then
 		Events[event] = {}
 	end
-	Log.i("Event "..event.." registered")
+
 	table.insert(Events[event], func)
 end
 
