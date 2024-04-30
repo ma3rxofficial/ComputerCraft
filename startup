@@ -4,6 +4,7 @@ os.loadAPI("System/API/Log")
 os.loadAPI('System/API/Settings')
 
 local install_files = {"installer", "dN2gMnV9"}
+local isModified = false
 
 for _, value in pairs(install_files) do
   if fs.exists(value) then
@@ -32,6 +33,22 @@ if http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/
 		Log.i("Startup file isn't modified!")
 	else
 		Log.w("Modified startup file detected!")
+		isModified = true
+	end
+
+	pidor2.close()
+end
+
+if http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua") then
+	pidor = http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua").readAll()
+	pidor2 = fs.open("System/main.lua", "r")
+	pidor3 = pidor2.readAll()
+
+	if pidor3 == pidor then
+		Log.i("OS file isn't modified!")
+	else
+		Log.w("Modified OS file detected!")
+		isModified = true
 	end
 
 	pidor2.close()
@@ -327,17 +344,23 @@ elseif LoadingScreen() then
 		    Log.e(v)
 
 		    if peripheral.find("modem") then
-		    	rednet.open(peripheral.find("modem"))
-		    	local newemail = "$EMAIL"..tostring(576)
-          	       .."!SP!"..os.getComputerLabel()
-            	     .."!SP!"..os.time().."!SP!"
-              	   .."Got error: "..v
-  				rednet.send(434, newemail)
-  				if rednet.receive(5)~=nil then
-    				success = true
-	  			else
-  	  			success = false
-  	  			Log.w("Error sending report!")
+		    	if not isModified then
+		    		rednet.open(peripheral.find("modem"))
+		    		local newemail = "$EMAIL"..tostring(576)
+          		       .."!SP!"..os.getComputerLabel()
+            		     .."!SP!"..os.time().."!SP!"
+              		   .."Got error: "..v
+  					rednet.send(434, newemail)	
+  					if rednet.receive(5)~=nil then
+    					success = true
+	  				else
+  	  				success = false
+  	  				Log.w("Error sending report!")
+  					end
+
+  				else
+  					sucess = false
+  					Log.w("System files are modified. Not sending report!")
   				end
   			end
 		end
@@ -347,13 +370,26 @@ elseif LoadingScreen() then
   	
   	local message = 'Error report failed!'
 
+  	if isModified then
+  		message = ''
+  	end
+
 		if success then
 			Log.i("Error report sent to Ma3rX's mail!")
 			message = 'Error report sent!'
 		end
 
+		if isModified then
+			term.setCursorPos(1, Drawing.Screen.Height-4)
+			term.clearLine()
+
+			Log.w('System is modified, not submitting report.')
+			PrintCentered('System is modified, not submitting report.', Drawing.Screen.Height-4)
+		end
+
 		term.setCursorPos(1, Drawing.Screen.Height-3)
 		term.clearLine()
+
 		PrintCentered(message..' Click to reboot.', Drawing.Screen.Height-3)
 
 		os.pullEvent('mouse_click')
