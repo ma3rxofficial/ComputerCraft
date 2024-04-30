@@ -147,41 +147,7 @@ function drawBox( startX, startY, endX, endY, nColour )
 end
 
 function drawFilledBox( startX, startY, endX, endY, nColour )
-    if type( startX ) ~= "number" or type( startX ) ~= "number" or
-       type( endX ) ~= "number" or type( endY ) ~= "number" or
-       (nColour ~= nil and type( nColour ) ~= "number") then
-        error( "Expected startX, startY, endX, endY, colour", 2 )
-    end
-
-    startX = math.floor(startX)
-    startY = math.floor(startY)
-    endX = math.floor(endX)
-    endY = math.floor(endY)
-
-    if nColour then
-        term.setBackgroundColor( nColour )
-    end
-    if startX == endX and startY == endY then
-        drawPixelInternal( startX, startY )
-        return
-    end
-
-    local minX = math.min( startX, endX )
-    if minX == startX then
-        minY = startY
-        maxX = endX
-        maxY = endY
-    else
-        minY = endY
-        maxX = startX
-        maxY = startY
-    end
-
-    for x=minX,maxX do
-        for y=minY,maxY do
-            drawPixelInternal( x, y )
-        end
-    end
+    print("heyo")
 end
 
 function drawImage( tImage, xPos, yPos )
@@ -285,7 +251,7 @@ end
 --Defaults for all objects
 local function getDefaults()
 	local mt = {
-		target = term.native(),
+		target = term,
 		x = 1,
 		y = 1,
 		dynX = 1,
