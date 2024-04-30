@@ -8,11 +8,12 @@ SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 fs = SpeedOS.FS
 
+pathToConfig = "System/SlideShow.settings"
+
+local sleep_time = tonumber(config.read(pathToConfig, "sleep_time"))
 local use_monitor = false
 local monitor
 local monitor_scale
-
-pathToConfig = "System/SlideShow.settings"
 
 function Menu()
 
