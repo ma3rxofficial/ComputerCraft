@@ -695,10 +695,7 @@ if ok then
 end
 
 --Clear and exit--
-term.setCursorPos(1,1)
-term.setTextColor(colors.white)
-term.setBackgroundColor(colors.black)
-term.clear()
+SpeedOS.Close()
 if not ok then
     if err == "Terminated" then
         print( "Check out the full version of Redirection:" )
