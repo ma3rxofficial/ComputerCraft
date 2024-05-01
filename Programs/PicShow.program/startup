@@ -10,7 +10,7 @@ fs = SpeedOS.FS
 
 pathToConfig = "System/SlideShow.settings"
 
-local sleep_time = tonumber(config.read(pathToConfig, "sleep_time"))
+local sleep_time = tonumber(config.read(pathToConfig, "sleep time"))
 local use_monitor = false
 local monitor
 local monitor_scale
