@@ -203,7 +203,7 @@ function Click(event, side, x, y)
 									if fs.isDir('Desktop/'..value) then
 										fs.makeDir('Desktop/'..value)
 										RefreshFiles()
-									elseif not 	fs.exists('Desktop/'..value) then
+									elseif not fs.exists('Desktop/'..value) then
 										fs.makeDir('Desktop/'..value)
 										RefreshFiles()
 									end
@@ -218,7 +218,6 @@ function Click(event, side, x, y)
 						if success then
 							if not fs.isDir('Desktop/'..value) then
 								pidor = fs.open('Desktop/'..value, "w")
-								pidor.write('print("Hello World!")')
 								pidor.close()
 								RefreshFiles()
 							end
@@ -270,7 +269,6 @@ function Click(event, side, x, y)
 						if success then
 							if not fs.isDir('Desktop/'..value) then
 								pidor = fs.open('Desktop/'..value, "w")
-								pidor.write('print("Hello World!")')
 								pidor.close()
 								RefreshFiles()
 							end
