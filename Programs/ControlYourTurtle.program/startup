@@ -42,7 +42,7 @@ function help()
   print(" FUEL - get fuel level")
   print(" REFUEL - refuel turtle")
   print(" ATTACK - attack everything near to turtle")
-  print(" RS - turtle sends redstone signal
+  print(" RS - turtle starts send redstone signal")
   print(" DIG or DIG(D, U) - dig block in front(or up, down)")
   print(" USE or USE(D, U) - uses item in selected slot(front, up, down")
   print(" 1-16 - select slot of turtle")
