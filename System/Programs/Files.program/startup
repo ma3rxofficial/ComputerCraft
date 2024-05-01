@@ -276,6 +276,8 @@ function RefreshFiles()
 		if peripheral.isPresent(Current.Peripheral.Side:lower()) then
 			if Current.Peripheral.Type == 'wireless_modem' then
 				Current.Peripheral.Type = 'Wireless_Modem'
+			elseif Current.Peripheral.Type == "rp_drive" then
+				Current.Peripheral.Type = 'RP Drive'
 			end
 			Current.Peripheral.Type = Helpers.Capitalise(Current.Peripheral.Type)
 			Current.Peripheral.Side = Helpers.Capitalise(Current.Peripheral.Side)
