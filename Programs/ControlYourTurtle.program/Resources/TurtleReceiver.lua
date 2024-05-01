@@ -101,10 +101,17 @@ while true do
       turtle.placeDown()
       rednet.send(id, "Turtle used item in down!")
     elseif msg == "RS" then
-      rs.setOutput("front", true)
+      for _, side in pairs(rs.getSides()) do
+          rs.setOutput(side, true)
+      end
+      
       rednet.send(id, "Turtle send redstone signal!")
       sleep(1)
-      rs.setOutput("front", false)
+
+      for _, side in pairs(rs.getSides()) do
+          rs.setOutput(side, false)
+      end
+      
       rednet.send(id, "Turtle not sending redstone signal anymore!")
     elseif msg == "1" then
       turtle.select(tonumber(msg))
