@@ -27,7 +27,7 @@
 		},	
 		AutoAPIUnloading = {
 			Type = 'Bool',
-			Label = 'API unloading ',
+			Label = 'API Unloading ',
 			Default = false,
 		},	
 	}
