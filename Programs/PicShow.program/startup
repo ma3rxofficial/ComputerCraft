@@ -68,8 +68,6 @@ function SlideShow(path, __term)
   local i = 1
 
   while true do
-    event = os.pullEvent()
-
     if use_monitor then
       windows.clearScreen(colors.white)
       term.setTextColor(colors.lightGray)
@@ -101,7 +99,7 @@ function SlideShow(path, __term)
       end
     end
 
-    i = 0
+    i = 1
   end
 end
 
