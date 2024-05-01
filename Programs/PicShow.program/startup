@@ -43,7 +43,7 @@ function Menu()
       use_monitor = true
 
       monitor = peripheral.wrap(peripheral.find("monitor", true))   
-      monitor.setTextScale(tonumber(config.read(pathToConfig, "monitor_scale")))
+      monitor.setTextScale(tonumber(config.read(pathToConfig, "monitor scale")))
       monitor.setBackgroundColor(colors.black)
       monitor.clear()
 
