@@ -70,8 +70,10 @@ while true do
     help()
   end
 
-  id, msg = rednet.receive(5)
-  if id == tonumber(turtle_id) then
+  repeat
+    rID, msg = rednet.receive(1.5)
+  until rID ~= os.getComputerID() or rID == tonumber(turtle_id) 
+  if rID == tonumber(turtle_id)  then
     print(msg)
   else
     print("Can't reach your turtle!")
