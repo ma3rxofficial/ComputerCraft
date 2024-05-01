@@ -585,12 +585,17 @@ function FilesClick(event, x, y, side)
 			elseif side == 2 then
 				local items = { 
 					{
-						Title = 'New Folder',
+						Title = 'New Folder...',
 						Click = function()
 							TextDialogueWindow:Initialise("Create a Folder", function(success, value)
 								if success then
-									SpeedOS.FS.makeDir(Current.Path..'/'..value)
-									Update()
+									if SpeedOS.FS.isDir(Current.Path..'/'..value) then
+										SpeedOS.FS.makeDir(Current.Path..'/'..value)
+										RefreshFiles()
+									elseif not SpeedOS.FS.exists(Current.Path..'/'..value) then
+										SpeedOS.FS.makeDir(Current.Path..'/'..value)
+										RefreshFiles()
+									end
 								end
 							end):Show()
 						end
@@ -600,9 +605,15 @@ function FilesClick(event, x, y, side)
 						Click = function()
 							TextDialogueWindow:Initialise("Create a File", function(success, value)
 								if success then
-									local h = SpeedOS.FS.open(Current.Path..'/'..value, 'w')
-									h.close()
-									RefreshFiles()
+									if not SpeedOS.FS.isDir(Current.Path..'/'..value) then
+										pidor = SpeedOS.FS.open(Current.Path..'/'..value, "w")
+										pidor.close()
+										RefreshFiles()
+									elseif not SpeedOS.FS.exists(Current.Path..'/'..value) then
+										pidor = SpeedOS.FS.open(Current.Path..'/'..value, "w")
+										pidor.close()
+										RefreshFiles()
+									end
 								end
 							end):Show()
 						end
@@ -696,12 +707,15 @@ function RightClickFile(file, absX, absY)
 		{
 			Title = 'Rename...',
 			Click = function()
-				if file.path == '/Desktop/Documents/' or file.path == '/Programs/' or file.path == '/System/' then
+				if file.path == '/Desktop/Documents/' or file.path == '/Programs/' or file.path == '/System/' or file.path == '/SpeedAPI/' then
 					ButtonDialogueWindow:Initialise("Unable to rename!", 'You can not rename that folder.', 'Ok', nil, function()end):Show()
 				else
 					local tdw = TextDialogueWindow:Initialise("Rename '"..Helpers.TruncateString(file.name, 17).."'", function(success, value)
 						if success and #value ~= 0 then
-							SpeedOS.FS.move(file.path, Helpers.RemoveFileName(file.path)..value)
+							if not SpeedOS.FS.exists(value) then
+								SpeedOS.FS.move(file.path, value)
+							end
+
 							Update()
 						end
 					end):Show()
@@ -752,8 +766,13 @@ function RightClickFile(file, absX, absY)
 			Click = function()
 				TextDialogueWindow:Initialise("Create a folder", function(success, value)
 					if success then
-						SpeedOS.FS.makeDir('Desktop/'..value)
-						RefreshFiles()
+						if SpeedOS.FS.isDir(Current.Path..'/'..value) then
+							SpeedOS.FS.makeDir(Current.Path..'/'..value)
+							RefreshFiles()
+						elseif not SpeedOS.FS.exists(Current.Path..'/'..value) then
+							SpeedOS.FS.makeDir(Current.Path..'/'..value)
+							RefreshFiles()
+						end
 					end
 				end):Show()
 			end
@@ -761,11 +780,17 @@ function RightClickFile(file, absX, absY)
 		{
 			Title = 'New File...',
 			Click = function()
-				TextDialogueWindow:Initialise("Create a Folder", function(success, value)
+				TextDialogueWindow:Initialise("Create a File", function(success, value)
 					if success then
-						local h = SpeedOS.FS.open(Current.Path..'/'..value, 'w')
-						h.close()
-						RefreshFiles()
+						if not SpeedOS.FS.isDir(Current.Path..'/'..value) then
+							pidor = SpeedOS.FS.open(Current.Path..'/'..value, "w")
+							pidor.close()
+							RefreshFiles()
+						elseif not SpeedOS.FS.exists(Current.Path..'/'..value) then
+							pidor = SpeedOS.FS.open(Current.Path..'/'..value, "w")
+							pidor.close()
+							RefreshFiles()
+						end
 					end
 				end):Show()
 			end
