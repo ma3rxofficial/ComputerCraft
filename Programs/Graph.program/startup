@@ -34,9 +34,9 @@ end
  
 windows.clearScreen(colors.cyan)
 m = peripheral.find("monitor", true)
-if m == nil then windows.clearScreen(colors.cyan) windows.error("This program requires external advanced monitor.") end
+if m == nil then windows.clearScreen(colors.cyan) windows.error("This program requires external advanced monitor.") SpeedOS.Close() end
 m = peripheral.wrap(m)
-if not m.isColor() then windows.clearScreen(colors.cyan) windows.error("This program will work only with ADVANCED monitor.") end
+if not m.isColor() then windows.clearScreen(colors.cyan) windows.error("This program will work only with ADVANCED monitor.") SpeedOS.Close() end
 m.setTextScale(0.5)
  
 local termxSize,termySize = term.getSize()
