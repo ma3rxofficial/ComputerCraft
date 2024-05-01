@@ -200,11 +200,34 @@ function Click(event, side, x, y)
 						Click = function()
 							TextDialogueWindow:Initialise("Create a Folder", function(success, value)
 								if success then
-									fs.makeDir('Desktop/'..value)
-									RefreshFiles()
+									if fs.isDir('Desktop/'..value) then
+										fs.makeDir('Desktop/'..value)
+										RefreshFiles()
+									elseif not 	fs.exists('Desktop/'..value) then
+										fs.makeDir('Desktop/'..value)
+										RefreshFiles()
+									end
 								end
 							end):Show()
 						end
+					},
+					{
+					Title = 'New File...',
+					Click = function()
+					TextDialogueWindow:Initialise("Create a File", function(success, value)
+						if success then
+							if not fs.isDir('Desktop/'..value) then
+								pidor = fs.open('Desktop/'..value, "w")
+								pidor.write('print("Hello World!")')
+								pidor.close()
+								RefreshFiles()
+							end
+						end
+					end):Show()
+					end
+					},
+					{
+						Separator = true
 					},
 					{
 						Title = 'Clean Up',
@@ -229,11 +252,34 @@ function Click(event, side, x, y)
 					Click = function()
 					TextDialogueWindow:Initialise("Create a Folder", function(success, value)
 						if success then
-							fs.makeDir('Desktop/'..value)
-							RefreshFiles()
+							if fs.isDir('Desktop/'..value) then
+								fs.makeDir('Desktop/'..value)
+								RefreshFiles()
+							elseif not fs.exists('Desktop/'..value) then
+								fs.makeDir('Desktop/'..value)
+								RefreshFiles()
+							end
 						end
 					end):Show()
 					end
+				},
+				{
+					Title = 'New File...',
+					Click = function()
+					TextDialogueWindow:Initialise("Create a File", function(success, value)
+						if success then
+							if not fs.isDir('Desktop/'..value) then
+								pidor = fs.open('Desktop/'..value, "w")
+								pidor.write('print("Hello World!")')
+								pidor.close()
+								RefreshFiles()
+							end
+						end
+					end):Show()
+					end
+				},
+				{
+						Separator = true
 				},
 				{
 					Title = 'Clean Up',
