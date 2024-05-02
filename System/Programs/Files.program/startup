@@ -714,8 +714,8 @@ function RightClickFile(file, absX, absY)
 				else
 					local tdw = TextDialogueWindow:Initialise("Rename '"..Helpers.TruncateString(file.name, 17).."'", function(success, value)
 						if success and #value ~= 0 then
-							if not SpeedOS.FS.exists(value) then
-								SpeedOS.FS.move(file.path, value)
+							if not SpeedOS.FS.exists(Current.Path..'/'..value) then
+								SpeedOS.FS.move(file.path, Current.Path..'/'..value)
 							end
 
 							Update()
