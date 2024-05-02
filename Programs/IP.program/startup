@@ -10,6 +10,13 @@ windows.clearScreen(colors.gray)
 term.setTextColor(colors.white)
 
 local test = http.get("https://api.ipify.org/?format=raw")
+
+if not test then
+	windows.clearScreen(colors.white)
+	windows.error("Can't reach IP server!")
+	SpeedOS.Close()
+end
+
 SpeedText.cPrint("Your IP is "..test.readAll())
 
 SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
