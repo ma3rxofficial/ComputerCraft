@@ -18,6 +18,8 @@ SpeedOS = loader.OS()
 SpeedOS.ToolBarColour = colours.lightGrey
 SpeedOS.ToolBarTextColour = colours.white
 
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+
 local old = os.pullEvent
 os.pullEvent = os.pullEventRaw
 
@@ -135,3 +137,6 @@ else
 end
 print("")
 print("Created by Ale32bit")
+
+SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
+SpeedOS.Close()
