@@ -118,8 +118,8 @@ end,function()
     end
 end,function()
     while true do
-        local ev = os.pullEventRaw("terminate")
-        if ev == "terminate" then
+        local ev = os.pullEventRaw()
+        if ev == "terminate" or ev == "mouse_click" or ev == "mouse_drag" or ev == "mouse_scroll" or ev == "key" then
             dead = true
             break
         end
