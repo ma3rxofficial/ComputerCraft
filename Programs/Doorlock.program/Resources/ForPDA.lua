@@ -1,4 +1,4 @@
-local side = nil
+local side
 
 for _, value in pairs(rs.getSides()) do
 	if peripheral.getType(value) == "modem" then
