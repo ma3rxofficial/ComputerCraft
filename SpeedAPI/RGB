@@ -5,12 +5,16 @@
 -- However, you may not publish this API under your name without asking me.
 -- If you have any suggestions, bug reports or questions then please send an email to:
 -- crazedprogrammer@gmail.com
+
 local hex = {"F0F0F0", "F2B233", "E57FD8", "99B2F2", "DEDE6C", "7FCC19", "F2B2CC", "4C4C4C", "999999", "4C99B2", "B266E5", "3366CC", "7F664C", "57A64E", "CC4C4C", "191919"}
 local rgb = {}
+
 for i=1,16,1 do
   rgb[i] = {tonumber(hex[i]:sub(1, 2), 16), tonumber(hex[i]:sub(3, 4), 16), tonumber(hex[i]:sub(5, 6), 16)}
 end
+
 local rgb2 = {}
+
 for i=1,16,1 do
   rgb2[i] = {}
   for j=1,16,1 do
@@ -60,7 +64,13 @@ colors.toRGB2 = function(color1, color2, str)
   return math.floor(rgb2[c1][c2][1]), math.floor(rgb2[c1][c2][2]), math.floor(rgb2[c1][c2][3])
 end
 
+-- Для поддержки нашего АПИ
+
 colours.fromRGB = colors.fromRGB
 colours.toRGB = colors.toRGB
 colours.fromRGB2 = colors.fromRGB2
 colours.toRGB2 = colors.toRGB2
+colours.fromRGB = _colors.fromRGB
+colours.toRGB = _colors.toRGB
+colours.fromRGB2 = _colors.fromRGB2
+colours.toRGB2 = _colors.toRGB2
