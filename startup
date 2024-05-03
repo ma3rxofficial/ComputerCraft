@@ -37,8 +37,10 @@ if http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/
 	end
 
 	pidor2.close()
+else
+	Log.w("Can't check startup file for modifications!")
 end
-
+	
 if http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua") then
 	pidor = http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua").readAll()
 	pidor2 = fs.open("System/main.lua", "r")
