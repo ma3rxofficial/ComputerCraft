@@ -54,6 +54,8 @@ if http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/
 	end
 
 	pidor2.close()
+else
+	Log.w("Can't check OS file for modifications!")
 end
 
 function LoadAPI(_sPath)
