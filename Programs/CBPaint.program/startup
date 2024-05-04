@@ -1,8 +1,23 @@
------------------ПОДГРУЗКА АПИ КОНТЕКСТНГО МЕНЮ----------------------
-os.loadAPI("System/API/context")
+os.loadAPI("loader")
+SpeedOS = loader.OS() 
+
+SpeedOS.LoadAPI("SpeedAPI/context")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/windows")
+
+if peripheral.find("modem") then
+        rednet.close(peripheral.find("modem"))
+end
+
+if not peripheral.find("command", true) then
+        windows.clearScreen(colors.white)
+        windows.error("You need command block!")
+        SpeedOS.Close()
+end
+ 
  
 ---------------------ПОДКЛЮЧЕНИЕ ПЕРИФЕРИИ---------------------------
-local CommandBlock = peripheral.wrap("bottom")
+local CommandBlock = peripheral.wrap(peripheral.find("command", true))
  
 ---------------------ОБЪЯВЛЕНИЕ ПЕРЕМЕННЫХ---------------------------
 local xSize, ySize = term.getSize()
@@ -124,7 +139,4 @@ while true do
 end
  
 ------------------------------ВЫХОД---------------------
-term.setTextColor(colors.white)
-term.setBackgroundColor(colors.black)
-term.setCursorPos(1,1)
-term.clear()
+SpeedOS.Close()
