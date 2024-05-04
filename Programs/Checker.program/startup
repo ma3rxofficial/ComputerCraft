@@ -83,10 +83,13 @@ function GetProgram(selected)
     file_New.write(result.readAll())
     file_New.close()
 
-    windows.clearScreen(colors.white)
-    term.setTextColor(colors.lightGray)
-    SpeedText.cPrint("Downloaded!")
+    windows.clearScreen(colors.gray)
+    term.setTextColor(colors.white)
+
+    SpeedText.cPrint("Downloaded!", 8)
     sleep(0.5)
+
+    term.setTextColor(colors.lightGray)
     SpeedText.cPrint("Click anywhere to continue...", 10)
 
     SpeeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
@@ -99,7 +102,7 @@ function GetProgram(selected)
 
   if result_data == selected_file_data then
     windows.clearScreen(colors.white)
-    term.setTextColor(colors.lightGray)
+    term.setTextColor(colors.black)
     SpeedText.cPrint("Program is up to date!")
     sleep(3)
     Menu()
@@ -120,10 +123,14 @@ function GetProgram(selected)
   SpeedText.cPrint("Updating...")
   selected_file2.write(result_data)
   sleep(1)
-  windows.clearScreen(colors.white)
-  term.setTextColor(colors.lightGray)
-  SpeedText.cPrint("Updated!")
+
+  windows.clearScreen(colors.gray)
+  term.setTextColor(colors.white)
+
+  SpeedText.cPrint("Updated!", 8)
   sleep(0.5)
+
+  term.setTextColor(colors.lightGray)
   SpeedText.cPrint("Click anywhere to continue...", 10)
 
   SpeeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
