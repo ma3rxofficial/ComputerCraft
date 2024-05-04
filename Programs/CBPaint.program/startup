@@ -1,30 +1,23 @@
-os.loadAPI("loader")
-SpeedOS = loader.OS() 
-
-SpeedOS.LoadAPI("SpeedAPI/context")
-SpeedOS.LoadAPI("SpeedAPI/peripheral")
-
-if peripheral.find("modem") then
-        rednet.close(peripheral.find("modem"))
-end
+-----------------ПОДГРУЗКА АПИ КОНТЕКСТНГО МЕНЮ----------------------
+os.loadAPI("System/API/context")
  
----------------------ÏÎÄÊËÞ×ÅÍÈÅ ÏÅÐÈÔÅÐÈÈ---------------------------
+---------------------ПОДКЛЮЧЕНИЕ ПЕРИФЕРИИ---------------------------
 local CommandBlock = peripheral.wrap("bottom")
  
----------------------ÎÁÚßÂËÅÍÈÅ ÏÅÐÅÌÅÍÍÛÕ---------------------------
+---------------------ОБЪЯВЛЕНИЕ ПЕРЕМЕННЫХ---------------------------
 local xSize, ySize = term.getSize()
  
---ÑÎÇÄÀÍÈÅ ÌÀÑÑÈÂÀ CURRENTID, ÏÅÐÂÛÉ ÝËÅÌÅÍÒ - ÝÒÎ ID ÁËÎÊÀ, ÂÒÎÐÎÉ - ÅÃÎ DATA, ÒÐÅÒÈÉ - ÖÂÅÒ, ÎÒÎÁÐÀÆÀÅÌÛÉ ÍÀ ÝÊÐÀÍÅ. ÏÎ ÓÌÎË×ÀÍÈÞ ÂÛÁÐÀÍ ÐÅÄÑÒÎÓÍ-ÁËÎÊ
+--СОЗДАНИЕ МАССИВА CURRENTID, ПЕРВЫЙ ЭЛЕМЕНТ - ЭТО ID БЛОКА, ВТОРОЙ - ЕГО DATA, ТРЕТИЙ - ЦВЕТ, ОТОБРАЖАЕМЫЙ НА ЭКРАНЕ. ПО УМОЛЧАНИЮ ВЫБРАН РЕДСТОУН-БЛОК
 local currentID = {
         [1]="redstone_block",
         [2]="0",
         [3]=colors.red
 }
  
---ÑÎÇÄÀÍÈÅ ÌÀÑÑÈÂÀ PIXELS, ÕÐÀÍßÙÅÃÎ ÂÑÅ ÍÀÐÈÑÎÂÀÍÍÛÅ ÏÈÊÑÅËÈ ÍÀ ÝÊÐÀÍÅ È ÈÕ ÖÂÅÒ
---ÅÃÎ ÑÒÐÓÊÒÓÐÀ ÒÀÊÎÂÀ: Pixels[êîîðäèíàòà ïî Y][êîîðäèíàòà ïî X] = öâåò (ïåðåìåííàÿ òèïà number)
+--СОЗДАНИЕ МАССИВА PIXELS, ХРАНЯЩЕГО ВСЕ НАРИСОВАННЫЕ ПИКСЕЛИ НА ЭКРАНЕ И ИХ ЦВЕТ
+--ЕГО СТРУКТУРА ТАКОВА: Pixels[координата по Y][координата по X] = цвет (переменная типа number)
 local Pixels = {}
---ÇÀÏÎËÍÅÍÈÅ ÌÀÑÑÈÂÀ ÏÈÊÑÅËßÌÈ ÁÅËÎÃÎ ÖÂÅÒÀ
+--ЗАПОЛНЕНИЕ МАССИВА ПИКСЕЛЯМИ БЕЛОГО ЦВЕТА
 for j=1,(ySize-1) do
         Pixels[j] = {}
         for i=1,xSize do
@@ -32,9 +25,10 @@ for j=1,(ySize-1) do
         end
 end
  
------------------------ÎÁÚßÂËÅÍÈÅ ÔÓÍÊÖÈÉ----------------------------
+-----------------------ОБЪЯВЛЕНИЕ ФУНКЦИЙ----------------------------
 local function cb(command)
-        
+        CommandBlock.setCommand(command)
+        CommandBlock.runCommand()
 end
  
 local function setBlock(x,y,id,data)
@@ -49,9 +43,9 @@ local function clearAll()
         end
 end
  
---------------------ÔÓÍÊÖÈß ÎÒÐÈÑÎÂÊÈ ÈÍÒÅÐÔÅÉÑÀ----------------------
+--------------------ФУНКЦИЯ ОТРИСОВКИ ИНТЕРФЕЙСА----------------------
 local function gui()
-        --×ÈÒÀÅÌ ÌÀÑÑÈÂ È ÐÈÑÓÅÌ ÏÈÊÑÅËÈ
+        --ЧИТАЕМ МАССИВ И РИСУЕМ ПИКСЕЛИ
         for j=1,#Pixels do
                 for i=1,#Pixels[j] do
                         if Pixels[j][i] ~= nil then
@@ -60,15 +54,15 @@ local function gui()
                 end
         end
        
-        --ÐÈÑÓÅÌ ÂÅÐÕÍÈÉ ÒÓËÁÀÐ
+        --РИСУЕМ ВЕРХНИЙ ТУЛБАР
         for i=1,xSize do
                 paintutils.drawPixel(i,1,colors.gray)
         end
  
-        --ÐÈÑÓÅÌ ÒÅÊÓÙÈÉ ÂÛÁÐÀÍÍÛÉ ÖÂÅÒ
+        --РИСУЕМ ТЕКУЩИЙ ВЫБРАННЫЙ ЦВЕТ
         paintutils.drawPixel(1,1,currentID[3])
  
-        --ÏÈØÅÌ ÎÑÒÀÂØÈÅÑß ÍÀÄÏÈÑÈ ÍÀ ÒÓËÁÀÐÅ
+        --ПИШЕМ ОСТАВШИЕСЯ НАДПИСИ НА ТУЛБАРЕ
         term.setTextColor(colors.lightGray)
         term.setBackgroundColor(colors.gray)
         term.setCursorPos(xSize,1)
@@ -78,32 +72,32 @@ local function gui()
         term.write(text)
 end
  
---ÂÛÇÛÂÀÅÌ ÔÓÍÊÖÈÞ ÈÍÒÅÐÔÅÉÑÀ ÐÀÇÎÂÎ ÏÐÈ ÑÒÀÐÒÅ ÏÐÎÃÐÀÌÌÛ (ÍÀÐÈÑÓÞÒÑß ÁÅËÛÅ ÏÈÊÑÅËÈ, Ò.Ê ÈÇÍÀ×ÀËÜÍÎ ÌÛ ÂÁÈËÈ Â ÌÀÑÑÈÂ PIXELS ÁÅËÛÉ ÖÂÅÒ)
+--ВЫЗЫВАЕМ ФУНКЦИЮ ИНТЕРФЕЙСА РАЗОВО ПРИ СТАРТЕ ПРОГРАММЫ (НАРИСУЮТСЯ БЕЛЫЕ ПИКСЕЛИ, Т.К ИЗНАЧАЛЬНО МЫ ВБИЛИ В МАССИВ PIXELS БЕЛЫЙ ЦВЕТ)
 gui()
  
---------------------ÎÒÑËÅÆÈÂÀÍÈÅ ÊËÈÊÀ ÌÛØÈ---------------------
+--------------------ОТСЛЕЖИВАНИЕ КЛИКА МЫШИ---------------------
 while true do
         local event,button,x,y = os.pullEvent()
         if event == "mouse_click" or event == "mouse_drag" then
  
-                --ÅÑËÈ ÍÀÆÀÒÀ ËÅÂÀß ÊËÀÂÈØÀ, ÒÎ
+                --ЕСЛИ НАЖАТА ЛЕВАЯ КЛАВИША, ТО
                 if button == 1 and y > 1 then
  
-                        --ÐÈÑÓÅÌ ÏÈÊÑÅËÜ ÒÅÊÓÙÅÃÎ ÖÂÅÒÀ ÍÀ ÝÊÐÀÍÅ
+                        --РИСУЕМ ПИКСЕЛЬ ТЕКУЩЕГО ЦВЕТА НА ЭКРАНЕ
                         paintutils.drawPixel(x,y,currentID[3])
-                        --ÇÀÁÈÂÀÅÌ ÇÍÀ×ÅÍÈÅ ÒÅÊÓÙÅÃÎ ÖÂÅÒÀ Â ÌÀÑÑÈÂ PIXELS (y-1 èç-çà ñìåùåíèÿ êîîðäèíàòû y èç-çà âåðõíåãî òóëáàðà)
+                        --ЗАБИВАЕМ ЗНАЧЕНИЕ ТЕКУЩЕГО ЦВЕТА В МАССИВ PIXELS (y-1 из-за смещения координаты y из-за верхнего тулбара)
                         Pixels[y-1][x] = currentID[3]
-                        --ÓÑÒÀÍÀÂËÈÂÀÅÌ ÁËÎÊ Â ÌÈÐÅ ÏÎ ÊÎÎÐÄÈÍÀÒÅ Ñ ÒÅÊÓÙÈÌÈ ÏÀÐÀÌÅÒÐÀÌÈ CURRENTID
+                        --УСТАНАВЛИВАЕМ БЛОК В МИРЕ ПО КООРДИНАТЕ С ТЕКУЩИМИ ПАРАМЕТРАМИ CURRENTID
                         setBlock(x,y,currentID[1],currentID[2])
  
-                --ÅÑËÈ ÍÀÆÀÒÀ ÏÐÀÂÀß ÊËÀÂÈØÀ, ÒÎ
+                --ЕСЛИ НАЖАТА ПРАВАЯ КЛАВИША, ТО
                 elseif button == 2 and y > 1 then
  
-                        --ÂÛÇÂÀÒÜ ÊÎÍÒÅÊÑÒÍÎÅ ÌÅÍÞ È ÇÀÏÈÑÀÒÜ Â ÏÅÐÅÌÅÍÍÓÞ ACTION ÐÅÇÓËÜÒÀÒ ÄÅÉÑÒÂÈÉ Ñ ÌÅÍÞ
+                        --ВЫЗВАТЬ КОНТЕКСТНОЕ МЕНЮ И ЗАПИСАТЬ В ПЕРЕМЕННУЮ ACTION РЕЗУЛЬТАТ ДЕЙСТВИЙ С МЕНЮ
                         local action = context.menu(x,y,{"Redstone block",false},{"Orange wool",false},{"Gold block",false},{"Emerald block",false},{"Blue wool",false},"-",{"Air",false})
  
-                        --ÀÍÀËÈÇ ÄÅÉÑÒÂÈß ÊÎÍÒÅÊÑÒÍÎÃÎ ÌÅÍÞ
-                        --ÇÀÏÈÑÜ Â ÌÀÑÑÈÂ CURRENTID ÈÍÔÎÐÌÀÖÈÈ ÏÎÑËÅ ÑÄÅËÀÍÍÎÃÎ ÂÛÁÎÐÀ Â ÊÎÍÒÅÊÑÒÍÎÌ ÌÅÍÞ
+                        --АНАЛИЗ ДЕЙСТВИЯ КОНТЕКСТНОГО МЕНЮ
+                        --ЗАПИСЬ В МАССИВ CURRENTID ИНФОРМАЦИИ ПОСЛЕ СДЕЛАННОГО ВЫБОРА В КОНТЕКСТНОМ МЕНЮ
                         if action == "Redstone block" then
                                 currentID = {[1]="redstone_block",[2]="0",[3]=colors.red}
                         elseif action == "Orange wool" then
@@ -118,10 +112,10 @@ while true do
                                 currentID = {[1]="air",[2]="0",[3]=colors.white}
                         end
  
-                        --ÏÅÐÅÐÈÑÎÂÀÒÜ ÈÍÒÅÐÔÅÉÑ, ×ÒÎÁÛ ÓÁÐÀÒÜ ÌÅÍÞ Ñ ÝÊÐÀÍÀ
+                        --ПЕРЕРИСОВАТЬ ИНТЕРФЕЙС, ЧТОБЫ УБРАТЬ МЕНЮ С ЭКРАНА
                         gui()
  
-                --ÅÑËÈ ÍÀÆÀÒ ÊÐÅÑÒÈÊ ÑÏÐÀÂÀ ÂÂÅÐÕÓ, ÒÎ ÓÄÀËÈÒÜ ÂÑÅ ÁËÎÊÈ, ÐÀÇÎÐÂÀÒÜ ÖÈÊË WHILE È ÂÛÉÒÈ ÈÇ ÏÐÎÃÐÀÌÌÛ
+                --ЕСЛИ НАЖАТ КРЕСТИК СПРАВА ВВЕРХУ, ТО УДАЛИТЬ ВСЕ БЛОКИ, РАЗОРВАТЬ ЦИКЛ WHILE И ВЫЙТИ ИЗ ПРОГРАММЫ
                 elseif x == xSize and y == 1 then
                         clearAll()
                         break
@@ -129,9 +123,8 @@ while true do
         end
 end
  
-------------------------------ÂÛÕÎÄ---------------------
-if peripheral.find("modem") then
-        rednet.open(peripheral.find("modem"))
-end
-
-SpeedOS.Close()
+------------------------------ВЫХОД---------------------
+term.setTextColor(colors.white)
+term.setBackgroundColor(colors.black)
+term.setCursorPos(1,1)
+term.clear()
