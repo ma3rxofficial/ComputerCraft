@@ -6,8 +6,6 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
-io = SpeedOS.IO
-
 log_file = fs.open("Resources/Chat.log", "a")
 
 if not peripheral.find("adventure map interface", true) then
