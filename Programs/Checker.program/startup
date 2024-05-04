@@ -107,7 +107,7 @@ function GetProgram(selected)
     SpeedText.cPrint("Program is up to date!")
 
     term.setTextColor(colors.lightGray)
-    sleep(3)
+    sleep(1)
     SpeedText.cPrint("Click anywhere to continue...")
 
     SpeeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
