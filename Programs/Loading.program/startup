@@ -19,6 +19,9 @@ SpeedOS.ToolBarColour = colours.lightGrey
 SpeedOS.ToolBarTextColour = colours.white
 
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/config")
+
+pathToConfig = "System/Loading.settings"
 
 local old = os.pullEvent
 os.pullEvent = os.pullEventRaw
@@ -51,17 +54,6 @@ local splash = {
     "Rahph was here",
     "Rahph, stop messing with my programs.",
     "Don't press the big red button",
-    "Loadingn't",
-    "Monch the bred",
-    "ahah yes",
-    "We are number one!",
-    "Shutting down...",
-    "Whomst'd've my loading bar?",
-    "java.lang.OutOfMemoryError",
-    "Fancy useless loadings.",
-    "Have you tried using Urn?",
-    "*Ali-a intro plays*",
-    "Alexa play despacito",
 }
 
 local col
