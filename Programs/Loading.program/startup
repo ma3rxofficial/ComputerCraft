@@ -12,7 +12,8 @@ pathToConfig = "System/Loading.settings"
 local old = os.pullEvent
 os.pullEvent = os.pullEventRaw
 
-local splash = {}
+huy_ = config.read(pathToConfig, "splashes")
+local splash = textutils.unserialize(huy_)
 
 local col
 if term.isColor() then
