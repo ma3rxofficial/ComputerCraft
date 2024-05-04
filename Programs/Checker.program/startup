@@ -101,9 +101,11 @@ function GetProgram(selected)
   selected_file_data = selected_file.readAll()
 
   if result_data == selected_file_data then
-    windows.clearScreen(colors.white)
-    term.setTextColor(colors.black)
+    windows.clearScreen(colors.gray)
+    term.setTextColor(colors.white)
+
     SpeedText.cPrint("Program is up to date!")
+
     sleep(3)
     Menu()
   end
