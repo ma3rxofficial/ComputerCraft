@@ -118,9 +118,14 @@ function GetProgram(selected)
 
   selected_file2 = fs.open(selected, "w")
 
-  windows.clearScreen(colors.white)
+  windows.clearScreen(colors.gray)
+  term.setTextColor(colors.white)
+  SpeedText.cPrint("Updating...", 8)
+
+  sleep(0.5)
   term.setTextColor(colors.lightGray)
-  SpeedText.cPrint("Updating...")
+  SpeedText.cPrint("Writing data to file...", 10)
+
   selected_file2.write(result_data)
   sleep(1)
 
