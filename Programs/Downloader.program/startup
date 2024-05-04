@@ -1,12 +1,32 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
-fs = SpeedOS.fs
 
 SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/config")
+
+pathToConfig = "System/Downloader.settings"
+
+use_http = false
+
+if config.read(pathToConfig, "enable http") == "true" then
+  use_http = true
+
+else
+  use_http = false
+end
+
+fs = SpeedOS.fs
 
 function downloadFile(l, p)
-  if not string.find(l, "https://") then 
-    l = "https://"..l
+  if use_http then
+    if not string.find(l, "http://") then 
+      l = "http://"..l
+    end
+    
+  else
+    if not string.find(l, "https://") then 
+      l = "https://"..l
+    end
   end
 
   data = http.get(l)
