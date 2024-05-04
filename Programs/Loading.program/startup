@@ -12,35 +12,7 @@ pathToConfig = "System/Loading.settings"
 local old = os.pullEvent
 os.pullEvent = os.pullEventRaw
 
-local splash = {
-    "Loading files, maybe...",
-    "Why is this taking so long?!",
-    "Windows is loading files...",
-    "sleep(1)",
-    "Loading 42PB of data. Please wait.",
-    "Closing handles...",
-    "Counting stars in the sky...",
-    "Not believing my eyes...",
-    "u wnt.. sum loading?",
-    "Mining etherum...",
-    "Sending files to NSA...",
-    "Distributing your credit card information...",
-    "Suing everyone...",
-    "handle:flushDownToilet()",--stolen from KRapFile :P
-    "Waiting for Half-Life 3...",
-    "Hacking NSA",
-    "Sending NSA data to.. NSA? I guess? Sure, why not.",
-    "() { :;};",
-    "Executing \"sudo rm -rf --no-preserve-root /*\"",
-    "Are you done yet? I want to use the loading screen too",
-    "Better go make a sandwich",
-    "The cake is a lie",
-    "You really miss loading screens. Don't you?",
-    "Press CTRL+T. I know you are tired aren't you?",
-    "Rahph was here",
-    "Rahph, stop messing with my programs.",
-    "Don't press the big red button",
-}
+local splash = {}
 
 local col
 if term.isColor() then
