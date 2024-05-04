@@ -11,5 +11,5 @@ if not side then
 
 else
 	rednet.broadcast("DOORLOCK%OPEN")
-
+	print("The door was open!")
 end
