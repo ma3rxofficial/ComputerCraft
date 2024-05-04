@@ -1,0 +1,5 @@
+clock in=left
+clock out=bottom
+data in=right
+data out=top
+username=???
