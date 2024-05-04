@@ -40,7 +40,7 @@ function setup()
     os.pullEvent = os.pullEventRaw
 
     -- attempt to load the string from disk
-    local file = io.open("Programs/Marquee.program/Resources/marquee-text", "r")
+    local file = io.open("Programs/Marquee.program/Resources/Pizdapka/marquee-text", "r")
     if file then
         str = file:read("*l") or str
         speed = tonumber(file:read("*l")) or speed
@@ -169,7 +169,7 @@ function drawUnlockedGUI()
 end
 
 function save()
-    local file = io.open("Programs/Marquee.program/Resources/marquee-text", "w")
+    local file = io.open("Programs/Marquee.program/Resources/Pizdapka/marquee-text", "w")
     if file then
         file:write(str)
         file:write("\n")
