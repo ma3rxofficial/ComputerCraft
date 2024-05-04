@@ -40,7 +40,8 @@ function FancyError()
   term.setCursorPos(2,18-1)
   term.setTextColour(colours.white)
   print(" Click anywhere to exit...")
-  os.pullEvent("mouse_click")
+
+  SpeeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
   SpeedOS.Close()
 end
 
