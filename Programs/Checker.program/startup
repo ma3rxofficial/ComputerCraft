@@ -126,7 +126,7 @@ function GetProgram(selected)
 
   windows.clearScreen(colors.gray)
   term.setTextColor(colors.white)
-  SpeedText.cPrint("Updating...", 8)
+  SpeedText.cPrint("Updating...")
 
   sleep(0.5)
   term.setTextColor(colors.lightGray)
