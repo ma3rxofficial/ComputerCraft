@@ -4,13 +4,18 @@ SpeedOS = loader.OS()
 SpeedOS.ToolBarColour = colours.grey
 SpeedOS.ToolBarColour = colours.white
 
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/config")
+
+pathToConfig = "System/MC-Chat.settings"
+
 windows.clearScreen(colors.black)
 
-sClockIn = "left"
-sClockOut = "bottom"
-sDataIn = "right"
-sDataOut = "top"
-sUserName = "???"
+sClockIn = config.read(pathToConfig, "clock in")
+sClockOut = config.read(pathToConfig, "clock out")
+sDataIn = config.read(pathToConfig, "data in")
+sDataOut = config.read(pathToConfig, "data out")
+sUserName = config.read(pathToConfig, "username")
 
 local bClock = false
 local a = {}
@@ -227,5 +232,5 @@ while bRunning do
     end
   end
 end
-term.clear()
-term.setCursorPos( 1, 1 )
+
+SpeedOS.Close()
