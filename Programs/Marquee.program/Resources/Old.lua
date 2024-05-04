@@ -1,5 +1,6 @@
-fs = SpeedOS.fs
-io = SpeedOS.io
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+
+io = SpeedOS.IO
 
 term.setBackgroundColor(colors.black)
 term.setTextColor(colors.white)
@@ -51,18 +52,17 @@ function setup()
         file:close()
     end
 
-    for i,side in ipairs(sides) do
-        if peripheral.getType(side) == "monitor" then
-            monitor = peripheral.wrap(side)
-            monitor.setTextScale(5)
-            running = true
-            return
-        end
+    if not peripheral.find("monitor", true) then
+        term.setBackgroundColor(colors.red)
+        print("No monitor attached")
+        error()
+        term.setBackgroundColor(colors.black)
+    else
+        monitor = peripheral.wrap(peripheral.find("monitor", true))
+        monitor.setTextScale(5)
+        running = true
+        return
     end
-    term.setBackgroundColor(colors.red)
-    print("No monitor attached")
-    error()
-    term.setBackgroundColor(colors.black)
 end
 
 function draw()
