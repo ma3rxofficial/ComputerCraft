@@ -4555,7 +4555,7 @@ function getOutput()
   if (monitor == nil and outIsTerm == false) then
     local monitorFound = false
     for _, side in pairs(Sides) do
-      if (peripheral.getType(side) == "monitor") then
+      if false then
         monitor = peripheral.wrap(side)
         monitorFound = true
         out = monitor
