@@ -1,0 +1,4 @@
+os.loadAPI("loader")
+SpeedOS = loader.OS()
+
+shell.run("Graffiti edit")
