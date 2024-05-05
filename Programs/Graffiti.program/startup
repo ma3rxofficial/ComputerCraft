@@ -4,4 +4,4 @@ SpeedOS = loader.OS()
 SpeedOS.ToolBarColour = colours.black
 SpeedOS.ToolBarTextColour = colours.white
 
-shell.run("Graffiti edit")
+shell.run("Resources/Engine edit")
