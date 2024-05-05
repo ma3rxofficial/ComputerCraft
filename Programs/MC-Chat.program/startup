@@ -1,11 +1,11 @@
 os.loadAPI("loader")
 SpeedOS = loader.OS()
 
-SpeedOS.ToolBarColour = colours.grey
-SpeedOS.ToolBarColour = colours.white
-
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/config")
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
 
 pathToConfig = "System/MC-Chat.settings"
 
@@ -62,9 +62,6 @@ end
 local function chatBox()
   term.setCursorPos( 1, 17 )
   term.clearLine()
-  for n=1,49 do
-    io.write("-")
-  end
 end
 
 local function addChat(str)
