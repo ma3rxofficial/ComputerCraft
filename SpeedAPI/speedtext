@@ -168,6 +168,12 @@ function time_and_date()
 	return tostring(den).."/"..tostring(mesyac).."/"..tostring(god).." "..time()
 end
 
+--Get date without time--
+function get_date() 
+	den, mesyac, god = getDate()
+	return tostring(den).."/"..tostring(mesyac).."/"..tostring(god)
+end
+
 --Extra exiting from program--
 function extraExit(_term)
 	if _term == nil then
