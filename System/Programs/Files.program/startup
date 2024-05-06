@@ -644,6 +644,15 @@ function FilesClick(event, x, y, side)
 							end
 						end
 					},
+					{
+						Separator = true
+					},
+ 					{
+						Title = 'Refresh',
+						Click = function()
+							Update()
+						end
+					},
 				}
 				if not Current.Clipboard.Content then
 					table.remove(items, 4)
