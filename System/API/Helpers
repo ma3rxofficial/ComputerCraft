@@ -3,7 +3,7 @@ LongestString = function(input, key, isKey)
 	if isKey then
 		for k, v in pairs(input) do
 			local titleLength = string.len(k)
-			if titleLength > length then
+			if titleLength > length then 
 				length = titleLength
 			end
 		end
