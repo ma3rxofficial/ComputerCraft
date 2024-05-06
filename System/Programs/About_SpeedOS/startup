@@ -163,7 +163,7 @@ end
 
 function TryClick(event, side, x, y)
 	if y == 5 and x >= 10 and x <= 44 then
-		SpeedOS.OpenFile('System/License')
+		SpeedOS.Run('Programs/Ink.program', 'System/License')
 		return
 	end
 
