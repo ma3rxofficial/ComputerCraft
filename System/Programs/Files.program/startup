@@ -13,7 +13,6 @@ SpeedOS.LoadAPI('/System/API/ListView')
 SpeedOS.LoadAPI('/System/API/TextDialogueWindow')
 SpeedOS.LoadAPI('/System/API/ButtonDialogueWindow')
 SpeedOS.LoadAPI('/System/API/OpenWithDialougeWindow')
-SpeedOS.LoadAPI('/SpeedAPI/windows')
 
 local startPath = tArgs[1] or '/Desktop/'
 local dragRelPos = nil
