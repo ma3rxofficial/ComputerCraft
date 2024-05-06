@@ -51,10 +51,18 @@ OpenFile = function(path, args)
 			end
 		elseif fs.isDir(path) then
 			LaunchProgram('/System/Programs/Files.program/startup', {path}, 'Files')
-		elseif extension == 'nfp' or extension == 'nft' or extension == 'skch' then
+		elseif extension == 'nfp' or extension == 'nft' or extension == 'skch' or extension == 'ico' then
 			LaunchProgram('/Programs/Sketch.program/startup', {path}, 'Sketch')
 		elseif extension == 'pkg' then
 			LaunchProgram('/System/Programs/Unpackager.program/startup', {path}, 'Unpackager')
+		elseif extension == 'txt' then
+			LaunchProgram('/Programs/Ink.program/startup', {path}, 'Ink')
+		elseif extension == 'text' then
+			LaunchProgram('/Programs/Ink.program/startup', {path}, 'Ink')
+		elseif extension == 'ink' then
+			LaunchProgram('/Programs/Ink.program/startup', {path}, 'Ink')
+		elseif extension == 'license' or extension == 'License' or extension == 'LICENSE' then
+			LaunchProgram('/Programs/Ink.program/startup', {path}, 'Ink')
 		else
 			LaunchProgram('/Programs/LuaIDE.program/startup', {path}, 'LuaIDE')
 		end
