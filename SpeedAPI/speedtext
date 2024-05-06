@@ -64,9 +64,12 @@ function line2(_term)
 end
 
 --Normal time returning-
-function time()
-        local time = os.time()
-	local formattedTime = textutils.formatTime(time, false)
+function time(use_pindos)
+    local time = os.time()
+    formattedTime = textutils.formatTime(time, false)
+    if use_pindos then
+    	local formattedTime = textutils.formatTime(time, true)
+    end
 	return formattedTime
 end
 
