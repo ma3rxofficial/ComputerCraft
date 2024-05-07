@@ -36,7 +36,7 @@ function UpdateButtons()
 				{
 					Title = 'Settings',
 					Click = function()
-						LaunchProgram('/System/Programs/Settings/startup', {}, 'Settings')
+						LaunchProgram('/System/Programs/Settings.program/startup', {}, 'Settings')
 					end
 				},
 				--[[
