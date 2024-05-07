@@ -123,7 +123,7 @@ function AutoUpdateRespose(event, url, data)
 		return
 	elseif SematicVersionIsNewer(GetSematicVersion(latestReleaseTag), GetSematicVersion(OneOSVersion)) then
 		--using old version
-		LaunchProgram('/System/Programs/Update/startup', {}, 'Update SpeedOS')
+		LaunchProgram('/System/Programs/Update.program/startup', {}, 'Update SpeedOS')
 	end
 end
 
