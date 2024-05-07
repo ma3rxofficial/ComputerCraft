@@ -54,6 +54,25 @@ if http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/
 	pidor2.close()
 end
 
+if Settings.GetValues('UseMonitor')['UseMonitor'] == true then
+	Log.i("Monitor mode enabled!")
+	Log.i("Checking for monitor...")
+
+	PidorEkran = peripheral.find("monitor", true)
+
+	if PidorEkran == nil then
+		Log.w("No monitor found! Running on computer screen...")
+	end
+
+	if not peripheral.wrap(PidorEkran).isColor() then
+		Log.w("No color monitor found!")
+	end
+
+	Log.i("Redirecting to monitor...")
+	print("OS is running on monitor(side "..PidorEkran..").")
+	term.redirect(peripheral.wrap(PidorEkran))
+end
+
 function LoadAPI(_sPath)
 	local sName = fs.getName( _sPath )
 	if tAPIsLoading[sName] == true then
