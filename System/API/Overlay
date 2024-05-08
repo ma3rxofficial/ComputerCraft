@@ -11,8 +11,8 @@ end
 
 function UpdateButtons()
 	if Current.Program then
-		toolBarColour = Current.Program.Environment.OneOS.ToolBarColour
-		toolBarTextColour = Current.Program.Environment.OneOS.ToolBarTextColour
+		toolBarColour = Current.Program.Environment.SpeedOS.ToolBarColour
+		toolBarTextColour = Current.Program.Environment.SpeedOS.ToolBarTextColour
 	else
 		toolBarColour = colours.white
 		toolBarTextColour = colours.black
@@ -30,7 +30,7 @@ function UpdateButtons()
 				{
 					Title = 'About SpeedOS',
 					Click = function()
-						LaunchProgram('/System/Programs/About_SpeedOS/startup', {}, 'About SpeedOS')
+						LaunchProgram('/System/Programs/About.program/startup', {}, 'About SpeedOS')
 					end
 				},
 				{
@@ -158,8 +158,8 @@ end
 
 function Draw()
 	if Current.Program then
-		toolBarColour = Current.Program.Environment.OneOS.ToolBarColour
-		toolBarTextColour = Current.Program.Environment.OneOS.ToolBarTextColour
+		toolBarColour = Current.Program.Environment.SpeedOS.ToolBarColour
+		toolBarTextColour = Current.Program.Environment.SpeedOS.ToolBarTextColour
 	else
 		toolBarColour = colours.white
 		toolBarTextColour = colours.black
