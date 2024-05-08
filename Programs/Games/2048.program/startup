@@ -2,9 +2,6 @@
 -- Clone by Richard (Rich73)
 -- Hacked together 10/04/2014
 
-os.loadAPI("loader")
-SpeedOS = loader.OS()
-
 SpeedOS.LoadAPI("SpeedAPI/windows")
 
 SpeedOS.ToolBarColour = colours.black
