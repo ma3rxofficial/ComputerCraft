@@ -1,5 +1,3 @@
-os.loadAPI("loader")
-SpeedOS = loader.OS()
 fs = SpeedOS.fs
 os.loadAPI("SpeedAPI/devices")
 os.loadAPI("SpeedAPI/windows")
