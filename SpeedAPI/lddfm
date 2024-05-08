@@ -13,7 +13,7 @@
 	  std PB wfdb986Z lddfm
 --]]
 
-fs = OneOS.fs
+fs = SpeedOS.FS
 local lddfm = { --main API
 	scroll = 0,
 	ypaths = {},
