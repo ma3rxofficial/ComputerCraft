@@ -1,8 +1,5 @@
 tArgs = {...}
 
-os.loadAPI("loader")
-SpeedOS = loader.OS()
-
 if SpeedOS then
 	--running under SpeedOS
 	SpeedOS.ToolBarColour = colours.grey
