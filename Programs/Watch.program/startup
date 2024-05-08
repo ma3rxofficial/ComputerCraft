@@ -5,8 +5,6 @@ local time_URL = "http://test-my-php.freeiz.com/time.php"
 local screenX, screenY = term.getSize()
 
 os.loadAPI("Resources/dateapi")
-os.loadAPI("loader")
-SpeedOS = loader.OS()
 
 SpeedOS.LoadAPI("SpeedAPI/config")
 
