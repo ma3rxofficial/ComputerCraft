@@ -1,4 +1,4 @@
-OneOSVersion = '...'
+SpeedOSVersion = '...'
 
 local x = 1
 local y = 1
@@ -57,7 +57,7 @@ function Initialise()
 	clockTimer = os.startTimer(0.8333333)
 	desktopRefreshTimer = os.startTimer(5)
 	local h = fs.open('System/.version', 'r')
-	OneOSVersion = h.readAll()
+	SpeedOSVersion = h.readAll()
 	h.close()
 
 	CheckAutoUpdate()
