@@ -1,7 +1,3 @@
--- SpeedOS initializing
-os.loadAPI("loader")
-SpeedOS = loader.OS()
-
 SpeedOS.ToolBarColour = colours.red
 SpeedOS.ToolBarTextColour = colours.white
 
