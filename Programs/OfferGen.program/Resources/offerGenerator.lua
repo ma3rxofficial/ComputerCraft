@@ -2,9 +2,6 @@
 -- Copyright 2015 - 2016 viluon (Andrew Kvapil), licensed under the MIT license (http://opensource.org/licenses/MIT)
 -- Version 1.2
 
-os.loadAPI("loader")
-SpeedOS = loader.OS()
-
 SpeedOS.LoadAPI("SpeedAPI/config")
 
 local m_rnd = math.random
