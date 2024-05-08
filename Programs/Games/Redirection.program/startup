@@ -2,8 +2,6 @@
 --Based on Redirection by Dan200: http://www.redirectiongame.com--
 --Clearing Screen--
 
-os.loadAPI("loader")
-SpeedOS = loader.OS()
 SpeedOS.ToolBarColour = colours.black
 SpeedOS.ToolBarTextColour = colours.white
 
