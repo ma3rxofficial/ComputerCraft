@@ -10,9 +10,6 @@ function findRadar()
     return nil
 end
 
-os.loadAPI("loader")
-
-SpeedOS = loader.OS()
 io = SpeedOS.IO
 
 SpeedOS.ToolBarColour = colours.lightGrey
