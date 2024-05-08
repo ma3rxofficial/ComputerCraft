@@ -8,9 +8,6 @@
 
 args = {...}
 
-os.loadAPI("loader")
-SpeedOS = loader.OS()
-
 SpeedOS.ToolBarColour = colours.grey
 SpeedOS.ToolBarTextColour = colours.white
 
