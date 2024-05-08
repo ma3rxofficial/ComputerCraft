@@ -69,6 +69,7 @@ This essentially allows the programs to run sandboxed. For example, os.shutdown 
 		self.Shell(env, program, shell, path, Helpers, os.run)
 		env.shell = addErrorHandler(shellEnv, 'Shell')
  		env.OneOS = addErrorHandler(self.OneOS(env, program), 'OneOS API')
+ 		env.SpeedOS = env.OneOS
 		env.sleep = env.os.sleep
 		return env
 	end
@@ -155,6 +156,8 @@ This essentially allows the programs to run sandboxed. For example, os.shutdown 
 			IO = io
 		}
 	end
+
+	SpeedOS = OneOS
 
 	FS = function(env, program, path)
 		local relPath = Helpers.RemoveFileName(path)
