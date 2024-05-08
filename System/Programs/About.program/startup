@@ -1,8 +1,5 @@
 tArgs = {...}
 
-os.loadAPI("loader")
-SpeedOS = loader.OS()
-
 SpeedOS.LoadAPI('/System/API/Drawing')
 SpeedOS.LoadAPI('/System/API/Button')
 SpeedOS.LoadAPI('/System/API/Helpers')
