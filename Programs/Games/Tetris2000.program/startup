@@ -1,10 +1,6 @@
-
 --ComputerCraft
 --Tetris v 1.0
 --© dzanis 12.07.12 
-
-os.loadAPI("loader")
-SpeedOS = loader.OS()
 
 SpeedOS.ToolBarColour = colours.black
 SpeedOS.ToolBarTextColour = colours.white
