@@ -4,9 +4,6 @@
     @author Hellkid98, HK98
 --]]
 
-os.loadAPI("loader")
-SpeedOS = loader.OS()
-
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 local w,h = term.getSize()
