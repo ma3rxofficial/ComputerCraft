@@ -10,9 +10,6 @@
 	Have fun!
 --]]
  
-os.loadAPI("loader")
-SpeedOS = loader.OS()
-
 fs = SpeedOS.fs
 
 -- Monochrome support (WIP)
