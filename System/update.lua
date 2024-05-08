@@ -2,7 +2,7 @@
 tArgs = {...}
 
 Settings = {
-	InstallPath = '/', --Where the program's installed, don't always asume root (if it's run under something like OneOS)
+	InstallPath = '/', --Where the program's installed, don't always asume root (if it's run under something like SpeedOS)
 	Hidden = true, --Whether or not the update is hidden (doesn't write to the screen), useful for background updates
 	GitHubUsername = 'ma3rxofficial', --Your GitHub username as it appears in the URL
 	GitHubRepoName = 'ComputerCraft', --The repo name as it appears in the URL
@@ -28,7 +28,7 @@ end
 tArgs = {...}
 
 Settings = {
-	InstallPath = '/', --Where the program's installed, don't always asume root (if it's run under something like OneOS)
+	InstallPath = '/', --Where the program's installed, don't always asume root (if it's run under something like SpeedOS)
 	Hidden = true, --Whether or not the update is hidden (doesn't write to the screen), useful for background updates
 	GitHubUsername = 'ma3rxofficial', --Your GitHub username as it appears in the URL
 	GitHubRepoName = 'ComputerCraft', --The repo name as it appears in the URL
