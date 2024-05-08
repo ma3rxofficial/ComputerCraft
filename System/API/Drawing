@@ -67,8 +67,8 @@ LoadImage = function(path, global)
 	}
 	if fs.exists(path) then
 		local _io = io
-		if OneOS then
-			_io = OneOS.IO
+		if SpeedOS then
+			_io = SpeedOS.IO
 		end
         local file = _io.open(path, "r")
         local sLine = file:read()

@@ -166,18 +166,18 @@ GetInfo = function(p)
 			screenType = 'Colour'
 		end
 		local buttonTitle = 'Use as Screen'
-		if OneOS.Settings:GetValues()['Monitor'] == p.Side:lower() then
+		if SpeedOS.Settings:GetValues()['Monitor'] == p.Side:lower() then
 			buttonTitle = 'Use Computer Screen'
 		end
 		table.insert(buttons, {Text = buttonTitle, OnClick = function(self, event, side, x, y)
 				self.Bedrock:DisplayAlertWindow('Reboot Required', "To change screen you'll need to reboot your computer.", {'Reboot', 'Cancel'}, function(value)
 					if value == 'Reboot' then
 						if buttonTitle == 'Use Computer Screen' then
-							OneOS.Settings:SetValue('Monitor', nil)
+							SpeedOS.Settings:SetValue('Monitor', nil)
 						else
-							OneOS.Settings:SetValue('Monitor', p.Side:lower())
+							SpeedOS.Settings:SetValue('Monitor', p.Side:lower())
 						end
-						OneOS.Reboot()
+						SpeedOS.Reboot()
 					end
 				end)
 			end

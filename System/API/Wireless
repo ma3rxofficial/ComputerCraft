@@ -1,4 +1,4 @@
-	--OneOS uses channels between 4200 and 4300, avoid use where possible
+	--SpeedOS uses channels between 4200 and 4300, avoid use where possible
 
 	Channels = {
 		Ignored = 4299,
