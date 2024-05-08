@@ -38,7 +38,7 @@ function FancyError()
   term.setTextColour(colours.white)
   print(" Click anywhere to exit...")
 
-  SpeeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
+  SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
   SpeedOS.Close()
 end
 
