@@ -1,5 +1,3 @@
-os.loadAPI("loader")
-SpeedOS = loader.OS()
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
