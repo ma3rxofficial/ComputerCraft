@@ -1,9 +1,6 @@
 -- Thanks to 1Ridav for this program!
 -- https://www.youtube.com/watch?v=G3v15PD4p2Y
 
-os.loadAPI("loader")
-SpeedOS = loader.OS()
-
 SpeedOS.ToolBarColour = colours.grey
 SpeedOS.ToolBarTextColour = colours.white
 
