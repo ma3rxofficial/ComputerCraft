@@ -3,9 +3,6 @@
                   By: Negeator
 ]]--
 
-os.loadAPI("loader")
-SpeedOS = loader.OS()
-
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
