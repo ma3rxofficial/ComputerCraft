@@ -1,5 +1,5 @@
-SpeedOS.LoadAPI("/SpeedAPI/SpeedText")
-SpeedOS.LoadAPI("/SpeedAPI/SpeedGUI")
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/SpeedGUI")
 
 function choosenum(num)
   real_num = math.random(0, 9)
