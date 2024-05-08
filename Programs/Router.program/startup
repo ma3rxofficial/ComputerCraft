@@ -1,6 +1,3 @@
-os.loadAPI("loader")
-SpeedOS = loader.OS()
-
 local rs_enabled = false
 local routing_enabled = false
 local blacklisted = {}
