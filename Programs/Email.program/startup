@@ -308,7 +308,7 @@ function runInterface()
           end
           state = states["CONFIRM"].id
         elseif slc==6 then
-          OneOS.Close()
+          SpeedOS.Close()
           return
         end
       end
