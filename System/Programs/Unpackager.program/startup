@@ -1,6 +1,3 @@
-os.loadAPI("loader")
-SpeedOS = loader.OS()
-
 tArgs = {...}
 
 if not tArgs[1] or not SpeedOS.FS.exists(tArgs[1]) then
