@@ -18,6 +18,8 @@ end
 
 rednet.open("right")
 
+r_i = 0
+
 term.setBackgroundColor(colors.black)
 term.clear()
 term.setCursorPos(1, 1)
@@ -38,6 +40,9 @@ while true do
   
   if event == "rednet_message" and id == tonumber(comp_id) then
     print(msg)
+    r_i = r_i + 1
+
+
     if msg == "W" then
       if turtle.getFuelLevel() == 0 then
         rednet.send(id, "No fuel!")
@@ -101,18 +106,21 @@ while true do
       turtle.placeDown()
       rednet.send(id, "Turtle used item in down!")
     elseif msg == "RS" then
-      for _, side in pairs(rs.getSides()) do
-          rs.setOutput(side, true)
-      end
-      
-      rednet.send(id, "Turtle send redstone signal!")
-      sleep(1)
+      if r_i % 2 == 0 then
 
-      for _, side in pairs(rs.getSides()) do
-          rs.setOutput(side, false)
-      end
+        for _, side in pairs(rs.getSides()) do
+            rs.setOutput(side, true)
+        end
       
-      rednet.send(id, "Turtle not sending redstone signal anymore!")
+        rednet.send(id, "Turtle send redstone signal!")
+        sleep(1)
+      else
+        for _, side in pairs(rs.getSides()) do
+            rs.setOutput(side, false)
+        end
+      
+        rednet.send(id, "Turtle not sending redstone signal anymore!")
+      end
     elseif msg == "1" then
       turtle.select(tonumber(msg))
       rednet.send(id, "Turtle's slot is now "..tostring(msg))
@@ -170,3 +178,4 @@ while true do
 end
 
 print("Turtle stopped.")
+
