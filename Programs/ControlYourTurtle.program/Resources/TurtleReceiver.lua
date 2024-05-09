@@ -29,6 +29,13 @@ print("Your ID: "..os.getComputerID())
 io.write("Please enter Computer ID: ")
 comp_id = io.read()
 
+if not comp_id then
+  term.clear()
+  term.setCursorPos(1, 1)
+  print("You must enter a number!")
+  error()
+end
+
 term.clear()
 term.setCursorPos(1, 1)
 
