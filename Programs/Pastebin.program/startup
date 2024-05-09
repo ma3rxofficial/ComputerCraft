@@ -1,4 +1,4 @@
-fs = SpeedOS.fs
+fs = SpeedOS.FS
 
 SpeedOS.LoadAPI("SpeedAPI/SpeedGUI")
 SpeedOS.LoadAPI("SpeedAPI/lddfm")
