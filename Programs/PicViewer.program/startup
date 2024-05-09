@@ -7,7 +7,7 @@ SpeedOS.LoadAPI("SpeedAPI/lddfm")
 SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
-fs = SpeedOS.fs
+fs = SpeedOS.FS
 
 local args = {...}
 local use_monitor = false
