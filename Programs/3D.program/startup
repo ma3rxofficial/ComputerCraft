@@ -1,9 +1,9 @@
 SpeedOS.ToolBarColour = colours.black 
 SpeedOS.ToolBarTextColour = colours.white
 
-os.loadAPI(shell.resolve(".").."/Resources/3D/matrix")
-os.loadAPI(shell.resolve(".").."/Resources/3D/graphics")
-os.loadAPI(shell.resolve(".").."/Resources/3D/vertex")
+os.loadAPI("Resources/3D/matrix")
+os.loadAPI("Resources/3D/graphics")
+os.loadAPI("Resources/3D/vertex")
 local w,h = term.getSize()
 
 --[[
