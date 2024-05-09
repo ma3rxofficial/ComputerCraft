@@ -115,13 +115,13 @@ function AutoUpdateRespose(event, url, data)
 	end
 	local latestReleaseTag = releases[1].tag_name
 
-	if OneOSVersion == latestReleaseTag then
+	if SpeedOSVersion == latestReleaseTag then
 		--using latest version
 		if checkAutoUpdateArg then
 			ButtonDialogueWindow:Initialise("Up to date!", "SpeedOS is up to date!", 'Ok', nil, function(success)end):Show()
 		end
 		return
-	elseif SematicVersionIsNewer(GetSematicVersion(latestReleaseTag), GetSematicVersion(OneOSVersion)) then
+	elseif SematicVersionIsNewer(GetSematicVersion(latestReleaseTag), GetSematicVersion(SpeedOSVersion)) then
 		--using old version
 		LaunchProgram('/System/Programs/Update.program/startup', {}, 'Update SpeedOS')
 	end
