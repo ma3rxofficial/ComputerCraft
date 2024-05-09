@@ -1,3 +1,6 @@
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 -- Common Draw Functions
