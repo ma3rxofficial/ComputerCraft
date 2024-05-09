@@ -1,7 +1,8 @@
 fs = SpeedOS.fs
-os.loadAPI("SpeedAPI/devices")
-os.loadAPI("SpeedAPI/windows")
-os.loadAPI("SpeedAPI/peripheral")
+
+SpeedOS.LoadAPI("SpeedAPI/devices")
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
 
 SpeedOS.ToolBarColour = colours.grey
 SpeedOS.ToolBarTextColour = colours.white
