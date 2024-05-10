@@ -233,7 +233,17 @@ function Click(event, side, x, y)
 						Click = function()
 							Clean()
 						end
-					}}):Show()
+					},
+					{
+						Separator = true
+					},
+					{
+						Title = 'Refresh',
+						Click = function()
+							RefreshFiles()
+						end
+					},
+					}):Show()
 			end
 
 			MainDraw()
@@ -284,7 +294,18 @@ function Click(event, side, x, y)
 					Click = function()
 						Clean()
 					end
-			}}):Show()
+				},
+				{
+						Separator = true
+				},
+				{
+					Title = 'Refresh',
+					Click = function()
+						RefreshFiles()
+					end
+				},
+
+				}):Show()
 		end
 		
 		MainDraw()
