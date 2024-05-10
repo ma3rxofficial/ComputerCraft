@@ -1,3 +1,15 @@
+if SpeedOS then
+    SpeedOS.ToolBarColour = colours.black
+    SpeedOS.ToolBarTextColour = colours.white
+end
+
+function InfoLog(msg)
+    log_file = fs.open("Resources/Pi.log", "a")
+    log_file.writeLine(msg)
+    log_file.flush()
+    log_file.close()
+end
+
 b = 1
 c = 0
 i = 1
@@ -10,7 +22,10 @@ while true do
     b = b + 2
     c = c + 1
 
-    print("Iteration: "..tostring(i).." Sub-iteration: "..tostring(c).." Pi: "..tostring(pi))
+    message = "Iteration: "..tostring(i).." Sub-iteration: "..tostring(c).." Pi: "..tostring(pi)
+
+    print(message)
+    InfoLog(message)
     
     if c == 100000 then
         c = 0
