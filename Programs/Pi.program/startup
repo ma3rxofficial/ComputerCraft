@@ -1,5 +1,6 @@
 b = 1
 c = 0
+i = 1
 pi = 0
 
 while true do
@@ -8,11 +9,12 @@ while true do
     pi = pi - 4/b
     b = b + 2
     c = c + 1
-    print(pi)
+
+    print("Iteration: "..tostring(i).." Sub-iteration: "..tostring(c).." Pi: "..tostring(pi))
     
     if c == 100000 then
-        print(pi) 
         c = 0
+        i = i + 1
     end
 
     sleep(0)
