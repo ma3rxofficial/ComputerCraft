@@ -3,6 +3,10 @@ if SpeedOS then
     SpeedOS.ToolBarTextColour = colours.white
 end
 
+if SpeedOS then
+    SpeedOS.LoadAPI("SpeedAPI/config")
+end
+
 function InfoLog(msg)
     log_file = fs.open("Resources/Pi.log", "a")
     log_file.writeLine(msg)
@@ -10,6 +14,7 @@ function InfoLog(msg)
     log_file.close()
 end
 
+iL = tonumber(config.read("System/Pi.settings", "iteration limit"))
 b = 1
 c = 0
 i = 1
@@ -27,7 +32,7 @@ while true do
     print(message)
     InfoLog(message)
     
-    if c == 100000 then
+    if c == iL then
         c = 0
         i = i + 1
     end
