@@ -3,10 +3,12 @@ if SpeedOS then
 	SpeedOS.ToolBarTextColour = colours.white
 end
 
-SpeedOS.LoadAPI("SpeedAPI/SpeedText")
-SpeedOS.LoadAPI("SpeedAPI/peripheral")
-SpeedOS.LoadAPI("SpeedAPI/windows")
-SpeedOS.LoadAPI("SpeedAPI/config")
+if SpeedOS then
+	SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+	SpeedOS.LoadAPI("SpeedAPI/peripheral")
+	SpeedOS.LoadAPI("SpeedAPI/windows")
+	SpeedOS.LoadAPI("SpeedAPI/config")
+end
 
 if not peripheral.find("monitor", true) then
 	windows.clearScreen(colors.white)
