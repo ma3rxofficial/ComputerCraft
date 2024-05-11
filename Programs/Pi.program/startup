@@ -5,10 +5,14 @@ end
 
 if SpeedOS then
     SpeedOS.LoadAPI("SpeedAPI/config")
+    SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 end
 
+day, month, year = SpeedText.getDate()
+logPath = "Resources/Pi_"..tostring(year).."-"..tostring(month).."-"..tostring(day).."_"..SpeedText.extraFormatTime(os.time(), ".", true)..".log"
+
 function InfoLog(msg)
-    log_file = fs.open("Resources/Pi.log", "a")
+    log_file = fs.open(logPath, "a")
     log_file.writeLine(msg)
     log_file.flush()
     log_file.close()
