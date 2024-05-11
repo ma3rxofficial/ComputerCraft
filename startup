@@ -7,7 +7,7 @@ local install_files = {"installer", "install", "dN2gMnV9"}
 local isModified = false
 
 for _, value in pairs(install_files) do
-  if fs.exists(value) then 
+  if fs.exists(value) then
     fs.delete(value)
   end
 end
