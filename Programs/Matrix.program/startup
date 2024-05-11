@@ -10,7 +10,7 @@ if SpeedOS then
 	SpeedOS.LoadAPI("SpeedAPI/config")
 end
 
-if not peripheral.find("monitor", true) then
+if not peripheral.find("monitor", true) then 
 	windows.clearScreen(colors.white)
 	windows.error("This program requires monitor!")
 	SpeedOS.Close()
