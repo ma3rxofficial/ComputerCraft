@@ -1,1 +1,7 @@
 fps=8
+maxLifetime=40
+minLifetime=8
+maxSourcesPerTick=5
+sourceWeight=0
+greenWeight=8
+grayWeight=2
