@@ -1,7 +1,7 @@
 os.loadAPI("SpeedAPI/windows")
 os.loadAPI("SpeedAPI/image")
 os.loadAPI("SpeedAPI/context")
- 
+
 local mode = "open"
 local workPath = ""
 local workPathHistory = {}
