@@ -179,7 +179,7 @@ function run()
 	local screen = setup( w, h )
 
 	while true do
-		event, _ = os.pullEvent()
+		event = os.pullEvent()
 
 		if event == "mouse_click" or event == "mouse_drag" or event == "key" then
 			break
