@@ -234,15 +234,6 @@ function Click(event, side, x, y)
 							Clean()
 						end
 					},
-					{
-						Separator = true
-					},
-					{
-						Title = 'Refresh',
-						Click = function()
-							RefreshFiles()
-						end
-					},
 					}):Show()
 			end
 
@@ -295,16 +286,6 @@ function Click(event, side, x, y)
 						Clean()
 					end
 				},
-				{
-						Separator = true
-				},
-				{
-					Title = 'Refresh',
-					Click = function()
-						RefreshFiles()
-					end
-				},
-
 				}):Show()
 		end
 		
