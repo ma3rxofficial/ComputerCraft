@@ -67,10 +67,35 @@ end
 function time(use_pindos)
     local time = os.time()
     formattedTime = textutils.formatTime(time, false)
-    if use_pindos then
+
+    if use_pindos == true then
     	local formattedTime = textutils.formatTime(time, true)
     end
+
 	return formattedTime
+end
+
+--Time with custom char--
+function extraFormatTime( nTime, char, bTwentyFourHour )
+	local sTOD = nil
+	if not bTwentyFourHour then
+		if nTime >= 12 then
+			sTOD = "PM"
+		else
+			sTOD = "AM"
+		end
+		if nTime >= 13 then
+			nTime = nTime - 12
+		end
+	end
+
+	local nHour = math.floor(nTime)
+	local nMinute = math.floor((nTime - nHour)*60)
+	if sTOD then
+		return string.format( "%d"..char.."%02d %s", nHour, nMinute, sTOD )
+	else
+		return string.format( "%d"..char.."%02d", nHour, nMinute )
+	end
 end
 
 --Time & date--
