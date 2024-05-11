@@ -1,4 +1,6 @@
-fs=OneOS.fs
+if SpeedOS then
+        fs = SpeedOS.fs
+end
 --[[
 Пояснения:
         AC: x и y - абсолютные координаты
