@@ -22,7 +22,7 @@ local fps = tonumber(config.read(pathToConfig, "fps")) --Determines how long the
 local maxLifetime = tonumber(config.read(pathToConfig, "maxLifetime")) --Max lifetime of each char
 local minLifetime = tonumber(config.read(pathToConfig, "minLifetime")) --Min lifetime of each char 
 local maxSourcesPerTick = tonumber(config.read(pathToConfig, "maxSourcesPerTick")) --Maximum number of sources created each tick
-local sourceWeight = 0 --Affects the chance that no sources will be generated
+local sourceWeight = tonumber(config.read(pathToConfig, "sourceWeight")) --Affects the chance that no sources will be generated
 local greenWeight = 8 --Threshhold out of 10 that determines when characters will switch from lime to green
 local grayWeight = 2 --Same as about, but from green to gray
 
