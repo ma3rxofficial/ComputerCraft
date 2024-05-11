@@ -181,7 +181,7 @@ function run()
 	while true do
 		event = os.pullEvent()
 
-		if event == "mouse_click" or event == "mouse_drag" or event == "key" then
+		if event == "mouse_click" or event == "mouse_drag" or event == "monitor_touch" or event == "key" then
 			break
 		end
 
