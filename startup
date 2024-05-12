@@ -3,7 +3,7 @@ os.loadAPI('SpeedAPI/peripheral')
 os.loadAPI('System/API/Log')
 os.loadAPI('System/API/Settings')
 
-local install_files = {"installer", "install", "dN2gMnV9"}
+local install_files = {"installer", "install", "dN2gMnV9", ".tmp"}
 local isModified = false
 
 for _, value in pairs(install_files) do
