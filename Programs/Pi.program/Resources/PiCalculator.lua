@@ -12,7 +12,7 @@ function InfoLog(msg)
     log_file.close()
 end
 
-iL = 1000
+iL = 100000
 b = 1
 c = 0
 i = 1
