@@ -11,31 +11,8 @@ term.setTextColor(colors.white)
 
 while true do  
   local event, character, p1, p2, p3, p4, p5, p6 = os.pullEvent()
-  if event == "char" then
-    print(character.." was pressed")
     
-    term.setTextColor(colors.lightGray)
-    SpeedText.line()
-    term.setTextColor(colors.white)
-           
-  elseif event == "mouse_click" then
-    print(character.." was pressed on mouse")
-    
-    term.setTextColor(colors.lightGray)
-    SpeedText.line()
-    term.setTextColor(colors.white)
-  
-  elseif event == "mouse_scroll" then
-    print("Scrolling mouse "..character)
-    
-    term.setTextColor(colors.lightGray)
-    SpeedText.line()
-    term.setTextColor(colors.white)
-  
-  elseif event == "key" then
-    print("ID of key is "..character)
-    
-  else 
+  if event then
     print(event.." event has happened")
     print("Info: ")
     if character then
@@ -47,23 +24,23 @@ while true do
     end
 
     if p2 then
-      print(p1)
+      print(p2)
     end
 
     if p3 then
-      print(p1)
+      print(p3)
     end
 
     if p4 then
-      print(p1)
+      print(p4)
     end
 
     if p5 then
-      print(p1)
+      print(p5)
     end
 
     if p6 then
-      print(p1)
+      print(p6)
     end
 
     term.setTextColor(colors.lightGray)
