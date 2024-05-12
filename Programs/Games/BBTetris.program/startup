@@ -67,7 +67,7 @@ local function exitGame(erroring)
   end
 
   os.pullEvent = OGeventPuller
-  error()
+  SpeedOS.Close()
 end
 
 -- Writes regular text at the specified location on the screen.
@@ -120,7 +120,7 @@ local function enforceScreenSize()
     term.clear()
     term.setCursorPos(1,1)
 
-    while (screenx < 50 or screeny < 19) and scale > 0.5 do
+    while (screenx < 50 or screeny < 18) and scale > 0.5 do
       scale = scale - 0.5
       mon.setTextScale(scale)
       screenx,screeny = term.getSize()
@@ -169,7 +169,7 @@ local function drawBorder()
   term.setCursorPos(screenx+13,screeny+6)
   term.write(string.rep("L",7))
   
-  for i=1,19 do
+  for i=1,18 do
     term.setCursorPos(screenx+1,screeny+i)
     term.write("L")
     term.setCursorPos(screenx+12,screeny+i)
@@ -220,14 +220,14 @@ local function fillGrid()
     end end
   end
   
-  if bit.band(gamemode-1,4)==4 then for i=level+2,19 do grid[i] = {} end end
+  if bit.band(gamemode-1,4)==4 then for i=level+2,18 do grid[i] = {} end end
 end
 
 -- Do the game over animation.
 local function gameover()
   term.setBackgroundColor(term.isColor() and colours.black or colours.white)
   term.setTextColor(term.isColor() and colours.lightGrey or colours.black)
-  for i=19,1,-1 do
+  for i=18,1,-1 do
     term.setCursorPos(screenx+2,screeny+i)
     term.write(string.rep("L",10))
     blockTimer = os.startTimer(0.1)
@@ -235,7 +235,7 @@ local function gameover()
   end
   
   term.setBackgroundColor(colours.black)
-  for i=1,19 do
+  for i=1,18 do
     term.setCursorPos(screenx+2,screeny+i)
     term.write(string.rep(" ",10))
     blockTimer = os.startTimer(0.1)
@@ -304,7 +304,7 @@ local function checkBlock(thisBlock,rotation,xpos,ypos)
       checkX, checkY = xpos+y-1, ypos+#block[thisBlock][1]-x
     end
     
-    if checkX < 1 or checkX > 10 or checkY < 1 or checkY > 19 or grid[20-checkY][checkX] ~= nil then return false end
+    if checkX < 1 or checkX > 10 or checkY < 1 or checkY > 18 or grid[20-checkY][checkX] ~= nil then return false end
   end end end
   
   return true
@@ -331,7 +331,7 @@ local function redrawGame(score)
   end
   
   term.setTextColor(term.isColor() and colours.lightGrey or colours.black)
-  for yy=1,19 do
+  for yy=1,18 do
     term.setCursorPos(screenx+2,screeny+yy)
     for xx=1,10 do if grid[20-yy][xx] ~= nil then
       term.setBackgroundColor(term.isColor() and bit.blshift(1,grid[20-yy][xx]) or colours.white)
