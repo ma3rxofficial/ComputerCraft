@@ -33,6 +33,7 @@ SpeedOS.ToolBarTextColour = colours.white
 rednet.open(peripheral.find("modem"))
 
 Log("Port "..peripheral.find("modem").." opened!", colors.green)
+Log("Repeating messages to "..tostring(send_to), colors.cyan)
 
 while true do
   event, id, msg, dist = os.pullEvent()
