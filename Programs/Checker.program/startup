@@ -89,7 +89,7 @@ function GetProgram(selected)
     term.setTextColor(colors.lightGray)
     SpeedText.cPrint("Click anywhere to continue...", 10)
 
-    SpeeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
+    SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
     Menu()
   end
 
