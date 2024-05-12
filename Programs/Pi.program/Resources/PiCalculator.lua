@@ -7,7 +7,7 @@ logPath = "Pi.log"
 
 function InfoLog(msg)
     log_file = fs.open(logPath, "a")
-    log_file.writeLine(msg)
+    log_file.writeLine(msg) 
     log_file.flush()
     log_file.close()
 end
