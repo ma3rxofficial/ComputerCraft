@@ -101,6 +101,8 @@ function GetProgram(selected)
     windows.clearScreen(colors.gray)
     term.setTextColor(colors.white)
 
+    selected_file.close()
+
     SpeedText.cPrint("Program is up to date!")
 
     term.setTextColor(colors.lightGray)
@@ -108,6 +110,7 @@ function GetProgram(selected)
     SpeedText.cPrint("Click anywhere to continue...")
 
     SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
+
     Menu()
   end
 
