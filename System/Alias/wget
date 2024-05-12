@@ -1,6 +1,10 @@
 local args = {...}
 
 if args[1] and args[2] then
+  if not http.get(args[1]) then
+    print("Can't connect to URL!")
+  end
+
   f = http.get(args[1]).readAll()
   f2 = fs.open(args[2], "w")
   f2.write(f)
