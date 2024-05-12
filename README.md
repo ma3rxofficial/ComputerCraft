@@ -20,10 +20,9 @@ SpeedOS - это графическая операционная система 
 
 	pastebin run dN2gMnV9
 
-Если у вас отсутствует доступ к ресурсу pastebin и установлена модифицированная версия ROM от ТехноМира, то используйте следующие команды последовательно:
+Если у вас отсутствует доступ к ресурсу pastebin и установлена модифицированная версия ROM от ТехноМира, то используйте следующую команду в консоли:
 
-	wget https://raw.githubusercontent.com/ma3rxofficial/CCStuff/main/Installer.lua installer
- 	installer
+	wget run https://raw.githubusercontent.com/ma3rxofficial/CCStuff/main/Installer.lua
 
 Все эти команды вы можете вставить в консоль, используя сочетание клавиш CTRL+V
 
