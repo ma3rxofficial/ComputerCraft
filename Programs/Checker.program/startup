@@ -107,7 +107,7 @@ function GetProgram(selected)
     sleep(1)
     SpeedText.cPrint("Click anywhere to continue...")
 
-    SpeeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
+    SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
     Menu()
   end
 
