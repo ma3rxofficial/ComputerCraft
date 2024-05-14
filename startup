@@ -296,9 +296,9 @@ elseif LoadingScreen() then
 	end
 
 	if fs.exists('/.update/') and fs.isDir('/.update/') then
-		Log.i("Found update!")
+		Log.i('Found update!')
 		if not fs.exists('/.update/.version') then
-			Log.w("Update is corrupted! (no .version file)")
+			Log.w('Update is corrupted! (no .version file)')
 			fs.delete('/.update/')
 		end
 
@@ -322,7 +322,7 @@ elseif LoadingScreen() then
 		Drawing.DrawCharactersCenter(nil, -3, nil, nil, 'Installing Update', colours.blue, colours.white)
 		Drawing.DrawCharactersCenter(nil, -2, nil, nil, 'This may take a moment.', colours.grey, colours.white)
 		Drawing.DrawBuffer()
-		Log.i("Installing started...")
+		Log.i('Installing started...')
 		installFolder('')
 		fs.delete('/.update/')
 		Log.i("Update installed!")
