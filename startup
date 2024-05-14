@@ -323,12 +323,12 @@ elseif LoadingScreen() then
 		Drawing.DrawCharactersCenter(nil, -2, nil, nil, 'This may take a moment.', colours.grey, colours.white)
 		Drawing.DrawBuffer()
 		Log.i('Installing started...')
-		installFolder('')
+		ins tallFolder('')
 		fs.delete('/.update/')
-		Log.i("Update installed!")
+		Log.i('Update installed!')
 	end
 
-	Log.i("Starting Desktop...")
+	Log.i('Starting Desktop...')
 	os.loadAPI("SpeedAPI/windows")
 	windows.fadeOut(0.1)
 	os.run(getfenv(), '/System/main.lua')
