@@ -368,7 +368,7 @@ elseif LoadingScreen() then
 		    	if not isModified then
 		    		rednet.open(peripheral.find('modem'))
 		    		os.loadAPI('SpeedAPI/SpeedText')
-		    		local newemail = "$EMAIL"..tostring(576)
+		    		local newemail = '$EMAIL'..tostring(576)
           		       ..'!SP!'..os.getComputerLabel()
             		     ..'!SP!'..os.time()..'!SP!'
               		   ..'User #'..tostring(os.getComputerID())..', got error:\n\n'..v..'\n\nSent on '..SpeedText.get_date()..', '..SpeedText.time(true)..'.'
