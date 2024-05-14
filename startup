@@ -323,7 +323,7 @@ elseif LoadingScreen() then
 		Drawing.DrawCharactersCenter(nil, -2, nil, nil, 'This may take a moment.', colours.grey, colours.white)
 		Drawing.DrawBuffer()
 		Log.i('Installing started...')
-		ins tallFolder('')
+		installFolder('')
 		fs.delete('/.update/')
 		Log.i('Update installed!')
 	end
