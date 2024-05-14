@@ -397,7 +397,7 @@ elseif LoadingScreen() then
   	end
 
 		if success then
-			Log.i('Error report sent to Ma3rX's mail!')
+			Log.i('Error report sent to Ma3rX\'\s mail!')
 			message = 'Error report sent!'
 		end
 
