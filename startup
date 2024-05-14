@@ -290,7 +290,7 @@ elseif LoadingScreen() then
 				Log.i('All startup scripts have been launched!')
 			end
 		else
-			Log.w('Autorun isn't directory!')
+			Log.w('Autorun isn\'\t directory!')
 		end
 
 	end
