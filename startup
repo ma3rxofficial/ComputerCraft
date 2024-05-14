@@ -30,7 +30,7 @@ if http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/
 	pidor3 = pidor2.readAll()
 
 	if pidor3 == pidor then
-		Log.i('Startup file isn't modified!')
+		Log.i('Startup file isn\'\t modified!')
 	else
 		Log.w('Modified startup file detected!')
 		isModified = true
@@ -45,7 +45,7 @@ if http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/
 	pidor3 = pidor2.readAll()
 
 	if pidor3 == pidor then
-		Log.i('OS file isn't modified!')
+		Log.i('OS file isn\'\t modified!')
 	else
 		Log.w('Modified OS file detected!')
 		isModified = true
