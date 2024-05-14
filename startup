@@ -3,7 +3,7 @@ os.loadAPI('SpeedAPI/peripheral')
 os.loadAPI('System/API/Log')
 os.loadAPI('System/API/Settings')
 
-local install_files = {"installer", "install", "dN2gMnV9", ".tmp"}
+local install_files = {'installer', 'install', 'dN2gMnV9', '.tmp'}
 local isModified = false
 
 for _, value in pairs(install_files) do
@@ -15,39 +15,39 @@ end
 local tAPIsLoading = {}
 doLog = true
 
-ver_f = fs.open(".version", "r")
+ver_f = fs.open('.version', 'r')
 ver_f2 = ver_f.readAll()
 ver_f.close()
 
 Log.Initialise()
 
 Log.i(os.version())
-Log.i("SpeedOS Version: "..ver_f2)
+Log.i('SpeedOS Version: '..ver_f2)
 
-if http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup") then
-	pidor = http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup").readAll()
-	pidor2 = fs.open("startup", "r")
+if http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup') then
+	pidor = http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup').readAll()
+	pidor2 = fs.open('startup', 'r')
 	pidor3 = pidor2.readAll()
 
 	if pidor3 == pidor then
-		Log.i("Startup file isn't modified!")
+		Log.i('Startup file isn't modified!')
 	else
-		Log.w("Modified startup file detected!")
+		Log.w('Modified startup file detected!')
 		isModified = true
 	end
 
 	pidor2.close()
 end
 
-if http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua") then
-	pidor = http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua").readAll()
-	pidor2 = fs.open("System/main.lua", "r")
+if http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua') then
+	pidor = http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua').readAll()
+	pidor2 = fs.open('System/main.lua', 'r')
 	pidor3 = pidor2.readAll()
 
 	if pidor3 == pidor then
-		Log.i("OS file isn't modified!")
+		Log.i('OS file isn't modified!')
 	else
-		Log.w("Modified OS file detected!")
+		Log.w('Modified OS file detected!')
 		isModified = true
 	end
 
@@ -55,28 +55,30 @@ if http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/
 end
 
 if Settings.GetValues('UseMonitor')['UseMonitor'] == true then
-	Log.i("Monitor mode enabled!")
-	Log.i("Checking for monitor...")
+	Log.i('Monitor mode enabled!')
+	Log.i('Checking for monitor...')
 
-	PidorEkran = peripheral.find("monitor", true)
+	PidorEkran = peripheral.find('monitor', true)
 
 	if PidorEkran == nil then
-		Log.w("No monitor found! Running on computer screen...")
+		Log.w('No monitor found! Running on computer screen...')
 	end
 
 	if not peripheral.wrap(PidorEkran).isColor() then
-		Log.w("No color monitor found!")
+		Log.w('No color monitor found!')
 	end
 
-	Log.i("Redirecting to monitor...")
-	print("OS is running on monitor(side "..PidorEkran..").")
+	-- @TODO: Idi nahui
+
+	Log.i('Redirecting to monitor...')
+	print('OS is running on monitor(side '..PidorEkran..').')
 	term.redirect(peripheral.wrap(PidorEkran))
 end
 
 function LoadAPI(_sPath)
 	local sName = fs.getName( _sPath )
 	if tAPIsLoading[sName] == true then
-		printError( "API "..sName.." is already being loaded" )
+		printError( 'API '..sName..' is already being loaded' )
 		return false
 	end
 	tAPIsLoading[sName] = true
@@ -153,39 +155,39 @@ function LoadingScreen()
 		end
 
 		if not rs_s then
-			os.loadAPI("SpeedAPI/SpeedText")
+			os.loadAPI('SpeedAPI/SpeedText')
 			term.setBackgroundColor(colors.blue)
 			term.clear()
 			term.setTextColor(colors.blue)
 			term.setBackgroundColor(colors.white)
-			SpeedText.cPrint("You don't have electricity!")
+			SpeedText.cPrint('You don't have electricity!')
 			term.setTextColor(colors.white)
 			term.setBackgroundColor(colors.blue)
-			SpeedText.cPrint("Click anywhere to reboot", 10)
+			SpeedText.cPrint('Click anywhere to reboot', 10)
 
-			os.pullEvent("mouse_click")
+			os.pullEvent('mouse_click')
 			os.reboot()
 		end
 
-		Log.i("Getting energy from side "..listen_energy)
+		Log.i('Getting energy from side '..listen_energy)
 	end
 
 
 	term.setBackgroundColor(colors.white)
 
 	term.setTextColor(colors.black)
-	SpeedText.cPrint("SpeedOS", 7)
+	SpeedText.cPrint('SpeedOS', 7)
 
 	term.clear()
 	term.setTextColor(colors.lightGray)
 
 	for _, file in pairs(fs.list(root .. 'System/API/')) do
-		if string.sub(file,1,1) ~= "." then
+		if string.sub(file,1,1) ~= '.' then
 			term.clear()
 			term.setTextColor(colors.black)
-			SpeedText.cPrint("SpeedOS", 7)
+			SpeedText.cPrint('SpeedOS', 7)
 			term.setTextColor(colors.lightGray)
-			SpeedText.cPrint("API "..file.." loaded!")
+			SpeedText.cPrint('API '..file..' loaded!')
 			sleep(0.1)
 
 			if not LoadAPI(root .. 'System/API/' .. file) then
@@ -200,46 +202,46 @@ function LoadingScreen()
 	end
 
 	for _, file in pairs(fs.list(root .. 'SpeedAPI/')) do
-		if string.sub(file,1,1) ~= "." then
+		if string.sub(file,1,1) ~= '.' then
 			os.unloadAPI('SpeedAPI/'..file)
-  			if not value == "SpeedText" then
+  			if not value == 'SpeedText' then
 			    os.loadAPI('SpeedAPI/'..file)
 			    Log.i('Loading: '..file)
 			end
 			term.clear()
 			term.setTextColor(colors.black)
-			SpeedText.cPrint("SpeedOS", 7)
+			SpeedText.cPrint('SpeedOS', 7)
 			term.setTextColor(colors.lightGray)
-			SpeedText.cPrint("API "..file.." loaded!")
+			SpeedText.cPrint('API '..file..' loaded!')
 			sleep(0.1)
 		end
 	end
 	
 	for _, file in pairs(fs.list(root .. 'System/Alias/')) do
-		if string.sub(file,1,1) ~= "." then
+		if string.sub(file,1,1) ~= '.' then
 
   			shell.setAlias(file, 'System/Alias/'..file)
   			Log.i('Making alias: '..file)
   			term.clear()
 				term.setTextColor(colors.black)
-				SpeedText.cPrint("SpeedOS", 7)
+				SpeedText.cPrint('SpeedOS', 7)
 				term.setTextColor(colors.lightGray)
-				SpeedText.cPrint("Alias "..file.." set!")
+				SpeedText.cPrint('Alias '..file..' set!')
 		end
 	end
 
 	sleep(1)
 	term.clear()
 	term.setTextColor(colors.black)
-	SpeedText.cPrint("SpeedOS", 7)
+	SpeedText.cPrint('SpeedOS', 7)
 	term.setTextColor(colors.lightGray)
-	SpeedText.cPrint("Initializing components")
+	SpeedText.cPrint('Initializing components')
 	sleep(3)
 
- 	os.loadAPI("SpeedAPI/peripheral")
- 	if peripheral.find("modem") then
-   rednet.open(peripheral.find("modem"))
-   Log.i('Opened modem on side '..peripheral.find("modem"))
+ 	os.loadAPI('SpeedAPI/peripheral')
+ 	if peripheral.find('modem') then
+   rednet.open(peripheral.find('modem'))
+   Log.i('Opened modem on side '..peripheral.find('modem'))
  	end
 
 	sleep(0.1)
@@ -261,18 +263,18 @@ if not term.isColour() then
 
 elseif LoadingScreen() then
 
-	Log.i("Checking for startup scripts...")
+	Log.i('Checking for startup scripts...')
 
-	if not fs.exists("System/.autorun") then
-		Log.w("No autorun directory!")
+	if not fs.exists('System/.autorun') then
+		Log.w('No autorun directory!')
 		
-		Log.i("Making autorun directory...")
-		fs.makeDir("System/.autorun")
-		Log.i("Done!")
+		Log.i('Making autorun directory...')
+		fs.makeDir('System/.autorun')
+		Log.i('Done!')
 
 	else
-		if fs.isDir("System/.autorun") then
-			Log.i("Autorun directory found!")
+		if fs.isDir('System/.autorun') then
+			Log.i('Autorun directory found!')
 
 			if #fs.list("System/.autorun") == 0 then
 				Log.i("No startup scripts found!")
@@ -369,18 +371,18 @@ elseif LoadingScreen() then
 		    		local newemail = "$EMAIL"..tostring(576)
           		       .."!SP!"..os.getComputerLabel()
             		     .."!SP!"..os.time().."!SP!"
-              		   .."User #"..tostring(os.getComputerID())..", got error:\n\n"..v.."\n\nSent on "..SpeedText.get_date()..", "..SpeedText.time(true).."."
+              		   ..'User #'..tostring(os.getComputerID())..', got error:\n\n'..v..'\n\nSent on '..SpeedText.get_date()..', '..SpeedText.time(true)..'.'
   					rednet.send(434, newemail)	
   					if rednet.receive(5)~=nil then
     					success = true
 	  				else
   	  				success = false
-  	  				Log.w("Error sending report!")
+  	  				Log.w('Error sending report!')
   					end
 
   				else
   					sucess = false
-  					Log.w("System files are modified. Not sending report!")
+  					Log.w('System files are modified. Not sending report!')
   				end
   			end
 		end
@@ -395,7 +397,7 @@ elseif LoadingScreen() then
   	end
 
 		if success then
-			Log.i("Error report sent to Ma3rX's mail!")
+			Log.i('Error report sent to Ma3rX's mail!')
 			message = 'Error report sent!'
 		end
 
@@ -420,7 +422,7 @@ elseif LoadingScreen() then
 		local w, h = term.getSize()
 		local x = w/2
 		local y = h/2
-		local warning = "A fatal error occured"
+		local warning = 'A fatal error occured'
 		term.setCursorPos(x-(#warning/2), y)
 		term.clearLine()
 		term.write(warning)
