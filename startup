@@ -417,19 +417,5 @@ elseif LoadingScreen() then
 		os.pullEvent('mouse_click')
 		os.reboot()
 	end
-	--[[end)
-	if err then
-		local w, h = term.getSize()
-		local x = w/2
-		local y = h/2
-		local warning = 'A fatal error occured'
-		term.setCursorPos(x-(#warning/2), y)
-		term.clearLine()
-		term.write(warning)
-		print()
-		print()
-		term.setTextColour(colours.red)
-		print(err)
-	end]]
 end
  
