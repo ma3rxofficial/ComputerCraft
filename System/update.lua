@@ -137,6 +137,7 @@ function downloadBlob(v)
 		Settings.DownloadedFiles = Settings.DownloadedFiles + 1
 		Settings.UpdateFunction()
 	end
+	sleep(0)
 end
 
 local downloads = {}
@@ -145,6 +146,7 @@ for i, v in ipairs(tree) do
 	--parallel.waitForAny(function() sleep(0) end, function()downloadBlob(v)end)
 	--downloadBlob(v)
 	table.insert(downloads, function()downloadBlob(v)end)
+	sleep(0)
 end
 
 
