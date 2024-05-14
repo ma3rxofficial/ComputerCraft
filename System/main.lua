@@ -146,7 +146,7 @@ function LaunchProgram(path, args, title)
 
 		for _, apishnik in pairs(fs.list("SpeedAPI")) do
 			os.unloadAPI("SpeedAPI/"..apishnik)
-			Log.i("API "..apishnik.." unloaded")
+			Log.i("API "..apishnik.." unloaded (Auto API Unloading)")
 		end
 	end
 
