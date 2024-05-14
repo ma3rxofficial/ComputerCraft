@@ -329,7 +329,7 @@ elseif LoadingScreen() then
 	end
 
 	Log.i('Starting Desktop...')
-	os.loadAPI("SpeedAPI/windows")
+	os.loadAPI('SpeedAPI/windows')
 	windows.fadeOut(0.1)
 	os.run(getfenv(), '/System/main.lua')
 	
@@ -364,7 +364,7 @@ elseif LoadingScreen() then
 		    print(v)
 		    Log.e(v)
 
-		    if peripheral.find("modem") then
+		    if peripheral.find('modem') then
 		    	if not isModified then
 		    		rednet.open(peripheral.find("modem"))
 		    		os.loadAPI("SpeedAPI/SpeedText")
