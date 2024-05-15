@@ -64,13 +64,12 @@ if Settings.GetValues('UseMonitor')['UseMonitor'] == true then
 
 	if not peripheral.wrap(PidorEkran).isColor() then
 		Log.w('No color monitor found!')
+
+	else
+		Log.i('Redirecting to monitor...')
+		print('OS is running on monitor(side '..PidorEkran..').')
+		term.redirect(peripheral.wrap(PidorEkran))
 	end
-
-	-- @TODO: Idi nahui
-
-	Log.i('Redirecting to monitor...')
-	print('OS is running on monitor(side '..PidorEkran..').')
-	term.redirect(peripheral.wrap(PidorEkran))
 end
 
 function LoadAPI(_sPath)
