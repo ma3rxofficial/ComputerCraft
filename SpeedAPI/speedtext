@@ -216,13 +216,13 @@ function extraExit(_term)
 end
 
 --HUY--
-local function modRead(properties, _term)
+local function modRead(properties, char, _term)
 	if _term == nil then
 		_term = term
 	end
 
 	local w, h = _term.getSize()
-	local defaults = {replaceChar = nil, history = nil, visibleLength = nil, textLength = nil, 
+	local defaults = {replaceChar = char, history = nil, visibleLength = nil, textLength = nil, 
 		liveUpdates = nil, exitOnKey = nil}
 	if not properties then properties = {} end
 	for k, v in pairs(defaults) do if not properties[k] then properties[k] = v end end
@@ -371,7 +371,7 @@ end
 
 
 --Better version of inputs--
-function centerRead(wid, begt, buttonColor, buttonTextColor, buttonTextInputColor, cancelEnabled, cancelColor, cancelTextColor, _term)
+function centerRead(wid, begt, buttonColor, buttonTextColor, buttonTextInputColor, cancelEnabled, cancelColor, cancelTextColor, char, startChar, _term)
 	if _term == nil then
 		_term = term
 	end
@@ -399,9 +399,17 @@ function centerRead(wid, begt, buttonColor, buttonTextColor, buttonTextInputColo
 		cancelTextColor = colors.white
 	end		
 
-	if not begt then begt = "" end
+	if not begt then 
+		begt = "" 
+	end
+
+	if not startChar then
+		startChar = "> "
+	end
+
 	_term.setTextColor(buttonTextColor)
 	_term.setBackgroundColor(buttonColor)
+
 	for i = 8, 10 do
 		_term.setCursorPos(w/2 - wid/2, i)
 		_term.write(string.rep(" ", wid))
@@ -421,9 +429,9 @@ function centerRead(wid, begt, buttonColor, buttonTextColor, buttonTextInputColo
 	_term.setBackgroundColor(buttonColor)
 	_term.setTextColor(buttonTextColor)
 	_term.setCursorPos(w/2 - wid/2 + 1, 9)
-	_term.write("> " .. begt)
+	_term.write(startChar .. begt)
 	_term.setTextColor(buttonTextInputColor)
-	return modRead({visibleLength = w/2 + wid/2, liveUpdates = liveUpdate})
+	return modRead({visibleLength = w/2 + wid/2, liveUpdates = liveUpdate}, char)
 end
 
 --Slow printing init--
