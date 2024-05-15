@@ -1,15 +1,11 @@
-if SpeedOS then
-  SpeedOS.ToolBarColour = colours.grey
-  SpeedOS.ToolBarTextColour = colours.white
-end
+SpeedOS.ToolBarColour = colours.grey
+SpeedOS.ToolBarTextColour = colours.white
 
-if SpeedOS then
-  SpeedOS.LoadAPI("SpeedAPI/windows")
-  SpeedOS.LoadAPI("SpeedAPI/peripheral")
-  SpeedOS.LoadAPI("SpeedAPI/lddfm")
-  SpeedOS.LoadAPI("SpeedAPI/config")
-  SpeedOS.LoadAPI("SpeedAPI/SpeedText")
-end
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/lddfm")
+SpeedOS.LoadAPI("SpeedAPI/config")
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 fs = SpeedOS.FS
 
