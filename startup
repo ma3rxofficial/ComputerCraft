@@ -13,7 +13,6 @@ for _, value in pairs(install_files) do
 end
 
 local tAPIsLoading = {}
-doLog = true
 
 ver_f = fs.open('.version', 'r')
 ver_f2 = ver_f.readAll()
