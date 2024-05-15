@@ -281,9 +281,7 @@ repeat
 		printCentred( math.floor(h/2) + 3, "               " )
 		term.setTextColour( colours.white )
 	end
-until e == "char"
+until e == "char" or e == "mouse_click" or e == "mouse_drag" or e == "mouse_scroll"
 
-term.clear()
-term.setCursorPos(1,1)
-
+SpeedOS.Close()
 		

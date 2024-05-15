@@ -62,11 +62,11 @@ function draw_picture(filename)
     local mx, my = monitor.getSize()
     windows.clearScreen(colors.gray)
 
-    term.setTextColor(colors.lightGray)
+    term.setTextColor(colors.white)
     SpeedText.cPrint("Your monitor scale is "..tostring(mx).."x"..tostring(my))
 
     sleep(1)
-    term.setTextColor(colors.yellow)
+    term.setTextColor(colors.lightGray)
 
     SpeedText.cPrint("Click anywhere to quit", 10)
   end
