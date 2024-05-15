@@ -98,7 +98,6 @@ function LoadAPI(_sPath)
 	end
 	
 	getfenv()[sName] = tAPI
-	os.loadAPI(_sPath)
 
 	tAPIsLoading[sName] = nil
 	return true
