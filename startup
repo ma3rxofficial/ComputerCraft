@@ -98,6 +98,7 @@ function LoadAPI(_sPath)
 	end
 	
 	getfenv()[sName] = tAPI
+	os.loadAPI(_sPath)
 
 	tAPIsLoading[sName] = nil
 	return true
@@ -114,23 +115,6 @@ function PrintCentered(text, y)
 end
 
 function LoadingScreen()
-	if false then
-		term.setBackgroundColor(colours.grey)
-		term.setTextColor(colours.white)
-		term.clear()
-
-		PrintCentered('You have less than 50KB of free space remaining!', 6)
-		PrintCentered('You may encounter crashes due to this.' , 7)
-		term.setTextColor(colours.lightGrey)
-
-		PrintCentered('Try to free up some space, open \'About SpeedOS\'' , 9)
-		PrintCentered('in the OS menu for more information.' , 10)
-		term.setTextColor(colours.white)
-
-		PrintCentered('Click anywhere to continue.', 12)
-
-		os.pullEvent('mouse_click')
-	end
 	local screenWidth, screenHeight = term.getSize()
 	local x = (screenWidth - 14) / 2
 	local y = (screenHeight - 9) / 2
@@ -415,4 +399,3 @@ elseif LoadingScreen() then
 		os.reboot()
 	end
 end
- 
