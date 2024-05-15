@@ -271,33 +271,33 @@ repeat
 	
 	-- Wait for key
 	
-	local e, k = os.pullEvent("char")
+	local e, k = os.pullEvent("key")
 	
-	if k == "a" and (not tab[posx-1][posy]) then
+	if k == keys.a and (not tab[posx-1][posy]) then
 		posx = posx - 1
 		offsetx = offsetx + 1
 	end
 	
-	if k == "d" and (not tab[posx+1][posy]) then
+	if k == keys.d and (not tab[posx+1][posy]) then
 		posx = posx + 1
 		offsetx = offsetx - 1
 	end
 	
-	if k == "w" and (not tab[posx][posy-1]) then
+	if k == keys.w and (not tab[posx][posy-1]) then
 		posy = posy - 1
 		offsety = offsety + 1
 	end
 	
-	if k == "s" and (not tab[posx][posy+1]) then
+	if k == keys.s and (not tab[posx][posy+1]) then
 		posy = posy + 1
 		offsety = offsety - 1
 	end
 	
-	if k == "q" then
+	if k == keys.q then
 		break
 	end
 	
-	if k == "r" then
+	if k == keys.r then
 		posx = 2
 		posy = 2
 
