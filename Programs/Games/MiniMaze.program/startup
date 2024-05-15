@@ -69,11 +69,22 @@ local ushS = shpS             -- Upgrades shop
 local gameOver = false
 local reason = "Something went wrong"
 
-print("Choose difficulity(0-any number)")
+-- GAME SESSIONS FUCK YOU
+
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/windows")
+
 local difficulity
 local endless = false
+
 while true do
-    difficulity = read()
+    windows.clearScreen(colors.gray)
+
+    term.setTextColor(colors.lightGray)
+    SpeedText.cPrint("Choose difficulity", 6)
+
+    difficulity = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false, nil, nil, nil, "> ")
+
     if difficulity == "D" then
         once_upgrades[1].has = true
         once_upgrades[2].has = true
@@ -85,13 +96,19 @@ while true do
         break
     end
 end
-print("Endless or not? (Y/n)")
+
+
 while true do
-    endless = read()
-    if string.lower(endless) == "n" then
+    windows.clearScreen(colors.gray)
+
+    term.setTextColor(colors.lightGray)
+    SpeedText.cPrint("Endless?", 6)
+
+    endless = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false, nil, nil, nil, "> ")
+    if string.lower(endless) == "no" or string.lower(endless) == "n" then
         endless = false
         break
-    elseif string.lower(endless) == "y" then
+    elseif string.lower(endless) == "yes" or string.lower(endless) == "y" then
         endless = true
         break
     end
