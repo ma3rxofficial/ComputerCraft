@@ -5,14 +5,13 @@ os.loadAPI('System/API/Settings')
 
 local install_files = {'installer', 'install', 'dN2gMnV9', '.tmp'}
 local isModified = false
+local tAPIsLoading = {}
 
 for _, value in pairs(install_files) do
   if fs.exists(value) then
     fs.delete(value)
   end
 end
-
-local tAPIsLoading = {}
 
 ver_f = fs.open('.version', 'r')
 ver_f2 = ver_f.readAll()
