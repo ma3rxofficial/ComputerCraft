@@ -3,8 +3,10 @@
 -- receiver.lua
 
 
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+  SpeedOS.ToolBarColour = colours.black
+  SpeedOS.ToolBarTextColour = colours.white
+end
 
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
