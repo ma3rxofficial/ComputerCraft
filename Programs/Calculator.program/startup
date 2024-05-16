@@ -1,7 +1,9 @@
 --[[Smart Calculator by Cranium]]--
 
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+ SpeedOS.ToolBarColour = colours.black
+ SpeedOS.ToolBarTextColour = colours.white
+end
  
 local tX, tY = term.getSize()
 local calc = {}
