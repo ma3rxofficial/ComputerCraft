@@ -1,3 +1,6 @@
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/config")
@@ -10,10 +13,6 @@ if not peripheral.find("adventure map interface", true) then
 	windows.error("You need adventure map interface!")
 	SpeedOS.Close()
 end
-
-
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
 
 huy = config.read("System/IRC.settings", "blacklist")
 local blacklist = textutils.unserialize(huy)
