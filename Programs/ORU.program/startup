@@ -27,10 +27,10 @@ while true do
 	print("[Y]-INPUT 32 KEY")
 	print("[U]-KEY ENGINE1")
 	print("[I]-KEY ENGINE2")
-print("=========================================")
+	print("=========================================")
 
-	local event, param1 = os.pullEvent("char") 
-	if param1 == "t" then
+	local event, param1 = os.pullEvent("key") 
+	if param1 == keys.t then
 		print("128")
 		rs.setBundledOutput(cableSide, z_t)
 		sleep(0.3)
@@ -41,7 +41,7 @@ print("=========================================")
 		term.setCursorPos(1,1)
 	end
 
-	if param1 == "y" then
+	if param1 == keys.y then
 		print("32")
 		rs.setBundledOutput(cableSide, z_y)
 		sleep(0.3)
@@ -52,7 +52,7 @@ print("=========================================")
 		term.setCursorPos(1,1)
 	end
 
-	if param1 == "u" then
+	if param1 == keys.u then
 		print("k eng1")
 		rs.setBundledOutput(cableSide, z_u)
 		sleep(0.3)
@@ -63,7 +63,7 @@ print("=========================================")
 		term.setCursorPos(1,1)
 	end
 
-	if param1 == "i" then
+	if param1 == keys.i then
 		print("k eng2")
 		rs.setBundledOutput(cableSide, z_i)
 		sleep(0.3)
