@@ -1,20 +1,35 @@
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/config")
 
 if SpeedOS then
   SpeedOS.ToolBarColour = colours.lightGrey
   SpeedOS.ToolBarTextColour = colours.white
 end
 
+local pathToConfig = "System/Events.settings"
+
+function skip(e)
+  skipString = config.read(pathToConfig, "skip")
+  skipTable = textutils.unserialize(skipString)
+
+  for _, ev in pairs(skipTable) do
+    if ev == e then
+      return false
+    end
+  end
+
+  return true
+end
+
 windows.clearScreen(colors.gray)
 term.setCursorPos(1, 1)
-
 term.setTextColor(colors.white)
 
 while true do  
   local event, character, p1, p2, p3, p4, p5, p6 = os.pullEvent()
     
-  if event then
+  if event and skip(event) then
     print(event.." event has happened")
     print("Info: ")
     if character then
