@@ -1,7 +1,9 @@
 -- ДЛЯ ТЕХ КТО НЕ РАЗОБРАЛСЯ ПОСМОТРИТЕ ВИДЕО ПРО КРАШЕР СЕРВЕРОВ А НЕ ЕБИТЕ МНЕ ЛС ВОПРОСАМИ!!! :D
 
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+  SpeedOS.ToolBarColour = colours.black
+  SpeedOS.ToolBarTextColour = colours.white
+end
 
 print("Press Enter to start the Pizdec")
 print("Place a redstone torch next to right side of redstone")
