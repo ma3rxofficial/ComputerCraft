@@ -6,8 +6,10 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/lddfm")
 SpeedOS.LoadAPI("SpeedAPI/config")
 
-SpeedOS.ToolBarColour = colours.lightGrey
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.lightGrey
+	SpeedOS.ToolBarTextColour = colours.white
+end
 
 local pathToConfig = "System/DropX.settings"
 local serverid = tonumber(config.read(pathToConfig, "ServerID"))
