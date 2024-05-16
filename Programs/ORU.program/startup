@@ -73,4 +73,6 @@ while true do
 		term.clear()
 		term.setCursorPos(1,1)
 	end
+
+	term.clear()
 end
