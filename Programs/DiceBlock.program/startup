@@ -10,8 +10,10 @@ end
 
 rednet.open(peripheral.find("modem"))
 
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+  SpeedOS.ToolBarColour = colours.black
+  SpeedOS.ToolBarTextColour = colours.white
+end
 
 pathToConfig = "System/DiceBlock.settings"
 local bundleSide = config.read(pathToConfig, "bundle output side")
