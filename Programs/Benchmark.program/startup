@@ -1,5 +1,7 @@
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+     SpeedOS.ToolBarColour = colours.black
+     SpeedOS.ToolBarTextColour = colours.white
+end
 
 local s={
 App="0.2.3",
