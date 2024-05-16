@@ -1,8 +1,10 @@
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 
-SpeedOS.ToolBarColour = colours.lightGrey
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+  SpeedOS.ToolBarColour = colours.lightGrey
+  SpeedOS.ToolBarTextColour = colours.white
+end
 
 windows.clearScreen(colors.gray)
 term.setCursorPos(1, 1)
