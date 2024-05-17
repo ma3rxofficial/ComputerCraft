@@ -4,8 +4,10 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 
 local tab = 0
 local use_mon_default
+local pathToConfig = "System/GraphTest.settings"
 
-huy = config.read("System/GraphTest.settings", "use_monitor_by_default")
+
+huy = config.read(pathToConfig, "use_monitor_by_default")
 
 if huy == "true" then
   use_mon_default = true
