@@ -1,5 +1,7 @@
-SpeedOS.ToolBarColour = colours.lightGrey
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+  SpeedOS.ToolBarColour = colours.lightGrey
+  SpeedOS.ToolBarTextColour = colours.white
+end
 
 SpeedOS.LoadAPI("System/API/Drawing")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
