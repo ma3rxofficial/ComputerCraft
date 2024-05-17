@@ -10,7 +10,7 @@
 	Have fun!
 --]]
  
-fs = SpeedOS.fs
+fs = SpeedOS.FS
 
 -- Monochrome support (WIP)
 if(not term.isColor())then
