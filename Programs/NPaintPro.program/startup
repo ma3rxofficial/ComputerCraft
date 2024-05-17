@@ -7,8 +7,10 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 
 windows.clearScreen(colors.white)
 
-SpeedOS.ToolBarColour = colours.grey
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.grey
+	SpeedOS.ToolBarTextColour = colours.white
+end
 
 fs = SpeedOS.fs
 io = SpeedOS.IO
