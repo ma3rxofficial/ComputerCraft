@@ -2,8 +2,10 @@
 --Based on Redirection by Dan200: http://www.redirectiongame.com--
 --Clearing Screen--
 
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.black
+	SpeedOS.ToolBarTextColour = colours.white
+end
 
 --Vars--
 local TermW,TermH = term.getSize()
