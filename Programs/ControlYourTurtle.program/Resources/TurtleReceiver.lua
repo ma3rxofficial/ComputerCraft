@@ -50,69 +50,69 @@ while true do
     r_i = r_i + 1
 
 
-    if msg == "W" then
+    if string.upper(msg) == "W" then
       if turtle.getFuelLevel() == 0 then
         rednet.send(id, "No fuel!")
       else
         turtle.forward()
         rednet.send(id, "Turtle moved forward!")
       end
-    elseif msg == "S" then
+    elseif string.upper(msg) == "S" then
       if turtle.getFuelLevel() == 0 then
         rednet.send(id, "No fuel!")
       else
         turtle.back()
         rednet.send(id, "Turtle moved backward!")
       end
-    elseif msg == "A" then
+    elseif string.upper(msg) == "A" then
       turtle.turnLeft()
       rednet.send(id, "Turtle turned left!")
-    elseif msg == "D" then
+    elseif string.upper(msg) == "D" then
       turtle.turnRight()
       rednet.send(id, "Turtle turned right!")
-    elseif msg == "UP" then
+    elseif string.upper(msg) == "UP" then
       if turtle.getFuelLevel() == 0 then
         rednet.send(id, "No fuel!")
       else
         turtle.up()
         rednet.send(id, "Turtle moved up!")
       end
-    elseif msg == "DOWN" then
+    elseif string.upper(msg) == "DOWN" then
        if turtle.getFuelLevel() == 0 then
         rednet.send(id, "No fuel!")
       else
         turtle.down()
         rednet.send(id, "Turned moved down!")
       end
-    elseif msg == "REFUEL" then
+    elseif string.upper(msg) == "REFUEL" then
       turtle.refuel()
       rednet.send(id, "Turtle refueled! Fuel level: "..turtle.getFuelLevel())
-    elseif msg == "FUEL" then
+    elseif string.upper(msg) == "FUEL" then
       rednet.send(id, tostring(turtle.getFuelLevel()))
-    elseif msg == "ATTACK" then
+    elseif string.upper(msg) == "ATTACK" then
       turtle.attack()
       turtle.attackUp()
       turtle.attackDown()
       rednet.send(id, "Turtle attacked!")
-    elseif msg == "DIG" then
+    elseif string.upper(msg) == "DIG" then
       turtle.dig()
       rednet.send(id, "Turtle digged!")
-    elseif msg == "DIGU"  or msg == "DIG U" then
+    elseif string.upper(msg) == "DIGU"  or string.upper(msg) == "DIG U" then
       turtle.digUp()
       rednet.send(id, "Tutle digged block in up!")
-    elseif msg == "DIGD"  or msg == "DIG D"then
+    elseif string.upper(msg) == "DIGD"  or string.upper(msg) == "DIG D"then
       turtle.digDown()
       rednet.send(id, "Turtle digged block in down!")
-    elseif msg == "USE" then
+    elseif string.upper(msg) == "USE" then
       turtle.place()
       rednet.send(id, "Turtle used item!")
-    elseif msg == "USEU" or msg == "USE U" then
+    elseif string.upper(msg) == "USEU" or string.upper(msg) == "USE U" then
       turtle.placeUp()
       rednet.send(id, "Turtle used item in up!")
-    elseif msg == "USED" or msg == "USE D" then
+    elseif string.upper(msg) == "USED" or string.upper(msg) == "USE D" then
       turtle.placeDown()
       rednet.send(id, "Turtle used item in down!")
-    elseif msg == "RS" then
+    elseif string.upper(msg) == "RS" then
       if r_i % 2 == 0 then
 
         for _, side in pairs(rs.getSides()) do
@@ -176,9 +176,9 @@ while true do
     elseif msg == "16" then
       turtle.select(tonumber(msg))
       rednet.send(id, "Turtle's slot is now "..tostring(msg))
-    elseif msg == "HELP" or msg == "help" then
+    elseif string.upper(msg) == "HELP" then
       rednet.send(id, " ")
-    elseif msg == "exit" or msg == "EXIT" or msg == "quit" or msg == "QUIT" then
+    elseif string.upper(msg) == ""EXIT" or string.upper(msg) == "QUIT" then
       break
     end
   end  
