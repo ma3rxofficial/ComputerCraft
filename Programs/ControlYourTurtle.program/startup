@@ -2,12 +2,12 @@
 -- pastebin get QQZTJ51z receiver.lua
 -- receiver.lua
 
-
 if SpeedOS then
   SpeedOS.ToolBarColour = colours.black
   SpeedOS.ToolBarTextColour = colours.white
 end
 
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 
@@ -19,15 +19,16 @@ end
 
 rednet.open(peripheral.find("modem"))
 
-term.setCursorPos(1, 1)
-print("Your ID: "..os.getComputerID())
-io.write("Please enter Turtle ID: ")
-turtle_id = io.read()
+local turtle_id
 
-if not tonumber(turtle_id) then
-  windows.error("Poshel nahuy")
-  SpeedOS.Close()
-end
+repeat
+  windows.clearScreen(colors.gray)
+  SpeedText.cPrint("Your ID: "..tostring(os.getComputerID()), 5)
+  term.setTextColor(colors.lightGray)
+  SpeedText.cPrint("Please enter turtle ID:", 6)
+
+  turtle_id = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
+until tonumber(turtle_id)
 
 function help()
   print("Welcome to Turtle Control!")
@@ -48,6 +49,7 @@ function help()
   print("")
 end
 
+term.setBackgroundColor(colors.black)
 term.clear()
 term.setCursorPos(1, 1)
 help()
