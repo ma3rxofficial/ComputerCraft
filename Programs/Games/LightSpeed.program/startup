@@ -1,7 +1,7 @@
 SpeedOS.ToolBarColour = colours.black
 SpeedOS.ToolBarTextColour = colours.white
 
-fs = SpeedOS.fs
+fs = SpeedOS.FS
 
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/_paintutils")
