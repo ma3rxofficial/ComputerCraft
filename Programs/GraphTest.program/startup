@@ -37,8 +37,10 @@ if peripheral.find("monitor", true) and use_mon_default then
   term.setTextColor(colors.lightGray)
   SpeedText.cPrint("Running graph on monitor(side "..peripheral.find("monitor", true)..")")
 else
-  SpeedOS.ToolBarColour = colours.black
-  SpeedOS.ToolBarTextColour = colours.white
+  if SpeedOS then
+    SpeedOS.ToolBarColour = colours.black
+    SpeedOS.ToolBarTextColour = colours.white
+  end
 end
 
 while true do
