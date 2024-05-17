@@ -1,8 +1,10 @@
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
-SpeedOS.ToolBarColour = colours.lightGrey
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.lightGrey
+	SpeedOS.ToolBarTextColour = colours.white
+end
 
 windows.clearScreen(colors.gray)
 term.setTextColor(colors.white)
