@@ -1,4 +1,5 @@
-fs=SpeedOS.fs
+fs=SpeedOS.FS
+
 os.loadAPI("SpeedAPI/windows")
 os.loadAPI("SpeedAPI/config")
 os.loadAPI("SpeedAPI/peripheral")
