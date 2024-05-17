@@ -1,5 +1,7 @@
-SpeedOS.ToolBarColour = colours.lightGrey
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+  SpeedOS.ToolBarColour = colours.lightGrey
+  SpeedOS.ToolBarTextColour = colours.white
+end
 
 local install_files = {"VMYEMZAB", "installer2"}
 local mon_cfg = "System/OS/monitor.cfg"
