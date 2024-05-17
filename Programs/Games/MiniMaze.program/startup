@@ -5,9 +5,10 @@ EAT - Y
 POISON - U
 --]]
 
-
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.black
+	SpeedOS.ToolBarTextColour = colours.white
+end
 
 local w,h = term.getSize()
 
