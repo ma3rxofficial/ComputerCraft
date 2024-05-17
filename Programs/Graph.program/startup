@@ -2,7 +2,7 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 
-fs = SpeedOS.fs
+fs = SpeedOS.FS
 
 use_old_pallete = false
  
