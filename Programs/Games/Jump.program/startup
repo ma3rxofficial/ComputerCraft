@@ -1,5 +1,7 @@
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.black
+	SpeedOS.ToolBarTextColour = colours.white
+end
 
 local playery, score, objects, maxx, maxy = 2, 0, {}, term.getSize()
 local objects = { {maxx - 2, math.random( 1, 4 )} }
