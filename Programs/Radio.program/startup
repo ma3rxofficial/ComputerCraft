@@ -1,6 +1,6 @@
 if SpeedOS then
-	SpeedOS.ToolBarColour = colours.grey
-	SpeedOS.ToolBarTextColour = colours.white
+  SpeedOS.ToolBarColour = colours.grey
+  SpeedOS.ToolBarTextColour = colours.white
 end
 
 SpeedOS.LoadAPI("SpeedAPI/config")
@@ -14,8 +14,6 @@ if not peripheral.find("modem") then
 end
 
 rednet.open(peripheral.find("modem"))
-
-term.setCursorPos(1, 2)
 
 huy_ = config.read("System/Radio.settings", "radios")
 local radio_id = textutils.unserialize(huy_)
