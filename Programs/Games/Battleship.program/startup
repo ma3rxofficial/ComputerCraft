@@ -13,8 +13,10 @@ if not peripheral.find("modem") then
   SpeedOS.Close()
 end
 
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+  SpeedOS.ToolBarColour = colours.black
+  SpeedOS.ToolBarTextColour = colours.white
+end
 
 term.clear()
 SpeedText.cPrint("Battleship")
