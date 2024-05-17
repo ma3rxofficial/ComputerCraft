@@ -5,8 +5,10 @@
 		Written by: Nitrogen Fingers
 ]]--
 
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.black
+	SpeedOS.ToolBarTextColour = colours.white
+end
 
 w,h = term.getSize()
 if not term.isColour() then
