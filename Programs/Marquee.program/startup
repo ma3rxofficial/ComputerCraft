@@ -1,8 +1,8 @@
 fs=SpeedOS.FS
 
-os.loadAPI("SpeedAPI/windows")
-os.loadAPI("SpeedAPI/config")
-os.loadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/config")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
  
 windows.clearScreen(colors.lightBlue)
  
