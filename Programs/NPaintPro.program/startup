@@ -12,7 +12,7 @@ if SpeedOS then
 	SpeedOS.ToolBarTextColour = colours.white
 end
 
-fs = SpeedOS.fs
+fs = SpeedOS.FS
 io = SpeedOS.IO
  
 --The screen size
