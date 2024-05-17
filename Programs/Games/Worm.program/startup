@@ -1,6 +1,7 @@
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
-
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.black
+	SpeedOS.ToolBarTextColour = colours.white
+end
 
 -- Display the start screen
 local w,h = term.getSize()
