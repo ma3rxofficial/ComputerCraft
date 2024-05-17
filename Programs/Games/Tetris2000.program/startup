@@ -2,9 +2,10 @@
 --Tetris v 1.0
 --© dzanis 12.07.12 
 
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
-
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.black
+	SpeedOS.ToolBarTextColour = colours.white
+end
 
 local w,h = term.getSize()
 local sX = w / 2 - 10/2 -- X позиция стакана
