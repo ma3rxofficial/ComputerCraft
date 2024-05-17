@@ -4,9 +4,10 @@
 -- |          ##     #   |    ####    |           #     #   |
 -- +---------------------+------------+---------------------+
 
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
-
+if SpeedOS then
+  SpeedOS.ToolBarColour = colours.black
+  SpeedOS.ToolBarTextColour = colours.white
+end
 
 version = "Version 1.0.1"
 
