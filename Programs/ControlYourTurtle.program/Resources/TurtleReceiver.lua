@@ -1,3 +1,11 @@
+if not peripheral.getType("right") == "modem" then
+  term.clear()
+  term.setCursorPos(1, 1)
+  error("You need wireless modem!")
+end
+
+rednet.open("right")
+
 r_i = 0
 
 term.setBackgroundColor(colors.black)
@@ -158,7 +166,7 @@ while true do
       rednet.send(id, "Turtle's slot is now "..tostring(msg))
     elseif string.upper(msg) == "HELP" then
       rednet.send(id, " ")
-    elseif string.upper(msg) == ""EXIT" or string.upper(msg) == "QUIT" then
+    elseif string.upper(msg) == "EXIT" or string.upper(msg) == "QUIT" then
       break
     end
   end  
