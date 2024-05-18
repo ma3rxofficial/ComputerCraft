@@ -6,8 +6,9 @@ end
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/config")
 
-pathToConfig = "System/Downloader.settings"
+fs = SpeedOS.FS
 
+pathToConfig = "System/Downloader.settings"
 use_http = false
 
 if config.read(pathToConfig, "enable http") == "true" then
@@ -16,8 +17,6 @@ if config.read(pathToConfig, "enable http") == "true" then
 else
   use_http = false
 end
-
-fs = SpeedOS.FS
 
 function downloadFile(l, p)
   if use_http then
