@@ -17,7 +17,7 @@ if not test then
 	SpeedOS.Close()
 end
 
-SpeedText.cPrint("Your IP is "..responce.readAll())
+SpeedText.cPrint("Your IP is "..response.readAll())
 
 SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
 SpeedOS.Close()
