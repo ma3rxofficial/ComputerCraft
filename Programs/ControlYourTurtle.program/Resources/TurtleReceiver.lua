@@ -1,16 +1,4 @@
-availableSides  = rs.getSides()
-
-function proverka() 
-  for _, side in pairs(availableSides) do
-    if peripheral.getType(side) == "modem" then
-      return true
-    end
-  end
-
-  return false
-end
-
-if not proverka() then
+if not peripheral.getType("right") == "modem" then
   term.clear()
   term.setCursorPos(1, 1)
   error("You need wireless modem!")
@@ -50,69 +38,69 @@ while true do
     r_i = r_i + 1
 
 
-    if string.upper(msg) == "W" then
+    if msg == "W" then
       if turtle.getFuelLevel() == 0 then
         rednet.send(id, "No fuel!")
       else
         turtle.forward()
         rednet.send(id, "Turtle moved forward!")
       end
-    elseif string.upper(msg) == "S" then
+    elseif msg == "S" then
       if turtle.getFuelLevel() == 0 then
         rednet.send(id, "No fuel!")
       else
         turtle.back()
         rednet.send(id, "Turtle moved backward!")
       end
-    elseif string.upper(msg) == "A" then
+    elseif msg == "A" then
       turtle.turnLeft()
       rednet.send(id, "Turtle turned left!")
-    elseif string.upper(msg) == "D" then
+    elseif msg == "D" then
       turtle.turnRight()
       rednet.send(id, "Turtle turned right!")
-    elseif string.upper(msg) == "UP" then
+    elseif msg == "UP" then
       if turtle.getFuelLevel() == 0 then
         rednet.send(id, "No fuel!")
       else
         turtle.up()
         rednet.send(id, "Turtle moved up!")
       end
-    elseif string.upper(msg) == "DOWN" then
+    elseif msg == "DOWN" then
        if turtle.getFuelLevel() == 0 then
         rednet.send(id, "No fuel!")
       else
         turtle.down()
         rednet.send(id, "Turned moved down!")
       end
-    elseif string.upper(msg) == "REFUEL" then
+    elseif msg == "REFUEL" then
       turtle.refuel()
       rednet.send(id, "Turtle refueled! Fuel level: "..turtle.getFuelLevel())
-    elseif string.upper(msg) == "FUEL" then
+    elseif msg == "FUEL" then
       rednet.send(id, tostring(turtle.getFuelLevel()))
-    elseif string.upper(msg) == "ATTACK" then
+    elseif msg == "ATTACK" then
       turtle.attack()
       turtle.attackUp()
       turtle.attackDown()
       rednet.send(id, "Turtle attacked!")
-    elseif string.upper(msg) == "DIG" then
+    elseif msg == "DIG" then
       turtle.dig()
       rednet.send(id, "Turtle digged!")
-    elseif string.upper(msg) == "DIGU"  or string.upper(msg) == "DIG U" then
+    elseif msg == "DIGU"  or msg == "DIG U" then
       turtle.digUp()
       rednet.send(id, "Tutle digged block in up!")
-    elseif string.upper(msg) == "DIGD"  or string.upper(msg) == "DIG D"then
+    elseif msg == "DIGD"  or msg == "DIG D"then
       turtle.digDown()
       rednet.send(id, "Turtle digged block in down!")
-    elseif string.upper(msg) == "USE" then
+    elseif msg == "USE" then
       turtle.place()
       rednet.send(id, "Turtle used item!")
-    elseif string.upper(msg) == "USEU" or string.upper(msg) == "USE U" then
+    elseif msg == "USEU" or msg == "USE U" then
       turtle.placeUp()
       rednet.send(id, "Turtle used item in up!")
-    elseif string.upper(msg) == "USED" or string.upper(msg) == "USE D" then
+    elseif msg == "USED" or msg == "USE D" then
       turtle.placeDown()
       rednet.send(id, "Turtle used item in down!")
-    elseif string.upper(msg) == "RS" then
+    elseif msg == "RS" then
       if r_i % 2 == 0 then
 
         for _, side in pairs(rs.getSides()) do
@@ -176,9 +164,9 @@ while true do
     elseif msg == "16" then
       turtle.select(tonumber(msg))
       rednet.send(id, "Turtle's slot is now "..tostring(msg))
-    elseif string.upper(msg) == "HELP" then
+    elseif msg == "HELP" or msg == "help" then
       rednet.send(id, " ")
-    elseif string.upper(msg) == ""EXIT" or string.upper(msg) == "QUIT" then
+    elseif msg == "exit" or msg == "EXIT" or msg == "quit" or msg == "QUIT" then
       break
     end
   end  
