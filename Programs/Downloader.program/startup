@@ -17,7 +17,7 @@ else
   use_http = false
 end
 
-fs = SpeedOS.fs
+fs = SpeedOS.FS
 
 function downloadFile(l, p)
   if use_http then
