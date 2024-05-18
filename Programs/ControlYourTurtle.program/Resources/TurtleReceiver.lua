@@ -41,6 +41,8 @@ while true do
     if string.upper(msg) == "W" then
       if turtle.getFuelLevel() == 0 then
         rednet.send(id, "No fuel!")
+      elseif turtle.detect() then
+        rednet.send(id, "The turtle cannot move, there is a block in front of it!")
       else
         turtle.forward()
         rednet.send(id, "Turtle moved forward!")
@@ -61,13 +63,17 @@ while true do
     elseif string.upper(msg) == "UP" then
       if turtle.getFuelLevel() == 0 then
         rednet.send(id, "No fuel!")
+      elseif turtle.detectUp() then
+        rednet.send(id, "The turtle cannot move, there is a block above it!")
       else
         turtle.up()
         rednet.send(id, "Turtle moved up!")
       end
     elseif string.upper(msg) == "DOWN" then
-       if turtle.getFuelLevel() == 0 then
+      if turtle.getFuelLevel() == 0 then
         rednet.send(id, "No fuel!")
+      elseif turtle.detectDown() then
+        rednet.send(id, "The turtle cannot move, there is a block under it!")
       else
         turtle.down()
         rednet.send(id, "Turned moved down!")
