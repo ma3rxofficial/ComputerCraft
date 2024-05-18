@@ -38,8 +38,13 @@ function downloadFile(l, p)
     windows.error("Can't connect to URL!")
     Menu()
   end
-  
-  f = fs.open("" ..tostring(p), "w")
+
+  if not fs.exists(p) then
+    fs.makeDir(p)
+    fs.delete(p)
+  end
+
+  f = fs.open(p, "w")
   f.write(data.readAll())
   f.close()
 end
