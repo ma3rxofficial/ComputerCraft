@@ -561,3 +561,8 @@ function waitForEvent(event_list)
 
 	return result_dolbaeba
 end
+
+--Convert string to color--
+function stringToColor(string)
+	return colors[string]
+end
