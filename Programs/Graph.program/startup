@@ -16,7 +16,7 @@ local bg_color = SpeedText.stringToColor(config.read("System/Graph.settings", "b
 local xy_color = SpeedText.stringToColor(config.read("System/Graph.settings", "coordinate color"))
 local graph_color = SpeedText.stringToColor(config.read("System/Graph.settings", "graph color"))
 local error_color = SpeedText.stringToColor(config.read("System/Graph.settings", "error color"))
-local lines_color = colors.lightGray
+local lines_color = SpeedText.stringToColor(config.read("System/Graph.settings", "lines color"))
 
 if use_old_pallete then
         bg_color = colors.white
