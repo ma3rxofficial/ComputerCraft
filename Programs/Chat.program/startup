@@ -13,11 +13,13 @@ if not peripheral.find("modem") then
 	SpeedOS.Close()
 end
 
+pathToConfig = "System/Chat.settings"
+
 local w, h = term.getSize()
 local input = ""
 local name = ""
-local s_rednet = "back"
-local serverID = 804
+local s_rednet = peripheral.find("modem")
+local serverID = tonumber(config.read(pathToConfig, "server ID"))
 
 while true do
 	term.clear()
