@@ -34,7 +34,7 @@ local cBlink = ""
 local cBlinkT = 0
 
 -- Visual Config
-bgColor = colors.black
+bgColor = SpeedText.stringToColor(config.read(pathToConfig, "background color"))
 chatMsgColor = colors.lightGray
 barsColor = colors.white
 textInputColor = colors.lightGray
