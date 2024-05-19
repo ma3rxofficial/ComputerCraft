@@ -8,9 +8,8 @@ end
 
 fs = SpeedOS.FS
 
-windows.clearScreen(colors.white) 
-
 local w, h = term.getSize()
+local githubRepo = "https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/"
 
 function FancyError()
   term.setBackgroundColor(colours.grey)
@@ -59,7 +58,7 @@ function Menu()
 end
 
 function GetProgram(selected)
-  result = http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/"..selected)
+  result = http.get(githubRepo..selected)
   
   if not result then
     windows.clearScreen(colors.cyan)
