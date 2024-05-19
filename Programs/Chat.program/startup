@@ -44,6 +44,16 @@ for i=1,w - 1 do
 	sBars = sBars.."-"
 end
 
+day, month, year = SpeedText.getDate()
+logPath = "Resources/Chat_"..tostring(year).."-"..tostring(month).."-"..tostring(day).."_"..SpeedText.extraFormatTime(os.time(), ".", true)..".log"
+
+function InfoLog(msg)
+    log_file = fs.open(logPath, "a")
+    log_file.writeLine(msg)
+    log_file.flush()
+    log_file.close()
+end
+
 function draw()
 	while true do
 		sleep( 0 )
@@ -114,6 +124,7 @@ function receive()
 		local event, ID, MSG, DIS = os.pullEvent( "rednet_message" )
 		if ID == serverID then
 			tChatHistory[table.getn( tChatHistory ) + 1] = MSG
+			InfoLog(string.sub(MSG, 1, -3))
 		end
 	end
 end
