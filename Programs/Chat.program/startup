@@ -86,15 +86,18 @@ function key()
 				break
 			elseif p1 == 14 then
 				cInput = string.sub( cInput, 1, string.len( cInput ) - 1 )
+			elseif string.lower(cInput) == "/exit" and p1 == 28 then
+				rednet.send( serverID, "#QUIT___#"..name )
+				break
+			elseif string.lower(cInput) == "/quit" and p1 == 28 then
+				rednet.send( serverID, "#QUIT___#"..name )
+				break
 			elseif p1 == 28 then
 				rednet.send( serverID, "ch_"..cInput )
 				cInput = ""
 			end
 		elseif event == "char" then
 			cInput = cInput..p1
-		elseif event == "terminate" then
-			rednet.send( serverID, "#QUIT___#"..name )
-			break
 		end
 	end
 end
