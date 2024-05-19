@@ -366,7 +366,7 @@ function caps_lock()
 		capsToggle = false
 	elseif capsToggle == false then
 		term.setCursorPos(36,16)
-		setCol("red", "white")
+		setCol("green", "white")
 		write("CAPS LOCK")
 		capsToggle = true
 	end
