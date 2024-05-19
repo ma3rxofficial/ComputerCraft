@@ -563,8 +563,8 @@ function waitForEvent(event_list)
 end
 
 --Convert string to color--
-function stringToColor(string)
-	return colors[string]
+function stringToColor(_string)
+	return colors[_string]
 end
 
 --Convert string to boolean--
