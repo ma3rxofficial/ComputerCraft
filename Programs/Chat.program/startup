@@ -3,6 +3,10 @@ if SpeedOS then
 	SpeedOS.ToolBarTextColour = colours.white
 end
 
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("SpeedAPI/config")
+
 local w, h = term.getSize()
 local input = ""
 local name = ""
