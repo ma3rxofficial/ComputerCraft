@@ -10,10 +10,10 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 
 pathToConfig = "System/CCWatch.settings"
 
-local GMT_max = tonumber(config.read(pathToConfig, "GMT_max"))
-local GMT_min = tonumber(config.read(pathToConfig, "GMT_min"))
-local GMT_default = tonumber(config.read(pathToConfig, "GMT_default"))
-local cur_dateFormat = config.read(pathToConfig, "dateFormat")
+local GMT_max = tonumber(config.read(pathToConfig, "GMT max"))
+local GMT_min = tonumber(config.read(pathToConfig, "GMT min"))
+local GMT_default = tonumber(config.read(pathToConfig, "GMT default"))
+local cur_dateFormat = config.read(pathToConfig, "date format")
 
 function eblan(time)
 	local nHour = math.floor(time)
