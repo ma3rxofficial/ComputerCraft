@@ -1,11 +1,13 @@
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.lightGrey
+	SpeedOS.ToolBarTextColour = colours.black
+end
+
 fs = SpeedOS.FS
 
 SpeedOS.LoadAPI("SpeedAPI/SpeedGUI")
 SpeedOS.LoadAPI("SpeedAPI/lddfm")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
-
-SpeedOS.ToolBarColour = colours.lightGrey
-SpeedOS.ToolBarTextColour = colours.white
 
 term.setBackgroundColor(colors.gray)
 term.clear()
