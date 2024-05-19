@@ -7,6 +7,12 @@ SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/config")
 
+if not peripheral.find("modem") then
+	windows.clearScreen(colors.cyan)
+	windows.error("This program requires wireless modem!")
+	SpeedOS.Close()
+end
+
 local w, h = term.getSize()
 local input = ""
 local name = ""
