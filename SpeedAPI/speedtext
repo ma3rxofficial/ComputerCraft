@@ -566,3 +566,12 @@ end
 function stringToColor(string)
 	return colors[string]
 end
+
+--Convert string to boolean--
+function stringToBoolean(_string)
+	if string.lower(_string) == "true" then
+		return true
+	elseif string.lower(_string) == "false" then
+		return false
+	end
+end
