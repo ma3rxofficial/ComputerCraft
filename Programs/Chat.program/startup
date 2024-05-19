@@ -1,0 +1,99 @@
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.black
+	SpeedOS.ToolBarTextColour = colours.white
+end
+
+local w, h = term.getSize()
+local input = ""
+local name = ""
+local s_rednet = "back"
+local serverID = 804
+
+while true do
+	term.clear()
+	term.setCursorPos(1, 1)
+	write( "NickName: "..name.."_" )
+	local event, p1 = os.pullEvent()
+	if event == "char" then
+		name = name..p1
+	elseif event == "key" then
+		if p1 == 14 then
+			name = string.sub( name, 1, string.len( name ) - 1 )
+		elseif p1 == 28 then
+			name = tostring( name )
+			break
+		end
+	end
+end
+
+rednet.open( s_rednet )
+rednet.send( serverID, "#CONNECT#"..name )
+local cInput = ""
+local sBars = ""
+local tChatHistory = {}
+local cBlink = ""
+local cBlinkT = 0
+
+for i=1,w - 1 do
+	sBars = sBars.."-"
+end
+
+function draw()
+	while true do
+		sleep( 0 )
+		cBlinkT = cBlinkT + 1
+		if cBlinkT == 5 then
+			if cBlink == "" then
+				cBlink = "_"
+			else
+				cBlink = ""
+			end
+			cBlinkT = 0
+		end
+		term.clear()
+		term.setCursorPos(1, 1)
+		local calch = h - 4
+		for i=table.getn( tChatHistory ) - calch,table.getn( tChatHistory ) do
+			if tChatHistory[i] ~= nil then
+				write( tChatHistory[i] )
+			end
+		end
+		term.setCursorPos( 1, h - 1 )
+		write( "> "..cInput..cBlink )
+		term.setCursorPos( 1, h - 2 )
+		write( sBars )
+	end
+end
+
+function key()
+	while true do
+		local event, p1 = os.pullEvent()
+		if event == "key" then
+			if p1 == 41 then
+				rednet.send( serverID, "#QUIT___#"..name )
+				break
+			elseif p1 == 14 then
+				cInput = string.sub( cInput, 1, string.len( cInput ) - 1 )
+			elseif p1 == 28 then
+				rednet.send( serverID, "ch_"..cInput )
+				cInput = ""
+			end
+		elseif event == "char" then
+			cInput = cInput..p1
+		elseif event == "terminate" then
+			rednet.send( serverID, "#QUIT___#"..name )
+			break
+		end
+	end
+end
+
+function receive()
+	while true do
+		local event, ID, MSG, DIS = os.pullEvent( "rednet_message" )
+		if ID == serverID then
+			tChatHistory[table.getn( tChatHistory ) + 1] = MSG
+		end
+	end
+end
+
+parallel.waitForAny( draw, key, receive )
