@@ -22,7 +22,7 @@ SpeedOS - это графическая операционная система 
 
 Если по какой-то причине ресурс pastebin для вас недоступен и у вас установлена модифицированная версия ROM от ТехноМира, используйте альтернативную команду для установки:
 
-	wget run https://raw.githubusercontent.com/ma3rxofficial/CCStuff/main/Installer.lua
+	wget run https://raw.githubusercontent.com/ma3rxofficial/CCStuff/main/Installer/Installer.lua
 
 Все эти команды вы можете вставить в консоль, используя сочетание клавиш CTRL+V
 
