@@ -35,7 +35,7 @@ local cBlinkT = 0
 
 -- Visual Config
 bgColor = SpeedText.stringToColor(config.read(pathToConfig, "background color"))
-chatMsgColor = colors.lightGray
+chatMsgColor = SpeedText.stringToColor(config.read(pathToConfig, "chat color"))
 barsColor = colors.white
 textInputColor = colors.lightGray
 
