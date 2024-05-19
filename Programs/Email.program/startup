@@ -20,7 +20,7 @@ w,h = term.getSize()
 umail = { }
 rmail = { }
 slc = 1
-serverid = tonumber(config.read("System/Email.settings", "serverID"))
+serverid = tonumber(config.read("System/Email.settings", "server ID"))
 side = peripheral.find("modem")
 
 confirmmsg = ""
