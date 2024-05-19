@@ -29,7 +29,7 @@ function Menu()
 
   if howManyPidors(selected_path) == 0 then
     windows.clearScreen(colors.white)
-    windows.attention({"No images!"}, {"No images found in path", selected_path, "Try using .nfp format!"})
+    windows.attention({"No images!"}, {"No images found in path", selected_path, "Try using the .nfp format!"})
     SpeedOS.Close()
   end
 
