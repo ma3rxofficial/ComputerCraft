@@ -21,22 +21,9 @@ local name = ""
 local s_rednet = peripheral.find("modem")
 local serverID = tonumber(config.read(pathToConfig, "server ID"))
 
-while true do
-	term.clear()
-	term.setCursorPos(1, 1)
-	write( "NickName: "..name.."_" )
-	local event, p1 = os.pullEvent()
-	if event == "char" then
-		name = name..p1
-	elseif event == "key" then
-		if p1 == 14 then
-			name = string.sub( name, 1, string.len( name ) - 1 )
-		elseif p1 == 28 then
-			name = tostring( name )
-			break
-		end
-	end
-end
+windows.clearScreen(colors.black)
+SpeedText.cPrint("Your chat nickname:", 6)
+name = SpeedText.centerRead(51 - 13, "", colors.gray, colors.white, colors.lightGray, false, nil, nil)
 
 rednet.open( s_rednet )
 rednet.send( serverID, "#CONNECT#"..name )
@@ -62,6 +49,8 @@ function draw()
 			end
 			cBlinkT = 0
 		end
+		term.setBackgroundColor(colors.black)
+		term.setTextColor(colors.lightGray)
 		term.clear()
 		term.setCursorPos(1, 1)
 		local calch = h - 4
@@ -70,8 +59,12 @@ function draw()
 				write( tChatHistory[i] )
 			end
 		end
+		term.setTextColor(colors.white)
 		term.setCursorPos( 1, h - 1 )
-		write( "> "..cInput..cBlink )
+		write( "> ")
+		term.setTextColor(colors.lightGray)
+		io.write( cInput..cBlink )
+		term.setTextColor(colors.white)
 		term.setCursorPos( 1, h - 2 )
 		write( sBars )
 	end
