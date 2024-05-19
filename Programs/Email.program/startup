@@ -12,6 +12,8 @@ if not peripheral.find("modem") then
   SpeedOS.Close()
 end
 
+local pathToConfig = "System/Email.settings"
+
 term.setCursorPos(1, 1)
 term.setTextColor(colors.white)
 term.setBackgroundColor(colors.black)
@@ -20,7 +22,7 @@ w,h = term.getSize()
 umail = { }
 rmail = { }
 slc = 1
-serverid = tonumber(config.read("System/Email.settings", "server ID"))
+serverid = tonumber(config.read(pathToConfig, "server ID"))
 side = peripheral.find("modem")
 
 confirmmsg = ""
