@@ -10,8 +10,10 @@ function findRadar()
     return nil
 end
 
-SpeedOS.ToolBarColour = colours.lightGrey
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+    SpeedOS.ToolBarColour = colours.lightGrey
+    SpeedOS.ToolBarTextColour = colours.white
+end
 
 io = SpeedOS.IO
 
