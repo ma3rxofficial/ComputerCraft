@@ -33,6 +33,12 @@ local tChatHistory = {}
 local cBlink = ""
 local cBlinkT = 0
 
+-- Visual Config
+bgColor = colors.black
+chatMsgColor = colors.lightGray
+barsColor = colors.white
+textInputColor = colors.lightGray
+
 for i=1,w - 1 do
 	sBars = sBars.."-"
 end
@@ -49,22 +55,29 @@ function draw()
 			end
 			cBlinkT = 0
 		end
-		term.setBackgroundColor(colors.black)
-		term.setTextColor(colors.lightGray)
+		term.setBackgroundColor(bgColor)
+		term.setTextColor(chatMsgColor)
+
 		term.clear()
 		term.setCursorPos(1, 1)
+
 		local calch = h - 4
+
 		for i=table.getn( tChatHistory ) - calch,table.getn( tChatHistory ) do
 			if tChatHistory[i] ~= nil then
 				write( tChatHistory[i] )
 			end
 		end
+
 		term.setTextColor(colors.white)
 		term.setCursorPos( 1, h - 1 )
+
 		write( "> ")
-		term.setTextColor(colors.lightGray)
+
+		term.setTextColor(textInputColor)
 		io.write( cInput..cBlink )
-		term.setTextColor(colors.white)
+
+		term.setTextColor(barsColor)
 		term.setCursorPos( 1, h - 2 )
 		write( sBars )
 	end
