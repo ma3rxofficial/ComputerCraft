@@ -19,17 +19,13 @@ local monitor_scale
 
 function Menu()
 
-  windows.clearScreen(colors.gray)
-  SpeedText.cPrint("Enter path to folder with pictures:", 6)
+  repeat
+    windows.clearScreen(colors.gray)
+    SpeedText.cPrint("Enter path to folder with pictures:", 6)
 
-  selected_path = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
+    selected_path = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
 
-  if not fs.isDir(selected_path) then
-    os.reboot()
-
-  elseif not selected_path then
-    os.reboot()
-  end
+  until fs.isDir(selected_path)
 
   if howManyPidors(selected_path) == 0 then
     windows.clearScreen(colors.white)
