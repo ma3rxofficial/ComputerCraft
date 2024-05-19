@@ -19,12 +19,12 @@ end
 pathToConfig = "System/Matrix.settings"
 
 local fps = tonumber(config.read(pathToConfig, "fps")) --Determines how long the system will wait between each update
-local maxLifetime = tonumber(config.read(pathToConfig, "maxLifetime")) --Max lifetime of each char
-local minLifetime = tonumber(config.read(pathToConfig, "minLifetime")) --Min lifetime of each char 
-local maxSourcesPerTick = tonumber(config.read(pathToConfig, "maxSourcesPerTick")) --Maximum number of sources created each tick
-local sourceWeight = tonumber(config.read(pathToConfig, "sourceWeight")) --Affects the chance that no sources will be generated
-local greenWeight = tonumber(config.read(pathToConfig, "greenWeight")) --Threshhold out of 10 that determines when characters will switch from lime to green
-local grayWeight = tonumber(config.read(pathToConfig, "grayWeight")) --Same as about, but from green to gray
+local maxLifetime = tonumber(config.read(pathToConfig, "max char lifetime")) --Max lifetime of each char
+local minLifetime = tonumber(config.read(pathToConfig, "min char lifetime")) --Min lifetime of each char 
+local maxSourcesPerTick = tonumber(config.read(pathToConfig, "max sources per tick")) --Maximum number of sources created each tick
+local sourceWeight = tonumber(config.read(pathToConfig, "source weight")) --Affects the chance that no sources will be generated
+local greenWeight = tonumber(config.read(pathToConfig, "green weight")) --Threshhold out of 10 that determines when characters will switch from lime to green
+local grayWeight = tonumber(config.read(pathToConfig, "gray weight")) --Same as about, but from green to gray
 
 function getMonitors()
 	local monitors = {}
