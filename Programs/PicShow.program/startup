@@ -10,7 +10,7 @@ SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 fs = SpeedOS.FS
 
-pathToConfig = "System/SlideShow.settings"
+pathToConfig = "System/PicShow.settings"
 
 local sleep_time = tonumber(config.read(pathToConfig, "sleep time"))
 local monitor_scale = tonumber(config.read(pathToConfig, "monitor scale"))
