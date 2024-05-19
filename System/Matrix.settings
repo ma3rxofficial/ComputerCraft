@@ -1,7 +1,7 @@
 fps=8
-maxLifetime=40
-minLifetime=8
-maxSourcesPerTick=5
-sourceWeight=0
-greenWeight=8
-grayWeight=2
+max char lifetime=40
+min char lifetime=8
+max sources per tick=5
+source weight=0
+green weight=8
+gray weight=2
