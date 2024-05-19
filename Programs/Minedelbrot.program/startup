@@ -40,7 +40,7 @@ if govno == "Yes" then
 end
 
 if toMonitor then
-  monitor.setTextScale(tonumber(config.read("System/Minedelbrot.settings", "monitor_scale")))
+  monitor.setTextScale(tonumber(config.read("System/Minedelbrot.settings", "monitor scale")))
 end
 
 if not toMonitor then
