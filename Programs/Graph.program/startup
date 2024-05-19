@@ -13,7 +13,7 @@ fs = SpeedOS.FS
 use_old_pallete = false
  
 local bg_color = SpeedText.stringToColor(config.read("System/Graph.settings", "bg color"))
-local xy_color = colors.white
+local xy_color = SpeedText.stringToColor(config.read("System/Graph.settings", "coordinate color"))
 local graph_color = colors.lime
 local error_color = colors.red
 local lines_color = colors.lightGray
