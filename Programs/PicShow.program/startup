@@ -52,7 +52,7 @@ function Menu()
       use_monitor = false  
     end
 
-    -- Запускаем наше шоу "Внутри Анны"
+    -- Запускаем наше слайд-шоу, ебать его в рот
 
     if use_monitor then
       SlideShow(selected_path, monitor)
