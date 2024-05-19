@@ -13,9 +13,10 @@ fs = SpeedOS.FS
 pathToConfig = "System/SlideShow.settings"
 
 local sleep_time = tonumber(config.read(pathToConfig, "sleep time"))
+local monitor_scale = tonumber(config.read(pathToConfig, "monitor scale"))
+
 local use_monitor = false
 local monitor
-local monitor_scale
 
 function Menu()
 
@@ -41,7 +42,7 @@ function Menu()
       use_monitor = true
 
       monitor = peripheral.wrap(peripheral.find("monitor", true))   
-      monitor.setTextScale(tonumber(config.read(pathToConfig, "monitor scale")))
+      monitor.setTextScale(monitor_scale)
       monitor.setBackgroundColor(colors.black)
       monitor.clear()
 
