@@ -10,10 +10,10 @@ function findRadar()
     return nil
 end
 
-io = SpeedOS.IO
-
 SpeedOS.ToolBarColour = colours.lightGrey
 SpeedOS.ToolBarTextColour = colours.white
+
+io = SpeedOS.IO
 
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
