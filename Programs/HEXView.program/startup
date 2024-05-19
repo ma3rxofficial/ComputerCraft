@@ -1,15 +1,5 @@
---[[
-	Program: HexIt
-	Created by: Lewisk3/Redxone
-	
-	Terms of use ( 6/23/17 ):
-		Do not edit this program and re-distribute the edit on the forums.
-		Use on ROM hacking is soley the responibility of the user.
-		Do not copy the program and try to push it off as your own.
-	
-	Have fun!
---]]
- 
+SpeedOS.LoadAPI("SpeedAPI/lddfm")
+
 fs = SpeedOS.FS
 
 -- Monochrome support (WIP)
@@ -27,8 +17,6 @@ if(not term.isColor())then
   colors.green     = colors.gray
   colors.red       = colors.gray
 end
-
-SpeedOS.LoadAPI("SpeedAPI/lddfm")
 
 local w, h = term.getSize()
 --local w,h = 26, 20
