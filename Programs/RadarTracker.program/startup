@@ -1,15 +1,3 @@
-function findRadar()
-    local dolbaeb = {'top', 'bottom', 'front', 'back', 'left', 'right', 'top:white', 'top:orange', 'top:magenta', 'top:lightBlue', 'top:yellow', 'top:lime', 'top:pink', 'top:gray', 'top:cyan', 'top:purple', 'top:blue', 'top:brown', 'top:green', 'top:red', 'top:black', 'bottom:white', 'bottom:orange', 'bottom:magenta', 'bottom:lightBlue', 'bottom:yellow', 'bottom:lime', 'bottom:pink', 'bottom:gray', 'bottom:cyan', 'bottom:purple', 'bottom:blue', 'bottom:brown', 'bottom:green', 'bottom:red', 'bottom:black', 'front:white', 'front:orange', 'front:magenta', 'front:lightBlue', 'front:yellow', 'front:lime', 'front:pink', 'front:gray', 'front:cyan', 'front:purple', 'front:blue', 'front:brown', 'front:green', 'front:red', 'front:black', 'back:white', 'back:orange', 'back:magenta', 'back:lightBlue', 'back:yellow', 'back:lime', 'back:pink', 'back:gray', 'back:cyan', 'back:purple', 'back:blue', 'back:brown', 'back:green', 'back:red', 'back:black', 'left:white', 'left:orange', 'left:magenta', 'left:lightBlue', 'left:yellow', 'left:lime', 'left:pink', 'left:gray', 'left:cyan', 'left:purple', 'left:blue', 'left:brown', 'left:green', 'left:red', 'left:black', 'right:white', 'right:orange', 'right:magenta', 'right:lightBlue', 'right:yellow', 'right:lime', 'right:pink', 'right:gray', 'right:cyan', 'right:purple', 'right:blue', 'right:brown', 'right:green', 'right:red', 'right:black'}
-
-    for _,value in pairs(dolbaeb) do
-        if peripheral.getType(value) == "ICBMRadar" then
-            return value
-        end
-    end
-
-    return nil
-end
-
 if SpeedOS then
     SpeedOS.ToolBarColour = colours.lightGrey
     SpeedOS.ToolBarTextColour = colours.white
@@ -21,6 +9,18 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/config")
+
+function findRadar()
+    local dolbaeb = {'top', 'bottom', 'front', 'back', 'left', 'right', 'top:white', 'top:orange', 'top:magenta', 'top:lightBlue', 'top:yellow', 'top:lime', 'top:pink', 'top:gray', 'top:cyan', 'top:purple', 'top:blue', 'top:brown', 'top:green', 'top:red', 'top:black', 'bottom:white', 'bottom:orange', 'bottom:magenta', 'bottom:lightBlue', 'bottom:yellow', 'bottom:lime', 'bottom:pink', 'bottom:gray', 'bottom:cyan', 'bottom:purple', 'bottom:blue', 'bottom:brown', 'bottom:green', 'bottom:red', 'bottom:black', 'front:white', 'front:orange', 'front:magenta', 'front:lightBlue', 'front:yellow', 'front:lime', 'front:pink', 'front:gray', 'front:cyan', 'front:purple', 'front:blue', 'front:brown', 'front:green', 'front:red', 'front:black', 'back:white', 'back:orange', 'back:magenta', 'back:lightBlue', 'back:yellow', 'back:lime', 'back:pink', 'back:gray', 'back:cyan', 'back:purple', 'back:blue', 'back:brown', 'back:green', 'back:red', 'back:black', 'left:white', 'left:orange', 'left:magenta', 'left:lightBlue', 'left:yellow', 'left:lime', 'left:pink', 'left:gray', 'left:cyan', 'left:purple', 'left:blue', 'left:brown', 'left:green', 'left:red', 'left:black', 'right:white', 'right:orange', 'right:magenta', 'right:lightBlue', 'right:yellow', 'right:lime', 'right:pink', 'right:gray', 'right:cyan', 'right:purple', 'right:blue', 'right:brown', 'right:green', 'right:red', 'right:black'}
+
+    for _,value in pairs(dolbaeb) do
+        if peripheral.getType(value) == "ICBMRadar" then
+            return value
+        end
+    end
+
+    return nil
+end
 
 windows.clearScreen(colors.black)
 term.setCursorPos(1, 1)
