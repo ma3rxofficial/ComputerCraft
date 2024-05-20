@@ -1,8 +1,10 @@
 -- Thanks to 1Ridav for this program!
 -- https://www.youtube.com/watch?v=G3v15PD4p2Y
 
-SpeedOS.ToolBarColour = colours.grey
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.grey
+	SpeedOS.ToolBarTextColour = colours.white
+end
 
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/config")
