@@ -75,8 +75,18 @@ function Server()
 	rednet.open(peripheral.find("modem"))
 
 
-	huy_ = config.read("System/RidavMFSU.settings", "EnergyIDS")
+	io.write("Enter energy computer IDs: ")
+
+	term.setTextColor(colors.magenta)
+
+	huy_ = tonumber(io.read())
+	term.setTextColor(colors.white)
 	id = textutils.unserialize(huy_)
+
+	if not id then
+		windows.error("You must enter table!")
+		Initialise()
+	end
 
 	local function bin(element)
 		if element == "1" then 
