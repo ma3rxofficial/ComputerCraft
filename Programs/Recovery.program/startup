@@ -6,7 +6,7 @@ end
 SpeedOS.LoadAPI("SpeedAPI/windows")
 
 
-fs = SpeedOS.fs
+fs = SpeedOS.FS
 
 windows.clearScreen(colors.cyan)
 button = windows.select({"Recovery OS!"},{"Do you want to recover your OS?"},{"No",colors.gray,colors.white}, {"Yes",colors.orange,colors.white})
