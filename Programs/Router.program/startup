@@ -4,7 +4,7 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 
 pathToConfig = "System/Router.settings"
 
-local redstone_side = config.read(pathToConfig, "output")
+redstone_side = config.read(pathToConfig, "output")
 local rs_enabled = false
 local routing_enabled = false
 local blacklisted = {}
