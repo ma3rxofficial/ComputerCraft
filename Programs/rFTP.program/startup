@@ -3,11 +3,11 @@ if SpeedOS then
   SpeedOS.ToolBarTextColour = colours.white
 end
 
-fs = SpeedOS.FS
-
 SpeedOS.LoadAPI("SpeedAPI/devices")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
+
+fs = SpeedOS.FS
 
 windows.clearScreen(colors.white)
 
