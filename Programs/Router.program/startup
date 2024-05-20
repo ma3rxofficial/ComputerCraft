@@ -1,13 +1,13 @@
-local rs_enabled = false
-local routing_enabled = false
-local blacklisted = {}
-
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/config")
 
 pathToConfig = "System/Router.settings"
-redstone_side = config.read(pathToConfig, "output")
+
+local redstone_side = config.read(pathToConfig, "output")
+local rs_enabled = false
+local routing_enabled = false
+local blacklisted = {}
 
 function blacklist(id)
   for _, value in pairs(blacklisted) do
