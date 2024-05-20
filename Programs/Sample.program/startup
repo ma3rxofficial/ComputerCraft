@@ -1,3 +1,6 @@
+SpeedOS.ToolBarColour = colours.white
+SpeedOS.ToolBarTextColour = colours.black
+
 SpeedOS.LoadAPI("SpeedAPI/windows")
 
 windows.clearScreen(colors.white)
