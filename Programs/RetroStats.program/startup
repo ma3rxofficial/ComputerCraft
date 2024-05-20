@@ -23,12 +23,4 @@ print("Free space: ", fs.getFreeSpace("/"), " bytes")
 print("Computer running: ", os.clock(), " seconds")
 print("Disk free space: ", fs.getFreeSpace("/disk"), " bytes")
 
-while true do
-	event, hueta = os.pullEvent()
-
-	if event == "key" then
-		SpeedOS.Close()
-	elseif event == "mouse_click" or event == "mouse_drag" then
-		SpeedOS.Close()
-	end
-end
+SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
