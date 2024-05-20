@@ -36,8 +36,6 @@ end
 
 function Menu()
   windows.clearScreen(colors.white)
-  --SpeedOS.ToolBarColour = colours.white
-  --SpeedOS.ToolBarTextColour = colours.black
   pressedButton = windows.select({"Hello!"},{"Welcome to FTP!"},{"Send",colors.lightGray,colors.black},{"Receive",colors.lightBlue,colors.black})
 
   local p1 = pressedButton
