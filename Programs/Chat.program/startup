@@ -130,4 +130,6 @@ function receive()
 end
 
 parallel.waitForAny( draw, key, receive )
+
+InfoLog("-- Disconnected --")
 SpeedOS.Close()
