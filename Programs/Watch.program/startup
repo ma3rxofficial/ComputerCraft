@@ -3,8 +3,7 @@ if SpeedOS then
 	SpeedOS.ToolBarTextColour = colours.black
 end
 
-os.loadAPI("Resources/dateapi")
-
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/config")
 
 pathToConfig = "System/CCWatch.settings"
@@ -503,7 +502,7 @@ h, m, s = chas, minuta, 0
 h = h + GMT_default
 -- Split cur_date into day, month and year
 local t_date = nil --split( cur_date, '/' )
-den, mesyac, god = dateapi.getDate()
+den, mesyac, god = SpeedText.getDate()
 month, d, y =  mesyac, den, god
 
 if h >= 24 then
