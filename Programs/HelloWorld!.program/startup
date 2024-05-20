@@ -5,7 +5,7 @@ end
 
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
-term.setTextColor(2^math.random(0,15))
+term.setTextColor(2 ^ math.random(0, 15))
 SpeedText.slowPrint("Hello World!")
 
 SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
