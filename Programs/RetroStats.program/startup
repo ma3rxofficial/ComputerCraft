@@ -24,3 +24,4 @@ print("Computer running: ", os.clock(), " seconds")
 print("Disk free space: ", fs.getFreeSpace("/disk"), " bytes")
 
 SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
+SpeedOS.Close()
