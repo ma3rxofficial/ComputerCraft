@@ -1,8 +1,5 @@
-local updateTime_delay = 0.8
-local cur_time, cur_date = nil, nil
-local h, m, s, d, month, y = nil, nil, nil, nil, nil, nil
-local time_URL = "http://test-my-php.freeiz.com/time.php"
-local screenX, screenY = term.getSize()
+SpeedOS.ToolBarColour = colours.white
+SpeedOS.ToolBarTextColour = colours.black
 
 os.loadAPI("Resources/dateapi")
 
@@ -14,6 +11,12 @@ local GMT_max = tonumber(config.read(pathToConfig, "GMT max"))
 local GMT_min = tonumber(config.read(pathToConfig, "GMT min"))
 local GMT_default = tonumber(config.read(pathToConfig, "GMT default"))
 local cur_dateFormat = config.read(pathToConfig, "date format")
+
+local updateTime_delay = 0.8
+local cur_time, cur_date = nil, nil
+local h, m, s, d, month, y = nil, nil, nil, nil, nil, nil
+local time_URL = "http://test-my-php.freeiz.com/time.php"
+local screenX, screenY = term.getSize()
 
 function eblan(time)
 	local nHour = math.floor(time)
