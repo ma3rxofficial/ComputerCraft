@@ -45,7 +45,7 @@ function Client()
 	term.setTextColor(colors.white)
 
 	if not serverID then
-		windows.error("Idi nahuy")
+		windows.error("You must enter number!")
 		Initialise()
 	end
 
