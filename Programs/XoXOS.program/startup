@@ -1,5 +1,7 @@
-SpeedOS.ToolBarColour = colours.black
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.black
+	SpeedOS.ToolBarTextColour = colours.white
+end
 
 -- XoXOS 1.2 (TechnoMir SPECIAL)
 serverID = 244
