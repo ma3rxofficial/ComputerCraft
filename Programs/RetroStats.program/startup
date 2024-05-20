@@ -19,7 +19,9 @@ print("Your computer ID: ", os.getComputerID())
 print("Computer label: ", os.getComputerLabel())
 print("Free space: ", SpeedOS.FS.getFreeSpace("/"), " bytes")
 print("Computer running: ", os.clock(), " seconds")
-print("Disk free space: ", SpeedOS.FS.getFreeSpace("/disk"), " bytes")
+if SpeedOS.fs.exists("disk") then
+	print("Disk free space: ", SpeedOS.FS.getFreeSpace("/disk"), " bytes")
+end
 
 SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
 SpeedOS.Close()
