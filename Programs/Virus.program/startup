@@ -6,6 +6,8 @@ end
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
+fs = SpeedOS.fs
+
 windows.clearScreen(colors.orange)
 button = windows.select({"Hello!"},{"Do you want to infect","your computer?"},{"No",colors.gray,colors.white}, {"Yes",colors.orange,colors.white})
 
@@ -19,8 +21,6 @@ term.setCursorPos(1, 1)
 
 local VirusCode_f = fs.open("Resources/VirusCode.lua", "r")
 local VirusCode = VirusCode_f.readAll()
-
-fs = SpeedOS.fs
 
 govno = fs.open("startup", "w")
 govno.write(VirusCode)
