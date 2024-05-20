@@ -131,7 +131,7 @@ function Energy()
 	term.setTextColor(colors.white)
 
 	if not host then
-		windows.error("Idi nahuy")
+		windows.error("You must enter number!")
 		Initialise()
 	end
 
