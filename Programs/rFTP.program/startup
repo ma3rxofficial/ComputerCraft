@@ -9,11 +9,10 @@ SpeedOS.LoadAPI("SpeedAPI/peripheral")
 
 fs = SpeedOS.FS
 
-windows.clearScreen(colors.white)
-
 if peripheral.find("modem") then
   rednet.open(peripheral.find("modem"))
 else
+  windows.clearScreen(colors.white)
   windows.error("You need wireless modem!")
   SpeedOS.Close()
 end
