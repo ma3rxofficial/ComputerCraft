@@ -22,10 +22,11 @@ end
 term.clear()
 SpeedText.cPrint("Battleship")
 
-cx, cy = SpeedText.cCursor("RIGA (c) 1983")
+stringToPrint = "RIGA (c) 1983"
+cx, cy = SpeedText.cCursor(stringToPrint)
 
-term.setCursorPos(SpeedText.cCursor("RIGA (c) 1983")[1], 10)
-SpeedText.slowPrint("RIGA (c) 1983")
+term.setCursorPos(SpeedText.cCursor(stringToPrint)[1], 10)
+SpeedText.slowPrint(stringToPrint)
 
 SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
 
