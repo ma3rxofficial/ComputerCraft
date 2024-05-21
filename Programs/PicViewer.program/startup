@@ -5,11 +5,11 @@ end
 
 if SpeedOS then
   SpeedOS.LoadAPI("System/API/Drawing")
+  SpeedOS.LoadAPI("SpeedAPI/SpeedText")
   SpeedOS.LoadAPI("SpeedAPI/windows")
   SpeedOS.LoadAPI("SpeedAPI/peripheral")
   SpeedOS.LoadAPI("SpeedAPI/lddfm")
   SpeedOS.LoadAPI("SpeedAPI/config")
-  SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 end
 
 fs = SpeedOS.FS
