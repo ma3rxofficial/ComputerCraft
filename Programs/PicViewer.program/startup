@@ -19,7 +19,7 @@ local use_monitor = false
 local monitor
 
 pathToConfig = "System/PicViewer.settings"
-local monitor_scale = tonumber(config.read("System/PicViewer.settings", "monitor scale"))
+local monitor_scale = tonumber(config.read(pathToConfig, "monitor scale"))
 
 if peripheral.find("monitor", true) then
   windows.clearScreen(colors.white)
