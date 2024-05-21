@@ -13,7 +13,7 @@ io = SpeedOS.IO
 windows.clearScreen(colors.black)
 term.setCursorPos(1, 1)
 
-if not findRadar() then
+if not peripheral.find("ICBMRadar", true) then
     windows.error("Ebana! U tebya net radara blyat!")
     SpeedOS.Close()
 end
