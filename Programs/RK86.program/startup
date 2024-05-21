@@ -4,7 +4,6 @@ if SpeedOS then
 end
 
 os.loadAPI("Resources/Core")
-
 local tArgs = {...}
 
 Core.loading(3)
