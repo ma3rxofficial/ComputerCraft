@@ -69,7 +69,7 @@ print("        ENHANCED RADAR HANDLING ENABLED            ")
 print("===================================================")
 while true do
     if true then
-maptab = peripheral.call(radarSide,"getEntities")
+        maptab = peripheral.call(radarSide,"getEntities")
         maptxt = textutils.serialize(maptab)
         if maptxt ~= "{}" then
                 allDat = 0
