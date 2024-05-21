@@ -54,7 +54,7 @@ if use_distance then
     end
 end
 
-radarSide = findRadar()
+radarSide = peripheral.find("ICBMRadar", true)
 
 
 --[[Radar Target Handler Display]]--        
