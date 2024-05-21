@@ -26,8 +26,8 @@ end
 function wait()
 	term.setCursorPos(1, 1)
 	term.setTextColor(colors.green)
- windows.clearScreen(colors.white)
- term.setCursorPos(1, 1)
+ 	windows.clearScreen(colors.white)
+ 	term.setCursorPos(1, 1)
 	print("["..SpeedText.time().."] Waiting for clients...")
 	while true do
 		event, id, msg, dist = os.pullEvent()
