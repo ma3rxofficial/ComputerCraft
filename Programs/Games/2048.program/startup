@@ -2,12 +2,12 @@
 -- Clone by Richard (Rich73)
 -- Hacked together 10/04/2014
 
-SpeedOS.LoadAPI("SpeedAPI/windows")
-
 if SpeedOS then
 	SpeedOS.ToolBarColour = colours.black
 	SpeedOS.ToolBarTextColour = colours.white
 end
+
+SpeedOS.LoadAPI("SpeedAPI/windows")
 
 g = { }
 tiles = { }
