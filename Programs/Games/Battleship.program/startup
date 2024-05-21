@@ -3,6 +3,10 @@
                   By: Negeator
 ]]--
 
+
+SpeedOS.ToolBarColour = colours.black
+SpeedOS.ToolBarTextColour = colours.white
+
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
@@ -11,11 +15,6 @@ if not peripheral.find("modem") then
   windows.clearScreen(colors.cyan)
   windows.error("You need wireless modem!")
   SpeedOS.Close()
-end
-
-if SpeedOS then
-  SpeedOS.ToolBarColour = colours.black
-  SpeedOS.ToolBarTextColour = colours.white
 end
 
 term.clear()
