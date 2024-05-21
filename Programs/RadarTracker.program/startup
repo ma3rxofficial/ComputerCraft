@@ -22,14 +22,7 @@ local use_distance
 local x2
 local y2
 local z2
-local test_govna = config.read("System/RadarTracker.settings", "count the distance")
-
-if test_govna == "true" then
-    use_distance = true
-
-else
-    use_distance = false
-end
+local use_distance = SpeedText.stringToBoolean(config.read("System/RadarTracker.settings", "count the distance"))
 
 if use_distance then
     term.setTextColor(colors.lime)
