@@ -28,7 +28,7 @@ if peripheral.find("monitor", true) then
     monitor = peripheral.wrap(peripheral.find("monitor", true))   
     windows.clearScreen(colors.black) 
 
-    monitor_scale = tonumber(config.read("System/PicViewer.settings", "monitor_scale"))
+    monitor_scale = tonumber(config.read("System/PicViewer.settings", "monitor scale"))
 
   else
     use_monitor = false  
