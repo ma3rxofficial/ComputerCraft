@@ -1,11 +1,9 @@
+SpeedOS.ToolBarColour = colours.lightGrey
+SpeedOS.ToolBarTextColour = colours.white
+
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/config")
-
-if SpeedOS then
-  SpeedOS.ToolBarColour = colours.lightGrey
-  SpeedOS.ToolBarTextColour = colours.white
-end
 
 local pathToConfig = "System/Events.settings"
 
