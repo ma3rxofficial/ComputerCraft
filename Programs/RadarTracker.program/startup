@@ -34,7 +34,7 @@ local use_distance
 local x2
 local y2
 local z2
-local test_govna = config.read("System/RadarTracker.settings", "Use_Distance")
+local test_govna = config.read("System/RadarTracker.settings", "count the distance")
 
 if test_govna == "true" then
     use_distance = true
