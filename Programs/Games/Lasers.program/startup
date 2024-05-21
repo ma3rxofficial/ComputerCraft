@@ -6,6 +6,9 @@
 
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
+SpeedOS.ToolBarColour = colours.white
+SpeedOS.ToolBarTextColour = colours.black
+
 local w,h = term.getSize()
 local radios = {352, 664}
 
