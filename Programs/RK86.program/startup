@@ -17,7 +17,9 @@ if #tArgs > 0 then
 	if not tArgs[1] == "run" then
 		Core.run(tArgs[1])
 	else
-		Core.run(tArgs[2])
+		if tArgs[2] then
+			Core.run(tArgs[2])
+		end
 	end
 end
 
