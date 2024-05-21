@@ -1,9 +1,10 @@
-os.loadAPI("Resources/Core")
 
 if SpeedOS then
 	SpeedOS.ToolBarColour = colours.black
 	SpeedOS.ToolBarTextColour = colours.white
 end
+
+os.loadAPI("Resources/Core")
 
 local tArgs = {...}
 
