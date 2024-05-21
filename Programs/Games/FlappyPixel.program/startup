@@ -1,11 +1,11 @@
-ver = "beta 1.0 build 04"
-aF = true
-betatesting = true
-
 SpeedOS.ToolBarColour = colours.white
 SpeedOS.ToolBarTextColour = colours.black
 
 SpeedOS.LoadAPI("SpeedAPI/speedtext")
+
+ver = "beta 1.0 build 04"
+aF = true
+betatesting = true
 
 -- GUI
 bird_icon = " "
