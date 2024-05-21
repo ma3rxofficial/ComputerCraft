@@ -17,7 +17,9 @@ fs = SpeedOS.FS
 local args = {...}
 local use_monitor = false
 local monitor
-local monitor_scale
+
+pathToConfig = "System/PicViewer.settings"
+local monitor_scale = tonumber(config.read("System/PicViewer.settings", "monitor scale"))
 
 if peripheral.find("monitor", true) then
   windows.clearScreen(colors.white)
@@ -25,10 +27,9 @@ if peripheral.find("monitor", true) then
   button = windows.select({"Detected monitor!"},{"Do you want to use it?"},{"No",colors.gray,colors.white}, {"Yes",colors.orange,colors.white})
   if button == "Yes" then
     use_monitor = true
+
     monitor = peripheral.wrap(peripheral.find("monitor", true))   
     windows.clearScreen(colors.black) 
-
-    monitor_scale = tonumber(config.read("System/PicViewer.settings", "monitor scale"))
 
   else
     use_monitor = false  
