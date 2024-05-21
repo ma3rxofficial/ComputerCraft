@@ -1,3 +1,8 @@
+--[[
+	Electic Itegrator, works at 
+	INPP CCR-1
+]]
+
 cableSide = "back"
 
 z_t = colors.white
