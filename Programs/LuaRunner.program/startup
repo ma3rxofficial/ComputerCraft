@@ -25,9 +25,6 @@ print("Type exit() to exit")
 term.setTextColor( colors.lightGray )
 
 while bRunning do
-	--if term.isColour() then
-	--	term.setTextColour( colours.yellow )
-	--end
 	term.setTextColor( colors.lightGray )
 	write( "> " )
 	--term.setTextColour( colours.white )
