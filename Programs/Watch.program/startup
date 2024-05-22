@@ -418,7 +418,7 @@ local function updateTime()
 		local _, timer = os.pullEvent( "timer" )
 		if timer == updateTimer then
 			if m < 59 then
-				_, m = eblan(os.time())
+				m = m + 1
 			elseif m == 59 or m == 60 then
 				m = 0
 				h = h + 1
@@ -492,12 +492,9 @@ end
 drawBG()
 
 
+-- Расчет времени на старте программы
 local chas, minuta = eblan(os.time())
 
--- Get the time from the server for first time
-cur_time, cur_date = getTimeAndDate( "Getting" )
--- Split cur_time into hours, minutes, and seconds
-local t_time = nil --split( cur_time, ':' )
 h, m, s = chas, minuta, 0
 h = h + GMT_default
 -- Split cur_date into day, month and year
