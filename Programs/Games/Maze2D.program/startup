@@ -275,22 +275,22 @@ repeat
 	
 	local e, k = os.pullEvent("key")
 	
-	if k == keys.a and (not tab[posx-1][posy]) then
+	if k == keys.a and (not tab[posx-1][posy]) or k == keys.left and (not tab[posx-1][posy]) then
 		posx = posx - 1
 		offsetx = offsetx + 1
 	end
 	
-	if k == keys.d and (not tab[posx+1][posy]) then
+	if k == keys.d and (not tab[posx+1][posy]) or k == keys.right and (not tab[posx+1][posy]) then
 		posx = posx + 1
 		offsetx = offsetx - 1
 	end
 	
-	if k == keys.w and (not tab[posx][posy-1]) then
+	if k == keys.w and (not tab[posx][posy-1]) or k == keys.up and (not tab[posx][posy-1]) then
 		posy = posy - 1
 		offsety = offsety + 1
 	end
 	
-	if k == keys.s and (not tab[posx][posy+1]) then
+	if k == keys.s and (not tab[posx][posy+1]) or k == keys.down and (not tab[posx][posy+1]) then
 		posy = posy + 1
 		offsety = offsety - 1
 	end
