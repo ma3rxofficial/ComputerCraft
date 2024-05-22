@@ -1,7 +1,7 @@
 ver = "beta 1.0 build 04"
 aF = true
 betatesting = true
-
+ 
 SpeedOS.LoadAPI("/SpeedAPI/speedtext")
 
 function drawMenu()
