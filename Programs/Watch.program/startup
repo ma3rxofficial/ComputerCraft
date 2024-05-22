@@ -9,7 +9,7 @@ SpeedOS.ToolBarTextColour = colours.black
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/config")
 
-pathToConfig = "SystemWatch.settings"
+pathToConfig = "System/Watch.settings"
 
 local GMT_max = tonumber(config.read(pathToConfig, "GMT max"))
 local GMT_min = tonumber(config.read(pathToConfig, "GMT min"))
