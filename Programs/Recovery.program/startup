@@ -1,14 +1,12 @@
-if SpeedOS then
-	SpeedOS.ToolBarColour = colours.grey
-	SpeedOS.ToolBarTextColour = colours.white
-end
+SpeedOS.ToolBarColour = colours.grey
+SpeedOS.ToolBarTextColour = colours.white
+
+fs = SpeedOS.fs
 
 SpeedOS.LoadAPI("SpeedAPI/windows")
 
-
-fs = SpeedOS.FS
-
 windows.clearScreen(colors.cyan)
+
 button = windows.select({"Recovery OS!"},{"Do you want to recover your OS?"},{"No",colors.gray,colors.white}, {"Yes",colors.orange,colors.white})
 
 if button == "No" then
@@ -41,7 +39,14 @@ windows.clearScreen(colors.gray)
 SpeedText.cPrint("Done!")
 
 sleep(0.5)
-SpeedText.cPrint("Running installer...", 10)
 
-sleep(1)
-SpeedOS.Reboot()
+windows.clearScreen(colors.gray)
+term.setTextColor(colors.white)
+
+SpeedText.cPrint('Now you must reboot by using "OS" context menu!')
+
+term.setTextColor(colors.lightGray)
+SpeedText.cPrint("Or use Ctrl+R to restart your computer", 10)
+
+SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
+SpeedOS.Close()
