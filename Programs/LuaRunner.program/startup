@@ -3,6 +3,8 @@ if SpeedOS then
 	SpeedOS.ToolBarTextColour = colours.white
 end
 
+SpeedOS.LoadAPI("SpeedAPI/windows")
+
 fs = SpeedOS.FS
 
 local bRunning = true
@@ -14,8 +16,8 @@ local tEnv = {
 }
 setmetatable( tEnv, { __index = getfenv() } )
 
-os.loadAPI("SpeedAPI/windows")
 windows.clearScreen(colors.white)
+
 term.setTextColor(colors.red)
 term.setCursorPos(1,1)
 print( "Lua 5.2 Copyright (c) 1994-2024 Lua.org, PUC-Rio" )
