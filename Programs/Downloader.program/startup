@@ -13,7 +13,6 @@ use_http = false
 
 if config.read(pathToConfig, "enable http") == "true" then
   use_http = true
-
 else
   use_http = false
 end
