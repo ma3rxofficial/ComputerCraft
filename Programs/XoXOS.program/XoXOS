@@ -1,0 +1,397 @@
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.black
+	SpeedOS.ToolBarTextColour = colours.white
+end
+
+-- XoXOS 1.2 (TechnoMir SPECIAL)
+serverID = 244
+chatServerID = 650
+devnet = "off"
+dnmsg = ""
+
+function clear()
+term.setCursorPos(1,1)
+term.clear()
+end
+
+function xor(a, b)
+if a == b then return false else return true end 
+end
+
+for _,v in pairs(rs.getSides()) do rednet.open(v) end
+
+
+startupprog = "none"
+
+if fs.exists("XoXOSC") then
+conff = fs.open("XoXOSC" , "r" )
+startupprog = conff.readLine()
+conff.close()
+end
+
+if startupprog ~= "none" then
+shell.run(startupprog) 
+end
+
+lsusr = true
+lsuser = ""
+lspass = ""
+lsres = ""
+lserr = ""
+lsiskey = false
+lskey = ""
+chars = { [14] = "backspace" ,[16] = "q",[17] = "w",[18] = "e",[19] = "r",[20] = "t",[21] = "y",[22] = "u",[23] = "i",[24] = "o",[25] = "p" ,[30] = "a",[31] = "s",[32] = "d",[33] = "f",[34] = "g",[35] = "h",[36] = "j",[37] = "k",[38] = "l",[44] = "z",[45] = "x",[46] = "c",[47] = "v",[48] = "b",[49] = "n",[50] = "m" }
+
+clear()
+computer_label = "XoXOS 1.2-" .. os.getComputerID()
+term.setCursorPos(1,1)
+print("Loaded label " .. computer_label) 
+os.sleep(3)
+
+while true do
+	lsiskey = false
+	lskey = ""
+	clear()
+	term.setCursorPos(1,1)
+print(" __   __   __   __   ____   _____   __   ___  ")
+print(" \\ \\ / /   \\ \\ / /  / __ \\ / ____| /_ | |__ \\") 
+print("  \\ V / ___ \\ V /  | |  | | (___    | |    ) |")
+print("   > < / _ \\ > <   | |  | |\\___ \\   | |   / / ")
+print("  / . \\ (_) / . \\  | |__| |____) |  | |_ / /_ ")
+print(" /_/ \\_\\___/_/ \\_\\  \\____/|_____/   |_(_)____| ")
+	term.setCursorPos(5,9)
+	if not rednet.send(1, "") then lsres = "guest" print("Signing in as guest because no" ); term.setCursorPos(5,10); print( "modem was found");sleep(3); break; end
+	if lsusr then
+	print("Username: " .. lsuser .. "\|" )
+	term.setCursorPos(5,11)
+	print("Password: " .. lspass )
+	else
+	print("Username: " .. lsuser  )
+	term.setCursorPos(5,11)
+	print("Password: " .. lspass .. "\|" )
+	end
+	term.setCursorPos(3,13)
+	print("Leave empty and press Enter to")
+	term.setCursorPos(3, 14)
+	print("to sign in as a guest.")
+	local lsevent, lsparam = os.pullEvent("key")
+	for k, v in pairs(chars) do if k == lsparam then lsiskey = true ; lskey = v end end
+	if lsiskey == true then			
+		if lsparam == 14 then
+			if lsusr then
+				lsuser = string.sub(lsuser, 1 , -2)
+			else
+				lspass = string.sub(lspass, 1 , -2)
+			end
+		else
+			if lsusr then
+				lsuser = lsuser .. lskey
+			else
+				lspass = lspass .. lskey
+			end
+		end
+	elseif lsparam == 28 then 
+		if lsuser == "" and lspass == "" then
+			lsres = "guest"
+			break
+		end
+		if xor( lsuser == "", lspass == "") then
+			if lsusr and lspass == "" then
+				lsusr = not lsusr
+			else
+				lserr = "Invalid User/Password combination"
+			end			
+		else
+			rednet.send(serverID, lsuser .. ";" .. lspass )
+			lsrevent, lsrid, lsrmsg, _ = os.pullEvent("rednet_message")
+			if lsrid == serverID and lsrmsg == "OK" then
+				lsres = "OK"
+				break 
+			else
+				lserr = "Invalid User/Password combination"
+			end
+		end
+	
+	elseif lsparam == 200 or lsparam == 208 then
+		lsusr = not lsusr
+	end
+end
+
+
+
+ttable = {}
+
+ttable.copy = ""
+
+ttable.copy = function(t1)
+	local t2 = {}
+	for k,v in pairs(t1) do 
+		if type(v) == "table" then
+			t2[k] = ttable.copy(v) 
+		else
+			t2[k] = v
+		end
+	end
+	return t2
+end
+
+startupprog = "none"
+notifytext = "XoXOS 1.1"
+
+function saveconfig()
+	conff = fs.open("XoXOSC", "w")
+	conff.writeLine(startupprog)
+	conff.close()
+	notifytext = "Saved."
+end
+
+menuIndex = 1
+menu = {}
+menu1 = {}
+menu2 = {}
+menu3 = {}
+menu4 = {}
+menu5 = {}
+menu6 = {}
+
+lsres = "OK"
+
+menu1.esc = function() end
+menu1[1] = { txt = "Programs" , exec = function() menu = ttable.copy( menu2 ) ; menuIndex = 1 end }
+menu1[2] = { txt = "Games" , exec = function() menu = ttable.copy( menu3 ) ; menuIndex = 1 end}
+menu1[3] = { txt = "Options", exec = function() menu = ttable.copy( menu4 ) ; menuIndex = 1 end}
+menu1[5] = { prog = "exit",txt = "Leave XoXOS", shell.run("os.exit()")}
+if lsres == "OK" then
+	menu1[4] = { txt = "DevNet Chat", exec = function() devnet = "read" end}
+end
+
+
+menu2.esc = function() menu = ttable.copy( menu1 ) ; menuIndex = 1 end
+menu2[1] = { prog = "npaint", txt = "NPaint", exec = function() shell.run("npaint") end}
+menu2[2] = { prog = "calc", txt = "Calculator", exec = function() shell.run("calc") end}
+menu2[3] = { prog = "lua",txt = "Lua Console", exec = function() shell.run("lua") end}
+menu2[4] = { prog = "luaide",txt = "Edit File", exec = function() shell.run("luaide") end}
+menu2[5] = { prog = "XoXRun",txt = "Execute File", exec = function() shell.run("XoXRun") end}
+menu2[6] = { prog = "render",txt = "3D Rendering", exec = function() shell.run("render") end}
+menu2[7] = { prog = "statistics", txt = "Computer's statistics", exec = function() shell.run("statistics") end}
+
+if fs.exists("XoXOSProgs") then
+	progsf = fs.open("XoXOSProgs" , "r" )
+	progs = {}
+	for i = 1, progsf.readLine() do
+		progs[#progs + 1] = progsf.readLine()
+		progs[#progs + 1] = progsf.readLine()
+	end
+	progsf.close()
+	for i = 1, #progs, 2 do
+		menu2[#menu2 + 1] = { prog = progs[i], txt = progs[i + 1], exec = function() shell.run(progs[i]) end}
+	end
+end
+
+
+
+menu3.esc = function() menu = ttable.copy( menu1 ) ; menuIndex = 1 end
+menu3[1] = { txt = "Darklands", exec = function() shell.run("rpg") end}
+menu3[2] = { txt = "Snake", exec = function() shell.run("worm") end}
+menu3[3] = { txt = "Gold Runner", exec = function() shell.run("goldrunner") end}
+menu3[4] = { txt = "Lights off", exec = function() shell.run("lightsoff") end}
+menu3[5] = { txt = "Nano Maze", exec = function() shell.run("maze") end}
+menu3[6] = { txt = "Chess", exec = function() shell.run("chess") end}
+menu3[7] = { txt = "Tetris", exec = function() shell.run("tetris") end}
+
+
+menu4.esc = function() menu = ttable.copy( menu1 ) ; menuIndex = 1 end
+menu4[1] =  { txt = "Startup Program", exec = function() menu = ttable.copy( menu5 ) ; menuIndex = 1 end}
+
+menu4[#menu4 + 1] = { txt = "Save" , exec = saveconfig }
+
+
+menu5.esc = function() menu = ttable.copy( menu4 ) ; menuIndex = 1 end
+menu5[1] = { prog = "npaint", txt = "NPaint", exec = function() shell.run("npaint") end}
+menu5[2] = { prog = "calc", txt = "Calculator", exec = function() shell.run("calc") end}
+menu5[3] = { prog = "lua",txt = "Lua Console", exec = function() shell.run("lua") end}
+menu5[4] = { prog = "luaide",txt = "Edit File", exec = function() shell.run("luaide") end}
+menu5[5] = { prog = "XoXRun",txt = "Execute File", exec = function() shell.run("XoXRun") end}
+menu5[6] = { prog = "render",txt = "3D Rendering", exec = function() shell.run("render") end}
+menu5[7] = { prog = "statistics", txt = "Computer's statistics", exec = function() shell.run("statistics") end}
+
+table.insert(menu5, 1, { txt = "None", prog = "none"  })
+if fs.exists("XoXOSProgs") then
+	for i = 1, #progs, 2 do
+		menu5[#menu5 + 1] = { prog = progs[i], txt = progs[i + 1], exec = function() shell.run(progs[i]) end}
+	end
+end
+for k, v in ipairs(menu5) do
+	v.exec = function() startupprog = menu5[menuIndex].prog end
+end
+
+startupprog = "none"
+
+if fs.exists("XoXOSC") then
+	conff = fs.open("XoXOSC" , "r" )
+	startupprog = conff.readLine()
+	conff.close()
+end
+
+if startupprog ~= "none" then
+	shell.run(startupprog) 
+end
+
+
+
+menu = ttable.copy( menu1 )
+term.clear()
+term.setCursorPos(1,1)
+
+function xoxdraw()
+while true do
+	if devnet == "off" then
+		term.clear()
+		term.setCursorPos(1,1)
+		for k,v in ipairs(menu) do
+			print("   ")
+			if menuIndex == k then
+				print( ">> " .. v.txt .. " <<")
+			else
+				print( "   " .. v.txt)
+			end
+		end
+		term.setCursorPos(1,15)
+		print(dnmsg)
+		term.setCursorPos(1,16)
+		if lsres == "guest" then
+			print("Signed in as Guest")
+		elseif lsres == "OK" then
+			print("Signed in as " .. lsuser )
+		end
+		term.setCursorPos(1,17)
+		print(notifytext)
+	
+		conf = fs.open("XoXOSDev", "w")
+		conf.writeLine("Nope.")
+		conf.close()
+	
+		local event, param1 = os.pullEvent("key")
+		notifytext = "XoXOS 1.2"
+		if param1 == 200 then
+			menuIndex = menuIndex - 1
+			if menuIndex < 1 then menuIndex = #menu end
+		elseif param1 == 208 then
+			menuIndex = menuIndex + 1
+			if menuIndex > #menu then menuIndex = 1 end
+			elseif param1 == 28 or param1 == 205 then
+		term.clear()
+			term.setCursorPos(1,1)
+			term.clear()
+			menu[menuIndex].exec()
+		elseif param1 == 14 or param1 == 203 then
+			menu.esc()
+		elseif param1 == 60 then
+			term.clear()
+			term.setCursorPos(1,1)
+			print("Enter Developer Password:")
+			local pwwd = read("*")
+			if pwwd == "luadev" then
+				conf = fs.open("XoXOSDev", "w")
+				conf.writeLine("Let's go")
+				conf.close()
+				return
+			end
+		end
+	else
+		sleep(2)
+	end
+end
+end
+
+dnenter = false
+dnlog = {}
+dnlog[1] = "Welcome to DevNet."
+
+
+function devnetprint()
+dnur = 0
+lastmsg = ""
+while true do
+sleep(0.5)
+	if devnet == "read" then
+		dnur = 0
+		if true then
+				clear()
+			for _,v in ipairs(dnlog) do
+				print(v)
+			end
+			print("Press Enter to write")
+			lastmsg = dnlog[#dnlog]
+		end
+	else
+		if dnur > 0 then dnmsg = dnur .. " unread DevNet messages" end 
+	end
+		
+end	
+end
+
+function devnetread()
+dnmsg = ""
+
+rednet.send(chatServerID, lsuser .. "@" .. os.getComputerID() .. ";" .. "SAO" )
+while true do
+	if devnet == "write" then
+		clear()
+		print("Enter Message. exit to exit DevNet")
+		dnwmsg = read()
+		if dnwmsg == "exit" then
+			devnet = "off"
+		elseif dnwmsg == "" then
+			devnet = "read"
+		else
+			rednet.send(chatServerID, lsuser .. "@" .. os.computerID() .. ";" .. dnwmsg )
+			devnet = "read"
+		end
+	else
+		sleep(0.5)
+	end
+end	
+end
+
+function devnetlistener()
+while true do
+_, dnlparam1, dnlparam2, _ = os.pullEvent("rednet_message")
+dnlmsg = {}
+if dnlparam1 == chatServerID then
+if dnlparam2 == "NULL" then
+	rednet.send(serverID, "")
+else
+	dnur = dnur + 1
+	for i in string.gmatch(dnlparam2, "[^%;]+") do
+		dnlmsg[#dnlmsg + 1] = i
+	end
+	if dnlmsg[2] == "SAO" then
+		dnlog[#dnlog + 1] = dnlmsg[1] .. " signed in."
+	else
+		dnlog[#dnlog + 1] = dnlmsg[1] .. ": " .. dnlmsg[2]
+	end
+end
+end
+end
+end
+
+function devnetenter()
+	while true do
+		if devnet == "read" then
+			_, dneparam1 = os.pullEvent("key")
+			if dneparam1 == 28 and devnet == "read" then
+				devnet = "write"
+			end
+		else
+			sleep(0.5)
+		end
+	end
+end
+
+lsres = "OK"
+if lsres == "OK" then
+parallel.waitForAny(devnetread,xoxdraw,devnetlistener,devnetprint, devnetenter)
+else
+xoxdraw()
+end
