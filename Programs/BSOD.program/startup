@@ -4,5 +4,4 @@ if SpeedOS then
 end
 
 SpeedOS.LoadAPI("SpeedAPI/bsod")
-
 bsod.bsod("It's just a test!")
