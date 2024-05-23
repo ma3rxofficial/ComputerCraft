@@ -1,6 +1,7 @@
-
-SpeedOS.ToolBarColour = colours.grey
-SpeedOS.ToolBarTextColour = colours.white
+if SpeedOs then
+  SpeedOS.ToolBarColour = colours.grey
+  SpeedOS.ToolBarTextColour = colours.white
+end
 
 os.loadAPI("SpeedAPI/peripheral")
 os.loadAPI("SpeedAPI/SpeedText")
