@@ -10,7 +10,7 @@ SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 print("Press any key to start the Pizdec")
 print("Place a redstone torch next to right side of redstone")
 
-SpeedText.waitForEvent({"key"})
+SpeedText.waitForEvent({"mouse_click", "key"})
 print("Pizdec started!")
 
 while true do
