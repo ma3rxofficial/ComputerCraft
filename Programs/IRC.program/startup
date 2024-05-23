@@ -62,7 +62,7 @@ while true do
 		io.write(user)
 		term.setTextColor(colors.white)
 		print(": "..msg)
-		log_file.writeLine("["..SpeedText.time_and_date().."] "..user..": "..msg)
+		log("["..SpeedText.time_and_date().."] "..user..": "..msg)
 		log_file.flush()
 	elseif event == "player_login" then
 		term.setTextColor(colors.orange)
