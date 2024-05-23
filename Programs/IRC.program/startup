@@ -22,7 +22,7 @@ function log(path, msg)
     file.close()
 end
 
-log_file = fs.open(getLogPath("Resources/"), "a")
+log_file = getLogPath("Resources/")
 
 if not peripheral.find("adventure map interface", true) then
 	windows.clearScreen(colors.white)
