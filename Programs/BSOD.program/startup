@@ -1,5 +1,5 @@
 SpeedOS.ToolBarColour = colours.white
-SpeedOS.ToolBarTextColour = colours.black
+ SpeedOS.ToolBarTextColour = colours.black
 
 SpeedOS.LoadAPI("SpeedAPI/bsod")
 
