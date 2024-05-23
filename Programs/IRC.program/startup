@@ -9,6 +9,9 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 pathToConfig = "System/IRC.settings" 
+day, month, year = SpeedText.getDate()
+logPath = "Resources/Pi_"..tostring(year).."-"..tostring(month).."-"..tostring(day).."_"..SpeedText.extraFormatTime(os.time(), ".", true)..".log"
+
 log_file = fs.open("Resources/Chat.log", "a")
 
 if not peripheral.find("adventure map interface", true) then
