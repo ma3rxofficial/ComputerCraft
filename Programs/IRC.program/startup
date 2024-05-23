@@ -9,8 +9,11 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 pathToConfig = "System/IRC.settings" 
-day, month, year = SpeedText.getDate()
-logPath = "Resources/Chat_"..tostring(year).."-"..tostring(month).."-"..tostring(day).."_"..SpeedText.extraFormatTime(os.time(), ".", true)..".log"
+
+function getLogPath()
+	day, month, year = SpeedText.getDate()
+	logPath = "Resources/Chat_"..tostring(year).."-"..tostring(month).."-"..tostring(day).."_"..SpeedText.extraFormatTime(os.time(), ".", true)..".log"
+end
 
 log_file = fs.open("Resources/Chat.log", "a")
 
