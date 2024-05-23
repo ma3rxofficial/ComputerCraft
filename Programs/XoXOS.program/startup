@@ -1,0 +1,10 @@
+shell.run("XoXOS")
+
+-- fix
+term.clear()
+term.setCursorPos(1, 1)
+print("U vas, blyat, krashnulas OS! ")
+print("Pohuy!")
+
+sleep(0)
+SpeedOS.Close()
