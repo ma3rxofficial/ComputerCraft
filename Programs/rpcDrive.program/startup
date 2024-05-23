@@ -10,7 +10,7 @@ SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 if not peripheral.find("rp_drive", true) then
 	windows.clearScreen(colors.cyan)
-	windows.error("You need redpower computer!")
+	windows.error("This program requires redpower computer!")
 	SpeedOS.Close()
 end
 
