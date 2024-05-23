@@ -15,7 +15,7 @@ function getLogPath(root)
 	return root.."Chat_"..tostring(year).."-"..tostring(month).."-"..tostring(day).."_"..SpeedText.extraFormatTime(os.time(), ".", true)..".log"
 end
 
-log_file = fs.open("Resources/Chat.log", "a")
+log_file = fs.open(getLogPath(), "a")
 
 if not peripheral.find("adventure map interface", true) then
 	windows.clearScreen(colors.white)
