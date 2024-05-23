@@ -15,8 +15,8 @@ function cPrint(string, y2, _term)
 	  y = y2
 	end
 
-        _term.setCursorPos(x, y)
-        _term.write(string)
+    _term.setCursorPos(x, y)
+    _term.write(string)
 end
 
 --Central Cursoring--
