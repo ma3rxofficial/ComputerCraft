@@ -12,7 +12,7 @@ pathToConfig = "System/IRC.settings"
 
 function getLogPath(root)
 	day, month, year = SpeedText.getDate()
-	logPath = root.."Chat_"..tostring(year).."-"..tostring(month).."-"..tostring(day).."_"..SpeedText.extraFormatTime(os.time(), ".", true)..".log"
+	return root.."Chat_"..tostring(year).."-"..tostring(month).."-"..tostring(day).."_"..SpeedText.extraFormatTime(os.time(), ".", true)..".log"
 end
 
 log_file = fs.open("Resources/Chat.log", "a")
