@@ -128,7 +128,7 @@ while true do
 				pl.sendChat("[Computer #"..os.getComputerID().."] "..msg2)
 			end
 		end
-		log("["..SpeedText.time_and_date().."] #"..os.getComputerID().." sended from IRC: "..msg2)
+		log(log_file, "["..SpeedText.time_and_date().."] #"..os.getComputerID().." sended from IRC: "..msg2)
 		end
 	end
 
