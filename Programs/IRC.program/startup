@@ -99,7 +99,6 @@ while true do
 		term.setTextColor(colors.lightBlue)
 		print(" respawned")
 		log_file.writeLine("["..SpeedText.time_and_date().."] "..user.." respawned")
-		log_file.flush()
 	elseif event == "player_change_world" then
 		term.setTextColor(colors.orange)
 		io.write("<")
