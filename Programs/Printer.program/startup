@@ -7,9 +7,8 @@ SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 
-windows.clearScreen(colors.white)
-
 if not peripheral.find("printer", true) then
+  windows.clearScreen(colors.white)
   windows.error("You need printer!")
   SpeedOS.Close()
 
