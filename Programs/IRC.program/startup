@@ -15,7 +15,7 @@ function getLogPath(root)
 	return root.."Chat_"..tostring(year).."-"..tostring(month).."-"..tostring(day).."_"..SpeedText.extraFormatTime(os.time(), ".", true)..".log"
 end
 
-function log(file, msg)
+function log(path, msg)
     file.writeLine(msg)
     file.flush()
     file.close()
