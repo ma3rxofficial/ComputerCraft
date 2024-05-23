@@ -86,7 +86,7 @@ while true do
 		io.write(user)
 		term.setTextColor(colors.red)
 		print(" left the game")
-		log("["..SpeedText.time_and_date().."] "..user.." left the game")
+		log(log_file, "["..SpeedText.time_and_date().."] "..user.." left the game")
 	elseif event == "player_respawn" then
 		term.setTextColor(colors.orange)
 		io.write("<")
