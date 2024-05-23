@@ -6,9 +6,9 @@ function cPrint(string, y2, _term)
 		_term = term
 	end
 
-        local tX, tY = _term.getSize()
-        local b = string.len(string) / 2
-        local x = (tX / 2) - b
+    local tX, tY = _term.getSize()
+    local b = string.len(string) / 2
+    local x = (tX / 2) - b
 	local y = tY / 2
 	
 	if y2 then
