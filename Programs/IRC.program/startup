@@ -17,7 +17,7 @@ if not peripheral.find("adventure map interface", true) then
 	SpeedOS.Close()
 end
 
-huy = config.read("System/IRC.settings", "blacklist")
+huy = config.read(pathToConfig, "blacklist")
 local blacklist = textutils.unserialize(huy)
 
 function Blacklist(name)
