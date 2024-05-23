@@ -8,10 +8,8 @@ if SpeedOS then
     SpeedOS.ToolBarTextColour = colours.white
 end
 
-if SpeedOS then
-    SpeedOS.LoadAPI("SpeedAPI/config")
-    SpeedOS.LoadAPI("SpeedAPI/SpeedText")
-end
+SpeedOS.LoadAPI("SpeedAPI/config")
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 day, month, year = SpeedText.getDate()
 logPath = "Resources/Pi_"..tostring(year).."-"..tostring(month).."-"..tostring(day).."_"..SpeedText.extraFormatTime(os.time(), ".", true)..".log"
