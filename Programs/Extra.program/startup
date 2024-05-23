@@ -5,6 +5,8 @@ if SpeedOS then
   SpeedOS.ToolBarTextColour = colours.white
 end
 
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+
 print("Press any key to start the Pizdec")
 print("Place a redstone torch next to right side of redstone")
 
