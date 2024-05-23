@@ -11,8 +11,7 @@ if not peripheral.find("printer", true) then
   windows.clearScreen(colors.white)
   windows.error("You need printer!")
   SpeedOS.Close()
-
-else
+end
 
 windows.clearScreen(colors.gray)
 term.setTextColor(colors.lightGray)
