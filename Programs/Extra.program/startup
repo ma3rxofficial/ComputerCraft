@@ -9,7 +9,7 @@ print("Press any key to start the Pizdec")
 print("Place a redstone torch next to right side of redstone")
 
 SpeedText.waitForEvent({"key"})
-print("Pizdec started.")
+print("Pizdec started!")
 
 while true do
   if rs.getInput("back", false) then
