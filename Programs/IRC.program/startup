@@ -112,7 +112,6 @@ while true do
 		term.setTextColor(colors.purple)
 		print(" changed world")
 		log_file.writeLine("["..SpeedText.time_and_date().."] "..user.." changed world")
-		log_file.flush()
 	elseif event == "char" then
 		term.setTextColor(colors.lightGray)
 		io.write("> ")
