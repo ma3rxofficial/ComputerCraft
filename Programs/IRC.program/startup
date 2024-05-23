@@ -75,6 +75,7 @@ while true do
 		term.setTextColor(colors.lime)
 		print(" joined the game")
 		log_file.writeLine("["..SpeedText.time_and_date().."] "..user.." joined the game")
+		log_file.flush()
 	elseif event == "player_logout" then
 		term.setTextColor(colors.orange)
 		io.write("<")
