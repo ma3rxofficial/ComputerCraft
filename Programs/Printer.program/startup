@@ -1,4 +1,4 @@
-if SpeedOs then
+if SpeedOS then
   SpeedOS.ToolBarColour = colours.lightGrey
   SpeedOS.ToolBarTextColour = colours.white
 end
