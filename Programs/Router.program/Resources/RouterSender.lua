@@ -1,3 +1,8 @@
+--[[
+       Это старая версия,
+       так что она не работает мб. Но мне похуй.
+]]
+
 local blacklisted = {}
 
 function find( sType, cable )
