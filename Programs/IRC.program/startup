@@ -8,7 +8,7 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
-pathToConfig = "System/IRC.settings" 
+pathToConfig = "System/IRC.settings"
 
 function getLogPath(root)
 	day, month, year = SpeedText.getDate()
