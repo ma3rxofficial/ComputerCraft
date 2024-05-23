@@ -119,7 +119,6 @@ while true do
 		msg2 = io.read()
 
 		if msg2 == "/exit" or msg2 == "/quit" then
-			log_file.close()
 			SpeedOS.Close()
 		else
 		for _, value in pairs(p.getPlayerUsernames()) do
