@@ -3,5 +3,7 @@ if SpeedOS then
 	SpeedOS.ToolBarTextColour = colours.black
 end
 
+SpeedOS.LoadAPI("SpeedAPI/config")
+
 SpeedOS.LoadAPI("SpeedAPI/bsod")
 bsod.bsod("It's just a test!")
