@@ -7,5 +7,6 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/bsod")
 
 pathToConfig = "BSOD.settings"
+string = config.read(pathToConfig, "string")
 
 bsod.bsod("It's just a test!")
