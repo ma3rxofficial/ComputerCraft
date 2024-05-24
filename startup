@@ -343,7 +343,6 @@ elseif LoadingScreen() then
 		    if peripheral.find('modem') then
 		    	if not isModified then
 		    		rednet.open(peripheral.find('modem'))
-		    		os.loadAPI('SpeedAPI/SpeedText')
 		    		local newemail = '$EMAIL'..tostring(576)
           		       ..'!SP!'..os.getComputerLabel()
             		     ..'!SP!'..os.time()..'!SP!'
