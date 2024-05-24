@@ -13,7 +13,10 @@
 	  std PB wfdb986Z lddfm
 --]]
 
-fs = SpeedOS.FS
+if SpeedOS then
+	fs = SpeedOS.FS
+end
+
 local lddfm = { --main API
 	scroll = 0,
 	ypaths = {},
