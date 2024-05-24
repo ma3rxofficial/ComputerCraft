@@ -182,16 +182,22 @@ function LoadingScreen()
 
 	for _, file in pairs(fs.list(root .. 'SpeedAPI/')) do
 		if string.sub(file,1,1) ~= '.' then
-  			if not value == 'SpeedText' then
-			    os.loadAPI('SpeedAPI/'..file)
-			    Log.i('Loading: '..file)
-			end
 			term.clear()
 			term.setTextColor(colors.black)
 			SpeedText.cPrint('SpeedOS', 7)
 			term.setTextColor(colors.lightGray)
 			SpeedText.cPrint('API '..file..' loaded!')
 			sleep(0.1)
+
+			if not LoadAPI(root .. 'SpeedAPI/' .. file) then
+				term.setTextColour(colours.red)
+				PrintCentered('Error While Loading API '..file, y + 11)
+				Log.e('Error While Loading API '..file)
+				term.setCursorPos(1, 1)
+				return false
+			end
+			
+			Log.i('Loading: '..file)
 		end
 	end
 	
