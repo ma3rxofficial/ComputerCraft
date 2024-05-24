@@ -1,0 +1,28 @@
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.black
+	SpeedOS.ToolBarTextColour = colours.white
+end
+
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+
+
+term.setTextColor(colors.white)
+term.setBackgroundColor(colors.black)
+
+term.clear()
+term.setCursorPos(1, 1)
+
+SpeedText.cPrint("Computer statistics", 1)
+SpeedText.line()
+
+print("Your computer ID: ", os.getComputerID())
+print("Computer label: ", os.getComputerLabel())
+print("Free space: ", SpeedOS.FS.getFreeSpace("/"), " bytes")
+print("Computer running: ", os.clock(), " seconds")
+
+if SpeedOS.Fs.exists("disk") then
+	print("Disk free space: ", SpeedOS.FS.getFreeSpace("/disk"), " bytes")
+end
+
+SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
+SpeedOS.Close()
