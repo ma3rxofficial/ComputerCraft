@@ -1,5 +1,6 @@
 os.loadAPI('SpeedAPI/SpeedText')
 os.loadAPI('SpeedAPI/peripheral')
+os.loadAPI('SpeedAPI/windows')
 os.loadAPI('System/API/Log')
 os.loadAPI('System/API/Settings')
 
@@ -135,7 +136,6 @@ function LoadingScreen()
 		end
 
 		if not rs_s then
-			os.loadAPI('SpeedAPI/SpeedText')
 			term.setBackgroundColor(colors.blue)
 			term.clear()
 			term.setTextColor(colors.blue)
@@ -183,7 +183,6 @@ function LoadingScreen()
 
 	for _, file in pairs(fs.list(root .. 'SpeedAPI/')) do
 		if string.sub(file,1,1) ~= '.' then
-			os.unloadAPI('SpeedAPI/'..file)
   			if not value == 'SpeedText' then
 			    os.loadAPI('SpeedAPI/'..file)
 			    Log.i('Loading: '..file)
@@ -218,10 +217,9 @@ function LoadingScreen()
 	SpeedText.cPrint('Initializing components')
 	sleep(3)
 
- 	os.loadAPI('SpeedAPI/peripheral')
  	if peripheral.find('modem') then
-   rednet.open(peripheral.find('modem'))
-   Log.i('Opened modem on side '..peripheral.find('modem'))
+		rednet.open(peripheral.find('modem'))
+   		Log.i('Opened modem on side '..peripheral.find('modem'))
  	end
 
 	sleep(0.1)
@@ -309,7 +307,6 @@ elseif LoadingScreen() then
 	end
 
 	Log.i('Starting Desktop...')
-	os.loadAPI('SpeedAPI/windows')
 	windows.fadeOut(0.1)
 	os.run(getfenv(), '/System/main.lua')
 	
