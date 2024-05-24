@@ -3,7 +3,7 @@ os.loadAPI('SpeedAPI/peripheral')
 os.loadAPI('System/API/Log')
 os.loadAPI('System/API/Settings')
 
-local install_files = {'installer', 'install', 'dN2gMnV9', '.tmp'}
+local install_files = {'installer', 'install', 'dN2gMnV9', '.tmp'} -- temporary installation files
 local isModified = false
 local tAPIsLoading = {}
 
@@ -13,62 +13,62 @@ for _, value in pairs(install_files) do
   end
 end
 
-ver_f = fs.open('.version', 'r')
-ver_f2 = ver_f.readAll()
-ver_f.close()
+versionFile = fs.open('.version', 'r')
+versionData = versionFile.readAll()
+versionFile.close()
 
 Log.Initialise()
 
 Log.i(os.version())
-Log.i('SpeedOS Version: '..ver_f2)
+Log.i('SpeedOS Version: '..versionData)
 
 if http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup') then
-	pidor = http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup').readAll()
-	pidor2 = fs.open('startup', 'r')
-	pidor3 = pidor2.readAll()
+	code = http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup').readAll()
+	code2 = fs.open('startup', 'r')
+	code3 = code2.readAll()
 
-	if pidor3 == pidor then
+	if code3 == code then
 		Log.i('Startup file isn\'\t modified!')
 	else
 		Log.w('Modified startup file detected!')
 		isModified = true
 	end
 
-	pidor2.close()
+	code2.close()
 end
 
 if http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua') then
-	pidor = http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua').readAll()
-	pidor2 = fs.open('System/main.lua', 'r')
-	pidor3 = pidor2.readAll()
+	code = http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua').readAll()
+	code2 = fs.open('System/main.lua', 'r')
+	code3 = code2.readAll()
 
-	if pidor3 == pidor then
+	if code3 == code then
 		Log.i('OS file isn\'\t modified!')
 	else
 		Log.w('Modified OS file detected!')
 		isModified = true
 	end
 
-	pidor2.close()
+	code2.close()
 end
 
 if Settings.GetValues('UseMonitor')['UseMonitor'] == true then
 	Log.i('Monitor mode enabled!')
 	Log.i('Checking for monitor...')
 
-	PidorEkran = peripheral.find('monitor', true)
+	testMon = peripheral.find('monitor', true)
 
-	if PidorEkran == nil then
+	if testMon == nil then
 		Log.w('No monitor found! Running on computer screen...')
 	end
 
-	if not peripheral.wrap(PidorEkran).isColor() then
+	if not peripheral.wrap(testMon).isColor() then
 		Log.w('No color monitor found!')
 
 	else
 		Log.i('Redirecting to monitor...')
-		print('OS is running on monitor(side '..PidorEkran..').')
-		term.redirect(peripheral.wrap(PidorEkran))
+		print('OS is running on monitor(side '..testMon..').')
+		term.redirect(peripheral.wrap(testMon))
 	end
 end
 
