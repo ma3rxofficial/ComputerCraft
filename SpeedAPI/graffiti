@@ -4622,7 +4622,7 @@ function main()
   end
 end
 
-if init() then
+if init() and Args[1] then
   Files.init()
   Files.clear(Files.Log.subDir, Files.Log.name)
   logFileLoaded = true
@@ -4650,5 +4650,7 @@ if init() then
     log("Graffiti loaded as an API.")
   end
 else
-  error("Graffiti Initialization failed!")
+  if Args[1] then
+  	error("Graffiti Initialization failed!")
+  end
 end
