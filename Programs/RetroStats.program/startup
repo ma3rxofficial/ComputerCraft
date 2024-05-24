@@ -17,11 +17,11 @@ SpeedText.line()
 
 print("Your computer ID: ", os.getComputerID())
 print("Computer label: ", os.getComputerLabel())
-print("Free space: ", SpeedOS.FS.getFreeSpace("/"), " bytes")
+print("Free space: "..tostring(SpeedOS.FS.getFreeSpace("/")).." bytes")
 print("Computer running: ", os.clock(), " seconds")
 
 if SpeedOS.FS.exists("disk") then
-	print("Disk free space: ", SpeedOS.FS.getFreeSpace("/disk"), " bytes")
+	print("Disk free space: "..tostring(SpeedOS.FS.getFreeSpace("/disk").." bytes"))
 end
 
 SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
