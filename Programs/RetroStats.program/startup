@@ -20,7 +20,7 @@ print("Computer label: ", os.getComputerLabel())
 print("Free space: ", SpeedOS.FS.getFreeSpace("/"), " bytes")
 print("Computer running: ", os.clock(), " seconds")
 
-if SpeedOS.Fs.exists("disk") then
+if SpeedOS.FS.exists("disk") then
 	print("Disk free space: ", SpeedOS.FS.getFreeSpace("/disk"), " bytes")
 end
 
