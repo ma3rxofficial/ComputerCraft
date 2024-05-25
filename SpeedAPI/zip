@@ -18,14 +18,7 @@ function archive(chto,vochto)
                                         local file = fs.open(path.."/"..Massiv[i],"r")
                                         Massiv2[Massiv2Id]["text"] = file.readAll()
                                         file.close()
-                                end
-                        end
-                end
-        end
-        FileList(chto)
-        file=fs.open(vochto..".zip","w")
-        file.write(textutils.serialise(Massiv2))
-        file.close()
+ e.close()
         return Massiv2
 end
  
