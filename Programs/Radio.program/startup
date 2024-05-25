@@ -68,6 +68,6 @@ while true do
     term.setTextColor(colors.lightGray)
     io.write(tostring(msg))
     print("")
-    InfoLog("["..tostring(SpeedText.time(false)).."] Radio #"..id..": "..tostring(msg))
+    InfoLog(logPath, "["..tostring(SpeedText.time(false)).."] Radio #"..id..": "..tostring(msg))
   end
 end
