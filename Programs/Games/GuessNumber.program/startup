@@ -24,7 +24,7 @@ function choosenum(num)
     term.setTextColor(colors.lightGray)
     SpeedText.cPrint("Click anywhere to continue...", 14)
 
-    sleep(3)
+    SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
     numberMenu()
   else
     windows.clearScreen(colors.white)
@@ -39,7 +39,7 @@ function choosenum(num)
     term.setTextColor(colors.lightGray)
     SpeedText.cPrint("Click anywhere to continue...", 14)
 
-    sleep(3)
+    SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
     numberMenu()
   end
 end
