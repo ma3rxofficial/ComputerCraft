@@ -11,7 +11,7 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 function choosenum(num)
   real_num = math.random(0, 9)
   
-  if false then
+  if num == real_num then
     windows.clearScreen(colors.white)
     term.setTextColor(colors.lime)
     SpeedText.cPrint("Right number!", 3)
