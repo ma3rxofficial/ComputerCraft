@@ -58,13 +58,13 @@ while true do
     term.setTextColor(colors.orange)
     io.write("] ")
     term.setTextColor(colors.lightGray)
-    	io.write(tostring(msg))
-        print("")
-        if file then
-	        local time = os.time()
-          timeFmt = textutils.formatTime(time, false)
-          file.writeLine("["..tostring(timeFmt).."] Radio #"..id..": "..tostring(msg))
-          file.flush()
-        end
+    io.write(tostring(msg))
+    print("")
+    if file then
+	    local time = os.time()
+      timeFmt = textutils.formatTime(time, false)
+      file.writeLine("["..tostring(timeFmt).."] Radio #"..id..": "..tostring(msg))
+      file.flush()
     end
+  end
 end
