@@ -197,10 +197,10 @@ function charToImg(char,c,x,y)
     img[5] = {c,c,c,c,c}
   elseif char == "7" then
     img[1] = {c,c,c,c,c}
-    img[2] = {0,0,0,c,0}
-    img[3] = {0,0,c,0,0}
-    img[4] = {0,c,0,0,0}
-    img[5] = {c,0,0,0,0}
+    img[2] = {0,0,0,0,c}
+    img[3] = {0,0,0,0,c}
+    img[4] = {0,0,0,0,c}
+    img[5] = {0,0,0,0,c}
   elseif char == "8" then
     img[1] = {c,c,c,c,c}
     img[2] = {c,0,0,0,c}
