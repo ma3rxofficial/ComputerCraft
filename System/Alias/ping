@@ -52,5 +52,5 @@ for a = 1, times do
 		print("fail")
 	end
 end
-print("done with "..(averageTable(completeRatio)*100).."% success")
-print("average ping is "..(averageTable(pingList)).." ticks")
+print("Done with "..(averageTable(completeRatio)*100).."% success")
+print("Average ping is "..(averageTable(pingList)).." ticks")
