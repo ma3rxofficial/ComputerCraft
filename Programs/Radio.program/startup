@@ -3,6 +3,7 @@ if SpeedOS then
   SpeedOS.ToolBarTextColour = colours.white
 end
 
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
