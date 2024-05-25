@@ -17,3 +17,9 @@ http.get = function(url)
 		return _http.get(url)
 	end
 end
+
+http.post = function(url)
+	if not checkForBlacklist(url) then
+		return _http.post(url)
+	end
+end
