@@ -20,7 +20,7 @@ rednet.open(peripheral.find("modem"))
 huy_ = config.read(pathToConfig, "radios")
 local radio_id = textutils.unserialize(huy_)
 
-huy = config.read("System/Radio.settings", "listen_everyone")
+huy = config.read(pathToConfig, "listen_everyone")
 local listen_everyone
 
 if huy == "true" then
