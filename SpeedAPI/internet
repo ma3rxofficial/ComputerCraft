@@ -1,9 +1,9 @@
-local blacklist = {"https://github.com/"}
+local URLblacklist = {"https://github.com/"}
 
 _http = http
 
 local function checkForBlacklist(url)
-	for _, urlik in pairs(blacklist) do
+	for _, urlik in pairs(URLblacklist) do
 		if url == urlik then
 			return true
 		end
