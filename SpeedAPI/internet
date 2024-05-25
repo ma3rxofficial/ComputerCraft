@@ -1,7 +1,5 @@
 local blacklist = {"https://pornhub.com"}
 
-_http = http
-
 local function checkForBlacklist(url)
 	for _, urlik in pairs(blacklist) do
 		if url == urlik then
@@ -14,12 +12,12 @@ end
 
 function get(url)
 	if not checkForBlacklist(url) then
-		return _http.get(url)
+		return http.get(url)
 	end
 end
 
 function post(url)
 	if not checkForBlacklist(url) then
-		return _http.post(url)
+		return http.post(url)
 	end
 end
