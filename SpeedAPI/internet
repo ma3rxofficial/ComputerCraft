@@ -1,4 +1,4 @@
-local blaklist = {}
+local blacklist = {}
 
 _http = http
 
