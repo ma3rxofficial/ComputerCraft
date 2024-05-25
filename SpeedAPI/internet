@@ -1,9 +1,9 @@
-local URLblacklist = {"https://github.com/"}
+local blacklist = {"https://pornhub.com"}
 
 _http = http
 
 local function checkForBlacklist(url)
-	for _, urlik in pairs(URLblacklist) do
+	for _, urlik in pairs(blacklist) do
 		if url == urlik then
 			return true
 		end
@@ -12,13 +12,13 @@ local function checkForBlacklist(url)
 	return false
 end
 
-http.get = function(url)
+function get(url)
 	if not checkForBlacklist(url) then
 		return _http.get(url)
 	end
 end
 
-http.post = function(url)
+function post(url)
 	if not checkForBlacklist(url) then
 		return _http.post(url)
 	end
