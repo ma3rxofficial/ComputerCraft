@@ -1,1 +1,3 @@
+local blaklist = {}
+
 _http = http
