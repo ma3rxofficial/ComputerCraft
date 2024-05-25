@@ -17,7 +17,7 @@ local pathToConfig = "System/Radio.settings"
 
 rednet.open(peripheral.find("modem"))
 
-huy_ = config.read("System/Radio.settings", "radios")
+huy_ = config.read(pathToConfig, "radios")
 local radio_id = textutils.unserialize(huy_)
 
 huy = config.read("System/Radio.settings", "listen_everyone")
