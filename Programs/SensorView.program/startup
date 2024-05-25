@@ -184,13 +184,7 @@ local function findGraphMatch(currTable, target, matchCount, trackingTable)
 end
 
 local function createGraph(targetNum)
-	local monSide = ""
-	for k, side in ipairs(rs.getSides()) do
-		if peripheral.getType(side) == "monitor" then
-			monSide = side
-			break
-		end
-	end
+	local monSide = peripheral.find("monitor", true)
 	if monSide and targetNum >= 1 and findGraphMatch(sensor.call(graphSide, "getTargetDetails", graphTarget), targetNum, 0, {}) then
 		graphMatch = targetNum
 		local val, name = findGraphMatch(sensor.call(graphSide, "getTargetDetails", graphTarget), targetNum, 0, {})
