@@ -13,9 +13,9 @@ if not peripheral.find("modem") then
   SpeedOS.Close()
 end
 
-rednet.open(peripheral.find("modem"))
-
 pathToConfig = "System/Radio.settings"
+
+rednet.open(peripheral.find("modem"))
 
 huy_ = config.read("System/Radio.settings", "radios")
 local radio_id = textutils.unserialize(huy_)
