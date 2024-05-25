@@ -1,3 +1,11 @@
 local blaklist = {}
 
 _http = http
+
+local function checkForBlacklist(url)
+
+end
+
+http.get = function(url)
+
+end
