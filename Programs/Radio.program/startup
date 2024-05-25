@@ -48,16 +48,16 @@ end
 
 
 while true do
-    event, id, msg, dist = os.pullEvent()
+  event, id, msg, dist = os.pullEvent()
 
-    if event == "rednet_message" and check(id) then
-    	term.setTextColor(colors.orange)
-     io.write("[Radio ")
-     term.setTextColor(colors.yellow)
-     io.write("#"..tostring(id))
-     term.setTextColor(colors.orange)
-     io.write("] ")
-    	term.setTextColor(colors.lightGray)
+  if event == "rednet_message" and check(id) then
+    term.setTextColor(colors.orange)
+    io.write("[Radio ")
+    term.setTextColor(colors.yellow)
+    io.write("#"..tostring(id))
+    term.setTextColor(colors.orange)
+    io.write("] ")
+    term.setTextColor(colors.lightGray)
     	io.write(tostring(msg))
         print("")
         if file then
