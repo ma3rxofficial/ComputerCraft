@@ -13,7 +13,7 @@ if not peripheral.find("modem") then
   SpeedOS.Close()
 end
 
-pathToConfig = "System/Radio.settings"
+local pathToConfig = "System/Radio.settings"
 
 rednet.open(peripheral.find("modem"))
 
