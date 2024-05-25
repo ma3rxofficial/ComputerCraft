@@ -45,7 +45,7 @@ function check(id)
   end
 end
 
-function InfoLog(msg)
+function InfoLog(logPath, msg)
     log_file = fs.open(logPath, "a")
     log_file.writeLine(msg)
     log_file.flush()
