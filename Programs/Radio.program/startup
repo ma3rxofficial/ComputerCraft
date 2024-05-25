@@ -52,6 +52,9 @@ function InfoLog(logPath, msg)
     log_file.close()
 end
 
+day, month, year = SpeedText.getDate()
+logPath = "Resources/Radio_"..tostring(year).."-"..tostring(month).."-"..tostring(day).."_"..SpeedText.extraFormatTime(os.time(), ".", true)..".log"
+
 while true do
   event, id, msg, dist = os.pullEvent()
 
