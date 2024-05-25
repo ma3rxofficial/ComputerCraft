@@ -1,4 +1,4 @@
-local blacklist = {"https://pornhub.com"}
+local blacklist = {}
 
 local function checkForBlacklist(url)
 	for _, urlik in pairs(blacklist) do
