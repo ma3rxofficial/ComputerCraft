@@ -1,4 +1,4 @@
-local blacklist = {}
+local blacklist = {"https://github.com/"}
 
 _http = http
 
@@ -23,6 +23,3 @@ http.post = function(url)
 		return _http.post(url)
 	end
 end
-
-internet.get = http.get
-internet.post = http.post
