@@ -68,11 +68,6 @@ while true do
     term.setTextColor(colors.lightGray)
     io.write(tostring(msg))
     print("")
-    if file then
-	    local time = os.time()
-      timeFmt = textutils.formatTime(time, false)
-      file.writeLine("["..tostring(timeFmt).."] Radio #"..id..": "..tostring(msg))
-      file.flush()
-    end
+    InfoLog("["..tostring(SpeedTex.time(false)).."] Radio #"..id..": "..tostring(msg)))
   end
 end
