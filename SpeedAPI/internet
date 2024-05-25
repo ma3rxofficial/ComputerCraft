@@ -3,7 +3,13 @@ local blaklist = {}
 _http = http
 
 local function checkForBlacklist(url)
+	for _, urlik in pairs(blacklist) do
+		if url == urlik then
+			return true
+		end
+	end
 
+	return false
 end
 
 http.get = function(url)
