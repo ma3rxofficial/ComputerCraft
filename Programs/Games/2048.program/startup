@@ -87,6 +87,9 @@ function moveLeft()
           g[i][k-1] = g[i][k] + 1
           g[i][k] = 0
           score = score + math.pow(2,g[i][k-1])
+          if score > hiscore then
+            hiscore = score
+          end
           k = k-1
         elseif g[i][k-1] == 0 then
           g[i][k-1] = g[i][k]
@@ -108,6 +111,9 @@ function moveUp()
           g[k-1][j] = g[k][j] + 1
           g[k][j] = 0
           score = score + math.pow(2,g[k-1][j])
+          if score > hiscore then
+            hiscore = score
+          end
           k = k-1
         elseif g[k-1][j] == 0 then
           g[k-1][j] = g[k][j]
