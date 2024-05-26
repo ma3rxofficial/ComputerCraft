@@ -241,39 +241,47 @@ function Draw()
 	drawing = true -- ДАААА МЫ РИСУЕМ!!!!
 	Current.Clicks = {}
 
-	if Current.Program then
-		--Current.Program.AppRedirect:Draw()
-	else
-		Desktop:Draw()
-		term.setCursorBlink(false)
+	if Current.Program then -- если есть открытая программа(хоть одна)
+		--Current.Program.AppRedirect:Draw() -- ничего. но как болванка - оставлю
+	else -- в противном случае, если есть только раб. стол
+		Desktop:Draw() -- рисуем десктоп
+		term.setCursorBlink(false) -- и останавливаем мигание курсора(фикс бага с часами)
 	end
 
-	for i, elem in ipairs(InterfaceElements) do
+	for i, elem in ipairs(InterfaceElements) do -- рисуем элементы интерфейса
 		if elem.Draw then
 			elem:Draw()
 		end
 	end
 
-	if Current.Window then
-		Current.Window:Draw()
+	if Current.Window then -- если у нас открыто окошко программы
+		Current.Window:Draw() -- то мы ее отрисовываем
 	end
 
-	Drawing.DrawBuffer()
-	term.setCursorPos(Current.CursorPos[1], Current.CursorPos[2])
-	term.setTextColour(Current.CursorColour)
-	drawing = false
-	needsDisplay = false
-	if not Current.Program then
-		updateTimer = os.startTimer(0.05)
+	Drawing.DrawBuffer() -- и рисуем все из буффера!
+
+	term.setCursorPos(Current.CursorPos[1], Current.CursorPos[2]) -- выставляем параметры курсора
+	term.setTextColour(Current.CursorColour) -- и цвет текста
+
+	drawing = false -- МЫ БОЛЬШЕ НЕ РИСУЕМ (((((((((((((
+	needsDisplay = false -- и отображать ничего не надо, и плакали все наши программки
+
+	if not Current.Program then -- если прога не открыта
+		updateTimer = os.startTimer(0.05) -- то увеличиваем задержку. Предпологается, что пользователь AFK.
 	end
 end
 
-MainDraw = Draw
+MainDraw = Draw -- дублирование функции в переменную MainDraw
 
-function RegisterElement(elem)
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Работа с интерфейсом тулбара
+
+-- Добавить элемент интерфейса
+function RegisterElement(elem) 
 	table.insert(InterfaceElements, elem)
 end
 
+-- Убрать элемент интерфейса
 function UnregisterElement(elem)
 	for i, e in ipairs(InterfaceElements) do
 		if elem == e then
@@ -282,10 +290,15 @@ function UnregisterElement(elem)
 	end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Крутые функции с мышью.
+
+-- Регистрация кликов. Каждый клик заносится в массив
 function RegisterClick(elem)
 	table.insert(Current.Clicks, elem)
 end
 
+-- Проверяем эвенты пользователя на КЛИК
 function CheckClick(object, x, y)
 	local pos = GetAbsolutePosition(object)
 	if pos.X <= x and pos.Y <= y and  pos.X + object.Width > x and pos.Y + object.Height > y then
@@ -293,12 +306,14 @@ function CheckClick(object, x, y)
 	end
 end
 
+-- Функция "делания" клика
 function DoClick(event, object, side, x, y)
 	if object and CheckClick(object, x, y) then
 		return object:Click(side, x - object.X + 1, y - object.Y + 1)
 	end	
 end
 
+-- Проверка на возможность клика
 function TryClick(event, side, x, y)
 	if Current.Menu and DoClick(event, Current.Menu, side, x, y) then
 		Draw()
@@ -330,6 +345,10 @@ function TryClick(event, side, x, y)
 	end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Клавиатура
+
+-- Ждем тыкания на клавишу какую-то
 function HandleKey(...)
 	local args = {...}
 	local event = args[1]
@@ -373,6 +392,9 @@ function HandleKey(...)
 	end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Позиция объекта относительно всего уже отрисованного
+
 function GetAbsolutePosition(obj)
 	if not obj.Parent then
 		return {X = obj.X, Y = obj.Y}
@@ -384,11 +406,15 @@ function GetAbsolutePosition(obj)
 	end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Сбросить переменную needsDisplay(в состояние "true")
+
 function NeedsDisplay()
 	needsDisplay = true
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Спящий режим(не автоматический!)
 
 function Sleep()
 	Drawing.Clear(colours.black)
@@ -397,37 +423,33 @@ function Sleep()
 	Drawing.DrawBuffer()
 	os.pullEvent('mouse_click')
 
-		--ProgramEventHandle()
-
---	for i, v in ipairs(Current.Programs) do
---		v:Resume()
---	end
-
 	Draw()
 	updateTimer = os.startTimer(0.05)
 	clockTimer = os.startTimer(0.8333333)
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Управление питанием компьютера
 
+-- Выключить комп(если указать true в аргументах, то компьютер перезагружается)
 function Shutdown(restart)
-	local success = true
-	for i, program in ipairs(Current.Programs) do
+	local success = true -- программы не открыты, можноперезагружаться
+	for i, program in ipairs(Current.Programs) do -- проверяем программы на возможность их завершения
 		if not program:Close() then
-			success = false
+			success = false -- если какую-то программу нельзя закрыть, то отключение может быть невозможно
 		end
 	end
 
-	if success and not restart then
+	if success and not restart then -- просто отключаем компьютер
 		Log.i("Shutting down...")
 		os.loadAPI("SpeedAPI/windows")
-		windows.tv(0)
+		windows.tv(0) -- и воспроизводим анимацию красивенькую
 		os.shutdown()
-	elseif success then
+	elseif success then -- перезагрузка
 		Log.i("Rebooting...")
-		windows.tv(0)
+		windows.tv(0) -- анимация красивая
 		os.reboot()
-	else
+	else -- если нельзя что-то там закрыть
 		Current.Program = nil
 		Overlay.UpdateButtons()
 		local shutdownLabel = 'shutdown'
@@ -437,21 +459,27 @@ function Shutdown(restart)
 			shutdownLabelCaptital = 'Restart'
 		end
 
-		ButtonDialogueWindow:Initialise("Programs Still Open", "Some programs stopped themselves from being closed, preventing "..shutdownLabel..". Save your work and close them or click 'Force "..shutdownLabelCaptital.."'.", 'Force '..shutdownLabelCaptital, 'Cancel', function(btnsuccess)
-			if btsuccess and not restart then
+		ButtonDialogueWindow:Initialise("Programs Still Open", "Some programs stopped themselves from being closed, preventing "..shutdownLabel..". Save your work and close them or click 'Force "..shutdownLabelCaptital.."'.", 'Force '..shutdownLabelCaptital, 'Cancel', function(btnsuccess) -- ну говорим об этом, шо сказать :D
+			if btsuccess and not restart then -- отключение
+				Log.i("Shutting down...")
+				os.loadAPI("SpeedAPI/windows")
+				windows.tv(0) -- и воспроизводим анимацию красивенькую
 				os.shutdown()
-			elseif btnsuccess then
+			elseif btnsuccess then -- перезагрузка
+				Log.i("Rebooting...")
+				windows.tv(0) -- анимация красивая
 				os.reboot()
 			end
 		end):Show()
 	end
 end
 
-function Restart()
+function Restart() -- простая функция для перезагрузки
 	Shutdown(true)
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Хуйня с эвентами. Нечего больше сказать.
 
 function EventRegister(event, func)
 	if not Events[event] then
