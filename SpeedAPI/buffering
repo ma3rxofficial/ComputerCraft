@@ -1,0 +1,16 @@
+backgroundColor = colors.black
+textColor = colors.white
+
+setBackgroundColor = function(color)
+  if backgroundColor ~= color then
+    term.setBackgroundColor(color)
+    backgroundColor = color
+  end
+end
+
+setTextColor = function(color)
+  if textColor ~= color then
+    term.setBackgroundColor(color)
+    textColor = color
+  end
+end
