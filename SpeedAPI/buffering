@@ -25,3 +25,5 @@ setTextColor = function(color)
     textColor = color
   end
 end
+
+--------------------------------------------------------------------------------
