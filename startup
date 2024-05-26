@@ -1,3 +1,8 @@
+--[[
+	Main boot script, that
+	loads OS.
+]]
+
 os.loadAPI('SpeedAPI/SpeedText')
 os.loadAPI('SpeedAPI/peripheral')
 os.loadAPI('System/API/Log')
