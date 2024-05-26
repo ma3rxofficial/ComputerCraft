@@ -83,25 +83,31 @@ end
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
-if Settings.GetValues('UseMonitor')['UseMonitor'] == true then
-	Log.i('Monitor mode enabled!')
-	Log.i('Checking for monitor...')
+-- Проверка на включенность параметра "Использовать Монитор" в настройках и его совместимости с ОС(необходим цветной монитор)
 
-	testMon = peripheral.find('monitor', true)
+if Settings.GetValues('UseMonitor')['UseMonitor'] == true then -- проверяем состояние опции "Использовать Монитор" 
+	Log.i('Monitor mode enabled!') -- Печатаем в лог ахуеть, какую нужную инфу 
+	Log.i('Checking for monitor...') -- печатаем о том, что начата проверка на монитор
 
-	if testMon == nil then
-		Log.w('No monitor found! Running on computer screen...')
+	testMon = peripheral.find('monitor', true) -- Получаем сторону монитора
+
+	if testMon == nil then -- Если монитор не найден...
+		Log.w('No monitor found! Running on computer screen...') -- то пишем в лог, мол "идите нахуй"
 	end
 
-	if not peripheral.wrap(testMon).isColor() then
-		Log.w('No color monitor found!')
+	if not peripheral.wrap(testMon).isColor() then -- аналогично, если монитор чернобелый
+		Log.w('No color monitor found!') -- иди нахуй
 
-	else
-		Log.i('Redirecting to monitor...')
-		print('OS is running on monitor(side '..testMon..').')
-		term.redirect(peripheral.wrap(testMon))
+	else -- если все же монитор найден
+		Log.i('Redirecting to monitor...') -- печатаем в лог о редиректе всего содержимого с экрана компа на экран монитора
+		print('OS is running on monitor(side '..testMon..').') -- и печатаем сторону рабочего мониторчика 
+		term.redirect(peripheral.wrap(testMon)) -- собственно, сам редирект
 	end
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+-- Подгрузка АПИ
 
 function LoadAPI(_sPath)
 	local sName = fs.getName( _sPath )
@@ -134,38 +140,46 @@ function LoadAPI(_sPath)
 	return true
 end
 
-term.setCursorPos(1,1)
-root = ''
+-----------------------------------------------------------------------------------------------------------------------------------
 
-function PrintCentered(text, y)
+-- Визуальная параша
+
+term.setCursorPos(1,1) -- курсорирование на 1, 1 по обоим осям(x, y)
+root = '' -- кореневая папка, в котором работает наша ОС, т. е. папка, в которой она установлена
+
+function PrintCentered(text, y) -- напечатать какую-то хуйню по центру экрана, принимает параметры самого текста и высоту, на которой печатать текст. Центрирование идет только по оси X.
     local w, h = term.getSize()
     x = math.ceil(math.ceil((w / 2) - (#text / 2)), 0)+1
     term.setCursorPos(x, y)
     print(text)
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
+-- Наш загрузочный экранчик. В основном тут индикация загрузки АПИшек
+
 function LoadingScreen()
-	local screenWidth, screenHeight = term.getSize()
-	local x = (screenWidth - 14) / 2
-	local y = (screenHeight - 9) / 2
+	local screenWidth, screenHeight = term.getSize() -- размер рабочего экрана
+	local x = (screenWidth - 14) / 2 -- ось X для работы загрузчика
+	local y = (screenHeight - 9) / 2 -- аналогично ось Y
 
-	local rs_s = false
-	local listen_energy
+	local rs_s = false -- сторона, с которой мы берем "питание" компа
+	local listen_energy -- дублер этой стороны
 
-	local text = 'SpeedOS by Ma3rX'
+	local text = 'SpeedOS by Ma3rX' -- заголовок загрузчика
 
 	local currentImage = -1
-	local totalAPIs = #fs.list(root .. 'System/API/')
+	local totalAPIs = #fs.list(root .. 'System/API/') -- кол-во АПИ
 
-	if Settings.GetValues('UseRedstoneElectrity')['UseRedstoneElectrity'] == true then
-		for _, storona in pairs(rs.getSides()) do
+	if Settings.GetValues('UseRedstoneElectrity')['UseRedstoneElectrity'] == true then -- если включено питание компа от редстоуна
+		for _, storona in pairs(rs.getSides()) do -- проверяем стороны, с которых подается сигнал
 			if rs.getInput(storona) == true then
 				rs_s = true
 				listen_energy = storona
 			end
 		end
 
-		if not rs_s then
+		if not rs_s then -- вывод предупреждения, если источника подпитки не найдено
 			term.setBackgroundColor(colors.blue)
 			term.clear()
 			term.setTextColor(colors.blue)
@@ -179,9 +193,10 @@ function LoadingScreen()
 			os.reboot()
 		end
 
-		Log.i('Getting energy from side '..listen_energy)
+		Log.i('Getting energy from side '..listen_energy) -- печатаем в лог, откуда берем энергию
 	end
 
+	-- Сам загрузочный экран
 
 	term.setBackgroundColor(colors.white)
 
@@ -190,6 +205,8 @@ function LoadingScreen()
 
 	term.clear()
 	term.setTextColor(colors.lightGray)
+
+	-- Загрузка АПИ из папки System/API
 
 	for _, file in pairs(fs.list(root .. 'System/API/')) do
 		if string.sub(file,1,1) ~= '.' then
@@ -211,6 +228,8 @@ function LoadingScreen()
 		end
 	end
 
+	-- Загрузка АПИ из папки SpeedAPI
+
 	for _, file in pairs(fs.list(root .. 'SpeedAPI/')) do
 		if string.sub(file,1,1) ~= '.' then
 			term.clear()
@@ -231,6 +250,8 @@ function LoadingScreen()
 			Log.i('Loading: '..file)
 		end
 	end
+
+	-- Выставление редиректов команд. По сути это позволяет нам запускать свои кастомные скрипты из любой папки, короче говоря - алиасы команд
 	
 	for _, file in pairs(fs.list(root .. 'System/Alias/')) do
 		if string.sub(file,1,1) ~= '.' then
@@ -253,15 +274,16 @@ function LoadingScreen()
 	SpeedText.cPrint('Initializing components')
 	sleep(3)
 
- 	if peripheral.find('modem') then
-		rednet.open(peripheral.find('modem'))
-   		Log.i('Opened modem on side '..peripheral.find('modem'))
+ 	if peripheral.find('modem') then -- если найден модем
+		rednet.open(peripheral.find('modem')) -- открываем его со стороны нахождения
+   		Log.i('Opened modem on side '..peripheral.find('modem')) -- и печатаем об этом в лог
  	end
 
 	sleep(0.1)
 	return true
 end
 
+-- предупреждение о том, что монитор не цветной
 if not term.isColour() then
 	term.setBackgroundColor(colours.black)
 	term.setTextColor(colours.white)
@@ -276,13 +298,13 @@ if not term.isColour() then
 	term.setCursorPos(1,1)
 
 elseif LoadingScreen() then
-
+	-- МОЁ ЛЮБИМОЕ НАХУЙ - АВТОЗАГРУЗОЧНЫЕ СКРИПТЫ
 	Log.i('Checking for startup scripts...')
 
-	if not fs.exists('System/.autorun') then
+	if not fs.exists('System/.autorun') then -- если нет директории с автозагрузочными скриптами
 		Log.w('No autorun directory!')
 		
-		Log.i('Making autorun directory...')
+		Log.i('Making autorun directory...') -- то мы ее сделаем
 		fs.makeDir('System/.autorun')
 		Log.i('Done!')
 
@@ -291,25 +313,25 @@ elseif LoadingScreen() then
 			Log.i('Autorun directory found!')
 
 			if #fs.list('System/.autorun') == 0 then
-				Log.i('No startup scripts found!')
+				Log.i('No startup scripts found!') -- если скриптов не было найдено в директории
 			else
 				Log.i('Running all startup scripts...')
 
-				for _, script in pairs(fs.list('System/.autorun')) do
+				for _, script in pairs(fs.list('System/.autorun')) do -- ну и запускаем скрипты по очереди
 					Log.i('Running script '..script..'...')
 					shell.run('System/.autorun/'..script)
 					Log.i('Startup script '..script..' finished!')
 				end
 
-				Log.i('All startup scripts have been launched!')
+				Log.i('All startup scripts have been launched!') -- все скрипты запущены, по сути загрузка на данном этапе завершена
 			end
 		else
-			Log.w('Autorun isn\'\t directory!')
+			Log.w('Autorun isn\'\t directory!') -- файл .autorun это не директория, работа запрещена нахуй
 		end
 
 	end
 
-	if fs.exists('/.update/') and fs.isDir('/.update/') then
+	if fs.exists('/.update/') and fs.isDir('/.update/') then -- система обновления ОС из папки
 		Log.i('Found update!')
 		if not fs.exists('/.update/.version') then
 			Log.w('Update is corrupted! (no .version file)')
@@ -342,6 +364,7 @@ elseif LoadingScreen() then
 		Log.i('Update installed!')
 	end
 
+	-- Запуск нашего Десктопа с приложухами
 	Log.i('Starting Desktop...')
 	windows.fadeOut(0.1)
 	os.run(getfenv(), '/System/main.lua')
@@ -349,6 +372,7 @@ elseif LoadingScreen() then
 
 	local ok = {pcall(Initialise)}
 
+	-- Печать об ошибке и ее последующая отправка по Email мне
 	if not ok[1] then
 		term.setBackgroundColor(colours.grey)
 		term.setTextColor(colours.white)
