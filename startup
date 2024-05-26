@@ -283,6 +283,10 @@ function LoadingScreen()
 	return true
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
+-- Работа десктопа и финальные проверочки
+
 -- предупреждение о том, что монитор не цветной
 if not term.isColour() then
 	term.setBackgroundColor(colours.black)
@@ -309,7 +313,7 @@ elseif LoadingScreen() then
 		Log.i('Done!')
 
 	else
-		if fs.isDir('System/.autorun') then
+		if fs.isDir('System/.autorun') then -- ураа нашло!
 			Log.i('Autorun directory found!')
 
 			if #fs.list('System/.autorun') == 0 then
@@ -401,14 +405,14 @@ elseif LoadingScreen() then
 		    print(v)
 		    Log.e(v)
 
-		    if peripheral.find('modem') then
-		    	if not isModified then
+		    if peripheral.find('modem') then -- отправки ошибки мне по емаилу
+		    	if not isModified then -- но только если сис. файлы не были модифицированы, а то нахуй мне эти репорты вообще?
 		    		rednet.open(peripheral.find('modem'))
 		    		local newemail = '$EMAIL'..tostring(576)
           		       ..'!SP!'..os.getComputerLabel()
             		     ..'!SP!'..os.time()..'!SP!'
               		   ..'User #'..tostring(os.getComputerID())..', got error:\n\n'..v..'\n\nSent on '..SpeedText.get_date()..', '..SpeedText.time(true)..'.'
-  					rednet.send(434, newemail)	
+  					rednet.send(434, newemail)	-- отправка ошибки на почту через мыло-сервак
   					if rednet.receive(5)~=nil then
     					success = true
 	  				else
@@ -418,7 +422,7 @@ elseif LoadingScreen() then
 
   				else
   					sucess = false
-  					Log.w('System files are modified. Not sending report!')
+  					Log.w('System files are modified. Not sending report!') -- модифицированы системные файлы!
   				end
   			end
 		end
