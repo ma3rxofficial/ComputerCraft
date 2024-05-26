@@ -25,7 +25,17 @@ tiles[11] = {"1024", 1024}
 tiles[12] = {"2048", 2048}
 size = 4
 score = 0
-hiscore = 0
+
+fileHiScore = fs.open("Resources/hiScore", "r")
+hiscore = tonumber(fileHiScore.readAll())
+fileHiScore.close()
+
+function writeScore(chislo)
+  fileHiScore = fs.open("Resources/hiScore", "w")
+  fileHiScore.write(tostring(chislo))
+  fileHiScore.flush()
+  fileHiScore.close()
+end
 
 function createBoard()
   for i=1, size do
@@ -88,7 +98,8 @@ function moveLeft()
           g[i][k] = 0
           score = score + math.pow(2,g[i][k-1])
           if score > hiscore then
-            hiscore = score
+            hicore = score
+            writeScore(hiscore)
           end
           k = k-1
         elseif g[i][k-1] == 0 then
@@ -113,6 +124,7 @@ function moveUp()
           score = score + math.pow(2,g[k-1][j])
           if score > hiscore then
             hiscore = score
+            writeScore(hiscore)
           end
           k = k-1
         elseif g[k-1][j] == 0 then
