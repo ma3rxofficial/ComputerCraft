@@ -1,8 +1,20 @@
-SpeedOSVersion = '...'
+--[[
+	Главный файл операционной системы. Именно тут происходят
+	все действия и появляется возможность взаимодействия
+	пользователя с ОС.
+]]
 
-local x = 1
-local y = 1
-local m = 4
+-----------------------------------------------------------------------------------------------------------------------------------
+
+-- Всякие нужные переменные
+
+SpeedOSVersion = '...' -- версия ОС. для начала мы ее не определили
+
+local x = 1 -- начальный пиксель по оси X, с которого рисуется весь экран
+local y = 1 -- начальный пиксель по оси Y, с которого рисуется весь экран
+local m = 4 
+
+-- Далее остальные системные переменные, к которым комментарии излишни.
 
 local needsDisplay = true
 local drawing = false
@@ -10,6 +22,10 @@ local drawing = false
 local updateTimer = nil
 local clockTimer = nil
 local desktopRefreshTimer = nil
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+-- Основные таблицы с программами и их содержимым. Здесь задаются параметры последней открытой программы(пока это просто заготовка)
 
 Current = {
 	Clicks = {},
@@ -33,135 +49,155 @@ InterfaceElements = {
 	
 }
 
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Функция, которая обращается к остальным АПИ и начинает рисовать рабочий стол
+
 function ShowDesktop()
-	Desktop.LoadSettings()
-	Desktop.RefreshFiles()
-	Desktop.SaveSettings()
+	Desktop.LoadSettings() -- подгрузка настроек расположения файлов
+	Desktop.RefreshFiles() -- обновление файлов
+	Desktop.SaveSettings() -- сохранение настроек
 	
-	RegisterElement(Overlay)
-	Overlay:Initialise()
+	RegisterElement(Overlay) -- регистрация остального говна для десктопа
+	Overlay:Initialise() -- инициализация говна
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Начальная подгрузка остальных подпрограмм
 
 function Initialise()
-	EventRegister('mouse_click', TryClick)
-	EventRegister('mouse_drag', TryClick)
-	EventRegister('monitor_touch', TryClick)
-	EventRegister('key', HandleKey)
-	EventRegister('char', HandleKey)
-	EventRegister('timer', Update)
-	EventRegister('http_success', AutoUpdateRespose)
-	EventRegister('http_failure', AutoUpdateFail)
+	-- Регистрация эвентов
+	EventRegister('mouse_click', TryClick) -- клик мыши
+	EventRegister('mouse_drag', TryClick) -- движение мыши с зажатой кнопкой
+	EventRegister('monitor_touch', TryClick) -- тыканье по монитору
+	EventRegister('key', HandleKey) -- кнопка
+	EventRegister('char', HandleKey) -- тоже кнопка, но эта функция возвращает символ, на который пользователь тыкнул
+	EventRegister('timer', Update) -- таймер задержки
+	EventRegister('http_success', AutoUpdateRespose) -- успешный запрос в интернет
+	EventRegister('http_failure', AutoUpdateFail) -- провальный запрос в интернет
 
-	ShowDesktop()
-	Draw()
-	clockTimer = os.startTimer(0.8333333)
-	desktopRefreshTimer = os.startTimer(5)
-	local h = fs.open('System/.version', 'r')
-	SpeedOSVersion = h.readAll()
-	h.close()
+	ShowDesktop() -- рисуем десктоп
+	Draw() -- и его приблуды
+	clockTimer = os.startTimer(0.8333333) -- задержка между обновлением часов(НЕ ИЗМЕНЯТЬ!)
+	desktopRefreshTimer = os.startTimer(5) -- задержка между обновлениями рабочего стола
+	local h = fs.open('System/.version', 'r') -- открываем файл с версией ОС
+	SpeedOSVersion = h.readAll() -- записываем в нашу переменную версию ОС
+	h.close() -- закрываем файл
 
-	CheckAutoUpdate()
+	CheckAutoUpdate() -- проверяем авто обновления
 
-	EventHandler()
+	EventHandler() -- начинаем ждать действий пользователя с мышью, клавиатурой, монитором и т. д.
 end
 
-local checkAutoUpdateArg = nil
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Автообновления и удобное форматирование строк для этого
+
+local checkAutoUpdateArg = nil -- временный аргумент для обновления
 
 function CheckAutoUpdate(arg)
-	checkAutoUpdateArg = arg
-	if http then
-		http.request('https://api.github.com/repos/ma3rxofficial/ComputerCraft/releases#')
-	elseif arg then
-		ButtonDialogueWindow:Initialise("HTTP Not Enabled!", "Turn on the HTTP API to update.", 'Ok', nil, function(success)end):Show()
+	checkAutoUpdateArg = arg -- дублируем аргумент в другую переменную
+	if http then -- если включен HTTP
+		http.request('https://api.github.com/repos/ma3rxofficial/ComputerCraft/releases#') -- отправляем запрос прямиком на мой гитхаб для проверки новых версий
+	elseif arg then -- если уж не включен HTTP...
+		ButtonDialogueWindow:Initialise("HTTP Not Enabled!", "Turn on the HTTP API to update.", 'Ok', nil, function(success)end):Show() -- то говорим, что для обновления он должен быть включен. а хули нет?
 	end
 end
 
+-- Функция сплитирования строк
 function split(str, sep)
         local sep, fields = sep or ":", {}
         local pattern = string.format("([^%s]+)", sep)
         str:gsub(pattern, function(c) fields[#fields+1] = c end)
-        return fields
+        return fields -- результат отдаем короч. что мне еще сказать?
 end
 
+-- Получаем адекватный вид версии в виде массива из чисел благодаря нашей функции split. К примеру версия 1.4.3, тогда эта функция вернет массив с числами 1, 4 и 3
 function GetSematicVersion(tag)
 	tag = tag:sub(2)
 	return split(tag, '.')
 end
 
---Returns true if the FIRST version is NEWER
+--Возвращает true, если первая указанная версия новее второй указанной версии
 function SematicVersionIsNewer(version, otherVersion)
-	return false
+	return false -- недописано
 end
 
+-- Недописанная функция. По задумке выскакивает окошко о том, что обновление провалено нахуй!
 function AutoUpdateFail(event, url, data)
 	return false
 end
 
+-- Функция, которая отправляет запрос на репозиторий с ОС
 function AutoUpdateRespose(event, url, data)
-	if url ~= 'https://api.github.com/repos/ma3rxofficial/ComputerCraft/releases#' then
+	if url ~= 'https://api.github.com/repos/ma3rxofficial/ComputerCraft/releases#' then -- шлем пользователя нахуй, если URL не нашего репозитория, защита от подделок
 		return false
 	end
-	os.loadAPI('/System/JSON')
-	if not data then
+	
+	os.loadAPI('/System/JSON') -- подгружаем АПИ
+	if not data then -- если результат мы от гитхаба не получили, то опять же - шлем пользователя нахуй
 		return
 	end
-	local releases = JSON.decode(data.readAll())
-	os.unloadAPI('JSON')
-	if not releases or not releases[1] or not releases[1].tag_name then
-		if checkAutoUpdateArg then
+	
+	local releases = JSON.decode(data.readAll()) -- получаем все релизы нашей ОС с гитхаба используя ранее загруженное АПИ JSON
+	os.unloadAPI('JSON') -- разгружаем JSON, он нам больше не понадобится
+	if not releases or not releases[1] or not releases[1].tag_name then -- если все плохо
+		if checkAutoUpdateArg then -- не получилось подключиться к гитхабу
 			ButtonDialogueWindow:Initialise("Update Check Failed", "Check your connection and try again.", 'Ok', nil, function(success)end):Show()
 		end
 		return
 	end
 	local latestReleaseTag = releases[1].tag_name
 
-	if SpeedOSVersion == latestReleaseTag then
-		--using latest version
+	if SpeedOSVersion == latestReleaseTag then -- если у пользователя последняя версия ОС(по версии с гитхаба)
 		if checkAutoUpdateArg then
 			ButtonDialogueWindow:Initialise("Up to date!", "SpeedOS is up to date!", 'Ok', nil, function(success)end):Show()
 		end
 		return
-	elseif SematicVersionIsNewer(GetSematicVersion(latestReleaseTag), GetSematicVersion(SpeedOSVersion)) then
-		--using old version
+	elseif SematicVersionIsNewer(GetSematicVersion(latestReleaseTag), GetSematicVersion(SpeedOSVersion)) then -- в противном случае - запускаем отдельную прогу для обновления
 		LaunchProgram('/System/Programs/Update.program/startup', {}, 'Update SpeedOS')
 	end
 end
 
-function LaunchProgram(path, args, title)
-	Log.i("Starting program: "..title.." ("..path..")")
-	Animation.RectangleSize(Drawing.Screen.Width/2, Drawing.Screen.Height/2, 1, 1, Drawing.Screen.Width, Drawing.Screen.Height, colours.grey, 0.3, function()
-		if Current.Menu then
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Функции для работы с программами. На этом этапе многозадачность системы проявляет себя 
+
+function LaunchProgram(path, args, title) -- функция запуска программки
+	Log.i("Starting program: "..title.." ("..path..")") -- логируем, какую программу и из какой папки мы запустили
+	Animation.RectangleSize(Drawing.Screen.Width/2, Drawing.Screen.Height/2, 1, 1, Drawing.Screen.Width, Drawing.Screen.Height, colours.grey, 0.3, function() -- отображаем анимацию
+		if Current.Menu then -- своеобрзаный костыль, для защиты от дублирования ОС в программе в самой ОС, а потом в этой ОС в программе запускаем опять ОС в программе и т.д. короче - ебучая рекурсия!
 			Current.Menu:Close()
 		end
-		Program:Initialise(shell, path, title, args)
-		Overlay.UpdateButtons()
-		Overlay:Draw()
-		Current.Program.AppRedirect:Draw()
+			
+		Program:Initialise(shell, path, title, args) -- инициализация самой программки
+		Overlay.UpdateButtons() -- обновляем верхний тулбар
+		Overlay:Draw() -- и перерисовываем его
+		Current.Program.AppRedirect:Draw() -- рисуем переключение на приложение
 	end)
 
-	Log.i("Program "..title.." ("..path..") finished")
+	Log.i("Program "..title.." ("..path..") finished") -- пишем о том, что прога закрылась или завершилась принудительно, что из этого - мне похуй.
 
-	os.loadAPI("System/API/Settings")
-	if Settings.GetValues('AutoAPIUnloading')['AutoAPIUnloading'] == true then
+	-- Функция автовыгрузки АПИ. Может привести к крашам и визуальным багам, так что это сугубо бета-версия. Я предупредил.
+	os.loadAPI("System/API/Settings") -- подгружаем АПИ. да, выглядет как говно, обращение к АПИ на середине кода, но мне не привыкать. а что было в SpeedOS 1.3?
+	
+	if Settings.GetValues('AutoAPIUnloading')['AutoAPIUnloading'] == true then -- собственно, если включена автовыгрузка АПИ
 
-		for _, apishnik in pairs(fs.list("SpeedAPI")) do
+		for _, apishnik in pairs(fs.list("SpeedAPI")) do -- то мы их поочередно выгружаем
 			os.unloadAPI("SpeedAPI/"..apishnik)
-			Log.i("API "..apishnik.." unloaded (Auto API Unloading)")
+			Log.i("API "..apishnik.." unloaded (Auto API Unloading)") -- и логируем это в лог-файл
 		end
 	end
 
 end
 
+-- Функция для переключения на другую программу
 function SwitchToProgram(newProgram, currentIndex, newIndex)
-	--Log.i("Switching to program "..newProgram["Title"].." from "..Current.Program["Title"])
-	if Current.Program then
-		local direction = 1
-		if newIndex < currentIndex then
-			direction = -1
+	if Current.Program then -- если у нас открыта другая программа
+		local direction = 1 -- первоначальное направление, в которое будет производиться наша анимашка
+		if newIndex < currentIndex then -- проверяем, какой номер у вкладки открытой и открывающейся программки
+			direction = -1 -- но если номер открывающейся программы меньше индекса открытой программы, то направление изменяется в обратную сторону
 		end
-		Animation.SwipeProgram(Current.Program, newProgram, direction)
-	else
-		Animation.RectangleSize(Drawing.Screen.Width/2, Drawing.Screen.Height/2, 1, 1, Drawing.Screen.Width, Drawing.Screen.Height, colours.grey, 0.3, function()
+		Animation.SwipeProgram(Current.Program, newProgram, direction) -- ну и сама анимашка с полученным нами направлением
+	else -- если же ситуация происходит абсолютно наоборот
+		Animation.RectangleSize(Drawing.Screen.Width/2, Drawing.Screen.Height/2, 1, 1, Drawing.Screen.Width, Drawing.Screen.Height, colours.grey, 0.3, function() -- то просто рисуем открытие новой проги
 			Current.Program = newProgram
 			Overlay.UpdateButtons()
 			Current.Program.AppRedirect:Draw()
@@ -170,38 +206,39 @@ function SwitchToProgram(newProgram, currentIndex, newIndex)
 	end
 end
 
+-- Функция обновления часов и рабочего стола
 function Update(event, timer)
-	if timer == updateTimer then
-		if needsDisplay then
-			Draw()
+	if timer == updateTimer then -- обновление содержимого во вкладке с программой 
+		if needsDisplay then -- если прям невтерпеж отображать, да и это уже сам пользователь указал
+			Draw() -- то все же рисуем, похуй на вас!
 		end
-	elseif timer == clockTimer then
-		clockTimer = os.startTimer(0.8333333)
-		Draw()
-	elseif timer == desktopRefreshTimer then
-		Desktop:RefreshFiles()
-		desktopRefreshTimer = os.startTimer(3)
-	elseif timer == Desktop.desktopDragOverTimer then
-		Desktop.DragOverUpdate()
-	else
-		Animation.HandleTimer(timer)
-		for i, program in ipairs(Current.Programs) do
+	elseif timer == clockTimer then -- если мы обновляем часики
+		clockTimer = os.startTimer(0.8333333) -- то мы их обновляем, иди нахуй! (новая задержка)
+		Draw() -- рисуем
+	elseif timer == desktopRefreshTimer then -- обновление раб. стола
+		Desktop:RefreshFiles() -- обновляем файлы
+		desktopRefreshTimer = os.startTimer(3) -- и снова задержка до обновления
+	elseif timer == Desktop.desktopDragOverTimer then -- если пользователь перемещает файлы, то рисуем их поверх задержки обновления файлов на десктопе
+		Desktop.DragOverUpdate() -- это и делаем, михалыч!
+	else -- если уж нет
+		Animation.HandleTimer(timer) -- новая задержка анимашки
+		for i, program in ipairs(Current.Programs) do -- и в каждой проге вызываем задержку, типо мульизадачность!
 			for i2, _timer in ipairs(program.Timers) do
 				if _timer == timer then
-					program:QueueEvent('timer', timer)
+					program:QueueEvent('timer', timer) -- сам вызов
 				end
 			end
 		end
 	end
 end
 
-
+-- Отрисовка программы
 function Draw()
-	if not Current.CanDraw then
+	if not Current.CanDraw then -- если в проге указано, что ее не рисовать, то, соответственно, не рисуем и идем пить чай
 		return
 	end
 
-	drawing = true
+	drawing = true -- ДАААА МЫ РИСУЕМ!!!!
 	Current.Clicks = {}
 
 	if Current.Program then
@@ -351,7 +388,7 @@ function NeedsDisplay()
 	needsDisplay = true
 end
 
---I'll try to impliment this sometime later. The main issue is that it doesn't resume the program, especially if it relies on sleep()
+-----------------------------------------------------------------------------------------------------------------------------------
 
 function Sleep()
 	Drawing.Clear(colours.black)
@@ -371,6 +408,7 @@ function Sleep()
 	clockTimer = os.startTimer(0.8333333)
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
 
 function Shutdown(restart)
 	local success = true
@@ -413,6 +451,8 @@ function Restart()
 	Shutdown(true)
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function EventRegister(event, func)
 	if not Events[event] then
 		Events[event] = {}
@@ -451,3 +491,5 @@ function EventHandler()
 		end
 	end
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
