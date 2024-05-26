@@ -1,6 +1,6 @@
 --[[
-	Main boot script, that
-	loads OS.
+	The main boot script that runs the OS and verifies 
+	compliance with the OS requirements.
 ]]
 
 os.loadAPI('SpeedAPI/SpeedText')
