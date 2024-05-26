@@ -1,11 +1,14 @@
-io = SpeedOS.IO
+if SpeedOS then
+  SpeedOS.ToolBarColour = colours.white
+  SpeedOS.ToolBarTextColour = colours.black
+end
 
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
-pathToConfig = "System/Parrot.settings"
+local pathToConfig = "System/Parrot.settings"
 
 if not peripheral.find("modem") then
   windows.clearScreen(colors.white)

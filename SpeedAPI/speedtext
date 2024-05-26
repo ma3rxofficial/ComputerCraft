@@ -191,9 +191,13 @@ end
 return day,month,year
 end
 
-function time_and_date() 
+function time_and_date(burzhui) 
 	den, mesyac, god = getDate()
-	return tostring(den).."/"..tostring(mesyac).."/"..tostring(god).." "..time()
+	if not burzhui then
+		return tostring(den).."/"..tostring(mesyac).."/"..tostring(god).." "..time(false)
+	else
+		return tostring(den).."/"..tostring(mesyac).."/"..tostring(god).." "..time(true)
+	end
 end
 
 --Get date without time--

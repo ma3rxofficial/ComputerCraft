@@ -152,6 +152,7 @@ This essentially allows the programs to run sandboxed. For example, os.shutdown 
 			end,
 			LoadFile = loadfile,
 			LoadString = loadstring,
+			Base = _G,
 			IO = io
 		}
 	end
