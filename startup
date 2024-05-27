@@ -4,6 +4,7 @@
 	стабильной работы всей ОС и ее программ.
 ]]
 
+-----------------------------------------------------------------------------------------------------------------------------------
 -- Загрузка набора самых базовых библиотек для первичной загрузки
 
 os.loadAPI('SpeedAPI/SpeedText')
@@ -18,7 +19,6 @@ local isModified = false -- переменная, отвечающая за ин
 local tAPIsLoading = {} -- хранилище подгружаемых API
 
 -----------------------------------------------------------------------------------------------------------------------------------
-
 -- Удаление временных загрузочных файлов
 
 for _, value in pairs(install_files) do
@@ -36,7 +36,6 @@ versionData = versionFile.readAll()
 versionFile.close()
 
 -----------------------------------------------------------------------------------------------------------------------------------
-
 -- Начальная инициализация логирования действий с ОС пользователем
 
 Log.Initialise()
@@ -46,7 +45,6 @@ Log.i(os.version()) -- Версия CraftOS(стандартной ОС)
 Log.i('SpeedOS Version: '..versionData) -- Версия SpeedOS
 
 -----------------------------------------------------------------------------------------------------------------------------------
-
 -- Проверка на модифицированность системных файлов, используется переменная isModified
 
 if http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup') then
@@ -66,7 +64,6 @@ if http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/
 end
 
 -- Проверка аналогична предыдущей, только файл System/main.lua
-
 if http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua') then
 	code = http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua').readAll()
 	code2 = fs.open('System/main.lua', 'r')
