@@ -322,7 +322,7 @@ elseif LoadingScreen() then
 			else
 				Log.i('Running all startup scripts...')
 
-				for _, script in pairs(fs.list('System/.autorun')) do -- ну и запускаем скрипты по очереди
+				for _, script in pairs(fs.list('System/.autorun')) do -- ну и запускаем скрипты поочереди
 					Log.i('Running script '..script..'...')
 					shell.run('System/.autorun/'..script)
 					Log.i('Startup script '..script..' finished!')
