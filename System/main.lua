@@ -5,7 +5,6 @@
 ]]
 
 -----------------------------------------------------------------------------------------------------------------------------------
-
 -- Всякие нужные переменные
 
 SpeedOSVersion = '...' -- версия ОС. для начала мы ее не определили
@@ -24,7 +23,6 @@ local clockTimer = nil
 local desktopRefreshTimer = nil
 
 -----------------------------------------------------------------------------------------------------------------------------------
-
 -- Основные таблицы с программами и их содержимым. Здесь задаются параметры последней открытой программы(пока это просто заготовка)
 
 Current = {
@@ -479,41 +477,44 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Хуйня с эвентами. Нечего больше сказать.
 
+-- "Зарегистрировать эвент". По сути, эта функция добавляет в массив эвент и функцию, которая будет производиться, когда этот эвент произойдет
 function EventRegister(event, func)
-	if not Events[event] then
-		Events[event] = {}
+	if not Events[event] then -- если переменная массива пустая
+		Events[event] = {} -- создаем ее
 	end
 
-	table.insert(Events[event], func)
+	table.insert(Events[event], func) -- добавляем в массив эвент и функцию
 end
 
+-- Регистратор эвентов для всех программ в реальном времени
 function ProgramEventHandle()
-	for i, program in ipairs(Current.Programs) do
-		for i, event in ipairs(program.EventQueue) do
-			program:Resume(unpack(event))
+	for i, program in ipairs(Current.Programs) do -- перебираем все открытые программы
+		for i, event in ipairs(program.EventQueue) do -- перебираем всю очередь эвентов одной программы
+			program:Resume(unpack(event)) -- отдаем поочередно каждый эвент в программу
 		end
-		program.EventQueue = {}
+		program.EventQueue = {} -- очищаем очередь эвентов
 	end
 end
 
+-- Регистратор эвентов всего компьютера в реальном времени
 function EventHandler()
-	while true do
-		ProgramEventHandle()
-		local event = { coroutine.yield() }
-		local hasFound = false
+	while true do -- бесконечный цикл
+		ProgramEventHandle() -- запускаем регистратор эвентов программ
+		local event = { coroutine.yield() } -- переменная эвента в виде массива
+		local hasFound = false -- найден ли эвент
 
-		if Events[event[1]] then
-			for i, e in ipairs(Events[event[1]]) do
-				if e(event[1], event[2], event[3], event[4], event[5]) == false then
-					hasFound = false
-				else
-					hasFound = true
+		if Events[event[1]] then -- перебираем эвенты
+			for i, e in ipairs(Events[event[1]]) do -- перебираем эвенты вновь
+				if e(event[1], event[2], event[3], event[4], event[5]) == false then -- если в массиве с эвентом есть переменные, но они пустые, или их нет
+					hasFound = false -- это значит, что эвент - пустой массив, т.е. он не найден
+				else -- в противном случае(информация об эвенте найдена)
+					hasFound = true -- это значит, что ивент найден
 				end
 			end
 		end
 
-		if not hasFound and Current.Program then
-			Current.Program:QueueEvent(unpack(event))
+		if not hasFound and Current.Program then -- если никаких эвентов не было найдено и есть хоть одна открытая программа
+			Current.Program:QueueEvent(unpack(event)) -- то пускаем ей эвенты
 		end
 	end
 end
