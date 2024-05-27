@@ -1,30 +1,3 @@
---[[
-tArgs = {...}
-
-Settings = {
-	InstallPath = '/', --Where the program's installed, don't always asume root (if it's run under something like SpeedOS)
-	Hidden = true, --Whether or not the update is hidden (doesn't write to the screen), useful for background updates
-	GitHubUsername = 'ma3rxofficial', --Your GitHub username as it appears in the URL
-	GitHubRepoName = 'ComputerCraft', --The repo name as it appears in the URL
-	DownloadReleases = true, --If true it will download the latest release, otherwise it will download the files as they currently appear
-	UpdateFunction = nil, --Sent when something happens (file downloaded etc.)
-	TotalBytes = 20, --Do not change this value (especially programatically)!
-	DownloadedBytes = 0, --Do not change this value (especially programatically)!
-	Status = 'Finding latest version',
-}
-
-if tArgs[1] and type(tArgs[1]) == 'function' then
-	Settings.UpdateFunction = tArgs[1]
-end
-
-
-for i = 1, 20 do
-	sleep(0.1)
-	Settings.DownloadedBytes = Settings.DownloadedBytes + 1
-	Settings.UpdateFunction()
-end	
-]]--
-
 tArgs = {...}
 
 Settings = {
