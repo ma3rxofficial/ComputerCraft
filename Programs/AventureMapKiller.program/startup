@@ -1,49 +1,72 @@
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Меняем цвет тулбара
+
 if SpeedOS then
   SpeedOS.ToolBarColour = colours.black
   SpeedOS.ToolBarTextColour = colours.white
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Подгрузка АПИ
+
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 
-windows.clearScreen(colors.white)
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Визуальщина. Очищаем экран
 
-local p = nil
-local w, h = term.getSize()
+windows.clearScreen(colors.white) -- собсна, очистка экрана в БЕЛЫЙ
 
-if not peripheral.find("adventure map interface", true) then
-  windows.error("You need Adventure map!")  
-  SpeedOS.Close()
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Константы
 
-else
-  p = peripheral.wrap(peripheral.find("adventure map interface", true))
+local p = nil -- переменная нашей периферии Adventure Map Interface(пока пустая, заполним ее, если найдем)
+local w, h = term.getSize() -- размер экрана
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Проверка, есть ли у нас подключенный Adventure Map Interface
+
+if not peripheral.find("adventure map interface", true) then -- в случае, если нет
+  windows.error("You need Adventure map!")   -- выводим ошибку
+  SpeedOS.Close() -- и закрываем программу
+
+else -- если найдено
+  p = peripheral.wrap(peripheral.find("adventure map interface", true)) -- то заносим в нашу переменную этот Adventure Map Interfacr
 end
 
-w = p.getWorld(0)
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Этап запуска. Спрашиваем имя жертвы, чистка экрана и т. д.
 
-windows.clearScreen(colors.gray)
-SpeedText.cPrint("Enter victim's username here:", 6)
-selected_player = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
+windows.clearScreen(colors.gray) -- чистим экран в серый цвет
+SpeedText.cPrint("Enter victim's username here:", 6) -- печатаем центрированный текст на 6 пикселей ниже от начала экрана
+selected_player = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false) -- выводим симпатичное поле ввода светло-серого цвета
 
-if not selected_player then
-  SpeedOS.Close()
-end
+if not selected_player then -- если пользователь ничего не ввел
+  SpeedOS.Close() -- закрываем программу
+end -- хуй
 
-function checkIsPlayerOnline(user)
-  for _, value in pairs(p.getPlayerUsernames()) do
-      if value == user then
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Проверка, есть ли пользователь в сети
+
+-- Простейшая функция проверки пользователя на наличие в списке игроков сервера в текущий момент
+function checkIsPlayerOnline(user) 
+  for _, value in pairs(p.getPlayerUsernames()) do -- перебираем элементы массива подключенных к серверу игроков
+      if value == user then -- если какой-то элемент идентичен указанному параметру user, то возвращаем, что действительно, такой пользователь есть в сети
         return true
       end
   end
 
-  return false
+  return false -- если ничего не нашли - шлем пользователя нахуй
 end
 
-if not checkIsPlayerOnline(selected_player) then
-  windows.error("Player not found!")
-  SpeedOS.Close()
+if not checkIsPlayerOnline(selected_player) then -- если пользователь не в сети
+  windows.error("Player not found!") -- шлем нахуй
+  SpeedOS.Close() -- шлем нахуй x2(закрываем прогу)
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Мега-говнокод. Ну типо прожка чето там делает. Можно без комментариев? xD
 
 windows.clearScreen(colors.black)
 
@@ -63,26 +86,35 @@ print("Victim name: "..tostring(selected_player))
 term.setTextColor(colors.white)
 sleep(5)
 
--- REAL LOCATING!
-pl = p.getPlayerByName(tostring(selected_player))
-ent = pl.asEntity()
-x, y, z = ent.getPosition()
+-----------------------------------------------------------------------------------------------------------------------------------
+-- А вот тут уже получше - ищем местонахождение пользователя по 3 координатным осям, вы их, есстественно, знаете: X, Y, Z.
+
+pl = p.getPlayerByName(tostring(selected_player)) -- заносим информацию о выбранной жертве в переменную pl
+ent = pl.asEntity() -- заносим информацию о жертве в формате сущности
+x, y, z = ent.getPosition() -- получаем позицию по x, y, z
+
+-- И печатаем все полученное говно
 print("X: "..tostring(x))
 sleep(1)
 print("Y: "..tostring(y))
 sleep(1)
 print("Z: "..tostring(z))
 sleep(2)
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Опять говнокод...
+
 term.setTextColor(colors.lime)
 print("Player "..tostring(selected_player).." is located!")
 term.setTextColor(colors.red)
 term.setCursorPos(1, 11)
 SpeedText.slowPrint("KILLING...")
-pl.damage(1020) --real killing!
+pl.damage(1020) -- Наносим жертве урон в 510 сердечек, фактически его убивая.
 sleep(3)
 
+-- Предупреждение, в случае, если жертва в творческом режиме(креативе)
 if pl.getGamemode() == 1 then
-  print("PLAYER IS IN CREATIVE MODE. CAN'T KILL!")
+  print("PLAYER IS IN CREATIVE MODE. CAN'T KILL!") -- информируем об этом пользователя
   sleep(5)
   SpeedOS.Close()
 end
@@ -90,6 +122,7 @@ end
 term.setTextColor(colors.red)
 print("KILLED!")
 
+-- Мега-функция ожидания эвента. Потом уберу
 while true do
   event, key = os.pullEvent()
   if event == "key" or event == "mouse_click" or event == "mouse_drag" then
