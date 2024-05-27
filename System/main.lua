@@ -514,7 +514,7 @@ function EventHandler()
 		end
 
 		if not hasFound and Current.Program then -- если никаких эвентов не было найдено и есть хоть одна открытая программа
-			Current.Program:QueueEvent(unpack(event)) -- то пускаем ей эвенты
+			Current.Program:QueueEvent(unpack(event)) -- то пускаем ей новые эвенты
 		end
 	end
 end
