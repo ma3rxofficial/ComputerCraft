@@ -122,10 +122,7 @@ end
 term.setTextColor(colors.red)
 print("KILLED!")
 
--- Мега-функция ожидания эвента. Потом уберу
-while true do
-  event, key = os.pullEvent()
-  if event == "key" or event == "mouse_click" or event == "mouse_drag" then
-    SpeedOS.Close()
-  end
-end
+-- Мега-функция ожидания эвента.
+SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
+SpeedOS.Close()
+
