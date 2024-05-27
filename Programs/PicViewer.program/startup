@@ -4,12 +4,11 @@ if SpeedOS then
 end
 
 if SpeedOS then
-  SpeedOS.LoadAPI("System/API/Drawing")
-  SpeedOS.LoadAPI("SpeedAPI/SpeedText")
   SpeedOS.LoadAPI("SpeedAPI/windows")
   SpeedOS.LoadAPI("SpeedAPI/peripheral")
   SpeedOS.LoadAPI("SpeedAPI/lddfm")
   SpeedOS.LoadAPI("SpeedAPI/config")
+  SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 end
 
 fs = SpeedOS.FS
@@ -17,9 +16,7 @@ fs = SpeedOS.FS
 local args = {...}
 local use_monitor = false
 local monitor
-
-pathToConfig = "System/PicViewer.settings"
-local monitor_scale = tonumber(config.read(pathToConfig, "monitor scale"))
+local monitor_scale
 
 if peripheral.find("monitor", true) then
   windows.clearScreen(colors.white)
@@ -27,9 +24,10 @@ if peripheral.find("monitor", true) then
   button = windows.select({"Detected monitor!"},{"Do you want to use it?"},{"No",colors.gray,colors.white}, {"Yes",colors.orange,colors.white})
   if button == "Yes" then
     use_monitor = true
-
     monitor = peripheral.wrap(peripheral.find("monitor", true))   
     windows.clearScreen(colors.black) 
+
+    monitor_scale = tonumber(config.read("System/PicViewer.settings", "monitor scale"))
 
   else
     use_monitor = false  
@@ -57,7 +55,7 @@ end
 function draw_picture(filename)
   windows.clearScreen(colors.white)
 
-  if use_monitor and not windows.getFileFormat(filename) == ".nft" then
+  if use_monitor then
     monitor.setTextScale(monitor_scale)
     monitor.clear()
 
@@ -74,7 +72,6 @@ function draw_picture(filename)
   end
   
   if windows.getFileFormat(filename) == ".nft" then
-    windows.clearScreen(colors.gray)
     Drawing.DrawImage(1, 1, Drawing.LoadImage(filename), 164, 81)
     Drawing.DrawBuffer()
   else
