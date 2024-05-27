@@ -14,24 +14,18 @@ os.loadAPI("Resources/3D/graphics")
 os.loadAPI("Resources/3D/vertex")
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Базовые константы
 
-local w,h = term.getSize()
-
---[[
-3D Render
-Display objects (and eventually textures) mapped in 3D coordinate space
-Makes use of the graphics API for projection and matrix API for transformations
-		
-By Nitrogen Fingers
-Feel free to play with this code as much as you want!
-]]--
-
+local w,h = term.getSize() -- получаем размер экрана
 local verbose = false
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Сами модели, между которыми вы можете переключаться
 
 camera = {
 	position = vertex.new(0,0,0);
 	rX = 0; rY = 0; rZ = 0;
-}
+} -- камера. да, это модель, а че?
 
 tetrahedron = {
 	name = "Tetrahedron";
@@ -55,7 +49,7 @@ tetrahedron = {
 	scale = 1;
 	translate = vector.new(0,0,5);
 	rotateX = 0; rotateY = 0; rotateZ = 0;
-}
+} -- тетраэдр
 
 cube = {
 	name = "Cube";
@@ -90,7 +84,7 @@ cube = {
 	scale = 1;
 	translate = vector.new(0,0,5);
 	rotateX = 0; rotateY = 0; rotateZ = 0;
-}
+} -- куб
 
 hourglass = {
 	name = "Hourglass";
@@ -131,9 +125,9 @@ hourglass = {
 	scale = 1;
 	translate = vector.new(0,0,5);
 	rotateX = 0; rotateY = 0; rotateZ = 0;
-}
-
---This thing is a freaking monster.
+} -- песочные часы
+ 
+-- ЭТО ПИЗДЕЦ
 tiefighter = {
 	name = "TIE Fighter";
 	vertices = {
@@ -227,31 +221,41 @@ tiefighter = {
 	scale = 1;
 	translate = vector.new(0,0,5);
 	rotateX = 0; rotateY = 0; rotateZ = 0;
-}
+} -- космический истребитель
 
-local modelList = {tetrahedron, cube, hourglass, tiefighter}
-local msel = 1
-local wireframe = false
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Константы рендера
 
-function minPoint(v1,v2)
+local modelList = {tetrahedron, cube, hourglass, tiefighter} -- массив всех моделек
+local msel = 1 -- модель, которая открыта при запуске игры
+local wireframe = false -- отображать линии полигончиков(каркас)
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Функции расчетов
+
+function minPoint(v1, v2)
 	if v1.y < v2.y then return v1
 	elseif v1.y > v2.y then return v2
 	elseif v1.x < v2.x then return v1
 	else return v2 end
 end
-function maxPoint(v1,v2)
+
+function maxPoint(v1, v2)
 	if v1.y < v2.y then return v2
 	elseif v1.y > v2.y then return v1
 	elseif v1.x < v2.x then return v2
 	else return v1 end
 end
 
---Ordering has to be precisely as follows
-	-- V1 is the topmost and leftmost of the three vertices
-	-- V3 is the bottommost and rightmost
-	-- V2 is what's left over
---It's very inefficient but it saves computational expense in the longrun.
---NOTE: We now also floor the 
+-- Порядок должен быть точно таким, как показано ниже
+	-- V1 - это самая верхняя и самая левая из трех вершин
+	-- V3 - самая нижняя и самая правая
+	-- V2 - то, шо осталось
+-- Это очень неэффективно, но в долгосрочной перспективе экономит вычислительные затраты.
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Функция рисования точек
+
 function orderPoints(v1,v2,v3)
 	local mini = minPoint(minPoint(v1,v2),v3)
 	mini.x =  math.floor(mini.x) mini.y = math.floor(mini.y)
@@ -265,7 +269,7 @@ function orderPoints(v1,v2,v3)
 	else return mini,v3,maxi end
 end
 
---The 'illusion of depth' function, really just for debugging and demo work.
+-- Функция "иллюзия глубины" на самом деле предназначена только для отладки и демонстрационной работы.
 function drawPointVert(vert)
 	term.setCursorPos(vert.x, vert.y)
 	if vert.dist < 5 then
@@ -284,12 +288,20 @@ function drawPointVert(vert)
 	end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Визуальные функции
+
+-- Функция очистки экрана в черный цвет
 function clearScreen()
-	term.setBackgroundColour(colours.black)
-	term.clear()
+	term.setBackgroundColour(colours.black) -- ставим черный цвет
+	term.clear() -- очищаем терминал
 end
 
---Breshman's Implementation
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Функции рисования моделей
+
+-- Спизженная функция рисования одной линии
 local function drawLine(x1, y1, x2, y2, colour)
 	x1 = math.floor(x1)
 	x2 = math.floor(x2)
@@ -327,7 +339,7 @@ local function drawLine(x1, y1, x2, y2, colour)
 	end
 end
 
---Assuming that V1 is the top of the triangle, and V2 is the left edge of the bottom
+-- Предполагая, что V1 - это вершина треугольника, а V2 - левый край нижнего
 function fillBottomTriangle(v1, v2, v3, colour)
 	local leftSlope = (v2.x - v1.x) / (v2.y - v1.y)
 	local rightSlope = (v3.x - v1.x) / (v3.y - v1.y)
@@ -342,7 +354,7 @@ function fillBottomTriangle(v1, v2, v3, colour)
 	end
 end
 
---Assuming V3 is bottom of triangle and V1 is left edge of top
+-- Предполагая, что V3 - это нижняя часть треугольника, а V1 - левый край вершины
 function fillTopTriangle(v1, v2, v3, colour)
 	local leftSlope = (v1.x - v3.x) / (v1.y - v3.y)
 	local rightSlope = (v2.x - v3.x) / (v2.y - v3.y)
@@ -357,8 +369,11 @@ function fillTopTriangle(v1, v2, v3, colour)
 	end
 end
 
---Fills a flat triangle. It uses top and bottom, individually if the triangle is flat on one
---side, otherwise splits the triangle in two and draws both sides.
+--[[ Заполняет плоский треугольник. При этом используются верхняя и нижняя части по отдельности, 
+     если треугольник плоский с одной стороны, в противном случае треугольник 
+     делится надвое и рисуются обе стороны.
+--]]
+
 function fillFlatTriangle(p1, p2, p3, colour)
 	local v1,v2,v3 = orderPoints(p1,p2,p3)
 	term.setCursorPos(1,h-1)
@@ -376,15 +391,17 @@ function fillFlatTriangle(p1, p2, p3, colour)
 	end
 end
 
---Draws our 3D models. Right now it only draws the vertices, not faces or lines.
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Функция самого рендера модельки(в параметры выдается массив с полигонами модели)
+
 function renderModel(model)
 	world = {}
-	--Note: Matrix operations, especially rotations are expensive. Rather than re-creating
-	--matrices over and over as done here, it is much safer to initialize them at the start
-	--of a program, and only update when necessary. If something is beyond the view frustrum,
-	--don't render it!!!
+	--[[Примечание: Операции с матрицей, особенно ротации, требуют больших затрат. Вместо того, чтобы снова и снова создавать
+	матрицы, как это делается здесь, гораздо безопаснее инициализировать их в начале
+	программы и обновлять только при необходимости. Если что-то находится за пределами усеченного поля зрения, 
+	не визуализируйте это!!!]]--
 
-	--Creating the world space
+	-- Создание 3D-пространства
 	global = matrix.identity()
 	global = global * matrix.createScale(model.scale)
 	global = global * matrix.createRotationX(model.rotateX)
@@ -400,41 +417,42 @@ function renderModel(model)
 			math.pow(camera.position.y - world[i].y, 2) + 
 			math.pow(camera.position.z - world[i].z, 2)))
 	end
-	--Converting from world space to camera space
+
+	-- Преобразование из общего 3D-пространства в пространство камеры
 	global = matrix.identity()
 	global = global * matrix.createTranslation(-camera.position)
 	global = global * matrix.createRotationX(-camera.rX)
 
 	for i,vertex in ipairs(world) do
-		--Applying camera space
+		-- Использование пространства камеры
 		world[i] = global:apply(vertex)
 	end
 
 	local projection = {}
-	--Project camera space into screen space
+	-- Перенос пространство камеры в пространство экрана
 	for i=1,#world do 
 		local col = world[i].color
 		projection[i] = graphics.project(world[i])
-		--Here until we sort out depth buffering
+		-- Здесь до тех пор, пока мы не разберемся с буферизацией глубины
 		projection[i].color = model.colors[i]
 		projection[i].dist = distances[i]
 	end
 
-	--For culling, we first find the direction the camera is facing.
+	-- Для отбора мы сначала определяем направление, в котором находится камера.
 	local cameraFacing = (matrix.createRotationX(camera.rX)):apply(vector.new(0, 0, -1))
 
-	--Preparing our faces to be drawn, depth buffering and so on...
+	-- Подготовка наших лиц к рисованию, буферизация глубины и т. д....
 	local faces = {}
 	for i=1,#model.indices, 3 do
-		--We compute the face normal first (a line perpendicular to that face)
+		-- Сначала мы вычисляем нормаль к грани (линию, перпендикулярную этой грани).
 		local v1,v2,v3 = world[model.indices[i]], world[model.indices[i+1]], world[model.indices[i+2]]
-		--An average centre (less precise but more reliable than a centroid for right-angles)
+		-- Средний центр (менее точный, но более надежный, чем центроид для прямых углов)
 		local vc = vector.new((v1.x + v2.x + v3.x)/3, (v1.y + v2.y + v3.y)/3, (v1.z + v2.z + v3.z)/3)
 
-		--Only opposite facing triangles are draw- we cull same-side triangles
-		--(who knew it would be that easy?)
+		-- Рисуются только треугольники, обращенные друг к другу противоположными сторонами - мы отбираем треугольники с одинаковыми сторонами
+		-- (кто бы мог подумать, что это будет так просто?)
 		local faceNormal = (v1 - v2):cross(v3 - v2)
-		--We don't draw faces behind the camera either
+		-- Мы тоже не рисуем грани за камерой
 		local cameraPF =  matrix.createRotationX(camera.rX):apply(vector.new(0,0,-1)) + camera.position
 
 		if faceNormal:dot(cameraFacing) <= 0 and cameraPF:dot(vc) < 0 then
@@ -442,7 +460,7 @@ function renderModel(model)
 				p1 = projection[model.indices[i]],
 				p2 = projection[model.indices[i+1]],
 				p3 = projection[model.indices[i+2]],
-				--Placeholder. Will be coloured by a different system soon...
+				-- Заполнитель. Скоро они будут сделаны по другой системе...
 				colour = model.colors[model.indices[i]],
 				distance = (camera.position - vc):length()
 			}
@@ -457,10 +475,9 @@ function renderModel(model)
 
 	term.clear()
 
-	--Preparing to draw faces
+	-- Подготовка к рисованию граней
 	for _,face in pairs(faces) do
 		fillFlatTriangle(face.p1, face.p2, face.p3, face.colour)
-		--This isn't very expensive, and it removes artefacts around edges, which is nice.
 		local linecol = model.wfcol or face.colour
 		drawLine(face.p1.x, face.p1.y, face.p2.x, face.p2.y, linecol)
 		drawLine(face.p2.x, face.p2.y, face.p3.x, face.p3.y, linecol)
@@ -468,7 +485,9 @@ function renderModel(model)
 	end
 end
 
---Again, a little demo function to show off the operations
+-----------------------------------------------------------------------------------------------------------------------------------
+
+-- Визуальная функция, рисует управление
 function printHUD()
 	term.setBackgroundColour(colours.black)
 	term.setTextColour(colours.white)
@@ -478,7 +497,7 @@ function printHUD()
 	term.write("Arrows move, WSAD QE rotate, RF scale. Enter quits.")
 end
 
---Lets you play with the 3D model a bit.
+-- Ну шо, летс гоу
 function run()
 	quit = false
 	repeat
@@ -487,7 +506,7 @@ function run()
 		printHUD()
 		local _,key = os.pullEvent("key")
 	
-		--Arrow keys translate
+		-- Стрелки - топ управление!!!!!! :):)):):)):):):)ДЩПДПалвыдапдзваьоидждфыфыввн5435паиви ываы
 		if key == keys.up then
 			modelList[msel].translate.z = modelList[msel].translate.z + 1
 		elseif key == keys.down then
@@ -509,24 +528,26 @@ function run()
 			modelList[msel].rotateY = modelList[msel].rotateY + (math.pi/16)
 		elseif key == keys.d then
 			modelList[msel].rotateY = modelList[msel].rotateY - (math.pi/16)
-		--RF scales
 		elseif key == keys.r then
 			modelList[msel].scale = modelList[msel].scale * 1.1
 		elseif key == keys.f then
 			modelList[msel].scale = modelList[msel].scale / 1.1
 		elseif key == keys.v then
 			verbose = not verbose
-		-- +/- switches model
 		elseif key == keys.minus then
 			msel = msel-1 if msel == 0 then msel = #modelList end
 		elseif key == keys.equals then
 			msel = (msel % #modelList) + 1
-		--Enter quits
 		elseif key == keys.enter then
 			SpeedOS.Close()
 		end
 	until quit == true
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Сам запуск собсн
+
 run()
 term.clear()
+
+-----------------------------------------------------------------------------------------------------------------------------------
