@@ -145,7 +145,7 @@ function Download()
     fs.makeDir(dcat)
     
     print("Select filename:")
-    dfile=read()
+    dfile = read()
     
     dpath=fs.combine(dcat,dfile)
     
