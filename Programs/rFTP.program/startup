@@ -69,7 +69,8 @@ function SendMenu()
   print("Estabilishing connection")
   rednet.send(dest,"@rftpstart")
   rednet.send(dest,sfile)
-  print("Waiting for device #"..dest.." to respond... [Press SPACE to cancel]")
+  print("Waiting for device #"..dest.." to respond...")
+  print("Click anywhere to cancel")
   Waiting()
 end
 
