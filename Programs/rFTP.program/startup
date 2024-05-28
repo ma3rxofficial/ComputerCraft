@@ -6,6 +6,8 @@ end
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
+SpeedOS.LoadAPI("SpeedAPI/lddfm")
+SpeedOS.LoadAPI("SpeedAPI/peripheral")
 
 fs = SpeedOS.FS
 
