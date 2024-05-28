@@ -157,7 +157,7 @@ function Download()
         if (p1==20) or (p1==21) then
             Download()
         else
-            rednet.send(p1,"@rftpdeny")
+            rednet.send(p1, "@rftpdeny")
             Menu()
         end
     end
