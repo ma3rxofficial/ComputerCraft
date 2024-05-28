@@ -110,7 +110,8 @@ function DownMenu()
     Clear()
     print("Your ID: "..id)
     print()
-    print("Waiting for an oncoming file... [Press SPACE to cancel]")
+    print("Waiting for an oncoming file...")
+    print("Click anywhere to cancel")
     local event,p1,p2
     repeat
     event,p1,p2=os.pullEvent()
