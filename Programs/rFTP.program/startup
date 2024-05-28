@@ -139,7 +139,7 @@ function Download()
     dcat = read()
 
     if dcat == "" then
-        dcat="/"
+        dcat = "/"
     end
 
     fs.makeDir(dcat)
