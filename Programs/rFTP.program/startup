@@ -87,7 +87,7 @@ function Waiting()
         os.pullEvent("key")
         Menu()
         break
-    elseif event == "key" or event == "mouse_click" or event == "mouse_drag" then
+    elseif event == "mouse_click" or event == "mouse_drag" then
         Menu()
         break
     end
