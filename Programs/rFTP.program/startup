@@ -55,6 +55,8 @@ function SendMenu()
     colors.lightGray, colors.white, colors.white, false))
   until dest
 
+  sfile = lddfm.makeMenu()
+
   if fs.exists(sfile)==true then
     windows.clearScreen(colors.black)
     term.setTextColor(colors.white)
