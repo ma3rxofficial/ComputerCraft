@@ -108,8 +108,6 @@ end
     
 function DownMenu()
     Clear()
-    --SpeedOS.ToolBarColour = colours.black
-    --SpeedOS.ToolBarTextColour = colours.white
     print("Your ID: "..id)
     print()
     print("Waiting for an oncoming file... [Press SPACE to cancel]")
