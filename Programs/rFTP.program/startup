@@ -149,7 +149,7 @@ function Download()
     
     dpath=fs.combine(dcat,dfile)
     
-    if fs.exists(dpath)==false then
+    if fs.exists(dpath) == false then
         SaveFile()
     else
         print("File already exists! Try again? [y/N]")
