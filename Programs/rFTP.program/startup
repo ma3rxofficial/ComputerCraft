@@ -136,7 +136,7 @@ function Download()
     Clear()
     
     print("Select the folder: [default: /]")
-    dcat=read()
+    dcat = read()
     if dcat=="" then
         dcat="/"
     end
