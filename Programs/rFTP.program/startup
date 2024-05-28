@@ -115,7 +115,7 @@ function DownMenu()
     local event,p1,p2
     repeat
     event,p1,p2 = os.pullEvent()
-    until event == "rednet_message" and p2=="@rftpstart" or ((event=="key") and (p1==57))
+    until event == "rednet_message" and p2=="@rftpstart" or event=="key" and (p1==57))
     if (event=="rednet_message") and (p2=="@rftpstart") then
         sender = p1
         event,p1,p2 = os.pullEvent("rednet_message")
