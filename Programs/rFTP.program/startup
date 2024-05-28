@@ -102,7 +102,7 @@ function Transfer()
     rednet.send(dest, "@rftpend")
     plik.close()
     print("Transfer complete! Any key to continue...")
-    SpeedText.waitForEvent({"key", "mouse_click", "mouse_scroll"})
+    SpeedText.waitForEvent({"key", "mouse_click", "mouse_drag"})
     Menu()
 end
     
