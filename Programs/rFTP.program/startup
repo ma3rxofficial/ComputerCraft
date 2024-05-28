@@ -173,9 +173,10 @@ function SaveFile()
     if p2 ~= "@rftpend" then
         plik.write(p2)
     end
+
     os.startTimer(10)
     while true do
-        local event,p1,p2=os.pullEvent()
+        local event, p1, p2=os.pullEvent()
         if event=="rednet_message" and p1==sender and p2=="@rftpend" then
             write("Transfer completed! ")
             break
