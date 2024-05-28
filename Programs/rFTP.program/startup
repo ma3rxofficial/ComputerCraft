@@ -102,7 +102,7 @@ function Transfer()
     rednet.send(dest, "@rftpend")
     plik.close()
     print("Transfer complete! Any key to continue...")
-    os.pullEvent("key")
+    SpeedText.waitForEvent({"key"})
     Menu()
 end
     
