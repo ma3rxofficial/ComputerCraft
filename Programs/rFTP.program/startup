@@ -114,7 +114,7 @@ function DownMenu()
     print("Click anywhere to cancel")
     local event,p1,p2
     repeat
-    event,p1,p2 = os.pullEvent()
+    event, p1, p2 = os.pullEvent()
     until event == "rednet_message" and p2 == "@rftpstart" or event == "mouse_click" or event == "mouse_drag"
     if event == "rednet_message" and p2 == "@rftpstart" then
         sender = p1
