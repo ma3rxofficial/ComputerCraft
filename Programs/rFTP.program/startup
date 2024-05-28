@@ -180,7 +180,7 @@ function SaveFile()
         if event == "rednet_message" and p1 == sender and p2 == "@rftpend" then
             write("Transfer completed! ")
             break
-        elseif event=="timer" then
+        elseif event == "timer" then
             write("Timed out! Check the file. ")
             break
         end
