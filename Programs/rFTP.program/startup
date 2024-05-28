@@ -96,7 +96,7 @@ end
 
 function Transfer()
     local plik = fs.open(sfile,"r")
-    local tresc=plik.readAll()
+    local tresc = plik.readAll()
     rednet.send(dest,tresc)
     sleep(0.3)
     rednet.send(dest,"@rftpend")
