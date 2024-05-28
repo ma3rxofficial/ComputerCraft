@@ -164,7 +164,7 @@ function Download()
 end
 
 function SaveFile()
-    local plik=fs.open(dpath,"w")
+    local plik = fs.open(dpath,"w")
     rednet.send(p1,"@rftpagree")
     local event,p1,p2
     repeat
