@@ -189,7 +189,7 @@ function SaveFile()
     plik.close()
     print("Any key to continue...")
 
-    SpeedText.waitForEvent({"key", "mouse_click"})
+    SpeedText.waitForEvent({"key", "mouse_click", "mouse_drag"})
     Menu()
 end
 
