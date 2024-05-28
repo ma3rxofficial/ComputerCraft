@@ -127,7 +127,7 @@ function DownMenu()
             rednet.send(p1, "@rftpdeny")
             Menu()
         end
-    elseif event == "mouse_click" then
+    elseif event == "mouse_click" or event == "mouse_drag" then
         Menu()
     end
 end
