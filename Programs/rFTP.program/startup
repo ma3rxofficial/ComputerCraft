@@ -117,7 +117,7 @@ function DownMenu()
     event,p1,p2=os.pullEvent()
     until ((event=="rednet_message") and (p2=="@rftpstart")) or ((event=="key") and (p1==57))
     if (event=="rednet_message") and (p2=="@rftpstart") then
-        sender=p1
+        sender = p1
         event,p1,p2 = os.pullEvent("rednet_message")
         print("Device "..p1.." want to send you a file: "..p2..". Accept? [y/N]")
         local event,pp1 = os.pullEvent("key")
