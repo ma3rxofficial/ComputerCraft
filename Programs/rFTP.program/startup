@@ -147,7 +147,7 @@ function Download()
     print("Select filename:")
     dfile = read()
     
-    dpath=fs.combine(dcat,dfile)
+    dpath = fs.combine(dcat,dfile)
     
     if fs.exists(dpath) == false then
         SaveFile()
