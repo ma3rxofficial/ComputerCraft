@@ -170,7 +170,7 @@ function SaveFile()
     repeat
         event, p1, p2 = os.pullEvent("rednet_message")
     until p1 == sender
-    if p2~="@rftpend" then
+    if p2 ~= "@rftpend" then
         plik.write(p2)
     end
     os.startTimer(10)
