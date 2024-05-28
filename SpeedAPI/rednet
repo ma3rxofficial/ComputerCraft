@@ -409,3 +409,5 @@ function receive( nTimeout )
 		end
 	end
 end
+
+run()
