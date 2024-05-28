@@ -121,7 +121,7 @@ function DownMenu()
         event,p1,p2=os.pullEvent("rednet_message")
         print("Device "..p1.." want to send you a file: "..p2..". Accept? [y/N]")
         local event,pp1=os.pullEvent("key")
-        if (pp1==20) or pp1==21 then
+        if pp1==20 or pp1==21 then
             Download()
         else
             rednet.send(p1, "@rftpdeny")
