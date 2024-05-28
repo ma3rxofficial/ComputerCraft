@@ -153,7 +153,7 @@ function Download()
         SaveFile()
     else
         print("File already exists! Try again? [y/N]")
-        local event,p1=os.pullEvent("key")
+        local event, p1=os.pullEvent("key")
         if p1 == 20 or p1 == 21 then
             Download()
         else
