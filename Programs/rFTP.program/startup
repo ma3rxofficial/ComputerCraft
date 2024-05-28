@@ -82,7 +82,7 @@ function Waiting()
         sleep(1)
         Transfer()
         break
-    elseif event=="rednet_message" and (p2=="@rftpdeny") then
+    elseif event=="rednet_message" and p2=="@rftpdeny" then
         print("#"..dest.." denied connection! Any key to continue...")
         os.pullEvent("key")
         Menu()
