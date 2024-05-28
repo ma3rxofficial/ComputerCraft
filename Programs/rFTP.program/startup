@@ -124,7 +124,7 @@ function DownMenu()
         if (pp1==20) or (pp1==21) then
             Download()
         else
-            rednet.send(p1,"@rftpdeny")
+            rednet.send(p1, "@rftpdeny")
             Menu()
         end
     elseif event == "key" and p1 == 57 then
