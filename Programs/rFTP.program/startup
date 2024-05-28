@@ -127,7 +127,7 @@ function DownMenu()
             rednet.send(p1,"@rftpdeny")
             Menu()
         end
-    elseif event=="key" and p1 == 57 then
+    elseif event == "key" and p1 == 57 then
         Menu()
     end
 end
