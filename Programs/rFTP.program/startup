@@ -177,7 +177,7 @@ function SaveFile()
     os.startTimer(10)
     while true do
         local event, p1, p2 = os.pullEvent()
-        if event == "rednet_message" and p1 == sender and p2 == "@rftpend" then
+        if event == "rednet_message" and p1 == sender and p2 == "@rftpend" then 
             write("Transfer completed! ")
             break
         elseif event=="timer" then
