@@ -61,8 +61,6 @@ function SendMenu()
     windows.clearScreen(colors.black)
     term.setTextColor(colors.white)
     term.setCursorPos(1,1)
-    --SpeedOS.ToolBarColour = colours.black
-    --SpeedOS.ToolBarTextColour = colours.white
   else
     windows.error("File not found!")
     Menu()
