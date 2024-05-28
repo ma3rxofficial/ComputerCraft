@@ -185,10 +185,11 @@ function SaveFile()
             break
         end
     end
-    
+
     plik.close()
     print("Any key to continue...")
-    os.pullEvent("key")
+
+    SpeedText.waitForEvent({"key"})
     Menu()
 end
 
