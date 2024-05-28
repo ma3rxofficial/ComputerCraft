@@ -137,9 +137,11 @@ function Download()
     
     print("Select the folder: [default: /]")
     dcat = read()
+    
     if dcat=="" then
         dcat="/"
     end
+
     fs.makeDir(dcat)
     
     print("Select filename:")
