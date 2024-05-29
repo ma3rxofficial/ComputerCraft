@@ -82,6 +82,9 @@ function SendMenu()
   Waiting()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
+
 function Waiting()
   while true do
     local event, p1, p2 = os.pullEvent()
@@ -103,6 +106,8 @@ function Waiting()
   end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function Transfer()
     local plik = fs.open(sfile, "r")
     local tresc = plik.readAll()
@@ -114,7 +119,9 @@ function Transfer()
     SpeedText.waitForEvent({"key", "mouse_click", "mouse_drag"})
     Menu()
 end
-    
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function DownMenu()
     Clear()
     print("Your ID: "..id)
@@ -140,6 +147,8 @@ function DownMenu()
         Menu()
     end
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
 
 function Download()
     Clear()
@@ -172,6 +181,8 @@ function Download()
     end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function SaveFile()
     local plik = fs.open(dpath, "w")
     rednet.send(p1, "@rftpagree")
@@ -202,10 +213,15 @@ function SaveFile()
     Menu()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function Clear()
   windows.clearScreen(colors.black)
   term.setTextColor(colors.white)
   term.setCursorPos(1, 1)
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
 
 Main()
