@@ -12,6 +12,7 @@ end
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Печатаем прост
 
 print("Press any key to start the Pizdec")
 print("Place a redstone torch next to right side of redstone")
