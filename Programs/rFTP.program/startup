@@ -29,7 +29,7 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Переменные
 local ver = "1.1"
-local id=os.getComputerID()
+local id= os.getComputerID()
 local wifi
 local dest
 local sfile
