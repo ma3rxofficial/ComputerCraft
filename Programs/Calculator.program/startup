@@ -171,7 +171,9 @@ local function objGen()
     end
 return _objects
 end
- 
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
 local function draw()
     term.setBackgroundColor(colors.black)
     term.clear()
@@ -192,6 +194,7 @@ local function draw()
         write(obj.label)
     end
 end
+
 --draw border and screen
 local function display()
     term.setBackgroundColor(colors.black)
@@ -232,7 +235,9 @@ local function calculate(eq)
         return vRes
     end
 end
- 
+
+----------------------------------------------------------------------------------------------------------------------------------- 
+
 -- function loop
 local equation = {"(", ")"}
 local result = "0"
