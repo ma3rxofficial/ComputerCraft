@@ -45,6 +45,8 @@ function Main()
   Menu()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function Menu()
   windows.clearScreen(colors.white)
   pressedButton = windows.select({"Hello!"},{"Welcome to FTP!"},{"Send",colors.lightGray,colors.black},{"Receive",colors.lightBlue,colors.black})
