@@ -58,7 +58,7 @@ function Menu()
   pressedButton = windows.select({"Hello!"},{"Welcome to FTP!"},{"Send",colors.lightGray,colors.black},{"Receive",colors.lightBlue,colors.black})
 
   local p1 = pressedButton
-    if p1=="Send" then
+    if p1 =="Send" then
           SendMenu()
     elseif p1=="Receive" then
           DownMenu()
