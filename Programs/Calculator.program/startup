@@ -9,7 +9,9 @@ end
  
 local tX, tY = term.getSize()
 local calc = {}
- 
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
 --equation states
 calc.mode = false
 calc.inverse = false
@@ -27,6 +29,8 @@ calc.cos = false
 calc.cosh = false
 calc.log = false
 calc.pos = false
+
+-----------------------------------------------------------------------------------------------------------------------------------
  
 -- characters
 local charList = {
