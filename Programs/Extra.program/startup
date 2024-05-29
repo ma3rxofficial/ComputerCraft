@@ -24,6 +24,7 @@ SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
 print("Pizdec started!")
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Код краша
 
 while true do
   if rs.getInput("back", false) then
