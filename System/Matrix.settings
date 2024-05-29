@@ -5,3 +5,4 @@ max sources per tick=5
 source weight=0
 green weight=8
 gray weight=2
+monitor scale=0.5
