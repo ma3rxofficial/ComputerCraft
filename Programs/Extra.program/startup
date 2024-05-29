@@ -18,6 +18,7 @@ print("Press any key to start the Pizdec")
 print("Place a redstone torch next to right side of redstone")
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Ожидаем эвенты клика или нажатия на кнопку
 
 SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
 print("Pizdec started!")
