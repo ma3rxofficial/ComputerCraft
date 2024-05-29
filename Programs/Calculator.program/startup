@@ -109,17 +109,17 @@ local labels = {
 }
  
 -----------------------------------------------------------------------------------------------------------------------------------
- 
--- generate the objects
+-- Функции для генерирации всяких объектов
+
 local function objGen()
-    local _objects = {}
-    local width = 9
-    for i=1, #labels do
+    local _objects = {} -- будущий массив с нашими объектиками
+    local width = 9 -- ШЫРИНА
+    for i=1, #labels do -- запускаем цикл, который останавливается при достижении кол-ва элементов в массиве с надписями(labels)
         table.insert(_objects, {
             x = (((i - 1)%width + 1)*5) - 1;
             y = (math.ceil(i/width) * 3) + 4;
             label = labels[i];
-            -- make operators different colors
+            -- Делаем операторы разных цветов
             color =
             i == 1 and colors.blue or
             i == 5 and colors.red or
@@ -146,7 +146,7 @@ local function objGen()
             i == 35 and colors.white or
             i == 36 and colors.white or
             colors.lightGray;
-            -- controls the highlight colors for operators
+            -- Контролирует цвета выделения для операторов
             back =
             i == 6 and
                 calc.sin == true and colors.red or
@@ -175,21 +175,22 @@ return _objects
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Визуальные функции
 
 local function draw()
     term.setBackgroundColor(colors.black)
     term.clear()
-    local objects = objGen()
-    for i=1, #objects do
+    local objects = objGen() -- получаем массив с объектами
+    for i=1, #objects do -- блнсуыддыф
         local obj = objects[i]
         term.setTextColor(colors.gray)
         term.setBackgroundColor(colors.black)
-        --draw the grid
+        -- Рисуем сетку с кнопочками
         for num, line in pairs{'+---+','|   |','+---+'} do
             term.setCursorPos(obj.x, obj.y + num - 1)
             write(line)
         end
-        --draw the button text and colors
+        -- Рисуем надписи в кнопках
         term.setCursorPos(obj.x+1, obj.y+1)
         term.setTextColor(obj.color)
         term.setBackgroundColor(obj.back)
