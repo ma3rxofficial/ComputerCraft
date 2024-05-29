@@ -1,9 +1,11 @@
---[[Smart Calculator by Cranium]]--
+-----------------------------------------------------------------------------------------------------------------------------------
 
 if SpeedOS then
  SpeedOS.ToolBarColour = colours.black
  SpeedOS.ToolBarTextColour = colours.white
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
  
 local tX, tY = term.getSize()
 local calc = {}
