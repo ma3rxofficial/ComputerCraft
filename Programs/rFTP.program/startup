@@ -60,7 +60,7 @@ function Menu()
   local p1 = pressedButton
     if p1 == "Send" then
           SendMenu()
-    elseif p1 =="Receive" then
+    elseif p1 == "Receive" then
           DownMenu()
     end
 end
