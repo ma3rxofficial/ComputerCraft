@@ -198,7 +198,7 @@ local function draw()
     end
 end
 
---draw border and screen
+-- Рисуем рамку
 local function display()
     term.setBackgroundColor(colors.black)
     term.setTextColor(colors.gray)
@@ -218,7 +218,8 @@ local function display()
         write(string.rep(" ", tX - 6))
     end
 end
---run the equation passed by the user.
+
+-- Считаем выражение, заданное пользаватилем
 local function calculate(eq)
     if table.concat(eq) == "()" then
         eq = {"0"}
