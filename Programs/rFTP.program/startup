@@ -20,6 +20,7 @@ SpeedOS.LoadAPI("SpeedAPI/lddfm")
 fs = SpeedOS.FS
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Нахождение модема
 
 if peripheral.find("modem") then
   rednet.open(peripheral.find("modem"))
