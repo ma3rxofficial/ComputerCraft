@@ -70,7 +70,7 @@ function SendMenu()
 
   sfile = lddfm.makeMenu()
 
-  if fs.exists(sfile) == true then
+  if fs.exists(sfile) then
     windows.clearScreen(colors.black)
     term.setTextColor(colors.white)
     term.setCursorPos(1,1)
