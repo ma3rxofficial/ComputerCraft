@@ -26,7 +26,7 @@ local maxSourcesPerTick = tonumber(config.read(pathToConfig, "max sources per ti
 local sourceWeight = tonumber(config.read(pathToConfig, "source weight")) --Affects the chance that no sources will be generated
 local greenWeight = tonumber(config.read(pathToConfig, "green weight")) --Threshhold out of 10 that determines when characters will switch from lime to green
 local grayWeight = tonumber(config.read(pathToConfig, "gray weight")) --Same as about, but from green to gray
-local monScale = tonumber(config.read(pathToConfig, "monitor scale"))
+local monScale = tonumber(config.read(pathToConfig, "monitor scale")) --hy
 
 function getMonitors()
 	local monitors = {}
