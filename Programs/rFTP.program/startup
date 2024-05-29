@@ -97,7 +97,7 @@ function Waiting()
         break
     elseif event == "rednet_message" and p2 == "@rftpdeny" then
         print("#"..dest.." denied connection! Any key to continue...")
-        SpeedOS.waitForEvent({"key", "mouse_click"})
+        SpeedOS.waitForEvent({"key", "mouse_click", "mouse_drag"})
         Menu()
         break
     elseif event == "mouse_click" or event == "mouse_drag" then
