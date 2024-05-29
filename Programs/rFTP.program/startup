@@ -1,14 +1,22 @@
+-----------------------------------------------------------------------------------------------------------------------------------
+
 if SpeedOS then
   SpeedOS.ToolBarColour = colours.grey
   SpeedOS.ToolBarTextColour = colours.white
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
 
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/lddfm")
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 fs = SpeedOS.FS
+
+-----------------------------------------------------------------------------------------------------------------------------------
 
 if peripheral.find("modem") then
   rednet.open(peripheral.find("modem"))
@@ -18,7 +26,8 @@ else
   SpeedOS.Close()
 end
 
--- GLOBAL VARIABLES --
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Переменные
 local ver="1.1"
 local id=os.getComputerID()
 local wifi
@@ -28,7 +37,8 @@ local sender
 local dcat
 local dfile
 local dpath
--- /GLOBAL VARIABLES --
+
+-----------------------------------------------------------------------------------------------------------------------------------
 
 function Main()
   Clear()
