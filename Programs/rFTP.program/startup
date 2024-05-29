@@ -88,7 +88,7 @@ end
 
 function Waiting()
   while true do
-    local event,p1,p2=os.pullEvent()
+    local event,p1,p2 = os.pullEvent()
 
     if event == "rednet_message" and p2 == "@rftpagree" then
         print("File accepted by #"..dest.."!")
