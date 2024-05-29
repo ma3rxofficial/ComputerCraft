@@ -70,14 +70,6 @@ function SendMenu()
 
   sfile = lddfm.makeMenu()
 
-  if fs.exists(sfile) then
-    windows.clearScreen(colors.black)
-    term.setTextColor(colors.white)
-    term.setCursorPos(1,1)
-  else
-    windows.error("File not found!")
-    Menu()
-  end
   print("Estabilishing connection")
   rednet.send(dest,"@rftpstart")
   rednet.send(dest,sfile)
