@@ -1,7 +1,11 @@
+-----------------------------------------------------------------------------------------------------------------------------------
+
 if SpeedOS then
 	SpeedOS.ToolBarColour = colours.white
 	SpeedOS.ToolBarTextColour = colours.black
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
 
 SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/bsod")
