@@ -30,6 +30,7 @@ local pathToConfig = "System/Chat.settings"
 local serverID = tonumber(config.read(pathToConfig, "server ID"))
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Базовые константы программы
 
 local w, h = term.getSize()
 local input = ""
