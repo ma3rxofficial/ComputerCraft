@@ -60,8 +60,8 @@ local cBlink = ""
 local cBlinkT = 0
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Настройки цвета разных элементов интерфейса
 
--- Visual Config
 bgColor = SpeedText.stringToColor(config.read(pathToConfig, "background color"))
 chatMsgColor = SpeedText.stringToColor(config.read(pathToConfig, "chat color"))
 barsColor = SpeedText.stringToColor(config.read(pathToConfig, "bars color"))
