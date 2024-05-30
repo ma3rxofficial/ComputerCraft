@@ -38,6 +38,7 @@ local name = ""
 local s_rednet = peripheral.find("modem")
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- 
 
 windows.clearScreen(colors.black)
 SpeedText.cPrint("Enter your nickname in chat:", 6)
