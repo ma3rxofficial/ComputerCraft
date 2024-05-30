@@ -51,6 +51,8 @@ local tChatHistory = {}
 local cBlink = ""
 local cBlinkT = 0
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 -- Visual Config
 bgColor = SpeedText.stringToColor(config.read(pathToConfig, "background color"))
 chatMsgColor = SpeedText.stringToColor(config.read(pathToConfig, "chat color"))
