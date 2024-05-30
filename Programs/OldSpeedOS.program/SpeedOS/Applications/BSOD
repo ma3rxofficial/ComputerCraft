@@ -1,6 +1,0 @@
-os.loadAPI("/SpeedAPI/bsod")
-
-bsod.bsod("It's just a test!")
-
-term.setBackgroundColor(colors.black)
-term.setTextColor(colors.white)
