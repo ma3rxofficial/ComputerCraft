@@ -59,6 +59,8 @@ chatMsgColor = SpeedText.stringToColor(config.read(pathToConfig, "chat color"))
 barsColor = SpeedText.stringToColor(config.read(pathToConfig, "bars color"))
 textInputColor = SpeedText.stringToColor(config.read(pathToConfig, "text input color"))
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 for i=1,w - 1 do
 	sBars = sBars.."-"
 end
