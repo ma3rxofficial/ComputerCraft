@@ -20,13 +20,15 @@ if not peripheral.find("modem") then
 	SpeedOS.Close()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 pathToConfig = "System/Chat.settings"
+local serverID = tonumber(config.read(pathToConfig, "server ID"))
 
 local w, h = term.getSize()
 local input = ""
 local name = ""
 local s_rednet = peripheral.find("modem")
-local serverID = tonumber(config.read(pathToConfig, "server ID"))
 
 windows.clearScreen(colors.black)
 SpeedText.cPrint("Enter your nickname in chat:", 6)
