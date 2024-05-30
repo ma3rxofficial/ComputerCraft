@@ -24,6 +24,7 @@ if not peripheral.find("modem") then
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Конфиг всякий короч
 
 local pathToConfig = "System/Chat.settings"
 local serverID = tonumber(config.read(pathToConfig, "server ID"))
