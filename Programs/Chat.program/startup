@@ -68,6 +68,7 @@ barsColor = SpeedText.stringToColor(config.read(pathToConfig, "bars color"))
 textInputColor = SpeedText.stringToColor(config.read(pathToConfig, "text input color"))
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- А вот иди нахуй! Не скажу, что это!
 
 for i=1, w - 1 do
 	sBars = sBars.."-"
