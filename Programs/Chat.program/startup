@@ -158,6 +158,8 @@ function receive()
 	end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 parallel.waitForAny( draw, key, receive )
 
 InfoLog("-- Disconnected --")
