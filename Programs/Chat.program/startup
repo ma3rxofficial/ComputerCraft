@@ -38,7 +38,7 @@ local name = ""
 local s_rednet = peripheral.find("modem")
 
 -----------------------------------------------------------------------------------------------------------------------------------
--- 
+-- Отрисовываем окошко для ввода внутричатового имени пользователя
 
 windows.clearScreen(colors.black)
 SpeedText.cPrint("Enter your nickname in chat:", 6)
