@@ -81,6 +81,7 @@ day, month, year = SpeedText.getDate()
 logPath = "Resources/Chat_"..tostring(year).."-"..tostring(month).."-"..tostring(day).."_"..SpeedText.extraFormatTime(os.time(), ".", true)..".log"
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Функция для логирования указанного в параметре
 
 function InfoLog(msg)
     log_file = fs.open(logPath, "a")
@@ -90,6 +91,7 @@ function InfoLog(msg)
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Функция для отрисовки всего интерфейса
 
 function draw()
 	while true do
