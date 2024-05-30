@@ -38,6 +38,8 @@ windows.clearScreen(colors.black)
 SpeedText.cPrint("Enter your nickname in chat:", 6)
 name = SpeedText.centerRead(51 - 13, "", colors.gray, colors.white, colors.lightGray, false, nil, nil)
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 rednet.open( s_rednet )
 rednet.send( serverID, "#CONNECT#"..name )
 local cInput = ""
