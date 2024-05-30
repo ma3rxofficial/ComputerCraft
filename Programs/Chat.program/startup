@@ -75,6 +75,7 @@ for i=1, w - 1 do
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Получаем имя файла для нашего лога
 
 day, month, year = SpeedText.getDate()
 logPath = "Resources/Chat_"..tostring(year).."-"..tostring(month).."-"..tostring(day).."_"..SpeedText.extraFormatTime(os.time(), ".", true)..".log"
