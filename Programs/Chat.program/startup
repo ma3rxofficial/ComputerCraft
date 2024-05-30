@@ -69,7 +69,7 @@ textInputColor = SpeedText.stringToColor(config.read(pathToConfig, "text input c
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
-for i=1,w - 1 do
+for i=1, w - 1 do
 	sBars = sBars.."-"
 end
 
