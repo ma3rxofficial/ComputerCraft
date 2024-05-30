@@ -15,6 +15,7 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/config")
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Предупреждение о том, что программа требует беспроводной модем
 
 if not peripheral.find("modem") then
 	windows.clearScreen(colors.cyan)
