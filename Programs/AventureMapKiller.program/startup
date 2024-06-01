@@ -32,7 +32,7 @@ if not peripheral.find("adventure map interface", true) then -- в случае,
   SpeedOS.Close() -- и закрываем программу
 
 else -- если найдено
-  p = peripheral.wrap(peripheral.find("adventure map interface", true)) -- то заносим в нашу переменную этот Adventure Map Interfacr
+  p = peripheral.wrap(peripheral.find("adventure map interface", true)) -- то заносим в нашу переменную этот Adventure Map Interface
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
