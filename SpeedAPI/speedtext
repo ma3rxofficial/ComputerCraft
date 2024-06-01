@@ -591,6 +591,15 @@ function checkForelement(element, array)
 	return false
 end
 
+--Get index of element in array--
+function getIndex(tablica, entry)
+  for i, v in pairs(tablica) do
+    if v == entry then
+      return i
+    end
+  end
+end
+
 --Serialize support, ebat!--
 local function serializeImpl( t, tTracking )	
 	local sType = type(t)
