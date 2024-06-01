@@ -12,6 +12,7 @@ backgroundColor = colors.black
 textColor = colors.white
 
 --------------------------------------------------------------------------------
+-- Оптимизированные стандартные функции
 
 setBackgroundColor = function(color)
   if backgroundColor ~= color then
