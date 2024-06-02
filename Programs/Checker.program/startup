@@ -85,7 +85,7 @@ function GetProgram(selected)
   end  
 
   if not fs.exists(selected) then -- если до этого у нас не было файла по указанному пути
-    windows.clearScreen(colors.white)
+    windows.clearScreen(colors.white) -- ОЧИСТКА СПЕРМОЙ
     button = windows.select({"New program!"},{"Do you want to download it?"},{"No",colors.lightGray,colors.black}, {"Yes",colors.lightBlue,colors.black})
 
     if button == "No" then
