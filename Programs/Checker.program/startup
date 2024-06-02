@@ -103,7 +103,7 @@ function GetProgram(selected)
     windows.clearScreen(colors.gray) -- очищаем экран в серый цвет, шобы не втыкали
     term.setTextColor(colors.white) -- делаем цвет распечатываемого текста белым
 
-    SpeedText.cPrint("Downloaded!", 8)
+    SpeedText.cPrint("Downloaded!", 8) -- СКАЧАЛАСЬ НИД ФОР СПИД УРЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯ
     sleep(0.5)
 
     term.setTextColor(colors.lightGray)
