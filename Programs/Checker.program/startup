@@ -149,7 +149,7 @@ function GetProgram(selected)
   windows.clearScreen(colors.gray) -- чистим экран в серый цвет
   term.setTextColor(colors.white) -- ставим белый цвет текста
 
-  SpeedText.cPrint("Updating...")
+  SpeedText.cPrint("Updating...") -- найдено обновление windows 10!
 
   sleep(0.5)
   term.setTextColor(colors.lightGray)
