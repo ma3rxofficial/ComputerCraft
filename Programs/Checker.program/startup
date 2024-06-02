@@ -120,7 +120,7 @@ function GetProgram(selected)
 
   if result_data == selected_file_data then -- если содержимое файла из репозитория и файла из компьютера пользователя совпадают
     windows.clearScreen(colors.gray) -- ЧИСТИМ ЭКРАН В СЕРЫЙ ЦВЕТ
-    term.setTextColor(colors.white)
+    term.setTextColor(colors.white) -- ставим цвет текста в белый
 
     selected_file.close()
 
