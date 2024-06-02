@@ -19,6 +19,8 @@ fs = SpeedOS.FS
 local w, h = term.getSize()
 local githubRepo = "https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/"
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function FancyError()
   term.setBackgroundColor(colours.grey)
   term.setTextColor(colours.white)
