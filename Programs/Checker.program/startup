@@ -169,6 +169,7 @@ function GetProgram(selected)
 
   SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
 
+  -- Очищаем процессы, относящиеся к файлам на компьютере пользователя
   selected_file.close()
   selected_file2.close()
 
