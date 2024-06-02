@@ -118,7 +118,7 @@ function GetProgram(selected)
   selected_file = fs.open(selected, "r") -- открываем файл по указанному пути для чтения
   selected_file_data = selected_file.readAll() -- содержимое файла на компьютере пользователя
 
-  if result_data == selected_file_data then
+  if result_data == selected_file_data then -- если содержимое файла из репозитория и файла из компьютера пользователя совпадают
     windows.clearScreen(colors.gray)
     term.setTextColor(colors.white)
 
