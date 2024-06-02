@@ -106,6 +106,7 @@ function GetProgram(selected)
     SpeedText.cPrint("Downloaded!", 8) -- СКАЧАЛАСЬ НИД ФОР СПИД УРЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯ
     sleep(0.5)
 
+    -- Ну дальше мои комментарии абсолютно излишни, просто послушайте
     term.setTextColor(colors.lightGray)
     SpeedText.cPrint("Click anywhere to continue...", 9)
 
