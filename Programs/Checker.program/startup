@@ -79,7 +79,7 @@ function GetProgram(selected)
   result = http.get(githubRepo..selected) -- отправляем запрос на репозиторий Github по указанному пути
   
   if not result then -- в случае, если нормально отправить запрос по указанному пути не удалось
-    windows.clearScreen(colors.cyan)
+    windows.clearScreen(colors.cyan) -- очищаем экран в бирюзовый цвет
     windows.error("Program not exists!")
     Menu()
   end  
