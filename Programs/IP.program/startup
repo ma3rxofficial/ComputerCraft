@@ -13,6 +13,7 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Изменяем цвета интерфейса программы
 
 windows.clearScreen(colors.gray)
 term.setTextColor(colors.white)
