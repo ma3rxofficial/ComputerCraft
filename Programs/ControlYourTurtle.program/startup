@@ -89,7 +89,7 @@ while true do
   end
   
   io.write(">> ") -- ну типа афармление, ебать красиво!
-  command = io.read()
+  command = io.read() -- обычная функция ввода, ничего тут особенного
 
   rednet.send(tonumber(turtle_id), command)
 
