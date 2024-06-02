@@ -98,7 +98,7 @@ function GetProgram(selected)
 
     file_New = fs.open(selected, "w") -- открываем файл для записи
     file_New.write(result.readAll()) -- вписываем туда хуйню интернетовскую
-    file_New.close()
+    file_New.close() -- закрываем файл
 
     windows.clearScreen(colors.gray)
     term.setTextColor(colors.white)
