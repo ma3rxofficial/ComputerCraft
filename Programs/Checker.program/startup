@@ -97,7 +97,7 @@ function GetProgram(selected)
     fs.delete(selected)
 
     file_New = fs.open(selected, "w") -- открываем файл для записи
-    file_New.write(result.readAll())
+    file_New.write(result.readAll()) -- вписываем туда хуйню интернетовскую
     file_New.close()
 
     windows.clearScreen(colors.gray)
