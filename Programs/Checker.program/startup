@@ -122,7 +122,7 @@ function GetProgram(selected)
     windows.clearScreen(colors.gray) -- ЧИСТИМ ЭКРАН В СЕРЫЙ ЦВЕТ
     term.setTextColor(colors.white) -- ставим цвет текста в белый
 
-    selected_file.close()
+    selected_file.close() -- закрываем файл, чтобы потом не выскакивала ошибка, шо типо файл занят другим процессом обновите виндоус чтобы починить
 
     SpeedText.cPrint("Program is up to date!")
 
