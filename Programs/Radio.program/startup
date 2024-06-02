@@ -4,6 +4,7 @@ if SpeedOS then
 end
 
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/SpeedGUI")
 SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/context")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
@@ -60,14 +61,13 @@ function aboutProgram()
   SpeedText.cPrint("Discord: Tomaska", 8)
 
   term.setTextColor(colors.white)
-  SpeedText.cPrint("Idea by", 11)
+  SpeedText.cPrint("Idea by", 10)
 
   term.setTextColor(colors.lightGray)
-  SpeedText.cPrint("Peaceful_Atom", 12)
+  SpeedText.cPrint("Peaceful_Atom", 11)
 
-  SpeedText.cPrint("Click anywhere to continue...", 16)
-  os.pullEvent("mouse_click")
-  main()
+  SpeedGUI.gui.button.add("                      OK!                      ", main, 1, 16, 2, 3, colors.white, colors.orange)
+  SpeedGUI.start()
 end
 
 function addStation()
@@ -132,6 +132,7 @@ logPath = "Resources/Radio_"..tostring(year).."-"..tostring(month).."-"..tostrin
 function main()
   windows.clearScreen(colors.black)
   term.setCursorPos(1, 1)
+  SpeedGUI.stop()
 
   rednet.open(peripheral.find("modem"))
 
