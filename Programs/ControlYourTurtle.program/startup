@@ -83,6 +83,7 @@ help() -- выводим помощь по программе
 
 while true do
   event, id, msg, dist = os.pullEvent()
+  
   if event == "rednet_message" and id == tonumber(turtle_id) then
     print(msg)
   end
