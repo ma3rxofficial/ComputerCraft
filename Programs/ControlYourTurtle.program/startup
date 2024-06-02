@@ -94,7 +94,7 @@ while true do
   rednet.send(tonumber(turtle_id), command) -- отправляем набранную нами команду черепашке по rednet
 
   if string.lower(command) == "exit" or string.lower(command) == "quit" then -- в случае, если пользователь ввел команду выхода
-    SpeedOS.Close()
+    SpeedOS.Close() -- то мы закрываем программу
   end
 
   if command == "help" or command == "HELP" then
