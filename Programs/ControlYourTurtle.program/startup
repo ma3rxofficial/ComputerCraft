@@ -67,8 +67,7 @@ end
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
-term.setBackgroundColor(colors.black)
-term.clear()
+windows.clearScreen(colors.black)
 term.setCursorPos(1, 1)
 help()
 
