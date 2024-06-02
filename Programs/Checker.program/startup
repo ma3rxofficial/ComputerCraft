@@ -164,6 +164,8 @@ function GetProgram(selected)
   Menu()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 if not http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup") then
   FancyError()
 end
