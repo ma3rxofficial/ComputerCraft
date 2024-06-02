@@ -100,7 +100,7 @@ function GetProgram(selected)
     file_New.write(result.readAll()) -- вписываем туда хуйню интернетовскую
     file_New.close() -- закрываем файл
 
-    windows.clearScreen(colors.gray)
+    windows.clearScreen(colors.gray) -- очищаем экран в серый цвет, шобы не втыкали
     term.setTextColor(colors.white)
 
     SpeedText.cPrint("Downloaded!", 8)
