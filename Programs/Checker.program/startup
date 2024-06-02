@@ -92,7 +92,8 @@ function GetProgram(selected)
       Menu() -- вызываем меню
     end  
 
-    fs.makeDir(selected)
+    -- Это некий костыль, позволяющий нам скачивать файлы из папок, которых еще не существует на нашем компьютере
+    fs.makeDir(selected) 
     fs.delete(selected)
 
     file_New = fs.open(selected, "w")
