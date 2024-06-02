@@ -114,7 +114,7 @@ function GetProgram(selected)
     Menu()
   end
 
-  result_data = result.readAll()
+  result_data = result.readAll() -- содержимое с запроса на репозиторий по пути
   selected_file = fs.open(selected, "r")
   selected_file_data = selected_file.readAll()
 
