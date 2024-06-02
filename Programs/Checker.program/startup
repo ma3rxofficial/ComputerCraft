@@ -69,7 +69,7 @@ function Menu()
     selected_path = SpeedText.centerRead(w - 13, "", colors.lightGray, colors.white, colors.white, false)
   until selected_path
 
-  GetProgram(selected_path)
+  GetProgram(selected_path) -- вызываем функцию для скачивания программы
 end
 
 function GetProgram(selected)
