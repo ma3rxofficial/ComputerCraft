@@ -115,7 +115,7 @@ function GetProgram(selected)
   end
 
   result_data = result.readAll() -- содержимое с запроса на репозиторий по пути
-  selected_file = fs.open(selected, "r")
+  selected_file = fs.open(selected, "r") -- открываем файл по указанному пути для чтения
   selected_file_data = selected_file.readAll()
 
   if result_data == selected_file_data then
