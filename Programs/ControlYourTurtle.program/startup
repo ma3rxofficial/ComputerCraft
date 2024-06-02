@@ -1,15 +1,24 @@
--- get receiver for turtle by 
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Приемник сообщений для черепашки скачайте командой
 -- pastebin get QQZTJ51z receiver.lua
--- receiver.lua
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Меняем цвет верхнего тулбара
 
 if SpeedOS then
   SpeedOS.ToolBarColour = colours.black
   SpeedOS.ToolBarTextColour = colours.white
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Подгружаем нужные программе АПИ
+
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Выводим ошибку, в случае, если на компьютер не поставлен модем
 
 if not peripheral.find("modem") then
   windows.clearScreen(colors.cyan)
@@ -17,18 +26,31 @@ if not peripheral.find("modem") then
   SpeedOS.Close()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Открываем порт модема
+
 rednet.open(peripheral.find("modem"))
 
-local turtle_id
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Начальные константы(пока - одна)
 
-repeat
-  windows.clearScreen(colors.gray)
-  SpeedText.cPrint("Your ID: "..tostring(os.getComputerID()), 5)
-  term.setTextColor(colors.lightGray)
-  SpeedText.cPrint("Please enter turtle ID:", 6)
+local turtle_id -- айди черепашки
 
-  turtle_id = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
-until tonumber(turtle_id)
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Ввод ID черепашки, которой мы будем управлять
+
+-- Запускаем цикл
+repeat 
+  windows.clearScreen(colors.gray) -- чистим экран в серый цвет
+  SpeedText.cPrint("Your ID: "..tostring(os.getComputerID()), 5) --  печатаем ID компьютера
+  term.setTextColor(colors.lightGray) -- ставим цвет текста на светло-серый
+  SpeedText.cPrint("Please enter turtle ID:", 6) -- и пишем, что пользователь должен ввести ID черепашки
+
+  turtle_id = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false) -- окошко ввода ID черепашки
+until tonumber(turtle_id) -- цикл остановится только тогда, когда введенное пользователем можно превратить в число
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Функция вывода помощи
 
 function help()
   print("Welcome to Turtle Control!")
@@ -49,10 +71,13 @@ function help()
   print("")
 end
 
-term.setBackgroundColor(colors.black)
-term.clear()
+-----------------------------------------------------------------------------------------------------------------------------------
+
+windows.clearScreen(colors.black)
 term.setCursorPos(1, 1)
 help()
+
+-----------------------------------------------------------------------------------------------------------------------------------
 
 while true do
   event, id, msg, dist = os.pullEvent()
@@ -81,4 +106,5 @@ while true do
     print("Can't reach your turtle!")
   end
 end 
-   
+
+-----------------------------------------------------------------------------------------------------------------------------------

@@ -590,3 +590,46 @@ function checkForelement(element, array)
 
 	return false
 end
+
+--Get index of element in array--
+function getIndex(tablica, entry)
+  for i, v in pairs(tablica) do
+    if v == entry then
+      return i
+    end
+  end
+end
+
+--Serialize support, ebat!--
+local function serializeImpl( t, tTracking )	
+	local sType = type(t)
+	if sType == "table" then
+		if tTracking[t] ~= nil then
+			error( "Cannot serialize table with recursive entries" )
+		end
+		tTracking[t] = true
+		
+		local result = "{"
+		for k,v in pairs(t) do
+			result = result..(serializeImpl(v, tTracking)..",")
+		end
+		result = result.."}"
+		return result
+		
+	elseif sType == "string" then
+		return string.format( "%q", t )
+	
+	elseif sType == "number" or sType == "boolean" or sType == "nil" then
+		return tostring(t)
+		
+	else
+		error( "Cannot serialize type "..sType )
+		
+	end
+end
+
+--Serialize without fucking [1]="foo"
+function extraSerialize( t )
+	local tTracking = {}
+	return serializeImpl( t, tTracking )
+end

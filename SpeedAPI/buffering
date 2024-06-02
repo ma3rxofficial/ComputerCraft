@@ -6,11 +6,14 @@
 
 
 --------------------------------------------------------------------------------
+-- Начальные значения цветов фона, текста и прочего
 
 backgroundColor = colors.black
 textColor = colors.white
+cursorPos = term.getCursorPos()
 
 --------------------------------------------------------------------------------
+-- Оптимизированные стандартные функции
 
 setBackgroundColor = function(color)
   if backgroundColor ~= color then
@@ -21,8 +24,17 @@ end
 
 setTextColor = function(color)
   if textColor ~= color then
-    term.setBackgroundColor(color)
+    term.setTextColor(color)
     textColor = color
+  end
+end
+
+setCursorPos = function(posX, posY)
+  _posX, _posY = cursorPos
+
+  if posX ~= _posX and posY ~= _posY then
+    term.setCursorPos(posX, posY)
+    cursorPos = posX, posY
   end
 end
 

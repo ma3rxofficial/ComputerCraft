@@ -5,6 +5,7 @@ end
 
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/config")
+SpeedOS.LoadAPI("SpeedAPI/context")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 
@@ -16,29 +17,17 @@ end
 
 local pathToConfig = "System/Radio.settings"
 
-rednet.open(peripheral.find("modem"))
-
 huy_ = config.read(pathToConfig, "radios")
 local radio_id = textutils.unserialize(huy_)
 
 local listen_everyone = SpeedText.stringToBoolean(config.read(pathToConfig, "listen everyone"))
-
-if huy_ == "{}" or huy_ == "" then
-  if not listen_everyone then
-    windows.clearScreen(colors.cyan)
-    windows.attention({"Empty list"}, {"Your radios list is", "empty!"})
-    SpeedOS.Close()
-  end
-end
-
-local file = fs.open("Resources/radio.log", "a")
 
 function check(id)
   if listen_everyone then
     return true
   end
 
-  for i,v in ipairs(radio_id) do
+  for i, v in ipairs(radio_id) do
     if v == id then
       return true
     end
@@ -52,22 +41,119 @@ function InfoLog(logPath, msg)
     log_file.close()
 end
 
+function aboutProgram()
+  windows.clearScreen(colors.gray)
+  term.setTextColor(colors.white)
+
+  SpeedText.cPrint("Author", 2)
+
+  term.setTextColor(colors.lightGray)
+  SpeedText.cPrint("Ivan Simonov", 3)
+  SpeedText.cPrint("Discord: Ma3rX", 4)
+
+
+  term.setTextColor(colors.white)
+  SpeedText.cPrint("Tester", 6)
+
+  term.setTextColor(colors.lightGray)
+  SpeedText.cPrint("Igor Gofman", 7)
+  SpeedText.cPrint("Discord: Tomaska", 8)
+
+  term.setTextColor(colors.white)
+  SpeedText.cPrint("Idea by", 11)
+
+  term.setTextColor(colors.lightGray)
+  SpeedText.cPrint("Peaceful_Atom", 12)
+
+  SpeedText.cPrint("Click anywhere to continue...", 16)
+  os.pullEvent("mouse_click")
+  main()
+end
+
+function addStation()
+  windows.clearScreen(colors.black)
+  SpeedText.cPrint("Enter new station ID here:", 6)
+  new_id = tonumber(SpeedText.centerRead(51 - 13, "", colors.gray, colors.lightGray, colors.white, false))
+
+  if not new_id then
+    main()
+  end
+
+  copiyaNahui = radio_id
+
+  table.insert(copiyaNahui, new_id)
+  radio_id = copiyaNahui
+
+  config.write(pathToConfig, "radios", SpeedText.extraSerialize(copiyaNahui))
+
+  main()
+end
+
+function removeStation()
+  windows.clearScreen(colors.black)
+  SpeedText.cPrint("Enter new station ID here:", 6)
+  remove_id = tonumber(SpeedText.centerRead(51 - 13, "", colors.gray, colors.lightGray, colors.white, false))
+
+  copiyaNahui = radio_id
+
+  table.remove(copiyaNahui, SpeedText.getIndex(copiyaNahui, remove_id))
+  radio_id = copiyaNahui
+
+  config.write(pathToConfig, "radios", SpeedText.extraSerialize(copiyaNahui))
+
+  main()
+end
+
+function contextMenu(doEtogoX, doEtogoY)
+  rednet.close(peripheral.find("modem"))
+
+  local action = context.menu(msg, dist, {"Add station"}, {"Remove station"}, "-", {"About program"}, {"Exit"})
+
+  if action == "Add station" then
+    addStation()
+  elseif action == "Remove station" then
+    removeStation()
+  elseif action == "About program" then
+    aboutProgram()
+  elseif action == "Exit" then
+    SpeedOS.Close()
+  elseif not action then
+    rednet.open(peripheral.find("modem"))
+
+    term.setCursorPos(doEtogoX, doEtogoY)
+    term.setBackgroundColor(colors.black)
+    return
+  end
+end
+
 day, month, year = SpeedText.getDate()
 logPath = "Resources/Radio_"..tostring(year).."-"..tostring(month).."-"..tostring(day).."_"..SpeedText.extraFormatTime(os.time(), ".", true)..".log"
 
-while true do
-  event, id, msg, dist = os.pullEvent()
+function main()
+  windows.clearScreen(colors.black)
+  term.setCursorPos(1, 1)
 
-  if event == "rednet_message" and check(id) then
-    term.setTextColor(colors.orange)
-    io.write("[Radio ")
-    term.setTextColor(colors.yellow)
-    io.write("#"..tostring(id))
-    term.setTextColor(colors.orange)
-    io.write("] ")
-    term.setTextColor(colors.lightGray)
-    io.write(tostring(msg))
-    print("")
-    InfoLog(logPath, "["..tostring(SpeedText.time_and_date(false)).."] Radio #"..id..": "..tostring(msg))
+  rednet.open(peripheral.find("modem"))
+
+  while true do
+    event, id, msg, dist = os.pullEvent()
+
+    if event == "rednet_message" and check(id) then
+      term.setTextColor(colors.orange)
+      io.write("[Radio ")
+      term.setTextColor(colors.yellow)
+      io.write("#"..tostring(id))
+      term.setTextColor(colors.orange)
+      io.write("] ")
+      term.setTextColor(colors.lightGray)
+      io.write(tostring(msg))
+      print("")
+      --InfoLog(logPath, "["..tostring(SpeedText.time_and_date(false)).."] Radio #"..id..": "..tostring(msg))
+    elseif event == "mouse_click" and id == 2 then
+      doEtogoX, doEtogoY = term.getCursorPos()
+      contextMenu(doEtogoX, doEtogoY)
+    end
   end
 end
+
+main()
