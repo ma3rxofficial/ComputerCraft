@@ -155,7 +155,7 @@ function GetProgram(selected)
   term.setTextColor(colors.lightGray)
   SpeedText.cPrint("Writing data to file...", 10)
 
-  selected_file2.write(result_data)
+  selected_file2.write(result_data) -- пишем содержимое из интернета в файл по указанному пути. на данном этапе, по сути, обновление файла полностью завершено
   sleep(1)
 
   windows.clearScreen(colors.gray)
