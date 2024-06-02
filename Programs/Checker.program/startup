@@ -144,10 +144,11 @@ function GetProgram(selected)
     Menu() -- запускаем менюшечку снова
   end  
 
-  selected_file2 = fs.open(selected, "w")
+  selected_file2 = fs.open(selected, "w") -- в случае, если пользователь все же согласился единообразить файл в репозитории и на его локальном компьютере
 
-  windows.clearScreen(colors.gray)
-  term.setTextColor(colors.white)
+  windows.clearScreen(colors.gray) -- чистим экран в серый цвет
+  term.setTextColor(colors.white) -- ставим белый цвет текста
+
   SpeedText.cPrint("Updating...")
 
   sleep(0.5)
