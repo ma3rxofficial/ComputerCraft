@@ -1,7 +1,7 @@
 --[[
-	Основной скрипт, который загружает и запускает ОС.
-	Также на данном этапе происходят необходимые проверки для
-	стабильной работы всей ОС и ее программ.
+  Основной скрипт, который загружает и запускает ОС.
+  Также на данном этапе происходят необходимые проверки для
+  стабильной работы всей ОС и ее программ.
 ]]
 
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -48,92 +48,92 @@ Log.i('SpeedOS Version: '..versionData) -- Версия SpeedOS
 -- Проверка на модифицированность системных файлов, используется переменная isModified
 
 if http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup') then
-	code = http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup').readAll() -- получаем код из репозитория с нашей ОС
-	code2 = fs.open('startup', 'r') -- открываем файл загрузки на компьютере пользователя
-	code3 = code2.readAll() -- читаем информацию из файла пользователя
+  code = http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup').readAll() -- получаем код из репозитория с нашей ОС
+  code2 = fs.open('startup', 'r') -- открываем файл загрузки на компьютере пользователя
+  code3 = code2.readAll() -- читаем информацию из файла пользователя
 
-	-- Проверяем соответствие данных с репозитория и с локальных файлов на пользовательском компе
-	if code3 == code then
-		Log.i('Startup file isn\'\t modified!')
-	else
-		Log.w('Modified startup file detected!')
-		isModified = true
-	end
+  -- Проверяем соответствие данных с репозитория и с локальных файлов на пользовательском компе
+  if code3 == code then
+    Log.i('Startup file isn\'\t modified!')
+  else
+    Log.w('Modified startup file detected!')
+    isModified = true
+  end
 
-	code2.close()
+  code2.close()
 end
 
 -- Проверка аналогична предыдущей, только файл System/main.lua
 if http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua') then
-	code = http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua').readAll()
-	code2 = fs.open('System/main.lua', 'r')
-	code3 = code2.readAll()
+  code = http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua').readAll()
+  code2 = fs.open('System/main.lua', 'r')
+  code3 = code2.readAll()
 
-	if code3 == code then
-		Log.i('OS file isn\'\t modified!')
-	else
-		Log.w('Modified OS file detected!')
-		isModified = true
-	end
+  if code3 == code then
+    Log.i('OS file isn\'\t modified!')
+  else
+    Log.w('Modified OS file detected!')
+    isModified = true
+  end
 
-	code2.close()
+  code2.close()
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Проверка на включенность параметра "Использовать Монитор" в настройках и его совместимости с ОС(необходим цветной монитор)
 
 if Settings.GetValues('UseMonitor')['UseMonitor'] == true then -- проверяем состояние опции "Использовать Монитор" 
-	Log.i('Monitor mode enabled!') -- Печатаем в лог ахуеть, какую нужную инфу 
-	Log.i('Checking for monitor...') -- печатаем о том, что начата проверка на монитор
+  Log.i('Monitor mode enabled!') -- Печатаем в лог ахуеть, какую нужную инфу 
+  Log.i('Checking for monitor...') -- печатаем о том, что начата проверка на монитор
 
-	testMon = peripheral.find('monitor', true) -- Получаем сторону монитора
+  testMon = peripheral.find('monitor', true) -- Получаем сторону монитора
 
-	if testMon == nil then -- Если монитор не найден...
-		Log.w('No monitor found! Running on computer screen...') -- то пишем в лог, мол "идите нахуй"
-	end
+  if testMon == nil then -- Если монитор не найден...
+    Log.w('No monitor found! Running on computer screen...') -- то пишем в лог, мол "идите нахуй"
+  end
 
-	if not peripheral.wrap(testMon).isColor() then -- аналогично, если монитор чернобелый
-		Log.w('No color monitor found!') -- иди нахуй
+  if not peripheral.wrap(testMon).isColor() then -- аналогично, если монитор чернобелый
+    Log.w('No color monitor found!') -- иди нахуй
 
-	else -- если все же монитор найден
-		Log.i('Redirecting to monitor...') -- печатаем в лог о редиректе всего содержимого с экрана компа на экран монитора
-		print('OS is running on monitor(side '..testMon..').') -- и печатаем сторону рабочего мониторчика 
-		term.redirect(peripheral.wrap(testMon)) -- собственно, сам редирект
-	end
+  else -- если все же монитор найден
+    Log.i('Redirecting to monitor...') -- печатаем в лог о редиректе всего содержимого с экрана компа на экран монитора
+    print('OS is running on monitor(side '..testMon..').') -- и печатаем сторону рабочего мониторчика 
+    term.redirect(peripheral.wrap(testMon)) -- собственно, сам редирект
+  end
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Подгрузка АПИ
 
 function LoadAPI(_sPath)
-	local sName = fs.getName( _sPath )
-	if tAPIsLoading[sName] == true then
-		printError( 'API '..sName..' is already being loaded' )
-		return false
-	end
-	tAPIsLoading[sName] = true
-		
-	local tEnv = {}
-	setmetatable( tEnv, { __index = getfenv() } )
-	local fnAPI, err = loadfile( _sPath )
-	if fnAPI then
-		setfenv( fnAPI, tEnv )
-		fnAPI()
-	else
-		printError( err )
+  local sName = fs.getName( _sPath )
+  if tAPIsLoading[sName] == true then
+    printError( 'API '..sName..' is already being loaded' )
+    return false
+  end
+  tAPIsLoading[sName] = true
+    
+  local tEnv = {}
+  setmetatable( tEnv, { __index = getfenv() } )
+  local fnAPI, err = loadfile( _sPath )
+  if fnAPI then
+    setfenv( fnAPI, tEnv )
+    fnAPI()
+  else
+    printError( err )
         tAPIsLoading[sName] = nil
-		return false
-	end
-	
-	local tAPI = {}
-	for k,v in pairs( tEnv ) do
-		tAPI[k] =  v
-	end
-	
-	getfenv()[sName] = tAPI
+    return false
+  end
+  
+  local tAPI = {}
+  for k,v in pairs( tEnv ) do
+    tAPI[k] =  v
+  end
+  
+  getfenv()[sName] = tAPI
 
-	tAPIsLoading[sName] = nil
-	return true
+  tAPIsLoading[sName] = nil
+  return true
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -153,128 +153,128 @@ end
 -- Наш загрузочный экранчик. В основном тут индикация загрузки АПИшек
 
 function LoadingScreen()
-	local screenWidth, screenHeight = term.getSize() -- размер рабочего экрана
-	local x = (screenWidth - 14) / 2 -- ось X для работы загрузчика
-	local y = (screenHeight - 9) / 2 -- аналогично ось Y
+  local screenWidth, screenHeight = term.getSize() -- размер рабочего экрана
+  local x = (screenWidth - 14) / 2 -- ось X для работы загрузчика
+  local y = (screenHeight - 9) / 2 -- аналогично ось Y
 
-	local rs_s = false -- сторона, с которой мы берем "питание" компа
-	local listen_energy -- дублер этой стороны
+  local rs_s = false -- сторона, с которой мы берем "питание" компа
+  local listen_energy -- дублер этой стороны
 
-	local text = 'SpeedOS by Ma3rX' -- заголовок загрузчика
+  local text = 'SpeedOS by Ma3rX' -- заголовок загрузчика
 
-	local currentImage = -1
-	local totalAPIs = #fs.list(root .. 'System/API/') -- кол-во АПИ
+  local currentImage = -1
+  local totalAPIs = #fs.list(root .. 'System/API/') -- кол-во АПИ
 
-	if Settings.GetValues('UseRedstoneElectrity')['UseRedstoneElectrity'] == true then -- если включено питание компа от редстоуна
-		for _, storona in pairs(rs.getSides()) do -- проверяем стороны, с которых подается сигнал
-			if rs.getInput(storona) == true then
-				rs_s = true
-				listen_energy = storona
-			end
-		end
+  if Settings.GetValues('UseRedstoneElectrity')['UseRedstoneElectrity'] == true then -- если включено питание компа от редстоуна
+    for _, storona in pairs(rs.getSides()) do -- проверяем стороны, с которых подается сигнал
+      if rs.getInput(storona) == true then
+        rs_s = true
+        listen_energy = storona
+      end
+    end
 
-		if not rs_s then -- вывод предупреждения, если источника подпитки не найдено
-			term.setBackgroundColor(colors.blue)
-			term.clear()
-			term.setTextColor(colors.blue)
-			term.setBackgroundColor(colors.white)
-			SpeedText.cPrint('You don\'\t have electricity!')
-			term.setTextColor(colors.white)
-			term.setBackgroundColor(colors.blue)
-			SpeedText.cPrint('Click anywhere to reboot', 10)
+    if not rs_s then -- вывод предупреждения, если источника подпитки не найдено
+      term.setBackgroundColor(colors.blue)
+      term.clear()
+      term.setTextColor(colors.blue)
+      term.setBackgroundColor(colors.white)
+      SpeedText.cPrint('You don\'\t have electricity!')
+      term.setTextColor(colors.white)
+      term.setBackgroundColor(colors.blue)
+      SpeedText.cPrint('Click anywhere to reboot', 10)
 
-			os.pullEvent('mouse_click')
-			os.reboot()
-		end
+      os.pullEvent('mouse_click')
+      os.reboot()
+    end
 
-		Log.i('Getting energy from side '..listen_energy) -- печатаем в лог, откуда берем энергию
-	end
+    Log.i('Getting energy from side '..listen_energy) -- печатаем в лог, откуда берем энергию
+  end
 
-	-- Сам загрузочный экран
+  -- Сам загрузочный экран
 
-	term.setBackgroundColor(colors.white)
+  term.setBackgroundColor(colors.white)
 
-	term.setTextColor(colors.black)
-	SpeedText.cPrint('SpeedOS', 7)
+  term.setTextColor(colors.black)
+  SpeedText.cPrint('SpeedOS', 7)
 
-	term.clear()
-	term.setTextColor(colors.lightGray)
+  term.clear()
+  term.setTextColor(colors.lightGray)
 
-	-- Загрузка АПИ из папки System/API
+  -- Загрузка АПИ из папки System/API
 
-	for _, file in pairs(fs.list(root .. 'System/API/')) do
-		if string.sub(file,1,1) ~= '.' then
-			term.clear()
-			term.setTextColor(colors.black)
-			SpeedText.cPrint('SpeedOS', 7)
-			term.setTextColor(colors.lightGray)
-			SpeedText.cPrint('API '..file..' loaded!')
-			sleep(0.1)
+  for _, file in pairs(fs.list(root .. 'System/API/')) do
+    if string.sub(file,1,1) ~= '.' then
+      term.clear()
+      term.setTextColor(colors.black)
+      SpeedText.cPrint('SpeedOS', 7)
+      term.setTextColor(colors.lightGray)
+      SpeedText.cPrint('API '..file..' loaded!')
+      sleep(0.1)
 
-			if not LoadAPI(root .. 'System/API/' .. file) then
-				term.setTextColour(colours.red)
-				PrintCentered('Error While Loading API '..file, y + 11)
-				Log.e('Error While Loading API '..file)
-				term.setCursorPos(1, 1)
-				return false
-			end
-			Log.i('Loading: '..file)
-		end
-	end
+      if not LoadAPI(root .. 'System/API/' .. file) then
+        term.setTextColour(colours.red)
+        PrintCentered('Error While Loading API '..file, y + 11)
+        Log.e('Error While Loading API '..file)
+        term.setCursorPos(1, 1)
+        return false
+      end
+      Log.i('Loading: '..file)
+    end
+  end
 
-	-- Загрузка АПИ из папки SpeedAPI
+  -- Загрузка АПИ из папки SpeedAPI
 
-	for _, file in pairs(fs.list(root .. 'SpeedAPI/')) do
-		if string.sub(file,1,1) ~= '.' then
-			term.clear()
-			term.setTextColor(colors.black)
-			SpeedText.cPrint('SpeedOS', 7)
-			term.setTextColor(colors.lightGray)
-			SpeedText.cPrint('API '..file..' loaded!')
-			sleep(0.1)
+  for _, file in pairs(fs.list(root .. 'SpeedAPI/')) do
+    if string.sub(file,1,1) ~= '.' then
+      term.clear()
+      term.setTextColor(colors.black)
+      SpeedText.cPrint('SpeedOS', 7)
+      term.setTextColor(colors.lightGray)
+      SpeedText.cPrint('API '..file..' loaded!')
+      sleep(0.1)
 
-			if not LoadAPI(root .. 'SpeedAPI/' .. file) then
-				term.setTextColour(colours.red)
-				PrintCentered('Error While Loading API '..file, y + 11)
-				Log.e('Error While Loading API '..file)
-				term.setCursorPos(1, 1)
-				return false
-			end
-			
-			Log.i('Loading: '..file)
-		end
-	end
+      if not LoadAPI(root .. 'SpeedAPI/' .. file) then
+        term.setTextColour(colours.red)
+        PrintCentered('Error While Loading API '..file, y + 11)
+        Log.e('Error While Loading API '..file)
+        term.setCursorPos(1, 1)
+        return false
+      end
+      
+      Log.i('Loading: '..file)
+    end
+  end
 
-	-- Выставление редиректов команд. По сути это позволяет нам запускать свои кастомные скрипты из любой папки, короче говоря - алиасы команд
-	
-	for _, file in pairs(fs.list(root .. 'System/Alias/')) do
-		if string.sub(file,1,1) ~= '.' then
+  -- Выставление редиректов команд. По сути это позволяет нам запускать свои кастомные скрипты из любой папки, короче говоря - алиасы команд
+  
+  for _, file in pairs(fs.list(root .. 'System/Alias/')) do
+    if string.sub(file,1,1) ~= '.' then
 
-  			shell.setAlias(file, 'System/Alias/'..file)
-  			Log.i('Making alias: '..file)
-  			term.clear()
-				term.setTextColor(colors.black)
-				SpeedText.cPrint('SpeedOS', 7)
-				term.setTextColor(colors.lightGray)
-				SpeedText.cPrint('Alias '..file..' set!')
-		end
-	end
+        shell.setAlias(file, 'System/Alias/'..file)
+        Log.i('Making alias: '..file)
+        term.clear()
+        term.setTextColor(colors.black)
+        SpeedText.cPrint('SpeedOS', 7)
+        term.setTextColor(colors.lightGray)
+        SpeedText.cPrint('Alias '..file..' set!')
+    end
+  end
 
-	sleep(1)
-	term.clear()
-	term.setTextColor(colors.black)
-	SpeedText.cPrint('SpeedOS', 7)
-	term.setTextColor(colors.lightGray)
-	SpeedText.cPrint('Initializing components')
-	sleep(3)
+  sleep(1)
+  term.clear()
+  term.setTextColor(colors.black)
+  SpeedText.cPrint('SpeedOS', 7)
+  term.setTextColor(colors.lightGray)
+  SpeedText.cPrint('Initializing components')
+  sleep(3)
 
- 	if peripheral.find('modem') then -- если найден модем
-		rednet.open(peripheral.find('modem')) -- открываем его со стороны нахождения
-   		Log.i('Opened modem on side '..peripheral.find('modem')) -- и печатаем об этом в лог
- 	end
+  if peripheral.find('modem') then -- если найден модем
+    rednet.open(peripheral.find('modem')) -- открываем его со стороны нахождения
+      Log.i('Opened modem on side '..peripheral.find('modem')) -- и печатаем об этом в лог
+  end
 
-	sleep(0.1)
-	return true
+  sleep(0.1)
+  return true
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -282,172 +282,172 @@ end
 
 -- предупреждение о том, что монитор не цветной
 if not term.isColour() then
-	term.setBackgroundColor(colours.black)
-	term.setTextColor(colours.white)
-	term.clear()
+  term.setBackgroundColor(colours.black)
+  term.setTextColor(colours.white)
+  term.clear()
 
-	PrintCentered('SpeedOS requires an advanced (gold) computer.', 8)
+  PrintCentered('SpeedOS requires an advanced (gold) computer.', 8)
 
-	PrintCentered('Press any key to return to the shell.', 10)
+  PrintCentered('Press any key to return to the shell.', 10)
 
-	os.pullEvent('key')
-	term.clear()
-	term.setCursorPos(1,1)
+  os.pullEvent('key')
+  term.clear()
+  term.setCursorPos(1,1)
 
 elseif LoadingScreen() then
-	-- МОЁ ЛЮБИМОЕ НАХУЙ - АВТОЗАГРУЗОЧНЫЕ СКРИПТЫ
-	Log.i('Checking for startup scripts...')
+  -- МОЁ ЛЮБИМОЕ НАХУЙ - АВТОЗАГРУЗОЧНЫЕ СКРИПТЫ
+  Log.i('Checking for startup scripts...')
 
-	if not fs.exists('System/.autorun') then -- если нет директории с автозагрузочными скриптами
-		Log.w('No autorun directory!')
-		
-		Log.i('Making autorun directory...') -- то мы ее сделаем
-		fs.makeDir('System/.autorun')
-		Log.i('Done!')
+  if not fs.exists('System/.autorun') then -- если нет директории с автозагрузочными скриптами
+    Log.w('No autorun directory!')
+    
+    Log.i('Making autorun directory...') -- то мы ее сделаем
+    fs.makeDir('System/.autorun')
+    Log.i('Done!')
 
-	else
-		if fs.isDir('System/.autorun') then -- ураа нашло!
-			Log.i('Autorun directory found!')
+  else
+    if fs.isDir('System/.autorun') then -- ураа нашло!
+      Log.i('Autorun directory found!')
 
-			if #fs.list('System/.autorun') == 0 then
-				Log.i('No startup scripts found!') -- если скриптов не было найдено в директории
-			else
-				Log.i('Running all startup scripts...')
+      if #fs.list('System/.autorun') == 0 then
+        Log.i('No startup scripts found!') -- если скриптов не было найдено в директории
+      else
+        Log.i('Running all startup scripts...')
 
-				for _, script in pairs(fs.list('System/.autorun')) do -- ну и запускаем скрипты поочереди
-					Log.i('Running script '..script..'...')
-					shell.run('System/.autorun/'..script)
-					Log.i('Startup script '..script..' finished!')
-				end
+        for _, script in pairs(fs.list('System/.autorun')) do -- ну и запускаем скрипты поочереди
+          Log.i('Running script '..script..'...')
+          shell.run('System/.autorun/'..script)
+          Log.i('Startup script '..script..' finished!')
+        end
 
-				Log.i('All startup scripts have been launched!') -- все скрипты запущены, по сути загрузка на данном этапе завершена
-			end
-		else
-			Log.w('Autorun isn\'\t directory!') -- файл .autorun это не директория, работа запрещена нахуй
-		end
+        Log.i('All startup scripts have been launched!') -- все скрипты запущены, по сути загрузка на данном этапе завершена
+      end
+    else
+      Log.w('Autorun isn\'\t directory!') -- файл .autorun это не директория, работа запрещена нахуй
+    end
 
-	end
+  end
 
-	if fs.exists('/.update/') and fs.isDir('/.update/') then -- система обновления ОС из папки
-		Log.i('Found update!')
-		if not fs.exists('/.update/.version') then
-			Log.w('Update is corrupted! (no .version file)')
-			fs.delete('/.update/')
-		end
+  if fs.exists('/.update/') and fs.isDir('/.update/') then -- система обновления ОС из папки
+    Log.i('Found update!')
+    if not fs.exists('/.update/.version') then
+      Log.w('Update is corrupted! (no .version file)')
+      fs.delete('/.update/')
+    end
 
-		function installFolder(path)
-			for i, v in ipairs(fs.list('/.update/'..path)) do
-				Drawing.DrawArea(1, math.floor(Drawing.Screen.Height / 2), Drawing.Screen.Width, 1, ' ', colours.lightGrey, colours.white)
-				Drawing.DrawCharactersCenter(nil, 0, nil, nil, path .. v, colours.lightGrey, colours.white)
-				Drawing.DrawBuffer()
-				if fs.isDir('/.update/'..path .. v) then
-					fs.makeDir('/'..path .. v)
-					installFolder(path .. v .. '/')
-				else
-					fs.delete('/'..path .. v)
-					fs.move('/.update/'..path .. v, '/'..path .. v)
-				end
-				sleep(0)
-			end
-		end
+    function installFolder(path)
+      for i, v in ipairs(fs.list('/.update/'..path)) do
+        Drawing.DrawArea(1, math.floor(Drawing.Screen.Height / 2), Drawing.Screen.Width, 1, ' ', colours.lightGrey, colours.white)
+        Drawing.DrawCharactersCenter(nil, 0, nil, nil, path .. v, colours.lightGrey, colours.white)
+        Drawing.DrawBuffer()
+        if fs.isDir('/.update/'..path .. v) then
+          fs.makeDir('/'..path .. v)
+          installFolder(path .. v .. '/')
+        else
+          fs.delete('/'..path .. v)
+          fs.move('/.update/'..path .. v, '/'..path .. v)
+        end
+        sleep(0)
+      end
+    end
 
-		Drawing.Clear(colours.white)
-		Drawing.DrawCharactersCenter(nil, -3, nil, nil, 'Installing Update', colours.blue, colours.white)
-		Drawing.DrawCharactersCenter(nil, -2, nil, nil, 'This may take a moment.', colours.grey, colours.white)
-		Drawing.DrawBuffer()
-		Log.i('Installing started...')
-		installFolder('')
-		fs.delete('/.update/')
-		Log.i('Update installed!')
-	end
+    Drawing.Clear(colours.white)
+    Drawing.DrawCharactersCenter(nil, -3, nil, nil, 'Installing Update', colours.blue, colours.white)
+    Drawing.DrawCharactersCenter(nil, -2, nil, nil, 'This may take a moment.', colours.grey, colours.white)
+    Drawing.DrawBuffer()
+    Log.i('Installing started...')
+    installFolder('')
+    fs.delete('/.update/')
+    Log.i('Update installed!')
+  end
 
-	-- Запуск нашего Десктопа с приложухами
-	Log.i('Starting Desktop...')
-	windows.fadeOut(0.1)
-	os.run(getfenv(), '/System/main.lua')
-	
+  -- Запуск нашего Десктопа с приложухами
+  Log.i('Starting Desktop...')
+  windows.fadeOut(0.1)
+  os.run(getfenv(), '/System/main.lua')
+  
 
-	local ok = {pcall(Initialise)}
+  local ok = {pcall(Initialise)}
 
-	-- Печать об ошибке и ее последующая отправка по Email мне
-	if not ok[1] then
-		term.setBackgroundColor(colours.grey)
-		term.setTextColor(colours.white)
-		term.clear()
-		paintutils.drawImage(paintutils.loadImage('/crash'), (Drawing.Screen.Width-7)/2 + 1, 3)
-		term.setBackgroundColor(colours.grey)
-		term.setTextColor(colours.white)
+  -- Печать об ошибке и ее последующая отправка по Email мне
+  if not ok[1] then
+    term.setBackgroundColor(colours.grey)
+    term.setTextColor(colours.white)
+    term.clear()
+    paintutils.drawImage(paintutils.loadImage('/crash'), (Drawing.Screen.Width-7)/2 + 1, 3)
+    term.setBackgroundColor(colours.grey)
+    term.setTextColor(colours.white)
 
-		PrintCentered('SpeedOS has crashed!', 8)
+    PrintCentered('SpeedOS has crashed!', 8)
 
-		PrintCentered('SpeedOS has encountered a serious error,', 10)
-		PrintCentered('click anywhere to reboot.', 11)
+    PrintCentered('SpeedOS has encountered a serious error,', 10)
+    PrintCentered('click anywhere to reboot.', 11)
 
-		term.setTextColor(colours.lightGrey)
-		table.remove(ok, 1)
+    term.setTextColor(colours.lightGrey)
+    table.remove(ok, 1)
 
-		local sucess
+    local sucess
 
-		for i, v in ipairs(ok) do
-			local w, h = term.getSize()
-		    x = math.ceil(math.ceil((w / 2) - (#v / 2)), 0)+1
-		    if x < 1 then
-		    	x = 1
-		    end
-		    term.setCursorPos(x, i+12)
-		    print(v)
-		    Log.e(v)
+    for i, v in ipairs(ok) do
+      local w, h = term.getSize()
+        x = math.ceil(math.ceil((w / 2) - (#v / 2)), 0)+1
+        if x < 1 then
+          x = 1
+        end
+        term.setCursorPos(x, i+12)
+        print(v)
+        Log.e(v)
 
-		    if peripheral.find('modem') then -- отправки ошибки мне по емаилу
-		    	if not isModified then -- но только если сис. файлы не были модифицированы, а то нахуй мне эти репорты вообще?
-		    		rednet.open(peripheral.find('modem'))
-		    		local newemail = '$EMAIL'..tostring(576)
-          		       ..'!SP!'..os.getComputerLabel()
-            		     ..'!SP!'..os.time()..'!SP!'
-              		   ..'User #'..tostring(os.getComputerID())..', got error:\n\n'..v..'\n\nSent on '..SpeedText.get_date()..', '..SpeedText.time(true)..'.'
-  					rednet.send(434, newemail)	-- отправка ошибки на почту через мыло-сервак
-  					if rednet.receive(5)~=nil then
-    					success = true
-	  				else
-  	  				success = false
-  	  				Log.w('Error sending report!')
-  					end
+        if peripheral.find('modem') then -- отправки ошибки мне по емаилу
+          if not isModified then -- но только если сис. файлы не были модифицированы, а то нахуй мне эти репорты вообще?
+            rednet.open(peripheral.find('modem'))
+            local newemail = '$EMAIL'..tostring(576)
+                     ..'!SP!'..os.getComputerLabel()
+                     ..'!SP!'..os.time()..'!SP!'
+                     ..'User #'..tostring(os.getComputerID())..', got error:\n\n'..v..'\n\nSent on '..SpeedText.get_date()..', '..SpeedText.time(true)..'.'
+            rednet.send(434, newemail)  -- отправка ошибки на почту через мыло-сервак
+            if rednet.receive(5)~=nil then
+              success = true
+            else
+              success = false
+              Log.w('Error sending report!')
+            end
 
-  				else
-  					sucess = false
-  					Log.w('System files are modified. Not sending report!') -- модифицированы системные файлы!
-  				end
-  			end
-		end
+          else
+            sucess = false
+            Log.w('System files are modified. Not sending report!') -- модифицированы системные файлы!
+          end
+        end
+    end
 
-		PrintCentered('Please report this on the forum.', Drawing.Screen.Height)
-		term.setTextColor(colours.white)
-  	
-  	local message = 'Error report failed!'
+    PrintCentered('Please report this on the forum.', Drawing.Screen.Height)
+    term.setTextColor(colours.white)
+    
+    local message = 'Error report failed!'
 
-  	if isModified then
-  		message = ''
-  	end
+    if isModified then
+      message = ''
+    end
 
-		if success then
-			Log.i('Error report sent to Ma3rX\'\s mail!')
-			message = 'Error report sent!'
-		end
+    if success then
+      Log.i('Error report sent to Ma3rX\'\s mail!')
+      message = 'Error report sent!'
+    end
 
-		if isModified then
-			term.setCursorPos(1, Drawing.Screen.Height-4)
-			term.clearLine()
+    if isModified then
+      term.setCursorPos(1, Drawing.Screen.Height-4)
+      term.clearLine()
 
-			Log.w('System is modified, not submitting report.')
-			PrintCentered('System is modified, not submitting report.', Drawing.Screen.Height-4)
-		end
+      Log.w('System is modified, not submitting report.')
+      PrintCentered('System is modified, not submitting report.', Drawing.Screen.Height-4)
+    end
 
-		term.setCursorPos(1, Drawing.Screen.Height-3)
-		term.clearLine()
+    term.setCursorPos(1, Drawing.Screen.Height-3)
+    term.clearLine()
 
-		PrintCentered(message..' Click to reboot.', Drawing.Screen.Height-3)
+    PrintCentered(message..' Click to reboot.', Drawing.Screen.Height-3)
 
-		os.pullEvent('mouse_click')
-		os.reboot()
-	end
+    os.pullEvent('mouse_click')
+    os.reboot()
+  end
 end
