@@ -51,13 +51,17 @@ write = function(text, posX, posY)
   if not posX or not posY then
     posX, posY = term.getCursorPos()
   end
-  
+
   setCursorPos(posX, posY)
 
   if _string ~= text then
     term.write(text)
     _string = text
+
+    return true
   end
+
+  return false
 end
 
 --------------------------------------------------------------------------------
