@@ -124,7 +124,7 @@ function GetProgram(selected)
 
     selected_file.close() -- закрываем файл, чтобы потом не выскакивала ошибка, шо типо файл занят другим процессом обновите виндоус чтобы починить
 
-    SpeedText.cPrint("Program is up to date!")
+    SpeedText.cPrint("Program is up to date!") -- ОБНОВЛЯТЬ НЕ НАДО
 
     term.setTextColor(colors.lightGray)
     sleep(1)
