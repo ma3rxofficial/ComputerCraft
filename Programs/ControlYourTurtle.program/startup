@@ -104,6 +104,7 @@ while true do
   repeat
     rID, msg = rednet.receive(1.5)
   until rID ~= os.getComputerID() or rID == tonumber(turtle_id) 
+  
   if rID == tonumber(turtle_id)  then
     print(msg)
   else
