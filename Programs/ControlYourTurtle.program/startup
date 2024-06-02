@@ -82,14 +82,15 @@ help() -- выводим помощь по программе
 -- Основной цикл программы
 
 while true do
-  event, id, msg, dist = os.pullEvent()
-  
-  if event == "rednet_message" and id == tonumber(turtle_id) then
-    print(msg)
+  event, id, msg, dist = os.pullEvent() -- запускаем обработчик эвентов
+
+  if event == "rednet_message" and id == tonumber(turtle_id) then -- в случае, если черепашка отослала нам какое-то сообщение
+    print(msg) -- мы его распечатываем
   end
   
-  io.write(">> ")
+  io.write(">> ") -- ну типа афармление, ебать красиво!
   command = io.read()
+
   rednet.send(tonumber(turtle_id), command)
 
   if command == "exit" or command == "EXIT" or command == "quit" or command == "QUIT" then
