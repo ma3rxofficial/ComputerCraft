@@ -53,6 +53,7 @@ function FancyError()
   SpeedOS.Close()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
 
 function Menu()
   windows.clearScreen(colors.gray)
