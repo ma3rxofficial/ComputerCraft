@@ -80,7 +80,7 @@ function GetProgram(selected)
   
   if not result then -- в случае, если нормально отправить запрос по указанному пути не удалось
     windows.clearScreen(colors.cyan) -- очищаем экран в бирюзовый цвет
-    windows.error("Program not exists!")
+    windows.error("Program not exists!") -- ПРОГРАММА НЕ НАЙДЕНА! ТЫ ДОЛБОЁБ!!!!!!!!
     Menu()
   end  
 
