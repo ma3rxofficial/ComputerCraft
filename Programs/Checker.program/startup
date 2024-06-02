@@ -119,7 +119,7 @@ function GetProgram(selected)
   selected_file_data = selected_file.readAll() -- содержимое файла на компьютере пользователя
 
   if result_data == selected_file_data then -- если содержимое файла из репозитория и файла из компьютера пользователя совпадают
-    windows.clearScreen(colors.gray)
+    windows.clearScreen(colors.gray) -- ЧИСТИМ ЭКРАН В СЕРЫЙ ЦВЕТ
     term.setTextColor(colors.white)
 
     selected_file.close()
