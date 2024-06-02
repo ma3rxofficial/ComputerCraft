@@ -23,6 +23,7 @@ local w, h = term.getSize()
 local githubRepo = "https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/"
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Симпатичная ошибка, которая выводится в том случае, если сайт github.com не отвечает
 
 function FancyError()
   term.setBackgroundColor(colours.grey)
