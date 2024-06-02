@@ -127,7 +127,7 @@ function GetProgram(selected)
     SpeedText.cPrint("Program is up to date!") -- ОБНОВЛЯТЬ НЕ НАДО
 
     term.setTextColor(colors.lightGray) -- ставим цвет текста в светло-серый
-    sleep(1)
+    sleep(1) -- хы типо умный ожидания в 1 секунду!!!
     SpeedText.cPrint("Click anywhere to continue...")
 
     SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
