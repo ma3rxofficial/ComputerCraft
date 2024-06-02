@@ -116,7 +116,7 @@ function GetProgram(selected)
 
   result_data = result.readAll() -- содержимое с запроса на репозиторий по пути
   selected_file = fs.open(selected, "r") -- открываем файл по указанному пути для чтения
-  selected_file_data = selected_file.readAll()
+  selected_file_data = selected_file.readAll() -- содержимое файла на компьютере пользователя
 
   if result_data == selected_file_data then
     windows.clearScreen(colors.gray)
