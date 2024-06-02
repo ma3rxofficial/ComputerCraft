@@ -29,5 +29,7 @@ end
 
 SpeedText.cPrint("Your IP is "..response.readAll())
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
 SpeedOS.Close()
