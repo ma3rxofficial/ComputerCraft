@@ -91,7 +91,7 @@ while true do
   io.write(">> ") -- ну типа афармление, ебать красиво!
   command = io.read() -- обычная функция ввода, ничего тут особенного
 
-  rednet.send(tonumber(turtle_id), command)
+  rednet.send(tonumber(turtle_id), command) -- отправляем набранную нами команду черепашке по rednet
 
   if command == "exit" or command == "EXIT" or command == "quit" or command == "QUIT" then
     SpeedOS.Close()
