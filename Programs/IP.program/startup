@@ -15,6 +15,8 @@ SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 windows.clearScreen(colors.gray)
 term.setTextColor(colors.white)
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 local response = http.get("https://api.ipify.org/?format=raw")
 
 if not response then
