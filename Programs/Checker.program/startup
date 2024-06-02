@@ -101,7 +101,7 @@ function GetProgram(selected)
     file_New.close() -- закрываем файл
 
     windows.clearScreen(colors.gray) -- очищаем экран в серый цвет, шобы не втыкали
-    term.setTextColor(colors.white)
+    term.setTextColor(colors.white) -- делаем цвет распечатываемого текста белым
 
     SpeedText.cPrint("Downloaded!", 8)
     sleep(0.5)
