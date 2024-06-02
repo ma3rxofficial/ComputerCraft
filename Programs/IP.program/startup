@@ -35,6 +35,7 @@ end
 SpeedText.cPrint("Your IP is "..response.readAll())
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Ждем, пока пользователь нажмет на клавишу, что приведет к закрытию программы
 
 SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
 SpeedOS.Close()
