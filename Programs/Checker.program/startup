@@ -62,14 +62,12 @@ end
 -- Основная функция программы
 
 function Menu()
-  windows.clearScreen(colors.gray)
-  term.setTextColor(colors.white)
-  SpeedText.cPrint("Enter program path:", 6)
-  selected_path = SpeedText.centerRead(w - 13, "", colors.lightGray, colors.white, colors.white, false)
-  
-  if not selected_path then
-    SpeedOS.Close()
-  end
+  repeat
+    windows.clearScreen(colors.gray)
+    term.setTextColor(colors.white)
+    SpeedText.cPrint("Enter program path:", 6)
+    selected_path = SpeedText.centerRead(w - 13, "", colors.lightGray, colors.white, colors.white, false)
+  until selected_path
 
   GetProgram(selected_path)
 end
