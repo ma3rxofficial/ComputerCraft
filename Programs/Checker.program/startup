@@ -76,7 +76,7 @@ end
 -- Функция для скачивания программы
 
 function GetProgram(selected)
-  result = http.get(githubRepo..selected)
+  result = http.get(githubRepo..selected) -- отправляем запрос на репозиторий Github по указанному пути
   
   if not result then
     windows.clearScreen(colors.cyan)
