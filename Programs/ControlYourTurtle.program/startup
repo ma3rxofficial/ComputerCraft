@@ -98,7 +98,7 @@ while true do
   end
 
   if command == "help" or command == "HELP" then -- если пользователь ввел команду вывода помощи
-    help()
+    help() -- то мы ее, собственно, выводим
   end
 
   repeat
