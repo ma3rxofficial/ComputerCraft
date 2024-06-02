@@ -18,6 +18,7 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 fs = SpeedOS.FS
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Базовые константы программы
 
 local w, h = term.getSize()
 local githubRepo = "https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/"
