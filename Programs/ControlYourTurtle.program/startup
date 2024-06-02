@@ -97,7 +97,7 @@ while true do
     SpeedOS.Close() -- то мы закрываем программу
   end
 
-  if command == "help" or command == "HELP" then
+  if command == "help" or command == "HELP" then -- если пользователь ввел команду вывода помощи
     help()
   end
 
