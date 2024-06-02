@@ -10,7 +10,9 @@
 
 backgroundColor = colors.black
 textColor = colors.white
-cursorPos = term.getCursorPos()
+cursorPosX = 51
+cursorPosY = 19
+_string = ""
 
 --------------------------------------------------------------------------------
 -- Оптимизированные стандартные функции
@@ -26,15 +28,35 @@ setTextColor = function(color)
   if textColor ~= color then
     term.setTextColor(color)
     textColor = color
+
+    return true
   end
+
+  return false
 end
 
 setCursorPos = function(posX, posY)
-  _posX, _posY = cursorPos
-
-  if posX ~= _posX and posY ~= _posY then
+  if posX ~= cursorPosX and cursorPosY ~= _posY then
     term.setCursorPos(posX, posY)
-    cursorPos = posX, posY
+    cursorPosX = posX
+    cursorPosY = posY
+
+    return true
+  end
+
+  return false
+end
+
+write = function(text, posX, posY)
+  if not posX or not posY then
+    posX, posY = term.getCursorPos()
+  end
+  
+  setCursorPos(posX, posY)
+
+  if _string ~= text then
+    term.write(text)
+    _string = text
   end
 end
 
