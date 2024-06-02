@@ -126,7 +126,7 @@ function GetProgram(selected)
 
     SpeedText.cPrint("Program is up to date!") -- ОБНОВЛЯТЬ НЕ НАДО
 
-    term.setTextColor(colors.lightGray)
+    term.setTextColor(colors.lightGray) -- ставим цвет текста в светло-серый
     sleep(1)
     SpeedText.cPrint("Click anywhere to continue...")
 
