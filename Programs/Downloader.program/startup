@@ -39,7 +39,7 @@ function downloadFile(link, path)
     end
   end
 
-  data = http.get(link)
+  data = http.get(link) -- отправляем запрос на указанную пользователем ссылку для дальнейшего скачивания файла
 
   if not data then
     windows.clearScreen(colors.cyan)
