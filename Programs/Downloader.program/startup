@@ -24,6 +24,7 @@ pathToConfig = "System/Downloader.settings"
 use_http = SpeedText.stringToBoolean(config.read(pathToConfig, "enable http"))
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Функция скачивания файла
 
 function downloadFile(l, p)
   if use_http then
