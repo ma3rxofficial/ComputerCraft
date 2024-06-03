@@ -33,7 +33,7 @@ function downloadFile(link, path)
       link = "http://"..link -- добавляем в начало ссылки протокол Http
     end
     
-  else
+  else -- если поддержка HTTP отключена
     if not string.find(link, "https://") then 
       link = "https://"..link
     end
