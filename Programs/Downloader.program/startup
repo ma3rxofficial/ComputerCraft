@@ -18,6 +18,7 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 fs = SpeedOS.FS
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Конфиг, ебтвоюмать
 
 pathToConfig = "System/Downloader.settings"
 use_http = SpeedText.stringToBoolean(config.read(pathToConfig, "enable http"))
