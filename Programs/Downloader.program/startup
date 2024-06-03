@@ -46,7 +46,7 @@ function downloadFile(link, path)
     Menu()
   end
 
-  if not fs.exists(p) then
+  if not fs.exists(path) then
     fs.makeDir(p)
     fs.delete(p)
   end
