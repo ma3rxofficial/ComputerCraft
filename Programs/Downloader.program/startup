@@ -30,7 +30,7 @@ function downloadFile(link, path)
   -- Автоматическое добавление названия протокола в начало строки
   if use_http then -- в случае, если включена поддержка протокола HTTP
     if not string.find(link, "http://") then -- в случае, если в строке ссылки на скачиваемый файл нету названия протокола
-      link = "http://"..link
+      link = "http://"..link -- добавляем в начало ссылки протокол Http
     end
     
   else
