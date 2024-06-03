@@ -209,8 +209,4 @@ function pizdec()
 	end
 end
 
-function run()
-	parallel.waitForAny(proga, pizdec)
-end
-
-run()
+parallel.waitForAny(proga, pizdec)
