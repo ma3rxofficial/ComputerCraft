@@ -48,7 +48,7 @@ function downloadFile(link, path)
 
   if not fs.exists(path) then
     fs.makeDir(path)
-    fs.delete(p)
+    fs.delete(path)
   end
 
   f = fs.open(p, "w")
