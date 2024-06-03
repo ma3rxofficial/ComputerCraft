@@ -29,7 +29,7 @@ use_http = SpeedText.stringToBoolean(config.read(pathToConfig, "enable http")) -
 function downloadFile(link, path)
   if use_http then
     if not string.find(link, "http://") then 
-      link = "http://"..l
+      link = "http://"..link
     end
     
   else
