@@ -27,7 +27,8 @@ use_http = SpeedText.stringToBoolean(config.read(pathToConfig, "enable http")) -
 -- Функция скачивания файла
 
 function downloadFile(link, path)
-  if use_http then
+  -- Автоматическое добавление названия протокола в начало строки
+  if use_http then 
     if not string.find(link, "http://") then 
       link = "http://"..link
     end
