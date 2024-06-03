@@ -64,7 +64,7 @@ end
 
 function Menu()
   windows.clearScreen(colors.cyan) -- чистим экран в бирюзовый цвет
-  local vvedeno = windows.input("auto","auto","Download",20,{"Link",""},{"Save as",""})
+  local vvedeno = windows.input("auto","auto","Download",20,{"Link",""},{"Save as",""}) -- окошко ввода блять
 
   downloadFile(vvedeno[1], vvedeno[2])
   windows.clearScreen(colors.cyan)
