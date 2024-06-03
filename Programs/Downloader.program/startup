@@ -47,6 +47,7 @@ function downloadFile(link, path)
     Menu() -- снова запускаем меню
   end
 
+  -- Костыль, который позволяет скачивать файлы в папки, которых еще не существует. Они создаются на ходу.
   if not fs.exists(path) then
     fs.makeDir(path)
     fs.delete(path)
