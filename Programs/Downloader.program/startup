@@ -21,7 +21,7 @@ fs = SpeedOS.FS
 -- Конфиг, ебтвоюмать
 
 pathToConfig = "System/Downloader.settings" -- путь до файла с параметрами программы(иначе - файл конфигурации)
-use_http = SpeedText.stringToBoolean(config.read(pathToConfig, "enable http"))
+use_http = SpeedText.stringToBoolean(config.read(pathToConfig, "enable http")) -- параметр поддержки сайтов по протоколу http, заместо стандартного https
 
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Функция скачивания файла
