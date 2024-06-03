@@ -174,7 +174,7 @@ function setup( w, h )
 	return retTab
 end
 
-function proga()
+function run()
 	windows.clearScreen(colors.white)
 	term.setTextColor(colors.lightGray)
 	SpeedText.cPrint("Running on monitor "..peripheral.find("monitor", true))
