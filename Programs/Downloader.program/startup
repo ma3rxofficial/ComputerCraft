@@ -19,6 +19,8 @@ fs = SpeedOS.FS
 pathToConfig = "System/Downloader.settings"
 use_http = SpeedText.stringToBoolean(config.read(pathToConfig, "enable http"))
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function downloadFile(l, p)
   if use_http then
     if not string.find(l, "http://") then 
