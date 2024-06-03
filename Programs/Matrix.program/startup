@@ -209,4 +209,4 @@ function eventHandler()
 	end
 end
 
-parallel.waitForAny(proga, pizdec)
+parallel.waitForAny(proga, eventHandler)
