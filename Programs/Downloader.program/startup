@@ -41,7 +41,7 @@ function downloadFile(link, path)
 
   data = http.get(link) -- отправляем запрос на указанную пользователем ссылку для дальнейшего скачивания файла
 
-  if not data then
+  if not data then -- если ответа на отправленный запрос от сервера скачивания не последовало
     windows.clearScreen(colors.cyan)
     windows.error("Can't connect to URL!")
     Menu()
