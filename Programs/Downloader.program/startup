@@ -51,7 +51,7 @@ function downloadFile(link, path)
     fs.delete(path)
   end
 
-  f = fs.open(p, "w")
+  f = fs.open(path, "w")
   f.write(data.readAll())
   f.close()
 end
