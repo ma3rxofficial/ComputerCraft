@@ -43,7 +43,7 @@ function downloadFile(link, path)
 
   if not data then -- если ответа на отправленный запрос от сервера скачивания не последовало
     windows.clearScreen(colors.cyan) -- чистим экран в бирюзовый цвет
-    windows.error("Can't connect to URL!")
+    windows.error("Can't connect to URL!") -- выводим ошибку о том, что ответа нет
     Menu()
   end
 
