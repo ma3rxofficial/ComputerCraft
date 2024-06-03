@@ -53,6 +53,7 @@ function downloadFile(link, path)
     fs.delete(path)
   end
 
+  -- Открываем файл для записи и туда записываем текстовый ответ от севера
   f = fs.open(path, "w")
   f.write(data.readAll())
   f.close()
