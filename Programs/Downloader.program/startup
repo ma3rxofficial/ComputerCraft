@@ -62,6 +62,8 @@ function Menu()
   windows.attention({"Sucessfuly downloaded!"}, {"File was saved as", vvedeno[2].."!"})
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 while true do
   Menu()
 end
