@@ -194,7 +194,7 @@ function proga()
 	end
 end
 
-function pizdec()
+function eventHandler()
 	while true do
 		event = os.pullEvent()
 
