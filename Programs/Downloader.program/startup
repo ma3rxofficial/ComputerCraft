@@ -34,7 +34,7 @@ function downloadFile(link, path)
     
   else
     if not string.find(link, "https://") then 
-      l = "https://"..link
+      link = "https://"..link
     end
   end
 
