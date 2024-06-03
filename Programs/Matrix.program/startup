@@ -26,7 +26,7 @@ local maxSourcesPerTick = tonumber(config.read(pathToConfig, "max sources per ti
 local sourceWeight = tonumber(config.read(pathToConfig, "source weight")) --Affects the chance that no sources will be generated
 local greenWeight = tonumber(config.read(pathToConfig, "green weight")) --Threshhold out of 10 that determines when characters will switch from lime to green
 local grayWeight = tonumber(config.read(pathToConfig, "gray weight")) --Same as about, but from green to gray
-local monScale = tonumber(config.read(pathToConfig, "monitor scale")) --hy
+local monScale = tonumber(config.read(pathToConfig, "monitor scale"))
 
 function getMonitors()
 	local monitors = {}
@@ -174,7 +174,7 @@ function setup( w, h )
 	return retTab
 end
 
-function run()
+function proga()
 	windows.clearScreen(colors.white)
 	term.setTextColor(colors.lightGray)
 	SpeedText.cPrint("Running on monitor "..peripheral.find("monitor", true))
@@ -192,13 +192,25 @@ function run()
 		printGrid( monitor, screen, color )
 		os.sleep(1/fps)
 	end
+end
 
-	monitor.clear()
-	monitor.setTextColor(colors.white)
-	monitor.setCursorPos(1, 1)
+function pizdec()
+	while true do
+		event = os.pullEvent()
 
-	SpeedOS.Close()
+		if event == "mouse_click" then
+			local monitor = peripheral.wrap( peripheral.find("monitor", true) )
+			monitor.clear()
+			monitor.setTextColor(colors.white)
+			monitor.setCursorPos(1, 1)
 
+			SpeedOS.Close()
+		end
+	end
+end
+
+function run()
+	parallel.waitForAny(proga, pizdec)
 end
 
 run()
