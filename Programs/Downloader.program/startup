@@ -51,6 +51,8 @@ function downloadFile(l, p)
   f.close()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function Menu()
   windows.clearScreen(colors.cyan)
   local vvedeno = windows.input("auto","auto","Download",20,{"Link",""},{"Save as",""})
