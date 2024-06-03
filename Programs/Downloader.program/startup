@@ -38,7 +38,7 @@ function downloadFile(link, path)
     end
   end
 
-  data = http.get(l)
+  data = http.get(link)
 
   if not data then
     windows.clearScreen(colors.cyan)
