@@ -217,6 +217,7 @@ function makeMove(input)
 	end
 end
 
+-- Конвертировать абсциссу из строки в число
 function convertLetterToCoordinate(input)
   if input=="a" then return 1
   elseif input=="b" then return 2
