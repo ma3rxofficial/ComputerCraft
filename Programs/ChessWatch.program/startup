@@ -217,6 +217,8 @@ function mcall(f,p1,p2,p3)
 	peripheral.call(monitorSide, f, p1, p2, p3)
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 --Finds the side the modem is on, and opens it
 function openModem()
 	for i=1,#rs.getSides() do
