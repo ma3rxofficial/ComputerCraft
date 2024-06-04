@@ -191,7 +191,6 @@ function makeMove(input)
 	board[newy][newx] = board[oldy][oldx]
 	board[oldy][oldx] = " "
 	
-	--en passant is handled here
 	if board[newy][newx] == " " and math.abs(oldx-newx) == 1 and
 	  board[oldy][oldx]:sub(2) == "p" and board[oldy][newx]:sub(2) == "p" then
 		board[oldy][newx] = " "
