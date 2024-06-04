@@ -231,9 +231,6 @@ function openModem()
 	return false
 end
 
---Finds the side the monitor is on
-function findMonitor()
-
 --This promotes a pawn from a network message
 function handleRemotePawnPromotion(msg)
 	local x = tonumber(string.sub(msg, 1, 1))
