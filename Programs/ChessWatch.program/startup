@@ -13,6 +13,7 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Нахождение нужной программе перифирии и информирование о том, что какое-то устройство не подключено к пользовательскому компьютеру
 
 if not peripheral.find("monitor", true) then
 	windows.clearScreen(colors.cyan)
