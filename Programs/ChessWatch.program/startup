@@ -233,7 +233,7 @@ end
 
 --Finds the side the monitor is on
 function findMonitor()
-	for i=1,#rs.getSides() do
+
 end
 
 --This promotes a pawn from a network message
