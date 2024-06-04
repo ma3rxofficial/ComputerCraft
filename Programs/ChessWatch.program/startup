@@ -10,6 +10,8 @@ end
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 if not peripheral.find("monitor", true) then
 	windows.clearScreen(colors.cyan)
 	windows.error("You need monitor and wireless modem!")
