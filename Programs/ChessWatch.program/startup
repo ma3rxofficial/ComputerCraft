@@ -238,8 +238,8 @@ function mcall(f,p1,p2,p3)
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Функция нахождения беспроводного модема и открытия его порта
 
---Finds the side the modem is on, and opens it
 function openModem()
 	for i=1,#rs.getSides() do
 		if peripheral.isPresent(rs.getSides()[i]) and peripheral.getType(rs.getSides()[i]) == "modem" then
