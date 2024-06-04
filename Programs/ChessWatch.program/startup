@@ -130,6 +130,7 @@ local backboard = {
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Функции отрисовки фигур и доски на подключенном к компьютеру мониторе
 
+-- Отрисовка доски
 function printBoard()
 	mcall("clear")
 	for i = 1, #backboard do
@@ -144,7 +145,7 @@ function printBoard()
 	end
 end
 
--- 
+
 function printPiece(piece, x, y)
 	white = false
 	if string.find(piece, "+") == 1 then white = true end
