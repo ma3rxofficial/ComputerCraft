@@ -28,6 +28,7 @@ if not peripheral.find("modem") then
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Константы перифирии
 
 local monitorSide = peripheral.find("monitor", true)
 local side = nil
