@@ -220,7 +220,7 @@ end
 -- Конвертировать абсциссу из строки в число
 function convertLetterToCoordinate(input)
   if input == "a" then return 1
-  elseif input=="b" then return 2
+  elseif input == "b" then return 2
   elseif input=="c" then return 3
   elseif input=="d" then return 4
   elseif input=="e" then return 5
