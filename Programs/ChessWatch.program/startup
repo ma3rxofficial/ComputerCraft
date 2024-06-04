@@ -238,7 +238,6 @@ function findMonitor()
 			monitorSide = rs.getSides()[i]
 			return true
 		end
-	end
 end
 
 --This promotes a pawn from a network message
