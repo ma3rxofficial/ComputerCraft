@@ -145,7 +145,7 @@ function printBoard()
 	end
 end
 
-
+-- Отрисовка фигур
 function printPiece(piece, x, y)
 	white = false
 	if string.find(piece, "+") == 1 then white = true end
