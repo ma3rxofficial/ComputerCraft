@@ -196,7 +196,6 @@ function makeMove(input)
 		board[oldy][newx] = " "
 	end
 	
-	--Castling is handled here
 	if board[newy][newx] == "+K" then
 		if newx - oldx == 2 then
 			board[1][6] = board[1][8]
