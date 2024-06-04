@@ -262,6 +262,8 @@ function runMonitor()
 	
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function prepareMonitor()
 
 	--This short program is used for monitor displays
