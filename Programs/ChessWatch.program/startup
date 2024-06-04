@@ -236,7 +236,6 @@ function findMonitor()
 	for i=1,#rs.getSides() do
 		if peripheral.isPresent(rs.getSides()[i]) and peripheral.getType(rs.getSides()[i]) == "monitor" then
 			monitorSide = rs.getSides()[i]
-			return true
 end
 
 --This promotes a pawn from a network message
