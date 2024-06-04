@@ -48,29 +48,34 @@ local board = {
   [1] = { "+C",  "+N",  "+B",  "+Q",  "+K",  "+B",  "+N",  "+C" }
   --        a     b     c     d     e     f     g     h
 }
+
 local pawnList = {
 	"(Q)",
 	"/Q\\",
 	"==="
 }
+
 local knightList = {
 	" ,^. ",
 	"(QQ'\\",
 	"|QQ\\ ",
 	"==== "
 }
+
 local bishopList = {
 	" o  ",
 	"(Q/)",
 	"/QQ\\",
 	"===="
 }
+
 local castleList = {
 	"WWWW",
 	"|QQ|",
 	"/QQ\\",
 	"===="
 }
+
 local queenList = {
 	"www",
 	"\\Q/",
@@ -78,6 +83,7 @@ local queenList = {
 	"/Q\\",
 	"==="
 }
+
 local kingList = {
 	"_+_",
 	"\\Q/",
