@@ -80,6 +80,7 @@ local castleList = {
 	"===="
 }
 
+-- Ферзь
 local queenList = {
 	"www",
 	"\\Q/",
