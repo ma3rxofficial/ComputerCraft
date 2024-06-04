@@ -243,6 +243,8 @@ function handleRemotePawnPromotion(msg)
 	movesMade[#movesMade].promotion = string.sub(msg, 4)
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function runMonitor()
 	while true do
 		printBoard()
