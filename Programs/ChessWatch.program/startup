@@ -239,7 +239,6 @@ function findMonitor()
 			return true
 		end
 	end
-	return fals
 end
 
 --This promotes a pawn from a network message
