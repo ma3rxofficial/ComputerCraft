@@ -153,6 +153,8 @@ function printPiece(piece, x, y)
 	end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 --A combination of the parseInput and the essentials of the makeMove method from chess.lua
 function makeMove(input)
 	local oldx = convertLetterToCoordinate(string.sub(input, 1, 1))
