@@ -223,7 +223,7 @@ function convertLetterToCoordinate(input)
   elseif input == "b" then return 2
   elseif input == "c" then return 3
   elseif input == "d" then return 4
-  elseif input=="e" then return 5
+  elseif input == "e" then return 5
   elseif input=="f" then return 6
   elseif input=="g" then return 7
   elseif input=="h" then return 8
