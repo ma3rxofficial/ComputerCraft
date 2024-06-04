@@ -24,6 +24,8 @@ if not peripheral.find("modem") then
 	SpeedOS.Close()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 local monitorSide = peripheral.find("monitor", true)
 local side = nil
 
