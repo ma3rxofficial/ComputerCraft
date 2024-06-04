@@ -72,6 +72,7 @@ local bishopList = {
 	"===="
 }
 
+-- Ладья
 local castleList = {
 	"WWWW",
 	"|QQ|",
