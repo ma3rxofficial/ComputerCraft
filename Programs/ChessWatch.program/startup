@@ -241,7 +241,7 @@ end
 -- Функция нахождения беспроводного модема и открытия его порта
 
 function openModem()
-	for i=1,#rs.getSides() do
+	for i=1, #rs.getSides() do
 		if peripheral.isPresent(rs.getSides()[i]) and peripheral.getType(rs.getSides()[i]) == "modem" then
 			side = rs.getSides()[i]
 			rednet.open(side)
