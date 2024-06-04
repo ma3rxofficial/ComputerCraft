@@ -266,7 +266,7 @@ end
 
 function prepareMonitor()
 
-	--This short program is used for monitor displays
+
 	term.write("Enter ID of host: ")
 	local number = tonumber(io.read())
 	if not number then
