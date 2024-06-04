@@ -252,8 +252,8 @@ function openModem()
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Перемещение пешки в соответствии с сетевым сообщением из rednet-эфира
 
---This promotes a pawn from a network message
 function handleRemotePawnPromotion(msg)
 	local x = tonumber(string.sub(msg, 1, 1))
 	local y = tonumber(string.sub(msg, 2, 2))
