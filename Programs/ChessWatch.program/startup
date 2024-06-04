@@ -265,8 +265,6 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------
 
 function prepareMonitor()
-
-
 	term.write("Enter ID of host: ")
 	local number = tonumber(io.read())
 	if not number then
