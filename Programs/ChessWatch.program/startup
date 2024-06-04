@@ -175,8 +175,8 @@ function printPiece(piece, x, y)
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Функции перемещения фигур
 
---A combination of the parseInput and the essentials of the makeMove method from chess.lua
 function makeMove(input)
 	local oldx = convertLetterToCoordinate(string.sub(input, 1, 1))
 	local oldy = tonumber(string.sub(input, 2, 2))
