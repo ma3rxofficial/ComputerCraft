@@ -58,7 +58,7 @@ function wait()
 		if event == "rednet_message" and msg == "DOORLOCK%OPEN" and id == tonumber(PDA_s) then
 			term.setTextColor(colors.blue)
 			print("["..SpeedText.time().."] "..tostring(id).." opened door!")
-					openDoor()
+			openDoor()
 				end
 			end
 		end
