@@ -56,8 +56,7 @@ function wait()
 	while true do -- цикл ожидания сообщений
 		event, id, msg, dist = os.pullEvent()
 		if event == "rednet_message" then
-			if id == tonumber(PDA_s) then
-				if msg == "DOORLOCK%OPEN" then
+				if msg == "DOORLOCK%OPEN" and id == tonumber(PDA_s) then
 					term.setTextColor(colors.blue)
 					print("["..SpeedText.time().."] "..tostring(id).." opened door!")
 					openDoor()
