@@ -31,7 +31,7 @@ rednet.open(peripheral.find("modem"))
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Хуйня с параметрами
 
-pathToConfig = "System/Doorlock.settings"
+pathToConfig = "System/Doorlock.settings" -- путь до файла конфигурации
 door_side = config.read(pathToConfig, "side")
 PDA_s = config.read(pathToConfig, "PDA")
 
