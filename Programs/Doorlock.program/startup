@@ -39,6 +39,8 @@ function openDoor()
 	rs.setOutput(door_side, false)
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function wait()
 	term.setCursorPos(1, 1)
 	term.setTextColor(colors.green)
