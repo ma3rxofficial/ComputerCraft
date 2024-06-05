@@ -8,8 +8,8 @@ end
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
-SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/SpeedGUI")
 SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
