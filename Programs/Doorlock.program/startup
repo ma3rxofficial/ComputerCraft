@@ -59,7 +59,6 @@ function wait()
 			term.setTextColor(colors.blue)
 			print("["..SpeedText.time().."] "..tostring(id).." opened door!")
 			openDoor()
-			end
 		end
 	end
 end
