@@ -48,7 +48,7 @@ end
 -- Функция ожидания компьютеров, которые отправят нашему компьютеру команду для открытия двери
 
 function wait()
-	term.setCursorPos(1, 1)
+	term.setCursorPos(1, 1) -- ставим позицию курсора на 1, 1
 	term.setTextColor(colors.green)
  	windows.clearScreen(colors.white)
  	term.setCursorPos(1, 1)
