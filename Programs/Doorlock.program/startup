@@ -49,7 +49,7 @@ end
 
 function wait()
 	term.setCursorPos(1, 1) -- ставим позицию курсора на 1, 1
-	term.setTextColor(colors.green)
+	term.setTextColor(colors.green) -- ставим цвет текста на зеленый
  	windows.clearScreen(colors.white)
  	term.setCursorPos(1, 1)
 	print("["..SpeedText.time().."] Waiting for clients...")
