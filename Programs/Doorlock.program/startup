@@ -10,7 +10,6 @@ end
 -- Подгружаем АПИ для работы программы
 
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
-SpeedOS.LoadAPI("SpeedAPI/SpeedGUI")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
