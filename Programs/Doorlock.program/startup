@@ -13,6 +13,8 @@ SpeedOS.LoadAPI("SpeedAPI/SpeedGUI")
 SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 if not peripheral.find("modem") then
   windows.clearScreen(colors.cyan)
   windows.error("You need wireless modem!")
