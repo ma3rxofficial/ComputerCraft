@@ -36,6 +36,8 @@ windows.clearScreen(colors.gray)
 term.setCursorPos(1, 1)
 term.setTextColor(colors.white)
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 while true do  
   local event, p1, p2, p3, p4, p5, p6, p7 = os.pullEvent()
     
