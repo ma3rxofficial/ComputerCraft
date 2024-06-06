@@ -29,7 +29,7 @@ term.setTextColor(colors.white) -- делаем цвет текста белым
 -- Цикл обработки действий пользователя(и не только)
 
 while true do  
-  local event, p1, p2, p3, p4, p5, p6, p7 = os.pullEvent()
+  local event, p1, p2, p3, p4, p5, p6, p7 = os.pullEvent() -- основная обработка эвентов
     
   if event and skip(event) then
     print(event.." event has happened")
