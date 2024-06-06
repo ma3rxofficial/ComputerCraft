@@ -11,6 +11,8 @@ SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/config")
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 local pathToConfig = "System/Events.settings"
 
 function skip(e)
