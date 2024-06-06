@@ -22,7 +22,7 @@ local pathToConfig = "System/Events.settings"
 
 
 
-  skipTable = textutils.unserialize(skipString)
+
 
   for _, ev in pairs(skipTable) do
     if ev == e then
