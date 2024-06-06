@@ -36,6 +36,7 @@ while true do
     print(event.." event has happened")
     print("Info: ")
 
+    -- Отрисовка всякой хуйни по поводу происходящего эвента в данный момент
     if p1 then
       print(p1)
     end
