@@ -47,6 +47,7 @@ Log.i('SpeedOS Version: '..versionData) -- Версия SpeedOS
 -----------------------------------------------------------------------------------------------------------------------------------
 if fs.exists('/.update/') and fs.isDir('/.update/') then -- система обновления ОС из папки
   Log.i('Found update!')
+  os.loadAPI("System/API/Drawing")
   if not fs.exists('/.update/.version') then
     Log.w('Update is corrupted! (no .version file)')
     fs.delete('/.update/')
@@ -54,7 +55,6 @@ if fs.exists('/.update/') and fs.isDir('/.update/') then -- система об�
 
   function installFolder(path)
     for i, v in ipairs(fs.list('/.update/'..path)) do
-      os.loadAPI("System/API/Drawing")
       Drawing.DrawArea(1, math.floor(Drawing.Screen.Height / 2), Drawing.Screen.Width, 1, ' ', colours.lightGrey, colours.white)
       Drawing.DrawCharactersCenter(nil, 0, nil, nil, path .. v, colours.lightGrey, colours.white)
       Drawing.DrawBuffer()
