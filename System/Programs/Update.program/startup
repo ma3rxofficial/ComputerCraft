@@ -402,15 +402,15 @@ function Draw(Downloader, action2)
 		
 		if not math.floor(100*(Settings.DownloadedBytes/Settings.TotalBytes)) then
 			if action2 then
-				windows.progressBar(20," started",Downloader,action2)
+				windows.progressBar(29," started",Downloader,action2)
 			else
-				windows.progressBar(20," started",Downloadr)
+				windows.progressBar(29," started",Downloadr)
 			end
 		else
 			if action2 then
-				windows.progressBar(20," "..math.floor(100*(Settings.DownloadedBytes/Settings.TotalBytes)).."%", Downloader, action2)
+				windows.progressBar(29," "..math.floor(100*(Settings.DownloadedBytes/Settings.TotalBytes)).."%", Downloader, action2)
 			else
-				windows.progressBar(20," "..math.floor(100*(Settings.DownloadedBytes/Settings.TotalBytes)).."%", Downloader)
+				windows.progressBar(29," "..math.floor(100*(Settings.DownloadedBytes/Settings.TotalBytes)).."%", Downloader)
 			end
 		end
 	end
