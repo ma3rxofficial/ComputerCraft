@@ -15,7 +15,7 @@ os.loadAPI('System/API/Settings')
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Базовые константы загрузчика
 
-local install_files = {'Installer.lua', 'dN2gMnV9', '.tmp'} -- временные файлы, которые могут остаться при установке ОС
+local install_files = {'installer', 'install', 'dN2gMnV9', '.tmp'} -- временные файлы, которые могут остаться при установке ОС
 local isModified = false -- переменная, отвечающая за информацию о том, модифицированы ли системные файлы
 local tAPIsLoading = {} -- хранилище подгружаемых API
 
@@ -43,6 +43,41 @@ Log.Initialise()
 -- Пишем версии ОС в лог
 Log.i(os.version()) -- Версия CraftOS(стандартной ОС)
 Log.i('SpeedOS Version: '..versionData) -- Версия SpeedOS
+
+-----------------------------------------------------------------------------------------------------------------------------------
+if fs.exists('/.update/') and fs.isDir('/.update/') then -- система обновления ОС из папки
+  Log.i('Found update!')
+  if not fs.exists('/.update/.version') then
+    Log.w('Update is corrupted! (no .version file)')
+    fs.delete('/.update/')
+  end
+
+  function installFolder(path)
+    for i, v in ipairs(fs.list('/.update/'..path)) do
+      os.loadAPI("System/API/Drawing")
+      Drawing.DrawArea(1, math.floor(Drawing.Screen.Height / 2), Drawing.Screen.Width, 1, ' ', colours.lightGrey, colours.white)
+      Drawing.DrawCharactersCenter(nil, 0, nil, nil, path .. v, colours.lightGrey, colours.white)
+      Drawing.DrawBuffer()
+      if fs.isDir('/.update/'..path .. v) then
+        fs.makeDir('/'..path .. v)
+        installFolder(path .. v .. '/')
+      else
+        fs.delete('/'..path .. v)
+        fs.move('/.update/'..path .. v, '/'..path .. v)
+      end
+      sleep(0)
+    end
+  end
+
+  Drawing.Clear(colours.white)
+  Drawing.DrawCharactersCenter(nil, -3, nil, nil, 'Installing Update', colours.blue, colours.white)
+  Drawing.DrawCharactersCenter(nil, -2, nil, nil, 'This may take a moment.', colours.grey, colours.white)
+  Drawing.DrawBuffer()
+  Log.i('Installing started...')
+  installFolder('')
+  fs.delete('/.update/')
+  Log.i('Update installed!')
+end
 
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Проверка на модифицированность системных файлов, используется переменная isModified
@@ -326,39 +361,6 @@ elseif LoadingScreen() then
       Log.w('Autorun isn\'\t directory!') -- файл .autorun это не директория, работа запрещена нахуй
     end
 
-  end
-
-  if fs.exists('/.update/') and fs.isDir('/.update/') then -- система обновления ОС из папки
-    Log.i('Found update!')
-    if not fs.exists('/.update/.version') then
-      Log.w('Update is corrupted! (no .version file)')
-      fs.delete('/.update/')
-    end
-
-    function installFolder(path)
-      for i, v in ipairs(fs.list('/.update/'..path)) do
-        Drawing.DrawArea(1, math.floor(Drawing.Screen.Height / 2), Drawing.Screen.Width, 1, ' ', colours.lightGrey, colours.white)
-        Drawing.DrawCharactersCenter(nil, 0, nil, nil, path .. v, colours.lightGrey, colours.white)
-        Drawing.DrawBuffer()
-        if fs.isDir('/.update/'..path .. v) then
-          fs.makeDir('/'..path .. v)
-          installFolder(path .. v .. '/')
-        else
-          fs.delete('/'..path .. v)
-          fs.move('/.update/'..path .. v, '/'..path .. v)
-        end
-        sleep(0)
-      end
-    end
-
-    Drawing.Clear(colours.white)
-    Drawing.DrawCharactersCenter(nil, -3, nil, nil, 'Installing Update', colours.blue, colours.white)
-    Drawing.DrawCharactersCenter(nil, -2, nil, nil, 'This may take a moment.', colours.grey, colours.white)
-    Drawing.DrawBuffer()
-    Log.i('Installing started...')
-    installFolder('')
-    fs.delete('/.update/')
-    Log.i('Update installed!')
   end
 
   -- Запуск нашего Десктопа с приложухами
