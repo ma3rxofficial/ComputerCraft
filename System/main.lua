@@ -116,7 +116,15 @@ end
 
 --Возвращает true, если первая указанная версия новее второй указанной версии
 function SematicVersionIsNewer(version, otherVersion)
-	return false -- недописано
+	if version[1] > otherVersion[1] then
+		return true
+	elseif version[2] > otherVersion[2] then
+		return true
+	elseif version[3] > otherVersion[3] then
+		return true
+	end
+	return false
+end
 end
 
 -- Недописанная функция. По задумке выскакивает окошко о том, что обновление провалено нахуй!
