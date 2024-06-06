@@ -21,7 +21,7 @@ local pathToConfig = "System/Events.settings"
 -----------------------------------------------------------------------------------------------------------------------------------
 
 
-  skipString = config.read(pathToConfig, "skip")
+
   skipTable = textutils.unserialize(skipString)
 
   for _, ev in pairs(skipTable) do
