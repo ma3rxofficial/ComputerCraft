@@ -19,6 +19,7 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 local pathToConfig = "System/Events.settings"
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Всякая визуальная инициализация программы
 
 windows.clearScreen(colors.gray)
 term.setCursorPos(1, 1)
