@@ -27,7 +27,6 @@ local pathToConfig = "System/Events.settings"
 
 
 
-    end
   end
 
   return true
