@@ -25,7 +25,7 @@ local pathToConfig = "System/Events.settings"
 
 
 
-    if ev == e then
+
       return false
     end
   end
