@@ -125,7 +125,6 @@ function SematicVersionIsNewer(version, otherVersion)
 	end
 	return false
 end
-end
 
 -- Недописанная функция. По задумке выскакивает окошко о том, что обновление провалено нахуй!
 function AutoUpdateFail(event, url, data)
