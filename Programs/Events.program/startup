@@ -65,6 +65,7 @@ while true do
       print(p7)
     end
 
+    -- Симпатичный разделитель
     term.setTextColor(colors.lightGray)
     SpeedText.line()
     term.setTextColor(colors.white)
