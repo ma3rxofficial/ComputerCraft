@@ -20,7 +20,7 @@ local pathToConfig = "System/Events.settings"
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
-function skip(e)
+
   skipString = config.read(pathToConfig, "skip")
   skipTable = textutils.unserialize(skipString)
 
