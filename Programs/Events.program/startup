@@ -24,7 +24,7 @@ local pathToConfig = "System/Events.settings"
 
 
 
-  for _, ev in pairs(skipTable) do
+
     if ev == e then
       return false
     end
