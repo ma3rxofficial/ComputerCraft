@@ -68,7 +68,7 @@ while true do
     -- Симпатичный разделитель
     term.setTextColor(colors.lightGray) -- ставим цвет текста на светло-серый
     SpeedText.line() -- разделитель норм
-    term.setTextColor(colors.white)
+    term.setTextColor(colors.white) -- возвращаем цвет текста на белый
   end
 end
 
