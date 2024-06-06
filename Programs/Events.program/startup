@@ -22,7 +22,7 @@ local pathToConfig = "System/Events.settings" -- путь до файла кон
 -- Всякая визуальная инициализация программы
 
 windows.clearScreen(colors.gray) -- чистим экран в серый цвет
-term.setCursorPos(1, 1)
+term.setCursorPos(1, 1) -- ставим позицию курсора на 1, 1
 term.setTextColor(colors.white)
 
 -----------------------------------------------------------------------------------------------------------------------------------
