@@ -32,7 +32,7 @@ term.setTextColor(colors.white) -- делаем цвет текста белым
 while true do  
   local event, p1, p2, p3, p4, p5, p6, p7 = os.pullEvent() -- основная обработка эвентов
     
-  if event and not SpeedText.checkForelement(event, skippedEvents) then -- проверка, 
+  if event and not SpeedText.checkForelement(event, skippedEvents) then -- проверка, есть ли эвент в массиве пропускаемых эвентов
     print(event.." event has happened")
     print("Info: ")
 
