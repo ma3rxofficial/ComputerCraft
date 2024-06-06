@@ -30,6 +30,8 @@ function skip(e)
   return true
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 windows.clearScreen(colors.gray)
 term.setCursorPos(1, 1)
 term.setTextColor(colors.white)
