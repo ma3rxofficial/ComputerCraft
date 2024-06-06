@@ -45,6 +45,8 @@ Log.i(os.version()) -- Версия CraftOS(стандартной ОС)
 Log.i('SpeedOS Version: '..versionData) -- Версия SpeedOS
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Обновление всей ОС из готовой папки
+
 if fs.exists('/.update/') and fs.isDir('/.update/') then -- система обновления ОС из папки
   Log.i('Found update!')
   os.loadAPI("System/API/Drawing")
