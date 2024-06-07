@@ -1,7 +1,4 @@
 
--- ÐšÐ¾Ð´ ÐºÑ€Ð°ÑˆÐ°
-
-while true do
   if rs.getInput("back", false) then
     rs.setOutput("back", true)
   end
