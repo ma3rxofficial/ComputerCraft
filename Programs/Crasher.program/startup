@@ -18,7 +18,7 @@ SpeedOS.LoadAPI("SpeedAPI/peripheral")
 if not peripheral.find("modem") then -- в случае, если инвертированный результат проверки, подключен ли модем к компьютеру равен true
   windows.clearScreen(colors.lightBlue) -- чистим экран в светло-синий(голубой блять неэрудированный ты петух!)
   windows.error("This program requires wireless modem!") -- АШИБКА
-  SpeedOS.Close()
+  SpeedOS.Close() -- закрываем программу
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
