@@ -1,10 +1,4 @@
 
--- ÐŸÐµÑ‡Ð°Ñ‚Ð°ÐµÐ¼ Ð¿Ñ€Ð¾ÑÑ‚
-
-print("Press any key to start the Pizdec")
-print("Place a redstone torch next to right side of redstone")
-
------------------------------------------------------------------------------------------------------------------------------------
 -- ÐžÐ¶Ð¸Ð´Ð°ÐµÐ¼ ÑÐ²ÐµÐ½Ñ‚Ñ‹ ÐºÐ»Ð¸ÐºÐ° Ð¸Ð»Ð¸ Ð½Ð°Ð¶Ð°Ñ‚Ð¸Ñ Ð½Ð° ÐºÐ½Ð¾Ð¿ÐºÑƒ
 
 SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
