@@ -157,7 +157,7 @@ function AutoUpdateRespose(event, url, data)
 			ButtonDialogueWindow:Initialise("Up to date!", "SpeedOS is up to date!", 'Ok', nil, function(success)end):Show()
 		end
 		return
-	elseif SematicVersionIsNewer(GetSematicVersion(latestReleaseTag), GetSematicVersion(SpeedOSVersion)) then -- в противном случае - запускаем отдельную прогу для обновления
+	elseif SematicVersionIsNewer(GetSematicVersion(latestReleaseTag), GetSematicVersion(SpeedOSVersion)) and Settings.GetValues('AutoUpdate')['AutoUpdate'] == true then -- в противном случае - запускаем отдельную прогу для обновления
 		LaunchProgram('/System/Programs/Update.program/startup', {}, 'Update SpeedOS')
 	end
 end
