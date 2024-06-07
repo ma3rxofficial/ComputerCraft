@@ -1,16 +1,4 @@
 
-  if rs.getInput("back", false) then
-    rs.setOutput("back", true)
-  end
-  
-  if rs.getInput("right", true)  then
-    rs.setOutput("front", true)
-    rs.setOutput("left", false)
-  end
-
-  if rs.getInput("right", false) then
-    rs.setOutput("left", true)
-  end
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
