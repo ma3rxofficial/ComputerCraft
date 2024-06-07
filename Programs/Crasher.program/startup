@@ -15,7 +15,7 @@ SpeedOS.LoadAPI("SpeedAPI/peripheral")
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Информирование пользователя о том, что для работы программы ему потребуется беспроводной модем для доступа к rednet-сети
 
-if not peripheral.find("modem") then
+if not peripheral.find("modem") then -- в случае, если инвертированный результат проверки, подключен ли модем к компьютеру равен true
   windows.clearScreen(colors.lightBlue)
   windows.error("This program requires wireless modem!")
   SpeedOS.Close()
