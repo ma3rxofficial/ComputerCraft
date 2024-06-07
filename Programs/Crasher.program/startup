@@ -36,7 +36,7 @@ local _string = ""
 
 while true do
   _string = _string.."-"
-  rednet.broadcast(_string)
+  rednet.broadcast(_string) -- атправляим
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
