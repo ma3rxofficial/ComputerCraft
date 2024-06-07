@@ -1,1 +1,1 @@
-{["UseAnimations"]=true,["UseRedstoneElectrity"]=false,["UseMonitor"]=false,["AutoAPIUnloading"]=false,["DesktopColour"]=512,["ComputerName"]="SpeedOS",}
+{["UseAnimations"]=true,["AutoUpdate"]=false,["ComputerName"]="SpeedOS",["AutoAPIUnloading"]=false,["UseRedstoneElectrity"]=false,["DesktopColour"]=512,["UseMonitor"]=false,}
