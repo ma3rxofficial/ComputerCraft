@@ -13,6 +13,7 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Информирование пользователя о том, что для работы программы ему потребуется беспроводной модем для доступа к rednet-сети
 
 if not peripheral.find("modem") then
   windows.clearScreen(colors.lightBlue)
