@@ -154,6 +154,7 @@ function GetList()
   term.setCursorPos(1, 1)
   textutils.pagedTabulate(textutils.unserialize(msg))
   SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
+  Menu()
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
