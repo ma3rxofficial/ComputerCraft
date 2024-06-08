@@ -30,6 +30,11 @@
 			Label = 'API Unloading ',
 			Default = false,
 		},	
+		AutoUpdate = {
+			Type = 'Bool',
+			Label = 'Auto Updating ',
+			Default = true,
+		},	
 	}
 
 	function WriteDefaults(self)
