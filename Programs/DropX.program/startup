@@ -103,7 +103,7 @@ function Get()
   	Menu() 
   end
 
-  theirFile =fs.open(filename2,"w")
+  theirFile = fs.open(filename2,"w")
   if not theirFile then windows.clearScreen(colors.white) windows.error("Could not open "..filename2.."! Try rebooting the computer.",0) Menu() end
   theirFile.write(msg)
   theirFile.close()
