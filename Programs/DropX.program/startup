@@ -145,8 +145,8 @@ end
 
 function GetList()
 	windows.clearScreen(colors.gray)
-
 	rednet.send(serverid,"@list~!DSX!~")
+
   repeat
     id, msg = rednet.receive(5)
   until id == serverid or id == nil
