@@ -79,8 +79,9 @@ function Get()
 	windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Enter filename(to save):", 6)
 	filename2 = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
-	
-	if id2 == "" then windows.clearScreen(colors.white) windows.error("Idi nahui") Menu() end
+
+	if id2 == "" then 
+		windows.clearScreen(colors.white) windows.error("Idi nahui") Menu() end
 	rednet.send(serverid,"@get~!DSX!~"..tostring(id).."~!DSX!~"..filename)
 	repeat
     id, msg = rednet.receive(5)
