@@ -147,7 +147,7 @@ function GetList()
 	windows.clearScreen(colors.gray)
 
 	rednet.send(serverid,"@list~!DSX!~")
-    repeat
+  repeat
         id,msg = rednet.receive(5)
     until id == serverid or id == nil
     if id == nil then print("Cannot Reach Server") return end
