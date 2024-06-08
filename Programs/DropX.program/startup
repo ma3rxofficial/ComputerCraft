@@ -134,12 +134,11 @@ function Delete()
   end
 
 	rednet.send(serverid,"@delete~!DSX!~"..filename)
-	
+
   windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Sucessfully deleted!")
 	sleep(3)
 	Menu()
-
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
