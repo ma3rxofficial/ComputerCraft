@@ -49,7 +49,8 @@ function Upload()
 
 	if not fs.exists(filename) then 
 		windows.clearScreen(colors.white) 
-		windows.error("File not exists!") Menu() end
+		windows.error("File not exists!") 
+		Menu() end
 	theirFile = fs.open(shell.resolve(filename), "r")
 	rednet.send(serverid,"@put~!DSX!~"..filename.."~!DSX!~"..theirFile.readAll())
   theirFile.close()
