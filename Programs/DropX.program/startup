@@ -42,8 +42,9 @@ function Upload()
 	windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Enter filename:", 6)
 	filename = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
-	
-	if filename == "" then Menu() end
+
+	if filename == "" then 
+		Menu() end
 	if not fs.exists(filename) then windows.clearScreen(colors.white) windows.error("File not exists!") Menu() end
 	theirFile = fs.open(shell.resolve(filename), "r")
 	rednet.send(serverid,"@put~!DSX!~"..filename.."~!DSX!~"..theirFile.readAll())
