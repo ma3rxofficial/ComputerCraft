@@ -54,7 +54,7 @@ function Upload()
 	end
 
 	theirFile = fs.open(shell.resolve(filename), "r")
-	rednet.send(serverid,"@put~!DSX!~"..filename.."~!DSX!~"..theirFile.readAll())
+	rednet.send(serverid, "@put~!DSX!~"..filename.."~!DSX!~"..theirFile.readAll())
   theirFile.close()
 
 	windows.clearScreen(colors.gray)
