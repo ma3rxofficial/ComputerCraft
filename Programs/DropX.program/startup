@@ -109,6 +109,7 @@ function Get()
   	windows.error("Could not open "..filename2.."! Try rebooting the computer.",0) 
   	Menu() 
   end
+  
   theirFile.write(msg)
   theirFile.close()
 	windows.clearScreen(colors.gray)
