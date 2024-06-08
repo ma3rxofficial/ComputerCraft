@@ -150,6 +150,7 @@ function GetList()
   repeat
     id, msg = rednet.receive(5)
   until id == serverid or id == nil
+  
   if id == nil then 
   	print("Cannot Reach Server") 
   	SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
