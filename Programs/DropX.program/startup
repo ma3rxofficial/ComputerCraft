@@ -84,6 +84,8 @@ function Get()
 	Menu()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function Delete()
 	windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Enter filename:", 6)
