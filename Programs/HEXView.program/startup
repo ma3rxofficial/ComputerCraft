@@ -3,6 +3,7 @@ if SpeedOS then
 	SpeedOS.ToolBarTextColour = colours.black
 end
 
+SpeedOS.LoadAPI("SpeedAPI/_paintutils")
 SpeedOS.LoadAPI("SpeedAPI/lddfm")
 
 fs = SpeedOS.FS
@@ -484,8 +485,8 @@ function showBox(title,text,btype,bw,bh,ym,nm,hist)
 		hist = false	
 	end
 	local midw, midh = math.floor(w/2), math.floor(h/2)
---	paintutils.drawBox((midw-(bw/2))-1,(midh-(bh/2))+1,(midw+(bw/2))-1,midh+1, colors.black)
---	paintutils.drawFilledBox(midw-(bw/2),midh-(bh/2),(midw+(bw/2)),midh, colors.lightGray)
+	_paintutils.drawBox((midw-(bw/2))-1,(midh-(bh/2))+1,(midw+(bw/2))-1,midh+1, colors.black)
+	_paintutils.drawFilledBox(midw-(bw/2),midh-(bh/2),(midw+(bw/2)),midh, colors.lightGray)
 	paintutils.drawLine(midw-(bw/2),midh-(bh/2),(midw+(bw/2)),midh-(bh/2), colors.blue)
 	term.setTextColor(colors.white)
 	term.setBackgroundColor(colors.blue)
@@ -958,8 +959,9 @@ end
 
 local tArgs = { ... }
 if(#tArgs == 0) then 
-	showBox("File","Loading\n"..lddfm.makeMenu(),"nomode",21,3)
-	loadFile(lddfm.makeMenu())
+	result = lddfm.makeMenu()
+	showBox("File","Loading\n"..result,"nomode",21,3)
+	loadFile(result)
 	refreshScreen()
 end
 
