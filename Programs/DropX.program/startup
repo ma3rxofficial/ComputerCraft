@@ -21,7 +21,7 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 fs = SpeedOS.FS
 
 -----------------------------------------------------------------------------------------------------------------------------------
--- Конфиг блять
+-- Настройки блять
 
 local pathToConfig = "System/DropX.settings"
 local serverid = tonumber(config.read(pathToConfig, "server ID"))
