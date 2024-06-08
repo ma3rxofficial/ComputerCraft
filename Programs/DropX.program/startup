@@ -1,4 +1,5 @@
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Меняем цвет верхнего тулбара
 
 if SpeedOS then
 	SpeedOS.ToolBarColour = colours.lightGrey
@@ -56,7 +57,7 @@ function Upload()
 	theirFile = fs.open(shell.resolve(filename), "r")
 	rednet.send(serverid,"@put~!DSX!~"..filename.."~!DSX!~"..theirFile.readAll())
   theirFile.close()
-  
+
 	windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Sucessfully uploaded file to server!")
 	sleep(3)
