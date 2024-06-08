@@ -150,7 +150,11 @@ function GetList()
   repeat
     id,msg = rednet.receive(5)
   until id == serverid or id == nil
-  if id == nil then print("Cannot Reach Server") return end
+  if id == nil then 
+  	print("Cannot Reach Server") 
+  	Menu() 
+  end
+
   term.setCursorPos(1, 1)
   textutils.pagedTabulate(textutils.unserialize(msg))
   SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
