@@ -69,8 +69,9 @@ function Get()
 	windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Enter filename(on server):", 6)
 	filename = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
-	
-	if filename == "" then windows.clearScreen(colors.white) windows.error("Idi nahui") Menu() end
+
+	if filename == "" then 
+		windows.clearScreen(colors.white) windows.error("Idi nahui") Menu() end
 	windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Enter filename(to save):", 6)
 	filename2 = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
