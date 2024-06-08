@@ -107,7 +107,8 @@ function Get()
   if not theirFile then 
   	windows.clearScreen(colors.white) 
   	windows.error("Could not open "..filename2.."! Try rebooting the computer.",0) 
-  	Menu() end
+  	Menu() 
+  end
   theirFile.write(msg)
   theirFile.close()
 	windows.clearScreen(colors.gray)
