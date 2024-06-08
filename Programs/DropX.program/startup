@@ -72,9 +72,9 @@ function Get()
 	repeat
     id, msg = rednet.receive(5)
   until id == serverid or id == nil
-  
+
   if not id or not msg then windows.clearScreen(colors.white) windows.error("Cannot Reach Server",0) SpeedOS.Close() end
-        if msg == "DOLBAEB" then windows.clearScreen(colors.white) windows.error("FAILA NET BLYAT!") Menu() end
+  if msg == "DOLBAEB" then windows.clearScreen(colors.white) windows.error("FAILA NET BLYAT!") Menu() end
         theirFile=fs.open(filename2,"w")
         if not theirFile then windows.clearScreen(colors.white) windows.error("Could not open "..filename2.."! Try rebooting the computer.",0) Menu() end
         theirFile.write(msg)
