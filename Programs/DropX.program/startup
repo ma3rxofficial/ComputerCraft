@@ -96,7 +96,7 @@ function Get()
 		windows.error("Idi nahui") Menu() 
 	end
 
-	rednet.send(serverid,"@get~!DSX!~"..tostring(id).."~!DSX!~"..filename)
+	rednet.send(serverid, "@get~!DSX!~"..tostring(id).."~!DSX!~"..filename)
 
 	repeat
     id, msg = rednet.receive(5)
