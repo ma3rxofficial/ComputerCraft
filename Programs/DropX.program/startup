@@ -127,7 +127,8 @@ function Delete()
 	SpeedText.cPrint("Enter filename:", 6)
 	filename = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
 
-  if filename == "" then windows.clearScreen(colors.white) windows.error("Idi nahui") Menu() end
+  if filename == "" then 
+  	windows.clearScreen(colors.white) windows.error("Idi nahui") Menu() end
 	rednet.send(serverid,"@delete~!DSX!~"..filename)
   windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Sucessfully deleted!")
