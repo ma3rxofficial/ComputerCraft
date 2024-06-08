@@ -170,7 +170,7 @@ function Menu()
 	SpeedText.cPrint("DropX - rednet File Server")
 
 	SpeedGUI.gui.button.add("Upload to DropX", Upload, 2, 2, 2, 3, colors.white, colors.orange)
-	SpeedGUI.gui.button.add("Download from DropX",Get,28,2,2,3,colors.white,colors.orange)
+	SpeedGUI.gui.button.add("Download from DropX", Get,28,2,2,3,colors.white,colors.orange)
 	SpeedGUI.gui.button.add("Delete files",Delete,17,11,2,3,colors.white,colors.orange)
 	SpeedGUI.gui.button.add("Get list of files from DropX",GetList,9,15,2,3,colors.white,colors.orange)
 	SpeedGUI.start()
