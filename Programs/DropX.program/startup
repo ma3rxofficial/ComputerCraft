@@ -70,7 +70,7 @@ function Get()
 	if id2 == "" then windows.clearScreen(colors.white) windows.error("Idi nahui") Menu() end
 	rednet.send(serverid,"@get~!DSX!~"..tostring(id).."~!DSX!~"..filename)
 	repeat
-        id,msg = rednet.receive(5)
+        id, msg = rednet.receive(5)
         until id == serverid or id == nil
         if not id or not msg then windows.clearScreen(colors.white) windows.error("Cannot Reach Server",0) SpeedOS.Close() end
         if msg == "DOLBAEB" then windows.clearScreen(colors.white) windows.error("FAILA NET BLYAT!") Menu() end
