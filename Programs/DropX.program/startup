@@ -28,12 +28,6 @@ local serverid = tonumber(config.read(pathToConfig, "server ID"))
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
-if not serverid then
-	serverid = 630
-end
-
------------------------------------------------------------------------------------------------------------------------------------
-
 if not peripheral.find("modem") then
   windows.clearScreen(colors.white)
   windows.error("You need wireless modem!")
