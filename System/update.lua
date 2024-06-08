@@ -1,19 +1,4 @@
 
--- Настройка кол-ва байтов
-
-Settings.TotalFiles = 0 -- кол-во файлов
-Settings.TotalBytes = 0 -- кол-во байтов(ДАЖЕ НЕ ДУМАЙТЕ ЕГО ПОСЧИТАТЬ)
-
-for i, v in ipairs(tree) do -- перебираем все в дереве файлов
-	if not isBlacklisted(Settings.InstallPath..v.path) and v.size then -- если файл не в черном списке и у него есть какой-то размер
-		Settings.TotalBytes = Settings.TotalBytes + v.size -- добавляем его размер в байтах к общему кол-ву байтов
-		Settings.TotalFiles = Settings.TotalFiles + 1 -- добавляем один файл в кол-во всех файлов
-	end
-end
-
-Settings.DownloadedBytes = 0 -- кол-во скачанных байтов с гитхаба
-Settings.DownloadedFiles = 0 -- кол-во уже полноценных файликов с гитхаба
-
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Функции скачивания
 
