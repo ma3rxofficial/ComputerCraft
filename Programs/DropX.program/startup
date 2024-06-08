@@ -59,6 +59,7 @@ function Get()
 	windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Enter ID, where file is:", 6)
 	id = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false)
+	
 	if id == "" or not tonumber(id) then 
 		windows.clearScreen(colors.white) 
 		windows.error("Idi nahui") 
