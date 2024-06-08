@@ -36,6 +36,8 @@ if not peripheral.find("modem") then
   SpeedOS.Close()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function Upload()
 	windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Enter filename:", 6)
