@@ -1,20 +1,4 @@
 
--- Функция печати
-
-local oldPrint = print -- дублируем стандартную версию функции print из bios в переменную OldPrint
-
--- Создаем нашу функцию
-function print(...)
-	local str = {...}
-	if not Settings.Hidden then
-		oldPrint(str[1])
-	end
-	Settings.Status = str[1]
-	Settings.SecondaryStatus = str[2]
-	Settings.UpdateFunction()
-end
-
------------------------------------------------------------------------------------------------------------------------------------
 -- Скачать что-то по HTTP используя декодирование JSON
 
 -- Вот, собственно, сама функция
