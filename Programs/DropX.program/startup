@@ -149,7 +149,7 @@ function GetList()
 	rednet.send(serverid,"@list~!DSX!~")
   repeat
         id,msg = rednet.receive(5)
-    until id == serverid or id == nil
+  until id == serverid or id == nil
     if id == nil then print("Cannot Reach Server") return end
     term.setCursorPos(1, 1)
     textutils.pagedTabulate(textutils.unserialize(msg))
