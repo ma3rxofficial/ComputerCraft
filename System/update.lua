@@ -1,23 +1,4 @@
 
--- Распечатка того, что программка щас делает и отправляем запросы на GitHub
-
-print('Downloading releases list...', 'Determining Latest Version') -- скачиваем список релизов
-local releases = downloadJSON('https://api.github.com/repos/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/releases') -- само скачивания(с помощью JSON)
-local latestReleaseTag = releases[1].tag_name -- получаем последний релиз
-print('Latest release: '..latestReleaseTag) -- печатаем последний релиз
-print('Downloading refs...', 'Optaining Latest Version URL') -- пишем, что получаем URL последней версии
-local refs = downloadJSON('https://api.github.com/repos/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/git/refs') -- получили нахуй
-local latestReleaseSha = '' -- SHA-код последней версии
-for i, v in ipairs(refs) do -- перебираем устойчивую файловую систему поочереди
-	if v.ref == 'refs/tags/'..latestReleaseTag then -- выбираем последний релиз
-		latestReleaseSha = v.object.sha -- и наконец получаем SHA-код последней версии
-	end
-end
-
-print('Downloading tree for SHA: '..latestReleaseSha, 'Downloading File Listing') -- печатаем, что скачиваем список файлов последнего релиза
-local tree = downloadJSON('https://api.github.com/repos/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/git/trees/'..latestReleaseSha..'?recursive=1').tree -- дерево файлов получено
-
------------------------------------------------------------------------------------------------------------------------------------
 -- Система ЧЕРНОГО списка файлов в версии
 
 -- Массив черного списка
