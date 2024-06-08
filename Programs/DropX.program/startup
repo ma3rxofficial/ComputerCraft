@@ -132,8 +132,9 @@ function Delete()
   	windows.error("Idi nahui") 
   	Menu() 
   end
-  
+
 	rednet.send(serverid,"@delete~!DSX!~"..filename)
+	
   windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Sucessfully deleted!")
 	sleep(3)
