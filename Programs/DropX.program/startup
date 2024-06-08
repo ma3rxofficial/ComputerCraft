@@ -104,7 +104,7 @@ function Get()
   end
 
   theirFile = fs.open(filename2, "w")
-  
+
   if not theirFile then 
   	windows.clearScreen(colors.white) 
   	windows.error("Could not open "..filename2.."! Try rebooting the computer.",0) 
@@ -113,6 +113,7 @@ function Get()
 
   theirFile.write(msg)
   theirFile.close()
+  
 	windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Sucessfully downloaded!")
 	sleep(3)
