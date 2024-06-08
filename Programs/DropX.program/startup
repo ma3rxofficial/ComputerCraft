@@ -129,7 +129,8 @@ function Delete()
 
   if filename == "" then 
   	windows.clearScreen(colors.white) 
-  	windows.error("Idi nahui") Menu() end
+  	windows.error("Idi nahui") 
+  	Menu() end
 	rednet.send(serverid,"@delete~!DSX!~"..filename)
   windows.clearScreen(colors.gray)
 	SpeedText.cPrint("Sucessfully deleted!")
