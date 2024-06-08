@@ -153,7 +153,7 @@ function GetList()
   if id == nil then print("Cannot Reach Server") return end
   term.setCursorPos(1, 1)
   textutils.pagedTabulate(textutils.unserialize(msg))
-  SpeedText.waitForEvent({"mouse_click", "mouse_drag"})
+  SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
