@@ -1,23 +1,4 @@
 
--- Скачать что-то по HTTP используя декодирование JSON
-
--- Вот, собственно, сама функция
-function downloadJSON(path)
-	local _json = http.get(path) -- запрос на какой-то URL
-	if not _json then -- если ничего не получили в ответ запроса
-		error('Could not download, check your connection.') -- пишем ошибку
-	end
-	return JSON.decode(_json.readAll()) -- возвращаем декодированную информацию этого URL
-end
-
--- Если не включено HTTP
-if http then
-	print('HTTP enabled, attempting update...')
-else
-	error('HTTP is required to update.')
-end
-
------------------------------------------------------------------------------------------------------------------------------------
 -- Распечатка того, что программка щас делает и отправляем запросы на GitHub
 
 print('Downloading releases list...', 'Determining Latest Version') -- скачиваем список релизов
