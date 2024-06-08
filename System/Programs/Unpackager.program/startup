@@ -11,22 +11,23 @@ Drawing.Clear(colours.white)
 Drawing.DrawCharactersCenter(nil, nil, nil, nil, 'Extracting Package...', colours.black, colours.white)
 Drawing.DrawBuffer()
 
+if tArgs[1] then
+	local packrun, err = SpeedOS.LoadFile(tArgs[1])
+	local env = getfenv()
+	env['installLocation'] = Helpers.RemoveFileName(tArgs[1])..'/'
+	setfenv( packrun, env)
+	if packrun then
+		packrun()
+	else
+		error(err)
+		error(tArgs[1])
+		error('The package appears to be corrupt.')
+	end
 
-local packrun, err = SpeedOS.LoadFile(tArgs[1])
-local env = getfenv()
-env['installLocation'] = Helpers.RemoveFileName(tArgs[1])..'/'
-setfenv( packrun, env)
-if packrun then
-	packrun()
-else
-	error(err)
-	error(tArgs[1])
-	error('The package appears to be corrupt.')
+	Drawing.Clear(colours.white)
+	Drawing.DrawCharactersCenter(nil, nil, nil, nil, 'Package Extracted', colours.black, colours.white)
+	Drawing.DrawBuffer()
 end
-
-Drawing.Clear(colours.white)
-Drawing.DrawCharactersCenter(nil, nil, nil, nil, 'Package Extracted', colours.black, colours.white)
-Drawing.DrawBuffer()
 
 sleep(1)
 SpeedOS.Close()
