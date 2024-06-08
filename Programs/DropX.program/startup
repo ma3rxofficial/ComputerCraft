@@ -82,7 +82,8 @@ function Get()
 
 	if id2 == "" then 
 		windows.clearScreen(colors.white) 
-		windows.error("Idi nahui") Menu() end
+		windows.error("Idi nahui") Menu() 
+	end
 	rednet.send(serverid,"@get~!DSX!~"..tostring(id).."~!DSX!~"..filename)
 	repeat
     id, msg = rednet.receive(5)
