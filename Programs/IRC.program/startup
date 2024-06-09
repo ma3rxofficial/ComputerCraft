@@ -15,6 +15,7 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Конфигурация
 
 pathToConfig = "System/IRC.settings"
 
