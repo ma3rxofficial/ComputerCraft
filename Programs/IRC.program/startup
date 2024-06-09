@@ -17,7 +17,7 @@ SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Ебать возможности кастомизации!
 
-local pathToConfig = "System/IRC.settings"
+local pathToConfig = "System/IRC.settings" -- путь до файла конфигурации
 local blacklist = textutils.unserialize(config.read(pathToConfig, "blacklist")) 
 
 -----------------------------------------------------------------------------------------------------------------------------------
