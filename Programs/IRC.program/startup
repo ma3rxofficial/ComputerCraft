@@ -34,6 +34,8 @@ end
 
 log_file = getLogPath("Resources/")
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 if not peripheral.find("adventure map interface", true) then
 	windows.clearScreen(colors.white)
 	windows.error("You need adventure map interface!")
