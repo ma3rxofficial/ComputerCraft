@@ -41,6 +41,7 @@ end
 log_file = getLogPath("Resources/")
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Информирование пользователя о том, что к его компьютеру не подключена перефирия
 
 if not peripheral.find("adventure map interface", true) then
 	windows.clearScreen(colors.white)
