@@ -69,6 +69,8 @@ io.write("TechWorld ")
 term.setTextColor(colors.cyan)
 print(" #IRC")
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 while true do
 	event, user, msg = os.pullEvent()
 
