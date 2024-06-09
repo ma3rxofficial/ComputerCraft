@@ -30,6 +30,8 @@ function log(path, msg)
     file.close()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 log_file = getLogPath("Resources/")
 
 if not peripheral.find("adventure map interface", true) then
