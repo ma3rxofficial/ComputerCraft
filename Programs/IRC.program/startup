@@ -18,7 +18,6 @@ SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 -- Конфигурация
 
 pathToConfig = "System/IRC.settings"
-
 huy = config.read(pathToConfig, "blacklist")
 local blacklist = textutils.unserialize(huy) 
 
