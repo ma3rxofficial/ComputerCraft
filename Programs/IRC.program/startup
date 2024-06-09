@@ -55,6 +55,7 @@ end
 p = peripheral.wrap(peripheral.find("adventure map interface", true))
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Вывод небольшого логотипа
 
 term.setTextColor(colors.lightGray)
 io.write("TechWorld ")
