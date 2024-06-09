@@ -47,6 +47,8 @@ end
 huy = config.read(pathToConfig, "blacklist")
 local blacklist = textutils.unserialize(huy) 
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function Blacklist(name)
 	for _, _name in pairs(blacklist) do
 		if _name == name then
