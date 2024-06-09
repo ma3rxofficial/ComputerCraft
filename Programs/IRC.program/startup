@@ -58,6 +58,8 @@ function Blacklist(name)
 	return true
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 p = peripheral.wrap(peripheral.find("adventure map interface", true))
 
 term.setTextColor(colors.lightGray)
