@@ -19,6 +19,9 @@ SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 pathToConfig = "System/IRC.settings"
 
+huy = config.read(pathToConfig, "blacklist")
+local blacklist = textutils.unserialize(huy) 
+
 -----------------------------------------------------------------------------------------------------------------------------------
 
 function getLogPath(root)
