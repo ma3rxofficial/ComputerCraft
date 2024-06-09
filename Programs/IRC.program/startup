@@ -15,7 +15,7 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 -----------------------------------------------------------------------------------------------------------------------------------
--- Конфигурация
+-- Ебать возможности кастомизации!
 
 pathToConfig = "System/IRC.settings"
 huy = config.read(pathToConfig, "blacklist")
