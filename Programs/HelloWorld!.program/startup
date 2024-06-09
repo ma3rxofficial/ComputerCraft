@@ -5,6 +5,8 @@ if SpeedOS then
   SpeedOS.ToolBarTextColour = colours.white
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 term.setTextColor(2 ^ math.random(0, 15))
