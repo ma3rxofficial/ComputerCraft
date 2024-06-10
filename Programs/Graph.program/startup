@@ -44,8 +44,6 @@ end
  
 
 
-                        return PeriList[i]
-                end
         end
 end
  
