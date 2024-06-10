@@ -44,8 +44,7 @@ end
  
 
 
-        end
-end
+        end=end
  
 windows.clearScreen(colors.cyan)
 m = peripheral.find("monitor", true)
