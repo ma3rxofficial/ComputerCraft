@@ -30,6 +30,8 @@ local graph_color = SpeedText.stringToColor(config.read(pathToConfig, "graph col
 local error_color = SpeedText.stringToColor(config.read(pathToConfig, "error color"))
 local lines_color = SpeedText.stringToColor(config.read(pathToConfig, "lines color"))
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 if use_old_pallete then
         bg_color = colors.white
         xy_color = colors.black
