@@ -42,7 +42,7 @@ end
 
 -----------------------------------------------------------------------------------------------------------------------------------
  
-local function findMonitor()
+
         local PeriList = peripheral.getNames()
         for i=1,#PeriList do
                 if peripheral.getType(PeriList[i]) == "monitor" then
