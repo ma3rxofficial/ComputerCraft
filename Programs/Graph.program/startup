@@ -41,7 +41,6 @@ if use_old_pallete then
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
-
  
 windows.clearScreen(colors.cyan)
 m = peripheral.find("monitor", true)
