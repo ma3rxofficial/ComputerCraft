@@ -39,6 +39,8 @@ if use_old_pallete then
         error_color = colors.red
         lines_color = colors.black
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
  
 local function findMonitor()
         local PeriList = peripheral.getNames()
