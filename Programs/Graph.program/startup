@@ -44,7 +44,6 @@ end
  
 
 
-                if peripheral.getType(PeriList[i]) == "monitor" then
                         return PeriList[i]
                 end
         end
