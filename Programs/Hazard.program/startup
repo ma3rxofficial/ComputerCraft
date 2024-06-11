@@ -40,7 +40,7 @@ while true do
   print("            00000")
   print("")
   print("================================")
-print("")
+  print("")
 print(" Q - UP Power | A - Down Power")
 
 local event, param1 = os.pullEvent("char")
