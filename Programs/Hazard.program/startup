@@ -44,6 +44,7 @@ while true do
   print(" Q - UP Power | A - Down Power")
 
 local event, param1 = os.pullEvent("char")
+
 if param1 == "q" then
 print("Up Power")
 rs.setBundledOutput("bottom", 1)
