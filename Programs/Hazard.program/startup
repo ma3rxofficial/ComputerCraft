@@ -46,7 +46,7 @@ while true do
   local event, param1 = os.pullEvent("char")
 
   if param1 == "q" then
-  print("Up Power")
+    print("Up Power")
   rs.setBundledOutput("bottom", 1)
   sleep(0.66)
   rs.setBundledOutput("bottom", 0)
