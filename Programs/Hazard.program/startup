@@ -48,7 +48,7 @@ while true do
 if param1 == "q" then
   print("Up Power")
   rs.setBundledOutput("bottom", 1)
-sleep(0.66)
+  sleep(0.66)
 rs.setBundledOutput("bottom", 0)
 sleep(0,4)
 term.clear()
