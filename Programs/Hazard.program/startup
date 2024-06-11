@@ -50,7 +50,7 @@ if param1 == "q" then
   rs.setBundledOutput("bottom", 1)
   sleep(0.66)
   rs.setBundledOutput("bottom", 0)
-sleep(0,4)
+  sleep(0,4)
 term.clear()
 term.setCursorPos(1,1)
 end
