@@ -16,6 +16,8 @@ SpeedText.cPrint("Hazard Reactor")
 SpeedText.cPrint("A. Ksensov. Moscow (c) 1987", 10)
 sleep(3)
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 --hueta
 term.clear()
 term.setCursorPos(1,1)
