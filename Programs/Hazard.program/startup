@@ -9,6 +9,8 @@ end
 
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 term.clear()
 SpeedText.cPrint("Hazard Reactor")
 SpeedText.cPrint("A. Ksensov. Moscow (c) 1987", 10)
