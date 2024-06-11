@@ -27,7 +27,7 @@ while true do
 
   print("------Technical Channel 1------")
   print("")
-print("------   Power Control   ------")
+  print("------   Power Control   ------")
 print("")
 print("            00000              ")
 print("          000000000            ")
