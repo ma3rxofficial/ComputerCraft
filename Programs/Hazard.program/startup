@@ -38,7 +38,7 @@ while true do
   print("         0[7]000[8]0")
   print("          000000000")
   print("            00000")
-print("")
+  print("")
 print("================================")
 print("")
 print(" Q - UP Power | A - Down Power")
