@@ -54,6 +54,7 @@ if param1 == "q" then
   term.clear()
   term.setCursorPos(1,1)
 end
+
 if param1 == "a" then
 print("Downed Power")
 rs.setBundledOutput("bottom", 2)
