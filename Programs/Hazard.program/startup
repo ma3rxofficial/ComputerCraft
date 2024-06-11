@@ -52,7 +52,7 @@ if param1 == "q" then
   rs.setBundledOutput("bottom", 0)
   sleep(0,4)
   term.clear()
-term.setCursorPos(1,1)
+  term.setCursorPos(1,1)
 end
 if param1 == "a" then
 print("Downed Power")
