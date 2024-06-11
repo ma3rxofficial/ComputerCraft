@@ -26,7 +26,7 @@ term.setCursorPos(1, 1)
 while true do
 
   print("------Technical Channel 1------")
-print("")
+  print("")
 print("------   Power Control   ------")
 print("")
 print("            00000              ")
