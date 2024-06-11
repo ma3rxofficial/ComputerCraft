@@ -46,6 +46,9 @@ windows.clearScreen(colors.cyan)
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
 m = peripheral.find("monitor", true)
 if m == nil then windows.clearScreen(colors.cyan) windows.error("This program requires external advanced monitor.") SpeedOS.Close() end
 m = peripheral.wrap(m)
