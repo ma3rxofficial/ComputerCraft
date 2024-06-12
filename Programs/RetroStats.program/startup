@@ -5,7 +5,6 @@ end
 
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
-
 term.setTextColor(colors.white)
 term.setBackgroundColor(colors.black)
 
@@ -23,6 +22,8 @@ print("Computer running: ", os.clock(), " seconds")
 if SpeedOS.FS.exists("disk") then
 	print("Disk free space: "..tostring(SpeedOS.FS.getFreeSpace("/disk").." bytes"))
 end
+
+print("\nPress any key to quit.")
 
 SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
 SpeedOS.Close()
