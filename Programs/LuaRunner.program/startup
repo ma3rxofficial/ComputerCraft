@@ -30,7 +30,6 @@ setmetatable( tEnv, { __index = getfenv() } )
 -----------------------------------------------------------------------------------------------------------------------------------
 
 windows.clearScreen(colors.white)
-
 term.setTextColor(colors.red)
 term.setCursorPos(1,1)
 
@@ -40,6 +39,8 @@ term.setTextColor(colors.gray)
 print("Type an expression and press Enter to execute it")
 print("Type exit() to exit")
 term.setTextColor( colors.lightGray )
+
+-----------------------------------------------------------------------------------------------------------------------------------
 
 while bRunning do
 	term.setTextColor( colors.lightGray )
