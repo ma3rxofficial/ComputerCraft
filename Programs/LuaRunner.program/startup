@@ -43,7 +43,7 @@ term.setTextColor(colors.lightGray)
 -----------------------------------------------------------------------------------------------------------------------------------
 
 while bRunning do
-	term.setTextColor( colors.lightGray)
+	term.setTextColor(colors.lightGray)
 	write( "> " )
 	
 	local s = read( nil, tCommandHistory )
