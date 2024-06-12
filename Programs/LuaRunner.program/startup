@@ -48,7 +48,7 @@ while bRunning do
 	
 	local s = read(nil, tCommandHistory)
 	table.insert(tCommandHistory, s)
-	term.setTextColour( colours.black)
+	term.setTextColour(colours.black)
 	
 	local nForcePrint = 0
 	local func, e = loadstring( s, "lua" )
