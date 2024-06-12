@@ -51,7 +51,7 @@ while bRunning do
 	term.setTextColour(colours.black)
 	
 	local nForcePrint = 0
-	local func, e = loadstring( s, "lua" )
+	local func, e = loadstring(s, "lua" )
 	local func2, e2 = loadstring( "return "..s, "lua" )
 	if not func then
 		if func2 then
