@@ -44,7 +44,7 @@ term.setTextColor(colors.lightGray)
 
 while bRunning do
 	term.setTextColor(colors.lightGray)
-	write("> " )
+	write("> ")
 	
 	local s = read( nil, tCommandHistory )
 	table.insert( tCommandHistory, s )
