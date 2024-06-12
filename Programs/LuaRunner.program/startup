@@ -33,7 +33,7 @@ windows.clearScreen(colors.white)
 term.setTextColor(colors.red)
 term.setCursorPos(1,1)
 
-print( "Lua 5.2 Copyright (c) 1994-2024 Lua.org, PUC-Rio" )
+print( "Lua 5.2 Copyright (c) 1994-2024 Lua.org, PUC-Rio")
 term.setTextColor(colors.gray)
 
 print("Type an expression and press Enter to execute it")
