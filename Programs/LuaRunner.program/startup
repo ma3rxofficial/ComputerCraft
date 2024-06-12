@@ -27,6 +27,8 @@ local tEnv = {
 
 setmetatable( tEnv, { __index = getfenv() } )
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 windows.clearScreen(colors.white)
 
 term.setTextColor(colors.red)
