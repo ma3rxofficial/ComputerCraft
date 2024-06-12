@@ -13,6 +13,8 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 
 fs = SpeedOS.FS
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 local bRunning = true
 local tCommandHistory = {}
 local tEnv = {
