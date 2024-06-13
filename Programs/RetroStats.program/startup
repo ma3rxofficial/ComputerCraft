@@ -13,6 +13,7 @@ SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Чистим экран в ЧОООООООРНЫЙ цвет и курсорируем на координаты старта отрисовки
 
 windows.clearScreen(colors.black)
 term.setCursorPos(1, 1)
