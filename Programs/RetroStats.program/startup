@@ -19,6 +19,7 @@ windows.clearScreen(colors.black)
 term.setCursorPos(1, 1)
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Некий заголовок статистики. Хуйня короче
 
 SpeedText.cPrint("Computer statistics", 1)
 SpeedText.line()
