@@ -20,6 +20,8 @@ term.setCursorPos(1, 1)
 SpeedText.cPrint("Computer statistics", 1)
 SpeedText.line()
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 print("Your computer ID: ", os.getComputerID())
 print("Computer label: ", os.getComputerLabel())
 print("Free space: "..tostring(SpeedOS.FS.getFreeSpace("/")).." bytes")
