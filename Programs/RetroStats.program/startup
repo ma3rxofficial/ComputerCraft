@@ -8,13 +8,11 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------
 
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/windows")
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
-term.setTextColor(colors.white)
-term.setBackgroundColor(colors.black)
-
-term.clear()
+windows.clearScreen(colors.black)
 term.setCursorPos(1, 1)
 
 SpeedText.cPrint("Computer statistics", 1)
