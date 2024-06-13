@@ -37,3 +37,5 @@ print("\nPress any key to quit.")
 
 SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
 SpeedOS.Close()
+
+-----------------------------------------------------------------------------------------------------------------------------------
