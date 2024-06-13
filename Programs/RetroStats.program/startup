@@ -15,6 +15,8 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 windows.clearScreen(colors.black)
 term.setCursorPos(1, 1)
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 SpeedText.cPrint("Computer statistics", 1)
 SpeedText.line()
 
