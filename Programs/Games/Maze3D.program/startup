@@ -44,6 +44,8 @@ if SpeedOS then
 	SpeedOS.ToolBarTextColour = colours.white
 end
 
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+
 -- The color check
 if (not term.isColor()) or turtle then
 	print("This program has to be run on advanced computer.")
@@ -626,3 +628,6 @@ term.clear()
 term.setCursorPos(1, 1)
 cprint("  Maze by Jesusthekiller. Thanks for playing!")
 cprint("3D engine by Gopher, He is A-W-E-S-O-M-E")
+
+SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
+SpeedOS.Close()
