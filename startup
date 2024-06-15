@@ -294,6 +294,7 @@ function LoadingScreen()
         SpeedText.cPrint('SpeedOS', 7)
         term.setTextColor(colors.lightGray)
         SpeedText.cPrint('Alias '..file..' set!')
+        sleep(0.1)
     end
   end
 
