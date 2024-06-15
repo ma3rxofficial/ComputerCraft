@@ -198,7 +198,7 @@ function eventHandler()
 	while true do
 		event = os.pullEvent()
 
-		if event == "mouse_click" or event == "mouse_drag" or event == "key" then
+		if event == "mouse_click" or event == "mouse_drag" or event == "key" or event == "monitor_touch" then
 			local monitor = peripheral.wrap( peripheral.find("monitor", true) )
 			monitor.clear()
 			monitor.setTextColor(colors.white)
