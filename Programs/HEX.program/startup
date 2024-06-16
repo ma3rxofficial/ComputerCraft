@@ -476,7 +476,7 @@ function drawGUI()
 end
 
 function loadFile(file)
-	if(not fs.exists(file))then error("HexEditCC: error -> File doesn't exist (" .. file .. ")." ) end
+	if(not SpeedOS.FS.exists(file))then error("HexEditCC: error -> File doesn't exist (" .. file .. ")." ) end
 	-- Load data into vars
 	_currentMemory = 0
 	_hexData = ""
