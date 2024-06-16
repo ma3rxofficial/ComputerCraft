@@ -72,7 +72,7 @@ hexedit_buttons = {
 	{x=5,graphic= "[" .. string.char(24) .. "]",desc="Open file.",call=function() 
 		local file = showBox("Open File","Enter file name or\n location.","input",21,10) 
 		refreshScreen()
-		if(not fs.exists(file) or #file <= 0)then
+		if(not SpeedOS.FS.exists(file) or #file <= 0)then
 			showBox("File"," File doesnt exist - \n " .. file .. "\n Press any key.","key",21,8)
 			refreshScreen()
 			return
