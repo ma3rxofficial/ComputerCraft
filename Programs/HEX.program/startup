@@ -485,7 +485,7 @@ function loadFile(file)
 	_hexSize = 1
 	_hexBuffer = ""
 	_hexLastByte = 0
-	f = fs.open(file,"rb")
+	f = SpeedOS.FS.open(file,"rb")
 	_hexFile = file
 	for byte in f.read do
 		_hexData = _hexData .. string.char(byte)
