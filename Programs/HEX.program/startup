@@ -45,7 +45,7 @@ hexedit_buttons = {
 			refreshScreen()
 			return
 		end  
-		if(fs.exists(file))then
+		if(SpeedOS.FS.exists(file))then
 			showBox("File","File \"" .. file:sub(1,15) .. "\"\n already exists. \n\n  Press any key.","key",21,10)
 			refreshScreen()
 			return
