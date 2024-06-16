@@ -1,8 +1,6 @@
 SpeedOS.LoadAPI("SpeedAPI/_paintutils")
 SpeedOS.LoadAPI("SpeedAPI/lddfm")
 
-fs = SpeedOS.FS
-
 local w, h = term.getSize()
 --local w,h = 26, 20
 
