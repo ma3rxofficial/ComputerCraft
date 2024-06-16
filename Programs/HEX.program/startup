@@ -496,7 +496,7 @@ function loadFile(file)
 end
 
 function newFile(file,size)
-	if(fs.exists(file))then error("HexEditCC: error -> File already exists (" .. file .. ")." ) end
+	if(SpeedOS.FS.exists(file))then error("HexEditCC: error -> File already exists (" .. file .. ")." ) end
 	-- Load data into vars
 	_currentMemory = 0
 	_hexData = ""
