@@ -1226,7 +1226,7 @@ if(#tArgs == 0) then
 	tArgs[1] = "startup"
 end
 
-if(not fs.exists(tArgs[1]))then
+if(not SpeedOS.FS.exists(tArgs[1]))then
 	drawGUI()
 	local size = tonumber(showBox("Welcome"," Enter size of \n new file. \n(in bytes)","input",21,10),16)
 	if (size == nil or size <= 0 or size > tonumber("FFFFF",16)) then 
