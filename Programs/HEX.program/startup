@@ -90,7 +90,7 @@ hexedit_buttons = {
 	{x=9,graphic="",desc="Save file.",call=function() 
 		result = "yes"
 		if(result == "yes")then
-			f = fs.open(_hexFile,"wb")
+			f = SpeedOS.FS.open(_hexFile,"wb")
 			for i = 1, #_hexData do
 				local byte = string.byte(_hexData:sub(i,i))
 				f.write(byte)
