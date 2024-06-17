@@ -355,12 +355,7 @@ end
 
 function exitHexIt()
 	running = false
-	term.setTextColor(colors.white)
-	term.setBackgroundColor(colors.black)
-	term.clear()
-	term.setCursorPos(1, 1)
-	print("Thanks for using HexIt!")
-	print("If you enjoyed the program be sure to give it an up vote on the forums!")
+	SpeedOS.Close()
 end
 
 
