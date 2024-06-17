@@ -1,3 +1,4 @@
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/_paintutils")
 SpeedOS.LoadAPI("SpeedAPI/lddfm")
 
@@ -730,7 +731,7 @@ function showBox(title,text,btype,bw,bh,ym,nm,hist)
 		write(res:sub(1,bw-2))
 		return res
 	end
-	if(btype == "key")then os.pullEvent("key") end
+	if(btype == "key")then SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"}) end
 	if(btype == "inputmode")then
 		sleep(0.01) -- Cancel already pressed keys.
 		paintutils.drawLine((midw-(bw/2))+1,midh-3,(midw+(bw/2))-1,midh-3, colors.black)
