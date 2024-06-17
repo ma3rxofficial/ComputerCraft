@@ -1843,9 +1843,4 @@ end
 os.queueEvent(S)
 os.pullEvent()
 end
-term.setBackgroundColor(colors.black)
-term.setTextColor(colors.white)
-term.clear()
-term.setCursorPos(1,1)
-f("Thank You for Using Lua IDE "..F)
-f("Made by GravityScore")
+SpeedOS.Close()
