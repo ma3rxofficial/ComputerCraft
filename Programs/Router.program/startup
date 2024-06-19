@@ -69,9 +69,8 @@ if button == "Yes" then
       print("<"..tostring(id).."> "..msg)
     end
   end
-
+  
 else
-
   windows.clearScreen(colors.black)
   term.setCursorPos(1, 1)
 
