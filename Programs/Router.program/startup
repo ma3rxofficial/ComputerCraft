@@ -71,6 +71,7 @@ if button == "Yes" then
 
   while true do
     event, id, msg, dist = os.pullEvent()
+    
     if event == "rednet_message" and blacklist(id) then
       modem.send("<"..tostring(id).."> "..msg)
       print("<"..tostring(id).."> "..msg)
@@ -87,7 +88,7 @@ if button == "No" then
 
   while true do
     event, side, id, channel, msg = os.pullEvent()
-    
+
     if event == "lan_message" then 
       print(msg) 
       if rs_enabled then
