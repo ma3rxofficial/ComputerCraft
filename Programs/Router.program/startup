@@ -35,8 +35,6 @@ end
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
-windows.clearScreen(colors.white)
-
 if not peripheral.find("LAN NIC", true) then
   windows.error("You need wired modem!")
   SpeedOS.Close()
