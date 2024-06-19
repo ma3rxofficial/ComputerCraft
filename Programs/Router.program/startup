@@ -12,6 +12,8 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/config")
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 pathToConfig = "System/Router.settings"
 
 local redstone_side = config.read(pathToConfig, "output")
