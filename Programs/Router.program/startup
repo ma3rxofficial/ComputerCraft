@@ -21,6 +21,8 @@ local rs_enabled = SpeedText.stringToBoolean(config.read(pathToConfig, "redstone
 local routing_enabled = false
 local blacklisted = {}
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function blacklist(id)
   for _, value in pairs(blacklisted) do
     if value == id then
