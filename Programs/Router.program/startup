@@ -87,6 +87,7 @@ if button == "No" then
 
   while true do
     event, side, id, channel, msg = os.pullEvent()
+    
     if event == "lan_message" then 
       print(msg) 
       if rs_enabled then
