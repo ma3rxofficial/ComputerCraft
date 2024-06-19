@@ -33,6 +33,8 @@ function blacklist(id)
   return true
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 windows.clearScreen(colors.white)
 
 if not peripheral.find("LAN NIC", true) then
