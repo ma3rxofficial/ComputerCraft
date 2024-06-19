@@ -42,6 +42,8 @@ if not peripheral.find("LAN NIC", true) then
   SpeedOS.Close()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 button = windows.select({"Hello!"},{"Do you want to use","your computer as router?"},{"No",colors.gray,colors.white}, {"Yes",colors.orange,colors.white})
 
 if button == "Yes" then
