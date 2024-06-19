@@ -15,6 +15,7 @@ SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/config")
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- ЕБАТЬ КАСТОМИЗАЦИЯ!
 
 pathToConfig = "System/Router.settings"
 
