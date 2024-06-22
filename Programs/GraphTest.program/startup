@@ -7,7 +7,6 @@ local tab = 0
 local use_mon_default
 local pathToConfig = "System/GraphTest.settings"
 
-
 huy = config.read(pathToConfig, "use monitor by default")
 
 if huy == "true" then
