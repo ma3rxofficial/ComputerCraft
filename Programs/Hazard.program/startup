@@ -59,7 +59,7 @@ while true do
     print("Downed Power")
     rs.setBundledOutput("bottom", 2)
     sleep(0.66)
-  rs.setBundledOutput("bottom", 0)
+    rs.setBundledOutput("bottom", 0)
   sleep(0,4)
   term.clear()
   term.setCursorPos(1,1)
