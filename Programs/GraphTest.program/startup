@@ -1,6 +1,7 @@
 SpeedOS.LoadAPI("SpeedAPI/graph")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/config")
+SpeedOS.LoadAPI("SpeedAPI/windows")
 
 local tab = 0
 local use_mon_default
