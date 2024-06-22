@@ -8,6 +8,7 @@ local use_mon_default
 local pathToConfig = "System/GraphTest.settings"
 
 huy = config.read(pathToConfig, "use monitor by default")
+huy2 = tonumber(config.read(pathToConfig, "max"))
 
 if huy == "true" then
   use_mon_default = true
@@ -25,10 +26,10 @@ end
 local graphInstance
 
 if peripheral.find("monitor", true) and use_mon_default then
-  graphInstance = graph.new(peripheral.wrap(peripheral.find("monitor", true)), update, "Testing", nil, 0, 100)
+  graphInstance = graph.new(peripheral.wrap(peripheral.find("monitor", true)), update, "Testing", nil, 0, huy2)
 
 else
-  graphInstance = graph.new(term, update, "Testing", nil, 0, 100)
+  graphInstance = graph.new(term, update, "Testing", nil, 0, huy2)
 
 end
 
