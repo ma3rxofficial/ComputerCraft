@@ -58,7 +58,7 @@ while true do
   if param1 == "a" then
     print("Downed Power")
     rs.setBundledOutput("bottom", 2)
-  sleep(0.66)
+    sleep(0.66)
   rs.setBundledOutput("bottom", 0)
   sleep(0,4)
   term.clear()
