@@ -55,7 +55,7 @@ while true do
     term.setCursorPos(1,1)
   end
 
-  if param1 == "a" then
+  elseif param1 == "a" then
     print("Downed Power")
     rs.setBundledOutput("bottom", 2)
     sleep(0.66)
