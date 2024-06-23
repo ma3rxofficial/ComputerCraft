@@ -27,58 +27,7 @@ local sourceWeight = tonumber(config.read(pathToConfig, "source weight")) --Affe
 local greenWeight = tonumber(config.read(pathToConfig, "green weight")) --Threshhold out of 10 that determines when characters will switch from lime to green
 local grayWeight = tonumber(config.read(pathToConfig, "gray weight")) --Same as about, but from green to gray
 local monScale = tonumber(config.read(pathToConfig, "monitor scale"))
-
-function getMonitors()
-	local monitors = {}
-	if checkMonitorSide( "top" ) then table.insert( monitors, "top" ) end
-	if checkMonitorSide( "bottom" ) then table.insert( monitors, "bottom" ) end
-	if checkMonitorSide( "left" ) then table.insert( monitors, "left" ) end
-	if checkMonitorSide( "right" ) then table.insert( monitors, "right" ) end
-	if checkMonitorSide( "front" ) then table.insert( monitors, "front" ) end
-	if checkMonitorSide( "back" ) then table.insert( monitors, "back" ) end
-	return monitors
-end
-function checkMonitorSide( side )
-	if peripheral.isPresent( side ) then
-		if peripheral.getType(side) == "monitor" then
-			return true
-		end
-	end
-	return false
-end
-function printMonitorStats( side )
-	local x, y = peripheral.call(side, "getSize")
-	local color = "No"
-	if peripheral.call(side, "isColor") then
-		color = "Yes"
-	end
-	print("Side:"..side.." Size:("..x..", "..y..") Color?"..color)
-end
-function askMonitor()
-	local monitors = getMonitors()
-	if #monitors == 0 then
-		print("No monitors found, add more!")
-		return nill
-	elseif #monitors == 1 then
-		return monitors[1]
-	else
-		while true do
-			print("Multiple monitors found, please pick one.")
-			for i,v in ipairs(monitors) do
-				write("["..(i).."] ")
-				printMonitorStats( v )
-			end
-			write("Selection: ")
-			local sel = tonumber(io.read())
-			if sel < 1 or sel > #monitors then
-				print("")
-				print("Invalid number.")
-			else
-				return monitors[sel]
-			end
-		end
-	end
-end
+local randTable = {"1","2","3","4","5","6","7","8","9","0","!","@","#","$","%","^","&","*","(",")","_","-","+","=","~","`",",","<",">",".","/","?",":","{","}","[","]","\\","\"","\'"}
 
 function printCharAt( monitor, x, y, char )
 	monitor.setCursorPos( x, y )
@@ -104,7 +53,6 @@ function colorLifetime( life, originalLifetime )
 	end
 end
 function getRandomChar()
-	local randTable = {"1","2","3","4","5","6","7","8","9","0","!","@","#","$","%","^","&","*","(",")","_","-","+","=","~","`",",","<",">",".","/","?",":","{","}","[","]","\\","\"","\'"}
 	return randTable[math.random(1, #randTable)]
 end
 function tick( screen )
