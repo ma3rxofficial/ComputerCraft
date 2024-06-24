@@ -4,7 +4,7 @@
 if SpeedOS then
 	SpeedOS.ToolBarColour = colours.lightGrey
 	SpeedOS.ToolBarTextColour = colours.white
-end
+end 
 
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Подгружаем АПИ
