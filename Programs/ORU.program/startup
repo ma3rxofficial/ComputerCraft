@@ -9,6 +9,8 @@ end
 
 SpeedOS.LoadAPI("SpeedAPI/config")
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 pathToConfig = "System/ORU.settings"
 
 local cableSide = config.read(pathToConfig, "side")
