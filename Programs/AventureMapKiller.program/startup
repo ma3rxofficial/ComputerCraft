@@ -53,7 +53,7 @@ end -- хуй
 function checkIsPlayerOnline(user) 
   for _, value in pairs(p.getPlayerUsernames()) do -- перебираем элементы массива подключенных к серверу игроков
       if value == user then -- если какой-то элемент идентичен указанному параметру user, то возвращаем, что действительно, такой пользователь есть в сети
-        return true
+        return true -- то возвращаем, что пользователь в сети.
       end
   end
 
