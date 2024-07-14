@@ -334,6 +334,7 @@ function runInterface()
           end
           state = states["CONFIRM"].id
         elseif slc==6 then
+          rednet.broadcast("Computer: #"..os.getComputerID().." left network.")
           SpeedOS.Close()
           return
         end
@@ -446,7 +447,7 @@ end
 
 if not getPrefs() then return end
 readFromArchive()
-rednet.broadcast("Computer: "..os.getComputerID().." is now on network.")
+rednet.broadcast("Computer: #"..os.getComputerID().." is now on network.")
 
 if os.getComputerLabel() == nil then
   os.setComputerLabel("SpeedOS #"..os.getComputerID())
