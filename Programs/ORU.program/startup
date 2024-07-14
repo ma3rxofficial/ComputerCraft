@@ -14,7 +14,7 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Всякая инициализация для конфигурации
 
-pathToConfig = "System/ORU.settings"
+pathToConfig = "System/ORU.settings" -- путь до файла с параметрами программы
 
 local cableSide = config.read(pathToConfig, "side")
 local z_t = tonumber(config.read(pathToConfig, "t"))
