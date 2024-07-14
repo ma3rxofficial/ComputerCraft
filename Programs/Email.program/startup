@@ -21,6 +21,7 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------
 
 local pathToConfig = "System/Email.settings"
+serverid = tonumber(config.read(pathToConfig, "server ID"))
 
 term.setCursorPos(1, 1)
 term.setTextColor(colors.white)
@@ -30,7 +31,6 @@ w,h = term.getSize()
 umail = { }
 rmail = { }
 slc = 1
-serverid = tonumber(config.read(pathToConfig, "server ID"))
 side = peripheral.find("modem")
 
 confirmmsg = ""
