@@ -94,11 +94,11 @@ ent = pl.asEntity() -- заносим информацию о жертве в ф
 x, y, z = ent.getPosition() -- получаем позицию по x, y, z
 
 -- И печатаем все полученное говно
-print("X: "..tostring(x))
+print("X: "..tostring(x)) -- X
 sleep(1)
-print("Y: "..tostring(y))
+print("Y: "..tostring(y)) -- Y
 sleep(1)
-print("Z: "..tostring(z))
+print("Z: "..tostring(z)) -- Z
 sleep(2)
 
 -----------------------------------------------------------------------------------------------------------------------------------
