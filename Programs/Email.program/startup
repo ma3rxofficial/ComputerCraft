@@ -101,7 +101,9 @@ function split(str, pattern)
   return t
 end
 
--- Interface Drawing --
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Функции рисования интерфейса
 
 function printHeader()
   term.setCursorPos(1, 1)
