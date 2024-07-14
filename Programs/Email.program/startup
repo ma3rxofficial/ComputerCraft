@@ -18,6 +18,8 @@ if not peripheral.find("modem") then
   SpeedOS.Close()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 local pathToConfig = "System/Email.settings"
 
 term.setCursorPos(1, 1)
