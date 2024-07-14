@@ -23,6 +23,8 @@ end
 local pathToConfig = "System/Email.settings"
 local serverid = tonumber(config.read(pathToConfig, "server ID"))
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 term.setCursorPos(1, 1)
 term.setTextColor(colors.white)
 term.setBackgroundColor(colors.black)
