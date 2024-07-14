@@ -254,7 +254,6 @@ function readEmails()
       body = t[i+2]
     })
   end
---  rednet.close(peripheral.find("modem"))
 end
 
 function readFromArchive()
@@ -287,6 +286,8 @@ function writeToArchive()
   file:write(arcstr)
   file:close()
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
 
 -- Interface Logic --
 
