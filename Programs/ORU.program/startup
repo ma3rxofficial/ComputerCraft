@@ -19,7 +19,7 @@ pathToConfig = "System/ORU.settings" -- путь до файла с параме
 local cableSide = config.read(pathToConfig, "side") -- сторона кабеля-шины
 local z_t = tonumber(config.read(pathToConfig, "t")) -- я не ебу какая-то защита типа
 local z_y = tonumber(config.read(pathToConfig, "y")) -- тут тоже вообще какой долбоёб это писал
-local z_u = tonumber(config.read(pathToConfig, "u"))
+local z_u = tonumber(config.read(pathToConfig, "u")) -- НУ БЛЯДЬ БУКВА U ЧЁ НЕПОНЯТНОГО БЛЯДЬ БЛЯДЬ ЭТО БУКВА U БЛЯДЬ ЭТО БЛЯДЬ БЛЯДЬ ЭТО БУКВА U У БЛДТЬ ПОНЯЛ БЛЯДЬ ЭТО U
 local z_i = tonumber(config.read(pathToConfig, "i"))
 
 -----------------------------------------------------------------------------------------------------------------------------------
