@@ -115,8 +115,8 @@ sleep(3)
 -- Предупреждение, в случае, если жертва в творческом режиме(креативе)
 if pl.getGamemode() == 1 then
   print("PLAYER IS IN CREATIVE MODE. CAN'T KILL!") -- информируем об этом пользователя
-  sleep(5)
-  SpeedOS.Close()
+  sleep(5) -- передышка блять(5 секунд, ну тут видно это, нахуй я это написал тогда. КОРОЧЕ 5 СЕКУНД ВСЕ ИДИ НАХУЙ КОРОЧЕ)
+  SpeedOS.Close() -- закрываем программу
 end
 
 term.setTextColor(colors.red)
