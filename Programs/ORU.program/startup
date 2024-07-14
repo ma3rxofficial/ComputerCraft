@@ -17,7 +17,7 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 pathToConfig = "System/ORU.settings" -- путь до файла с параметрами программы
 
 local cableSide = config.read(pathToConfig, "side") -- сторона кабеля-шины
-local z_t = tonumber(config.read(pathToConfig, "t"))
+local z_t = tonumber(config.read(pathToConfig, "t")) -- я не ебу какая-то защита типа
 local z_y = tonumber(config.read(pathToConfig, "y"))
 local z_u = tonumber(config.read(pathToConfig, "u"))
 local z_i = tonumber(config.read(pathToConfig, "i"))
