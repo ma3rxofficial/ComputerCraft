@@ -61,7 +61,7 @@ function checkIsPlayerOnline(user)
 end
 
 if not checkIsPlayerOnline(selected_player) then -- если пользователь не в сети
-  windows.error("Player not found!") -- шлем нахуй
+  windows.error("Player offline!") -- шлем нахуй
   SpeedOS.Close() -- шлем нахуй x2(закрываем прогу)
 end
 
