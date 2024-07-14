@@ -447,8 +447,9 @@ end
 if not getPrefs() then return end
 readFromArchive()
 rednet.broadcast("Computer: "..os.getComputerID().." is now on network.")
+
 if os.getComputerLabel() == nil then
-  os.setComputerLabel("New User")
+  os.setComputerLabel("SpeedOS #"..os.getComputerID())
 end
 
 runInterface()
