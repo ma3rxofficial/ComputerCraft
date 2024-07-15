@@ -628,8 +628,33 @@ local function serializeImpl( t, tTracking )
 	end
 end
 
---Serialize without fucking [1]="foo"
+--Serialize without fucking [1]="foo"--
 function extraSerialize( t )
 	local tTracking = {}
 	return serializeImpl( t, tTracking )
+end
+
+--Fill screen with specified symbol--
+function fill(char, _textColor, _term)
+	if _term == nil then
+		_term = term
+	end
+
+	if char == nil then
+		char = "#"
+	end
+	
+	if _textColor == nil then
+		_textColor = colors.white
+	end
+
+	local w,  h = term.getSize()
+
+	for y=0, h do
+		for x=0, w do
+			term.setTextColor(_textColor)
+			term.setCursorPos(x, y)
+			term.write(char)
+		end
+	end
 end
