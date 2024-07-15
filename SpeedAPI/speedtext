@@ -645,11 +645,11 @@ function fill(char, yStart, xStart, _textColor, _term)
 	end
 
 	if yStart == nil then
-		yStart = 0
+		yStart = 1
 	end
 
 	if xStart == nil then
-		xStart = 0
+		xStart = 1
 	end
 	
 	if _textColor == nil then
@@ -658,8 +658,8 @@ function fill(char, yStart, xStart, _textColor, _term)
 
 	local w,  h = term.getSize()
 
-	for y=0, h do
-		for x=0, w do
+	for y=yStart, h do
+		for x=xStart, w do
 			term.setTextColor(_textColor)
 			term.setCursorPos(x, y)
 			term.write(char)
