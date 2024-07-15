@@ -1,6 +1,0 @@
-if SpeedOS then
-  SpeedOS.ToolBarColour = colours.black
-  SpeedOS.ToolBarTextColour = colours.white
-end
-
-shell.run("Resources/Engine edit")
