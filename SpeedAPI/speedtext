@@ -635,13 +635,21 @@ function extraSerialize( t )
 end
 
 --Fill screen with specified symbol--
-function fill(char, _textColor, _term)
+function fill(char, yStart, xStart, _textColor, _term)
 	if _term == nil then
 		_term = term
 	end
 
 	if char == nil then
 		char = "#"
+	end
+
+	if yStart == nil then
+		yStart = 0
+	end
+
+	if xStart == nil then
+		xStart = 0
 	end
 	
 	if _textColor == nil then
