@@ -34,8 +34,7 @@ local kadr = 1
 local kadr_quantity = #fs.list(picsDir)
 
 -----------------------------------------------------------------------------------------------------------------------------------
-
--- drawing all frames
+-- Рисуем кадры поочередно
 
 while true do
   event, key = os.pullEvent()
