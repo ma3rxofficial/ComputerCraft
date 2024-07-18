@@ -27,8 +27,7 @@ SpeedText.cPrint("Press any key to continue...", 10)
 SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
 
 -----------------------------------------------------------------------------------------------------------------------------------
-
--- animation
+-- Объявляем переменные
 
 local picsDir = "Programs/Mudaki.program/Resources"
 local kadr = 1
