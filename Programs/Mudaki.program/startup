@@ -53,7 +53,6 @@ while true do
   
   -- drawing frame
   Drawing.DrawImage(1, 1, Drawing.LoadImage(picsDir.."/"..tostring(kadr)..".nft"), 51, 18)
-  Drawing.DrawBuffer()
-  
+  Drawing.DrawBuffer()  
 end
 
