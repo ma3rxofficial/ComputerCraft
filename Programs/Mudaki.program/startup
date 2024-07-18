@@ -33,6 +33,8 @@ local picsDir = "Programs/Mudaki.program/Resources"
 local kadr = 1
 local kadr_quantity = #fs.list(picsDir)
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 -- drawing all frames
 
 while true do
