@@ -45,6 +45,7 @@ while true do
     else
       kadr = 1
     end
+    
   elseif event == "key" and key == keys.left or event == "mouse_click" and key == 2 or event == "mouse_drag" and key == 2 or event == "mouse_scroll" and key == 1 then -- предыдущий кадр
     if kadr == 1 then
       kadr = kadr_quantity
