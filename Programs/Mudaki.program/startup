@@ -18,8 +18,7 @@ SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 fs = SpeedOS.FS
 
 -----------------------------------------------------------------------------------------------------------------------------------
-
--- intro
+-- Cвоеобразное "интро" и ждем, пока пользователь нажмет на мышку или на клавишу
 
 SpeedText.cPrint("This is a little .nft images demonstration", 8)
 sleep(2)
