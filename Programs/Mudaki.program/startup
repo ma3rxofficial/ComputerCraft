@@ -53,7 +53,7 @@ while true do
     end
   end
   
-  -- drawing frame
+  -- Отрисовка кадра
   Drawing.DrawImage(1, 1, Drawing.LoadImage(picsDir.."/"..tostring(kadr)..".nft"), 51, 18)
   Drawing.DrawBuffer()  
 end
