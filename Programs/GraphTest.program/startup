@@ -28,6 +28,8 @@ function update()
   return tab
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 --our graph declaration.  We use nil as the gradientTable parameter, so it will use the default red-green gradient.
 local graphInstance
 
