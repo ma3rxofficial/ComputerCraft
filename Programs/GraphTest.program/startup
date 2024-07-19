@@ -38,7 +38,6 @@ if peripheral.find("monitor", true) and use_mon_default then
 
 else
   graphInstance = graph.new(term, update, "Testing", nil, 0, huy2)
-
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
