@@ -41,6 +41,8 @@ else
 
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 if peripheral.find("monitor", true) and use_mon_default then
   windows.clearScreen(colors.white)
   term.setTextColor(colors.lightGray)
@@ -51,6 +53,8 @@ else
     SpeedOS.ToolBarTextColour = colours.white
   end
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
 
 while true do
   --update the graph
