@@ -137,17 +137,17 @@ while true do
 		if string.lower(msg2) == "/exit" or string.lower(msg2) == "/quit" then
 			SpeedOS.Close()
 		else
-		for _, value in pairs(p.getPlayerUsernames()) do
-			pl = p.getPlayerByName(value)
+			for _, value in pairs(p.getPlayerUsernames()) do
+				pl = p.getPlayerByName(value)
 
-			if Blacklist(value) then
-				pl.sendChat("[Computer #"..os.getComputerID().."] "..msg2)
+				if Blacklist(value) then
+					pl.sendChat("[Computer #"..os.getComputerID().."] "..msg2)
+				end
 			end
-		end
-		log(log_file, "["..SpeedText.time_and_date().."] #"..os.getComputerID().." sended from IRC: "..msg2)
+
+			log(log_file, "["..SpeedText.time_and_date().."] #"..os.getComputerID().." sended from IRC: "..msg2)
 		end
 	end
-
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
