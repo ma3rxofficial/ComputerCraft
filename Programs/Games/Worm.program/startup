@@ -3,28 +3,11 @@ if SpeedOS then
 	SpeedOS.ToolBarTextColour = colours.white
 end
 
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/windows")
+
 -- Display the start screen
 local w,h = term.getSize()
-
-local headingColour, textColour, wormColour, fruitColour
-if term.isColour() then
-	headingColour = colours.yellow
-	textColour = colours.white
-	wormColour = colours.lime
-	fruitColour = colours.red
-else
-	headingColour = colours.white
-	textColour = colours.white
-	wormColour = colours.white
-	fruitColour = colours.white
-end
-
-function printCentred( y, s )
-	local x = math.floor((w - string.len(s)) / 2)
-	term.setCursorPos(x,y)
-	--term.clearLine()
-	term.write( s )
-end
 
 local xVel,yVel = 1,0
 local xPos, yPos = math.floor(w/2), math.floor(h/2)
@@ -51,16 +34,7 @@ screen[xPos][yPos] = { snake = true }
 
 local nFruit = 1
 local tFruits = {
-	"A", "B", "C", "D", "E", "F", "G", "H",
-	"I", "J", "K", "L", "M", "N", "O", "P",
-	"Q", "R", "S", "T", "U", "V", "W", "X",
-	"Y", "Z",
-	"a", "b", "c", "d", "e", "f", "g", "h",
-	"i", "j", "k", "l", "m", "n", "o", "p",
-	"q", "r", "s", "t", "u", "v", "w", "x",
-	"y", "z",
-	"1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
-	"@", "$", "%", "#", "&", "!", "?", "+", "*", "~"
+	"#"
 }
 
 local function addFruit()
@@ -71,9 +45,9 @@ local function addFruit()
 		if fruit.snake == nil and fruit.wall == nil and fruit.fruit == nil then
 			screen[x][y] = { fruit = true }
 			term.setCursorPos(x,y)
-			term.setBackgroundColour( fruitColour )
-			term.write(" ")
-			term.setBackgroundColour( colours.black )
+			term.setTextColor(colors.red)
+			term.write(tFruits[nFruit])
+			term.setTextColor(colors.white)
 			break
 		end
 	end
@@ -82,26 +56,6 @@ local function addFruit()
 	if nFruit > #tFruits then
 		nFruit = 1
 	end
-end
-
-local function drawMenu()
-	term.setTextColour( headingColour )
-	term.setCursorPos(1,1)
-	term.write( "SCORE " )
-	
-	term.setTextColour( textColour )
-	term.setCursorPos(7,1)
-	term.write( tostring(nScore) )
-
-	term.setTextColour( headingColour )
-	term.setCursorPos(w-11,1)
-	term.write( "DIFFICULTY ")
-
-	term.setTextColour( textColour )
-	term.setCursorPos(w,1)
-	term.write( tostring(nDifficulty or "?") ) 
-
-	term.setTextColour( colours.white )
 end
 
 local function update( )
@@ -116,7 +70,9 @@ local function update( )
 		local tail = screen[tailX][tailY]
 		screen[tailX][tailY] = {}
 		term.setCursorPos(tailX,tailY)
-		term.write(" ")
+		term.setTextColor(colors.gray)
+		term.write("#")
+		term.setTextColor(colors.white)
 		tailX = tail.nextX
 		tailY = tail.nextY
 	else
@@ -132,7 +88,7 @@ local function update( )
 	elseif newXPos > w then
 		newXPos = 1
 	end
-	if newYPos < 2 then
+	if newYPos < 1 then
 		newYPos = h
 	elseif newYPos > h then
 		newYPos = 2
@@ -159,54 +115,39 @@ local function update( )
 	end
 	
 	term.setCursorPos(xPos,yPos)
-	term.setBackgroundColour( wormColour )
-	term.write(" ")
-	term.setBackgroundColour( colours.black )
-
-	drawMenu()
+	term.setTextColor(colors.lime)
+	term.write("#")
+	term.setTextColor(colors.white)
 end
 
 -- Display the frontend
 term.clear()
 local function drawFrontend()
-	term.setTextColour( headingColour )
-	printCentred( math.floor(h/2) - 3, "" )
-	printCentred( math.floor(h/2) - 2, " SELECT DIFFICULTY " )
-	printCentred( math.floor(h/2) - 1, "" )
-	
-	printCentred( math.floor(h/2) + 0, "            " )
-	printCentred( math.floor(h/2) + 1, "            " )
-	printCentred( math.floor(h/2) + 2, "            " )
-	printCentred( math.floor(h/2) - 1 + nDifficulty, " [        ] " )
-
-	term.setTextColour( textColour )
-	printCentred( math.floor(h/2) + 0, "EASY" )
-	printCentred( math.floor(h/2) + 1, "MEDIUM" )
-	printCentred( math.floor(h/2) + 2, "HARD" )
-	printCentred( math.floor(h/2) + 3, "" )
-
-	term.setTextColour( colours.white )
+	SpeedText.cPrint( "", math.floor(h/2) - 3 )
+	SpeedText.cPrint( "SELECT DIFFICULTY", math.floor(h/2) - 2 )
+	SpeedText.cPrint( "", math.floor(h/2) - 1 )
+	SpeedText.cPrint( ((nDifficulty == 1) and "[  EASY  ]") or "EASY", math.floor(h/2) + 0 )
+	SpeedText.cPrint( ((nDifficulty == 2) and "[ MEDIUM ]") or "MEDIUM", math.floor(h/2) + 1 )
+	SpeedText.cPrint( ((nDifficulty == 3) and "[  HARD  ]") or "HARD", math.floor(h/2) + 2 )
+	SpeedText.cPrint( "", math.floor(h/2) + 3 )
 end
 
-drawMenu()
 drawFrontend()
 while true do
 	local e,key = os.pullEvent( "key" )
-	if key == keys.up or key == keys.w then
+	if key == 17 or key == 200 then
 		-- Up
 		if nDifficulty > 1 then
 			nDifficulty = nDifficulty - 1
-			drawMenu()
 			drawFrontend()
 		end
-	elseif key == keys.down or key == keys.s then
+	elseif key == 31 or key == 208 then
 		-- Down
 		if nDifficulty < 3 then
 			nDifficulty = nDifficulty + 1
-			drawMenu()
 			drawFrontend()
 		end
-	elseif key == keys.enter then
+	elseif key == 28 then
 		-- Enter
 		break
 	end
@@ -218,7 +159,8 @@ nInterval = 1 / nSpeed
 
 -- Grow the snake to its intended size
 term.clear()
-drawMenu()
+SpeedText.fill("#", 1, 1, colors.gray)
+
 screen[tailX][tailY].snake = true
 while nExtraLength > 0 do
 	update()
@@ -230,29 +172,30 @@ addFruit()
 local timer = os.startTimer(0)
 while bRunning do
 	local event, p1, p2 = os.pullEvent()
+
 	if event == "timer" and p1 == timer then
 		timer = os.startTimer(nInterval)
 		update( false )
 	
 	elseif event == "key" then
 		local key = p1
-		if key == keys.up or key == keys.w then
+		if key == 17 or key == 200 then
 			-- Up
 			if yVel == 0 then
 				pxVel,pyVel = 0,-1
 			end
-		elseif key == keys.down or key == keys.s then
+		elseif key == 31 or key == 208 then
 			-- Down
 			if yVel == 0 then
 				pxVel,pyVel = 0,1
 			end
-		elseif key == keys.left or key == keys.a then
+		elseif key == 30 or key == 203 then
 			-- Left
 			if xVel == 0 then
 				pxVel,pyVel = -1,0
 			end
 		
-		elseif key == keys.right or key == keys.d then
+		elseif key == 32 or key == 205 then
 			-- Right
 			if xVel == 0 then
 				pxVel,pyVel = 1,0
@@ -263,26 +206,20 @@ while bRunning do
 end
 
 -- Display the gameover screen
-term.setTextColour( headingColour )
-printCentred( math.floor(h/2) - 2, "                   " )
-printCentred( math.floor(h/2) - 1, " G A M E   O V E R " )
+windows.clearScreen(colors.black)
 
-term.setTextColour( textColour )
-printCentred( math.floor(h/2) + 0, "                 " )
-printCentred( math.floor(h/2) + 1, " FINAL SCORE "..nScore.." " )
-printCentred( math.floor(h/2) + 2, "                 " )
-term.setTextColour( colours.white )
+SpeedText.cPrint( "", math.floor(h/2) - 2 )
+SpeedText.cPrint("G A M E   O V E R",  math.floor(h/2) - 1 )
+SpeedText.cPrint( "", math.floor(h/2) + 0 )
+SpeedText.cPrint( "FINAL SCORE "..nScore, math.floor(h/2) + 1 )
+SpeedText.cPrint( "", math.floor(h/2) + 2 )
 
-local timer = os.startTimer(2.5)
+local timer = os.startTimer(3)
 repeat
 	local e,p = os.pullEvent()
 	if e == "timer" and p == timer then
-		term.setTextColour( textColour )
-		printCentred( math.floor(h/2) + 2, " PRESS ANY KEY " )
-		printCentred( math.floor(h/2) + 3, "               " )
-		term.setTextColour( colours.white )
+		SpeedText.cPrint( "PRESS ANY KEY", math.floor(h/2) + 2 )
 	end
-until e == "char" or e == "mouse_click" or e == "mouse_drag" or e == "mouse_scroll"
+until e == "char"
 
 SpeedOS.Close()
-		
