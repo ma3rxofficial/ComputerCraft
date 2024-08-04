@@ -660,7 +660,7 @@ function fill(char, yStart, xStart, _textColor, _term)
 
 	for y=yStart, h do
 		for x=xStart, w do
-			term.setTextColor(_textColor)
+			_term.setTextColor(_textColor)
 			term.setCursorPos(x, y)
 			term.write(char)
 		end
