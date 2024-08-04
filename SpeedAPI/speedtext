@@ -656,7 +656,7 @@ function fill(char, yStart, xStart, _textColor, _term)
 		_textColor = colors.white
 	end
 
-	local w,  h = term.getSize()
+	local w,  h = _term.getSize()
 
 	for y=yStart, h do
 		for x=xStart, w do
