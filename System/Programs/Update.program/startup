@@ -1,6 +1,6 @@
 fs = SpeedOS.fs
 
-APIrequest = http.get("https://raw.githubusercontent.com/ma3rxofficial/CCStuff/main/Installer/GUI2.lua")
+APIrequest = http.get("http://raw.githubusercontent.com/ma3rxofficial/CCStuff/main/Installer/GUI2.lua")
 APIfile = fs.open("windows", "w")
 
 APIfile.write(APIrequest.readAll())
