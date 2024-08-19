@@ -450,7 +450,7 @@ end
 
 subTitle = 'Determining Latest Version'
 Draw()
-local releases = downloadJSON('https://api.github.com/repos/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/releases')
+local releases = downloadJSON('http://api.github.com/repos/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/releases')
 local latestReleaseTag = releases[1].tag_name
 if not tArgs or #tArgs ~= 1 and tArgs[1] ~= 'beta' then
 	for i, v in ipairs(releases) do
