@@ -21,7 +21,7 @@ fs = SpeedOS.FS
 -- Базовые константы программы
 
 local w, h = term.getSize() -- размер экрана
-local githubRepo = "https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/" -- ссылка на репозиторий со скриптами на github
+local githubRepo = "http://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/" -- ссылка на репозиторий со скриптами на github
 
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Симпатичная ошибка, которая выводится в том случае, если сайт github.com не отвечает
