@@ -462,13 +462,13 @@ if not tArgs or #tArgs ~= 1 and tArgs[1] ~= 'beta' then
 end
 subTitle = 'Optaining Latest Version URL'
 Draw()
-local refs = downloadJSON('https://api.github.com/repos/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/git/refs/tags/'..latestReleaseTag)
+local refs = downloadJSON('http://api.github.com/repos/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/git/refs/tags/'..latestReleaseTag)
 local latestReleaseSha = refs.object.sha
 
 subTitle = 'Downloading File Listing'
 Draw()
 
-local tree = downloadJSON('https://api.github.com/repos/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/git/trees/'..latestReleaseSha..'?recursive=1').tree
+local tree = downloadJSON('http://api.github.com/repos/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/git/trees/'..latestReleaseSha..'?recursive=1').tree
 
 local blacklist = {
 	'/.gitignore',
@@ -520,13 +520,13 @@ function downloadBlob(v)
 
         local tries, f = 0
         repeat 
-			f = http.get(('https://raw.github.com/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/'..tostring(latestReleaseTag)..Settings.InstallPath..v.path)) --:gsub(' ','%%20'))
+			f = http.get(('http://raw.github.com/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/'..tostring(latestReleaseTag)..Settings.InstallPath..v.path)) --:gsub(' ','%%20'))
                 if not f then sleep(5) end
                 tries = tries + 1
         until tries > 5 or f
 
 		if not f then
-			error('Downloading failed, try again. '..('https://raw.github.com/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/'..latestReleaseTag..Settings.InstallPath..v.path):gsub(' ','%%20'))
+			error('Downloading failed, try again. '..('http://raw.github.com/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/'..latestReleaseTag..Settings.InstallPath..v.path):gsub(' ','%%20'))
 		end
 
 		local h = fs.open('.update/'..Settings.InstallPath..v.path, 'w')
