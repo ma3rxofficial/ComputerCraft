@@ -179,7 +179,7 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Если все же к гитхабу не получилось приконнектиться
 
-if not http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup") then
+if not http.get("http://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup") then
   FancyError() -- то выводим ошибочку
 end
 
