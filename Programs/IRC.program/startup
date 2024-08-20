@@ -140,7 +140,7 @@ while true do
 			for _, value in pairs(p.getPlayerUsernames()) do
 				pl = p.getPlayerByName(value)
 
-				if Blacklist(value) then
+				if SpeedText.checkForelement(value, blacklist) then
 					pl.sendChat("[Computer #"..os.getComputerID().."] "..msg2)
 				end
 			end
