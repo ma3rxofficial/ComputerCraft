@@ -6,7 +6,7 @@ end
 
 rednet.open("right")
 
-r_i = 0
+r_i = 1
 
 term.setBackgroundColor(colors.black)
 term.clear()
@@ -89,14 +89,26 @@ while true do
       turtle.attackDown()
       rednet.send(id, "Turtle attacked!")
     elseif string.upper(msg) == "DIG" then
-      turtle.dig()
+	   if turtle.detect() then
+	    turtle.dig()
       rednet.send(id, "Turtle digged!")
+	   else
+		  rednet.send(id, "Turtle didn't find the block ahead!")
+	   end
     elseif string.upper(msg) == "DIGU"  or string.upper(msg) == "DIG U" then
-      turtle.digUp()
-      rednet.send(id, "Tutle digged block in up!")
+      if turtle.detectUp() then
+        turtle.digUp()
+        rednet.send(id, "Tutle digged block in up!")
+      else
+        rednet.send(id, "Turtle didn't find the block in up!")
+      end
     elseif string.upper(msg) == "DIGD"  or string.upper(msg) == "DIG D"then
-      turtle.digDown()
-      rednet.send(id, "Turtle digged block in down!")
+      if turtle.detectDown() then
+        turtle.digDown()
+        rednet.send(id, "Tutle digged block in down!")
+      else
+        rednet.send(id, "Turtle didn't find the block in down!")
+      end
     elseif string.upper(msg) == "USE" then
       turtle.place()
       rednet.send(id, "Turtle used item!")
