@@ -1,11 +1,5 @@
 fs = SpeedOS.fs
 
-APIrequest = http.get("http://raw.githubusercontent.com/ma3rxofficial/CCStuff/main/Installer/GUI2.lua")
-APIfile = fs.open("windows", "w")
-
-APIfile.write(APIrequest.readAll())
-APIfile.close()
-
 os.setComputerLabel("SpeedOS #"..os.getComputerID())
 SpeedOS.LoadAPI("windows")
 
@@ -399,7 +393,7 @@ function Draw(Downloader, action2)
 			if action2 then
 				windows.progressBar(29," started",Downloader,action2)
 			else
-				windows.progressBar(29," started",Downloadr)
+				windows.progressBar(29," started",Downloader)
 			end
 		else
 			if action2 then
@@ -450,7 +444,7 @@ end
 
 subTitle = 'Determining Latest Version'
 Draw()
-local releases = downloadJSON('http://api.github.com/repos/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/releases')
+local releases = downloadJSON('https://api.github.com/repos/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/releases')
 local latestReleaseTag = releases[1].tag_name
 if not tArgs or #tArgs ~= 1 and tArgs[1] ~= 'beta' then
 	for i, v in ipairs(releases) do
@@ -462,13 +456,13 @@ if not tArgs or #tArgs ~= 1 and tArgs[1] ~= 'beta' then
 end
 subTitle = 'Optaining Latest Version URL'
 Draw()
-local refs = downloadJSON('http://api.github.com/repos/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/git/refs/tags/'..latestReleaseTag)
+local refs = downloadJSON('https://api.github.com/repos/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/git/refs/tags/'..latestReleaseTag)
 local latestReleaseSha = refs.object.sha
 
 subTitle = 'Downloading File Listing'
 Draw()
 
-local tree = downloadJSON('http://api.github.com/repos/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/git/trees/'..latestReleaseSha..'?recursive=1').tree
+local tree = downloadJSON('https://api.github.com/repos/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/git/trees/'..latestReleaseSha..'?recursive=1').tree
 
 local blacklist = {
 	'/.gitignore',
@@ -520,13 +514,13 @@ function downloadBlob(v)
 
         local tries, f = 0
         repeat 
-			f = http.get(('http://raw.github.com/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/'..tostring(latestReleaseTag)..Settings.InstallPath..v.path)) --:gsub(' ','%%20'))
+			f = http.get(('https://raw.github.com/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/'..tostring(latestReleaseTag)..Settings.InstallPath..v.path)) --:gsub(' ','%%20'))
                 if not f then sleep(5) end
                 tries = tries + 1
         until tries > 5 or f
 
 		if not f then
-			error('Downloading failed, try again. '..('http://raw.github.com/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/'..latestReleaseTag..Settings.InstallPath..v.path):gsub(' ','%%20'))
+			error('Downloading failed, try again. '..('https://raw.github.com/'..Settings.GitHubUsername..'/'..Settings.GitHubRepoName..'/'..latestReleaseTag..Settings.InstallPath..v.path):gsub(' ','%%20'))
 		end
 
 		local h = fs.open('.update/'..Settings.InstallPath..v.path, 'w')
