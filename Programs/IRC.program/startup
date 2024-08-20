@@ -29,7 +29,7 @@ function getLogPath(root)
 end
 
 function log(path, msg)
-	file = fs.open(path, "a")
+    file = fs.open(path, "a")
     file.writeLine(msg)
     file.flush()
     file.close()
