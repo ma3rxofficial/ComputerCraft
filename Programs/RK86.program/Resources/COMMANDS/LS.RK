@@ -1,0 +1,19 @@
+local tArgs = {...}
+
+local sDir = shell.dir()
+if tArgs[1] ~= nil then
+	sDir = shell.resolve(tArgs[1])
+end
+
+local tAll = fs.list(sDir)
+local tResult = {}
+
+for _, sFile in pairs(tAll) do
+	if sFile == "icon" or sFile == "startup" or sFile == "Resources" then
+		sFile = nil
+	else
+		table.insert(tResult, _.." "..sFile)
+	end
+end
+
+textutils.pagedTabulate(tResult)

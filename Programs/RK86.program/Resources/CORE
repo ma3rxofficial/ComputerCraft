@@ -1,0 +1,180 @@
+local supportedList = {"LS", "DIR", "HELP"}
+
+function getCommands()
+    return supportedList
+end
+
+function isFileExists(fn)
+    for _, suka in pairs(fs.list("/")) do
+        if suka == fn then
+            return true
+        end
+    end
+
+    return false
+end
+
+function isFileOk(filename)
+    local ok, err = pcall(loadfile(filename))
+        if not ok then
+            if err and err ~= "" then
+                return false
+            end
+            return false
+       end
+       return true
+end
+
+function supportedCommand(comm)
+    for _, blyad in pairs(supportedList) do
+        if blyad == comm then
+            return true
+        end
+    end
+
+    return false
+end
+
+function isLuaFunction(comanda)
+    x = string.sub(comanda, 1, 1)
+
+    if x == "=" then
+        return true
+    else
+        return false
+    end
+end
+
+function makeLuaFunction(comanda)
+    return string.sub(comanda, 2)
+end
+
+function runLuaFunction(s) 
+    local tCommandHistory = {}
+    local tEnv = {
+        ["exit"] = function()
+            bRunning = false
+        end,
+    }
+    setmetatable( tEnv, { __index = getfenv() } )
+
+    local nForcePrint = 0
+    local func, e = loadstring( s, "lua" )
+    local func2, e2 = loadstring( "return "..s, "lua" )
+    if not func then
+        if func2 then
+            func = func2
+            e = nil
+            nForcePrint = 1
+        end
+    else
+        if func2 then
+            func = func2
+        end
+    end
+    
+    if func then
+        setfenv( func, tEnv )
+        local tResults = { pcall( function() return func() end ) }
+        if tResults[1] then
+            local n = 1
+            while (tResults[n + 1] ~= nil) or (n <= nForcePrint) do
+                print( tostring( tResults[n + 1] ) )
+                n = n + 1
+            end
+        else
+            print( tResults[2] )
+        end
+    else
+        print( e )
+    end
+
+    print("\nPROGRAM FINISHED")
+end
+
+function clear()
+    term.setBackgroundColor(colors.black)
+    term.clear()
+end
+
+function cursor(posX, posY)
+    term.setCursorPos(posX, posY)
+end
+
+function getSize()
+    return term.getSize()
+end
+
+function getCommandList()
+    return supportedList
+end
+
+function programError()
+    print("FILE HAS ERROR")
+end
+
+function programNotFound()
+    print("FILE NOT FOUND")
+end
+
+function logo()
+    print("RADIO-86RK")
+end
+
+function loading(num)
+    cursor(1, 1)
+    print("Loading...")
+    sleep(num)
+end
+
+function _print(string)
+    term.setTextColor(colors.white)
+    term.setBackgroundColor(colors.black)
+
+    print(string)
+end
+
+function line()
+    print("---------------------------------------------------")
+end
+
+function cPrint(string, y2)
+        local tX, tY = term.getSize()
+        local b = string.len(string) / 2
+        local x = (tX / 2) - b
+    local y = tY / 2
+    
+    if y2 then
+      y = y2
+    end
+
+        cursor(x, y)
+        write(string)
+end
+
+function waitForCommand()
+    term.write("-->")
+    comanda = io.read()
+
+    return comanda
+end
+
+function run(filename)
+    if isFileExists(filename) then
+        if isFileOk(filename) then
+            print("\nPROGRAM FINISHED")
+        else
+            programError()
+        end
+    else
+        if supportedCommand(filename) then
+            shell.run("Resources/COMMANDS/"..filename..".RK")
+        else
+            if filename == "" or filename == " " then
+                filename = ""
+            else
+                programNotFound()
+            end
+        end
+    end
+end
