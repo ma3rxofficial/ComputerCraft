@@ -1,7 +1,0 @@
---[[
-	This is an example of a 
-	program on the RK-86 core
-]]
-
-os.loadAPI("Programs/RK86.program/Resources/Core") -- This is how you should load the core
-Core._print("Hello world!") -- Using core RK-86
