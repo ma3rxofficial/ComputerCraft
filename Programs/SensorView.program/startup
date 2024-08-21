@@ -24,7 +24,6 @@ for _, pidor in pairs(coloriki) do
 	end
 end
 
-
 local sideNames = sensori
 local sensorSides = {}
 local sideSelection, targetSelection, targetOffset, detailOffset = 1, 1, 1, 1
@@ -211,7 +210,7 @@ while true do
 			end
 		elseif p1 == 205 then
 			--right, selects next side
-			if true then
+			if sideSelection < #sensori then
 				sideSelection = sideSelection + 1
 				targetSelection = 1
 				targetOffset = 1
