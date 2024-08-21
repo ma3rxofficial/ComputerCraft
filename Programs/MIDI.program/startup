@@ -1,3 +1,8 @@
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.lightGrey
+	SpeedOS.ToolBarTextColour = colours.white
+end
+
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/windows")
@@ -24,18 +29,25 @@ SpeedText.cPrint("Instant ComputerCraft Radio", 6)
 sleep(0.5)
 SpeedText.cPrint("Press any key...", 9)
 SpeedText.waitForEvent({"mouse_click", "mouse_drag", "key"})
-windows.clearScreen(colors.gray)
 
 rednet.open(peripheral.find("modem"))
 local msg
 
 while true do
+	windows.clearScreen(colors.gray)
+
 	repeat 
 		term.setTextColor(colors.lightGray)
 		SpeedText.cPrint("Your message here:", 6)
 		msg = SpeedText.centerRead(51 - 13, "", colors.lightGray, colors.white, colors.white, false, nil, nil, nil, "")
-		windows.clearScreen(colors.gray)
 	until tostring(msg)
 
 	rednet.broadcast(msg)
+	term.setCursorPos(1, 18)
+	term.setTextColor(colors.white)
+	term.setBackgroundColor(colors.gray)
+	io.write("#"..tostring(os.getComputerID())..": ")
+	term.setTextColor(colors.lightGray)
+	term.write(msg)
+	sleep(1)
 end
