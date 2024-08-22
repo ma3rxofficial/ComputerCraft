@@ -16,4 +16,5 @@ for _, sFile in pairs(tAll) do
 	end
 end
 
+print()
 textutils.pagedTabulate(tResult)
