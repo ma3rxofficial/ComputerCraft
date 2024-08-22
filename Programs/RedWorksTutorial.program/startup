@@ -4,6 +4,7 @@ if SpeedOS then
 end
 
 fs = SpeedOS.FS
+io = SpeedOS.IO
 
 -- BaseLine Variables
 CurrentChapter = 1
@@ -294,7 +295,7 @@ print ""
 print ("Your Computer # is "..os.getComputerID())
 pressany()
 sleep(.5)
-shell.run("mkdir", "examples")
+fs.makeDir("examples/")
 local i = 1
 	while true do
 		if Examples[i] ~= nil then
