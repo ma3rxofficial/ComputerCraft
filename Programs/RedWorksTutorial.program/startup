@@ -3,6 +3,8 @@ if SpeedOS then
 	SpeedOS.ToolBarTextColour = colours.white
 end
 
+fs = SpeedOS.FS
+
 -- BaseLine Variables
 CurrentChapter = 1
 CurrentSection = 1
