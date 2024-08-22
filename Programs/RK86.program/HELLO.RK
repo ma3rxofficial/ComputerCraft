@@ -4,4 +4,4 @@
 ]]
 
 os.loadAPI("Programs/RK86.program/Resources/CORE") -- This is how you should load the core
-CORE._print("Hello world!") -- Using core RK-86
+CORE.PRINT("Hello world!") -- Using core RK-86
