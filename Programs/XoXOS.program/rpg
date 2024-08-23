@@ -2572,7 +2572,7 @@ function main()
 	
 	print("Initializing game...")
 	sleep(1)
-	onInit()
+	--onInit()
 	clearLog()
 	if debugging then writeToLog("Game Started") end
 	
