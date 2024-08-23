@@ -6,9 +6,6 @@
 ]]
 
 -- Конфигурация
-local enable_password = false
-local password = ""
-local servername = ""
 local s_rednet = "back"
 local wait = 0
 
@@ -17,32 +14,6 @@ function getRoot()
 	outC = shell.getRunningProgram()
 	outC = string.sub( outC, 1 , string.len( outC ) - 10 )
 	return outC
-end
-
-if fs.exists( getRoot().."sconfig.cfg" ) then
-	cr = fs.open( getRoot().."sconfig.cfg", "r" )
-	for i=1,5 do
-		local fd = cr.readLine()
-		if i == 3 then
-			local fdx = string.sub( fd, string.len( fd ), string.len( fd ) )
-			if fdx == "0" then
-				enable_password = false
-			elseif fdx == "1" then
-				enable_password = true
-			else
-				enable_password = "error"
-			end
-		elseif i == 4 then
-			local fdx = string.sub( fd, 12 + 1, string.len( fd ) - 1 )
-			password = fdx
-		elseif i == 5 then
-			local fdx = string.sub( fd, 14 + 1, string.len( fd ) - 1 )
-			servername = fdx
-		end
-	end
-	cr.close()
-else
-	
 end
 
 rednet.open( s_rednet )
