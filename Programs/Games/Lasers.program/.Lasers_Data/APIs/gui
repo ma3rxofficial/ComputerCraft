@@ -600,9 +600,7 @@ end
 				    end
 	 
 	            elseif tMenu[language][menu][mNum].destination == "_exit" then --# Exiting the program/game if the destination in the table is "_exit"
-	                term.setTextColor(colors.white) term.setBackgroundColor(colors.black)
-	                clear()
-	                error()
+	                SpeedOS.Close()
 	            end
 	 
             end
@@ -655,9 +653,7 @@ end
 							  end
 							  
 	                    elseif tMenu[language][menu][mNum].destination == "_exit" then --# Exiting the program/game if the destionation in the table is "_exit"
-	                        term.setTextColor(colors.white) term.setBackgroundColor(colors.black)
-	                        clear()
-	                        error()
+	                        SpeedOS.Close()
 	                    end
 					    
 					  
