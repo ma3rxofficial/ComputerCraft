@@ -9,7 +9,7 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Подгружаем ядро операционной системы
 
-os.loadAPI("Resources/Core")
+os.loadAPI("RESOURCES/CORE")
 
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Массив, в который заносятся все переданные программы параметры(понадобится в будущем)
@@ -19,20 +19,20 @@ local tArgs = {...}
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Загрузочный экран
 
-Core.loading(3)
-Core.clear()
-Core.cursor(1, 1)
-Core.logo()
+CORE.LOADING(3)
+CORE.CLEAR()
+CORE.CURSOR(1, 1)
+CORE.LOGO()
 
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Запуск программы по переданным параметрам
 
 if #tArgs > 0 then
 	if not tArgs[1] == "run" then
-		Core.run(tArgs[1])
+		CORE.RUN(tArgs[1])
 	else
 		if tArgs[2] then
-			Core.run(tArgs[2])
+			CORE.RUN(tArgs[2])
 		end
 	end
 end
@@ -41,12 +41,12 @@ end
 -- Основной цикл программы. Отправляем в ядро введённые пользователем команды.
 
 while true do
-	command = Core.waitForCommand()
+	command = CORE.WAITFORCMD()
 
-	if Core.isLuaFunction(command) then
-		Core.runLuaFunction(Core.makeLuaFunction(command))
+	if CORE.ISLUAFUNCTION(command) then
+		CORE.RUNLUAFUNCTION(CORE.MAKELUAFUNCTION(command))
 	else
-		Core.run(command)
+		CORE.RUN(command)
 	end
 end
 
