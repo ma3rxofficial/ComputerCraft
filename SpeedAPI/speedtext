@@ -599,7 +599,6 @@ function getIndex(tbl, val)
     end
   end
 end
-end
 
 --Serialize support, ebat!--
 local function serializeImpl( t, tTracking )	
