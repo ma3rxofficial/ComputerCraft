@@ -1,4 +1,4 @@
-OneOS.LoadAPI("SpeedAPI/SpeedText")
+SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 
 --[[
 		Darklands: Tales from Transylvania
