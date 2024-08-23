@@ -1,4 +1,4 @@
-os.loadAPI("Programs/RK86.program/Resources/CORE")
+os.loadAPI("Programs/RK86.program/RESOURCES/CORE")
 
 local tBiomes = {
 	"in a forest",
@@ -648,7 +648,7 @@ function commands.look( _sTarget )
 	if _sTarget == nil then
 		-- Look at the world
 		if y == 0 then
-			io.write( "You are standing " .. tBiomes[room.nBiome] .. ". " )
+			CORE.PRINT( "You are standing " .. tBiomes[room.nBiome] .. ". " )
 			CORE.PRINT( tDayCycle[ getTimeOfDay() ] )
 		else
 			io.write( "You are underground. " )
@@ -1313,7 +1313,7 @@ while bRunning do
     write( "? " )
 	term.setTextColour( colours.white )
 		
-    local sRawLine = READ( nil, tCommandHistory )
+    local sRawLine = CORE.READ( nil, tCommandHistory )
     table.insert( tCommandHistory, sRawLine )
     
     local sLine = nil
