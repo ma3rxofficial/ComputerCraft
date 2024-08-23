@@ -592,12 +592,13 @@ function checkForelement(element, array)
 end
 
 --Get index of element in array--
-function getIndex(tablica, entry)
-  for i, v in pairs(tablica) do
-    if v == entry then
+function getIndex(tbl, val)
+  for i, v in ipairs(tbl) do
+    if v == val then
       return i
     end
   end
+end
 end
 
 --Serialize support, ebat!--
@@ -656,13 +657,13 @@ function fill(char, yStart, xStart, _textColor, _term)
 		_textColor = colors.white
 	end
 
-	local w,  h = _term.getSize()
+	local w,  h = term.getSize()
 
 	for y=yStart, h do
 		for x=xStart, w do
-			_term.setTextColor(_textColor)
-			_term.setCursorPos(x, y)
-			_term.write(char)
+			term.setTextColor(_textColor)
+			term.setCursorPos(x, y)
+			term.write(char)
 		end
 	end
 end
