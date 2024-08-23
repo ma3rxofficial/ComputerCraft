@@ -1,11 +1,11 @@
 sPackage=[[local pkg=%@1
 local function makeFile(_path,_content)
- local file=OneOS.FS.open(_path,"w")
+ local file=SpeedOS.FS.open(_path,"w")
  file.write(_content)
  file.close()
 end
 local function makeFolder(_path,_content)
- OneOS.FS.makeDir(_path)
+ SpeedOS.FS.makeDir(_path)
  for k,v in pairs(_content) do
   if type(v)=="table" then
    makeFolder(_path.."/"..k,v)
@@ -24,13 +24,13 @@ makeFolder(sDest,tPackage)
 ]]
 
 function addFile(_package,_path)
-	if OneOS.FS.getName(_path)==".DS_Store" then
+	if SpeedOS.FS.getName(_path)==".DS_Store" then
 		return _package
 	end
-	local file,err=OneOS.FS.open(_path,"r")
+	local file,err=SpeedOS.FS.open(_path,"r")
 	local content=file.readAll()
 	content=content:gsub("%%","%%%%")
-	_package[OneOS.FS.getName(_path)]=content
+	_package[SpeedOS.FS.getName(_path)]=content
 	file.close()
 	return _package
 end
@@ -40,10 +40,10 @@ function addFolder(_package,_path)
 		return
 	end
 	_package=_package or {}
-	for _,f in ipairs(OneOS.FS.list(_path)) do
+	for _,f in ipairs(SpeedOS.FS.list(_path)) do
 		local path=_path.."/"..f
-		if OneOS.FS.isDir(path) then
-			_package[OneOS.FS.getName(f)]=addFolder(_package[OneOS.FS.getName(f)],path)
+		if SpeedOS.FS.isDir(path) then
+			_package[SpeedOS.FS.getName(f)]=addFolder(_package[SpeedOS.FS.getName(f)],path)
 		else
 			_package=addFile(_package,path)
 		end
@@ -53,17 +53,17 @@ end
 
 local tArgs={...}
 
-local sSource=OneOS.Shell.resolve(tArgs[1])
-local sDest=OneOS.Shell.resolve(tArgs[2])
+local sSource=SpeedOS.Shell.resolve(tArgs[1])
+local sDest=SpeedOS.Shell.resolve(tArgs[2])
 
 
-if OneOS.FS.exists(sSource) and OneOS.FS.isDir(sSource) then
+if SpeedOS.FS.exists(sSource) and SpeedOS.FS.isDir(sSource) then
 	tPackage={}
 	tPackage=addFolder(tPackage,sSource)
-	fPackage=OneOS.FS.open(sDest,"w")
+	fPackage=SpeedOS.FS.open(sDest,"w")
 	if fPackage then
 		sPackage=string.gsub(sPackage,"%%@1",textutils.serialize(tPackage))
-		sPackage=string.gsub(sPackage,"%%@2",textutils.serialize(OneOS.FS.getName(tArgs[1])))
+		sPackage=string.gsub(sPackage,"%%@2",textutils.serialize(SpeedOS.FS.getName(tArgs[1])))
 		fPackage.write(sPackage)
 		fPackage.close()
 	else
