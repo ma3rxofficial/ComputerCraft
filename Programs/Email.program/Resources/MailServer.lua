@@ -114,7 +114,6 @@ if #tArgs==0 then side = "bottom"
 else side = tArgs[1] end
 
 print("MAIL SERVER OPERATING SYSTEM")
-print("Written and developed by NitrogenFingers")
 print(string.rep("-", 50))
 print("Opening server on "..os.getComputerID().."...")
 print("Checking stored emails...")
