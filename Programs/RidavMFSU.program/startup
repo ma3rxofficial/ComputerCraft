@@ -78,6 +78,7 @@ function Server()
 	io.write("Enter energy computer IDs: ")
 	term.setCursorPos(term.getCursorPos())
 	term.setTextColor(colors.magenta)
+	term.setCursorPos(term.getCursorPos())
 
 	huy_ = tonumber(io.read())
 	term.setTextColor(colors.white)
