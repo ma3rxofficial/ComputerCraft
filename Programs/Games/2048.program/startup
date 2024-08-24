@@ -26,7 +26,7 @@ tiles[12] = {"2048", 2048}
 size = 4
 score = 0
 
-fileHiScore = fs.open("Resources/hiScore", "r")
+fileHiScore = fs.open("Resources/hiScore.dat", "r")
 hiscore = tonumber(fileHiScore.readAll())
 fileHiScore.close()
 
