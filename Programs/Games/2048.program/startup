@@ -31,7 +31,7 @@ hiscore = tonumber(fileHiScore.readAll())
 fileHiScore.close()
 
 function writeScore(chislo)
-  fileHiScore = fs.open("Resources/hiScore", "w")
+  fileHiScore = fs.open("Resources/hiScore.dat", "w")
   fileHiScore.write(tostring(chislo))
   fileHiScore.flush()
   fileHiScore.close()
