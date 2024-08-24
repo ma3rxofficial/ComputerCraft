@@ -225,6 +225,8 @@ local function modRead(properties, char, _term)
 		_term = term
 	end
 
+	_term.setCursorPos(_term.getCursorPos())
+
 	local w, h = _term.getSize()
 	local defaults = {replaceChar = char, history = nil, visibleLength = nil, textLength = nil, 
 		liveUpdates = nil, exitOnKey = nil}
