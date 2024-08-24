@@ -137,6 +137,7 @@ function Energy()
 
 	term.setTextColor(colors.magenta)
 	term.setCursorPos(18, 1)
+	term.setCursorPos(term.getCursorPos())
 
 	host = tonumber(io.read())
 	term.setTextColor(colors.white)
