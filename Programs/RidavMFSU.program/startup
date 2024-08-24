@@ -75,9 +75,8 @@ function Server()
 	
 	rednet.open(peripheral.find("modem"))
 
-
 	io.write("Enter energy computer IDs: ")
-
+	term.setCursorPos(term.getCursorPos())
 	term.setTextColor(colors.magenta)
 
 	huy_ = tonumber(io.read())
