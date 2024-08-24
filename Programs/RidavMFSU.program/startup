@@ -40,6 +40,7 @@ function Client()
 
 	term.setTextColor(colors.magenta)
 	term.setCursorPos(18, 1)
+	term.setCursorPos(term.getCursorPos())
 
 	serverID = tonumber(io.read())
 	term.setTextColor(colors.white)
