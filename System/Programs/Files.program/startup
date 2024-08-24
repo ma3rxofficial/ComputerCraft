@@ -369,6 +369,8 @@ function RefreshFiles()
 			local path = Current.Path .. '/' .. v
 			if Helpers.TidyPath(path) == '/rom/' then
 				break
+			elseif Helpers.TidyPath(path) == '/ocs2/' then
+				break
 			end
 			table.insert(Current.FileList,{
 				name = SpeedOS.FS.getName(path),
