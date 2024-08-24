@@ -274,6 +274,8 @@ function RefreshFiles()
 				Current.Peripheral.Type = 'Wireless_Modem'
 			elseif Current.Peripheral.Type == "rp_drive" then
 				Current.Peripheral.Type = 'RP Drive'
+			elseif Current.Peripheral.Type == "LAN NIC" then
+				Current.Peripheral.Type = 'Modem'
 			end
 			Current.Peripheral.Type = Helpers.Capitalise(Current.Peripheral.Type)
 			Current.Peripheral.Side = Helpers.Capitalise(Current.Peripheral.Side)
@@ -344,7 +346,8 @@ function RefreshFiles()
 				}
 			elseif Current.Peripheral.Type == 'Modem' then
 				Current.Peripheral.Info = {
-					['Connected Peripherals'] = tostring(#peripheral.call(Current.Peripheral.Side:lower(), 'getNamesRemote'))
+					['Default Channel'] = tostring(peripheral.call(Current.Peripheral.Side:lower(), 'getDefaultChannel')),
+					['Promiscuous'] = tostring(peripheral.call(Current.Peripheral.Side:lower(), 'getPromiscuous')),
 				}
 			elseif Current.Peripheral.Type == 'Monitor' then
 				local w, h = peripheral.call(Current.Peripheral.Side:lower(), 'getSize')
