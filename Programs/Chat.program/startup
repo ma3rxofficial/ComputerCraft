@@ -354,9 +354,9 @@ function Start()
 					elseif string.sub(messageaa, 1, 5) == "/mute" then
 						if isOP(_tUser, serverOPs) then
 							if SpeedText.getIndex(banList, string.sub(messageaa, 7, string.len(messageaa))) then
-								addMSG("(Console)".."User already muted!")
+								addMSG("(Console) ".."User already muted!")
 							else
-								addMSG("(Console)"..string.sub(messageaa, 7, string.len(messageaa)).. " has been muted.")
+								addMSG("(Console) "..string.sub(messageaa, 7, string.len(messageaa)).. " has been muted.")
 								rednet.broadcast("IRC_MUTE:" .._tChannel.. ":" .._tUser.. ":" ..string.sub(messageaa, 7, string.len(messageaa)))
 								banList[#banList+1] = string.sub(messageaa, 7, string.len(messageaa))
 							end
@@ -366,7 +366,7 @@ function Start()
 					elseif string.sub(messageaa, 1, 7) == "/unmute" then
 						if isOP(_tUser, serverOPs) then
 							if SpeedText.getIndex(banList, string.sub(messageaa, 9, string.len(messageaa))) then
-								addMSG("(Console)"..string.sub(messageaa, 9, string.len(messageaa)).. " has been unmuted.")
+								addMSG("(Console) "..string.sub(messageaa, 9, string.len(messageaa)).. " has been unmuted.")
 								rednet.broadcast("IRC_UNMUTE:" .._tChannel.. ":" .._tUser.. ":" ..string.sub(messageaa, 9, string.len(messageaa)))
 								banList[SpeedText.getIndex(banList, string.sub(messageaa, 9, string.len(messageaa)))] = nil
 							end
