@@ -207,7 +207,7 @@ function Start()
 							addMSG("<" .._messageWords2[3].. "> " .._messageWords2[4])
 						end
 					end
-				elseif message == ("ServerPing" .._tChannel) and serverHost then
+				elseif message == ("ServerPing" ..string.upper(_tChannel)) and serverHost then
 					rednet.send(id, ("Ping_Received_" .._tChannel.. "_IRC"))
 				end
 
@@ -291,9 +291,10 @@ function Start()
 		print("Pinging server: " .._tChannel)
 		local timer = os.startTimer(1)
 		while true do
-			rednet.broadcast("ServerPing" .._tChannel)
+			rednet.broadcast("ServerPing" ..string.upper(_tChannel))
 			local event, id, message = os.pullEvent()
-			if event == "rednet_message" and message == "Ping_Received_" .._tChannel.. "_IRC" then
+			if event == "rednet_message" and string.upper(string.sub(message, 15)) == string.upper(_tChannel).."_IRC" then
+				_tChannel = string.sub(string.sub(message, 15), 1, -5);
 				channelOP = id;
 				serverHost = false;
 				print("Server found! Joining...")
