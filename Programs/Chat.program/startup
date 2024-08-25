@@ -221,6 +221,7 @@ function Start()
 				end
 
 				print()
+				print()
 				term.setCursorPos(1,y11)
 				term.setTextColor(colors.white)
 				write("> ")
@@ -421,6 +422,7 @@ function Start()
 				end
 
 
+				print()
 				print()
 			end
 		end
