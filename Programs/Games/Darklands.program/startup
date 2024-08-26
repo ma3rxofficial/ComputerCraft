@@ -1,0 +1,2613 @@
+--[[
+
+					RPG Engine
+				Created by Nitrogen Fingers
+	
+	Version: -0.4a (pre-alpha)
+	
+	Created: 29/06/2012
+	Last Updated: 10/03/2013
+	
+	: This program allows the running of a fairly simple, Ultima-style RPG. It includes the ability to run simple :
+	: scripts to define enemies, towns, quests, weapons and so on and will include them within the game engine    :
+	: dynamically. Note this is solely the engine- the game itself is defined by it's scripts, which are kept in  :
+	: the script, towns and world files in this directory
+	
+	Immediate Goals for next version:
+	- Skill sheet
+	- Greater control over random generation of enemies (type, level etc)
+	- Dynamic dungeons- levers, secret doors and more
+	- More graphical elements in dungeons
+	
+	Goals for later versions:
+	- Magic
+	- Serialization of some sort
+	- Music
+
+]]--
+
+if SpeedOS then
+	SpeedOS.ToolBarColour = colours.black
+	SpeedOS.ToolBarTextColour = colours.white
+end
+
+w,h = term.getSize()
+gameOver = false
+debugging = false
+
+				--[[SECTION: GLOBAL parameters & variables]]--
+
+--name: How the quest appears in your logbook
+--activestage: At what stage the quest is up to. 0 is inactive, -1 is complete.
+--variables: You may insert anything you like here- space for the filling!
+--stages: the ID for each stage and what it means:
+	--desc: a short description of what's needed to complete this stage of the quest
+	--condition: a function that checks the state of the world and each action the player makes,
+		--if this returns true it runs a function that modifies the game state (usually a display or something)
+		--and updates the quest stage.
+--reward: a table with the type and value of the reward (at present types are GOLD and ITEM).
+quests = {}
+--name: The town's title
+--xpos,ypos: coordinates it should appear on the world map
+--startx,starty: coordinates the player should appear when entering/exiting the town
+--level: the environment of the town itself
+--dialogue: dialog options that are true for everyone in the town. Used when personal dialog choices are exhasted
+--visible: Whether or not the town is presently visible
+--npc: a list of all npcs in the town
+	--name: The name of the npc
+	--xpos,ypos: Position of the x and y
+	--moving: boolean, whether or not the NPC walks around. They never move more than 2 or 3 steps from where they start.
+	--dialog: A list of every dialog option with the word or phrase needed to start it. # tags are added, and similies should # the actual option
+		--Defaults: onfirstgreet, ongreet, onfarewell 
+	--job: How the user interacts with the npc
+	--level: Affects the equipment the NPC sells, and how much XP each quest he assigns is worth
+	--inventory: Smiths/Mystics only: The items they have available for sale
+	--priceModifier: Smiths/Merchants/Mystics only: Their buying or selling modifier price, normalized percentage (ex. 0.75 for 75%)
+	--goldLimit: Merchants only: Their maximum buying price on any item (will never pay more than this)
+town = { }
+--Global dialogue- dialogue shared by all members of the game
+globalDialogue = { }
+--name: The title of the dungeon, as given in the over display
+--xpos,ypos: coordinates it should appear on the world map
+--startx,starty,startlevel: the coodinates the player starts at within the dungeon. Place these NEXT to E, not in an E.
+--startfx, startfy: the facing the player starts at
+--level: the level itself, divided into sublevels by index
+--creatures: A list of all enemies currently in the dungeon. Can start at zero, if there are none yet.
+--creaturesSpawn: A boolean- if true enemies will occasionally spawn at random within the dungeon.
+dungeons = { } 
+creatures = { }
+items = { }
+enchantments = { }
+--The function to be run when the game starts. Here you should initialize things like the player's class, stats,
+--and any other initialization your script will require.
+onInit = nil
+--A 2D array of strings, for displaying images. You can use this however you like, the displayImage function will do it for you.
+images = { }
+
+--Quest State information, to do with conversations.
+	--activeDialog: the name of the person the PC engaged in conversation with
+activeDialog = nil
+
+				--[[SECTION: Character, RP Stats]]--
+				
+charName = "Unnamed"
+charClass = "Adventurer"
+charLevel = 1
+charHealth = 80
+charMaxHealth = 80
+charXP = 0
+charNextXP = 50
+charGold = 0
+
+--The player's RPG stats, modifiers for his combat ability
+local charStrength = 10
+local charEndurance = 10
+local charAgility = 10
+local charSpeed = 10
+
+activeQuests = {}
+inventory = {}
+
+--What the player has equipped
+charEquipment = {
+	swordhand = { value = nil, suffix = "(S)" };
+	offhand = { value = nil, suffix = "(O)" };
+	head = { value = nil, suffix = "(H)" };
+	chest = { value = nil, suffix = "(C)" };
+	legs = { value = nil, suffix = "(L)" };
+	feet = { value = nil, suffix = "(F)" };
+}
+--The last page the journal was opened to
+local journalPage = 1
+
+--A little timesavaer
+local directions = { {x = -1, y = 0}, {x = 0, y = -1}, {x = 1, y = 0}, {x = 0, y = 1} }
+
+				--[[SECTION: Overword Information]]--
+
+overworld = { }
+--Overcreatures also track:
+--chaseturns: How many turns the overcreature has been chasing the player. If this exceeds 10, they should give up
+--stillturns: How many turns the overcreature has been unable to move. If this exceeds 3, they should give up
+local overcreatures = { }
+worldname = "The World"
+local mapw = 29
+local maph = 15
+
+pox = 1
+poy = 1
+
+local overEventList = {}
+
+				--[[SECTION: Town information]]--
+
+activeTown = 0
+inTown = false
+
+townpx, townpy = 0,0
+local townEventList = {}
+
+					--[[SECTION: Dungeon, State Attributes]]--
+
+--The player's position and facing
+dunpx = 0
+dunpy = 0
+dunlevel = 0
+dunfx = 0
+dunfy = 0
+
+inDungeon = false
+activeDungeon = 0
+
+local dungeonEventList = {}
+
+					--[[SECTION: General, Graphics Interface]]--
+					
+local inventoryInterface = {
+	"//=============================\\ /===============\\\\",
+	"||                              |       __       ||",
+	"||                              |      /  \\H     ||",
+	"||                              |      \\__/      ||",
+	"||                              | /--^--  --^--\\ ||",
+	"||                              | S----\\  /----O ||",
+	"||                              |     C|  |      ||",
+	"||                              |      |  |      ||",
+	"||                              |      |  |L     ||",
+	"||                              |      /  \\      ||",
+	"||                              |     |_.._|F    ||",
+	"||                              |                ||",
+	"**------------------------------*----------------**",
+}
+local journalInterface = { 
+	" _______________________ _ _______________________ ",
+	"/                       [ ]                       \\",
+	"|                       | |                       |",
+	"\\_______________________[_]_______________________/"
+}
+local shopInterface = {
+	"//===========================\\\\",
+	"||                           ||",
+	"||                           |/-~-~-~-~-~-~-~-~-~-~-\\",
+	"||                           ||                     |",
+	"\\\\===========================//-~-~-~-~-~-~-~-~-~-~-/"
+}
+
+					--[[SECTION: Dungeon, Display Components]]--
+
+--The algorithms behind this are ingenius, but complicated. They involve overlaying various sprites on top of one another
+--at given areas to give the illusion of 3D.
+local cor = {
+	"\\                 /",
+	" \\               / ",
+	"  \\             /  ",
+	"   \\           /   ",
+	"    \\         /    ",
+	"     \\       /     ",
+	"      \\     /      ",
+	"       \\   /       ",
+	"        / \\        ",
+	"        \\ /        ",
+	"       /   \\       ", 
+	"      /     \\      ",
+	"     /       \\     ",
+	"    /         \\    ",
+	"   /           \\   ",
+	"  /             \\  ",
+	" /               \\ ",
+	"/                 \\",
+}
+local corx = 1
+local cory = 1
+
+local twoend = {
+	" ___ ",
+	"|   |",
+	"|   |",
+	"|   |",
+	" --- "
+}
+local twoexitend = {
+	" ___ ",
+	"| _ |",
+	"|/ \\|",
+	"|| ||",
+	",- -."
+}
+local twoendx = 10
+local twoendy = 7
+
+local oneend = {
+	"\\_________/",
+    "|         |",
+    "|         |",
+    "|         |",
+    "|         |",
+    "|         |",
+    "|         |",
+    "|         |",
+    "|_________|"
+}
+local oneexitend = {
+	"\\_________/",
+    "|         |",
+    "|  _____  |",
+    "| /     \\ |",
+    "| |     | |",
+    "| |     | |",
+    "| |     | |",
+    "| |     | |",
+    "|_|     |_|"
+}
+local oneendx = 7
+local oneendy = 5
+
+local trightturn = {
+	" |",           
+    "||",         
+    "||",         
+    "||",          
+    "||",         
+    " |"    
+}
+local trightturnx = 14
+local trightturny = 7
+
+local tleftturn = {
+	"| ",           
+    "||",         
+    "||",         
+    "||",          
+    "||",         
+    "| "    
+}
+local tleftturnx = 9
+local tleftturny = 7
+
+local rightturn = {
+	"   |",
+	"   |",
+	" __|",
+	"|  |",
+    "|  |",
+    "|  |",
+    "|  |",
+    "|  |",
+    "|  |",
+    "|  |",
+    "|__|",
+    "   |",
+    "   |",
+    "   |"
+}
+local rightturnx = 17
+local rightturny = 3
+
+local leftturn = {
+	"|   ",
+	"|   ",
+	"|__ ",
+	"|  |",
+    "|  |",
+    "|  |",
+    "|  |",
+    "|  |",
+    "|  |",
+    "|  |",
+    "|__|",
+    "|   ",
+    "|   ",
+    "|   "
+}
+local leftturnx = 4
+local leftturny = 3
+
+local bwturn = {
+	"    ",
+	"    ",
+	"    ",
+	"    ",
+	"____",
+	"    ",
+	"    ",
+	"    ",
+	"    ",
+	"    ",
+	"    ",
+	"    ",
+	"____",
+	"    ",
+	"    ",
+	"    ",
+	"    ",
+    "    "
+}
+local bwleftturnx = 1
+local bwrightturnx = 20
+local bwturny = 1
+
+local ladderd = {
+	" |---| ",
+    " |   | ",
+    "/|---|\\",
+    "\\|___|/"
+}
+local ladderdx = 9
+local ladderdy = 13
+
+local ladderu = {
+	" _____ ",
+    "/|---|\\",
+    "\\|   |/",
+    " |---| ",
+    " |   | ",
+    " |---| ",
+    " |   | ",
+    " |---| ",
+    " |   | ",
+    " |---| ",
+    " |   | ",
+    " |---| ",
+    " |   | ",
+    " |---| ",
+    " |   | "  
+}
+local ladderux = 9
+local ladderuy = 2
+
+local ladderud = {
+	" _____ ",
+    "/|---|\\",
+    "\\|   |/",
+    " |---| ",
+    " |   | ",
+    " |---| ",
+    " |   | ",
+    " |---| ",
+    " |   | ",
+    " |---| ",
+    " |   | ",
+    " |---| ",
+    " |   | ",
+    "/|---|\\",
+    "\\|___|/"
+}
+local ladderudx = 9
+local ladderudy = 2
+
+local chestc = {
+	"/-------\\",
+    "|   0   |", 
+	"|_______|"
+}
+local chestcx = 8
+local chestcy = 14
+
+local chesto = {
+	" _______ ",
+	"/       \\",
+    "\\_______/",
+    "|   0   |",
+    "|_______|"
+}
+local chestox = 8
+local chestoy = 12
+			
+local compass = {
+	"  ___  ",
+	" /   \\ ",
+	"|     |",
+	"|     |",
+	" \\___/ "
+
+}
+
+--Determines the left facing depending on the current facing
+function getLeft(curx, cury)
+	if curx == 1 then return 0,-1 end
+	if curx == -1 then return 0,1 end
+	if cury == 1 then return 1,0 end
+	if cury == -1 then return -1,0 end
+end
+
+--Determines the right facing depending on the current facing
+function getRight(curx, cury)
+	if curx == 1 then return 0,1 end
+	if curx == -1 then return 0,-1 end
+	if cury == 1 then return -1,0 end
+	if cury == -1 then return 1,0 end
+end
+
+				--[[SECTION: Overworld, Helper]]--
+
+--Determines if the chosen letter is a vowel. Used mostly for determining articles.
+function isVowel(letter)
+	return letter == "a" or letter == "e" or letter == "i" or letter == "o" or letter == "u"
+end
+				
+--Prints a string with left justification, given a height and an optional offset
+function printLeft(msg, height, offset)
+	if not offset then offset = 0 end
+	term.setCursorPos(1 + offset, height)
+	term.write(msg)
+end
+
+--A more advanced version of the above method including wrapping over specified width.
+--It will move to a new line each time and return the number of lines it takes.
+function wprintLeft(msg, height, width, offset)
+	local inc = 0
+	local ops = 1
+	while #msg - ops > width do
+		local nextspace = 0
+		while string.find(msg, " ", ops + nextspace) and
+				string.find(msg, " ", ops + nextspace) - ops < width do
+			nextspace = string.find(msg, " ", nextspace + ops) + 1 - ops
+		end
+		local ox,oy = term.getCursorPos()
+		term.setCursorPos(offset, height + inc)
+		inc = inc + 1
+		term.write(string.sub(msg, ops, nextspace + ops - 1))
+		ops = ops + nextspace
+	end
+	term.setCursorPos(offset, height + inc)
+	term.write(string.sub(msg, ops))
+	
+	return inc + 1
+end
+
+--Prints a string with right justfication, given a height and optional offset
+function printRight(msg, height, offset)
+	if not offset then offset = 0 end
+	term.setCursorPos(w - #msg - offset, height)
+	term.write(msg)
+end
+
+--Prints a string in the center of the space specified- with the given height and offset
+function printOffCenter(msg, height, width, offset)
+	if not offset then offset = 0 end
+	term.setCursorPos(width/2 - #msg/2 + offset, height)
+	term.write(msg)
+end
+
+--A slightly more advanced version of the above method, to include text wrapping over the
+--specified width. It will move to a new line each time, and return the number of lines it takes.
+function wprintOffCenter(msg, height, width, offset)
+	local inc = 0
+	local ops = 1
+	while #msg - ops > width do
+		local nextspace = 0
+		while string.find(msg, " ", ops + nextspace) and
+				string.find(msg, " ", ops + nextspace) - ops < width do
+			nextspace = string.find(msg, " ", nextspace + ops) + 1 - ops
+		end
+		local ox,oy = term.getCursorPos()
+		term.setCursorPos(width/2 - (nextspace)/2 + offset, height + inc)
+		inc = inc + 1
+		term.write(string.sub(msg, ops, nextspace + ops - 1))
+		ops = ops + nextspace
+	end
+	term.setCursorPos(width/2 - #string.sub(msg, ops)/2 + offset, height + inc)
+	term.write(string.sub(msg, ops))
+	
+	return inc + 1
+end
+
+--Displays an image statically, in a frame and waits on a key event to dispel it. Offset on width and height can be chosen, leaving them null will center the image.
+--Note- any images with an uneven length will have spaces appended to them to make them fit.
+function displayStaticImage(index, woffset, hoffset)
+	local image = images[index]
+	local longest = 0
+	for i=1,#image do longest = math.max(longest, #image[i]) end
+	
+	if not woffset then
+		woffset = w/2 - longest/2
+	end
+	if not hoffset then
+		hoffset = h/2 - #image/2
+	end
+	
+	printLeft("/"..string.rep("-",longest).."\\", hoffset-1, woffset-1)
+	printLeft("\\"..string.rep("-",longest).."/", hoffset+#image+1, woffset-1)
+	
+	for i=1,#image do
+		printLeft("|"..image[i]..string.rep(" ",longest - #image[i]).."|", hoffset-1+i, woffset-1)
+	end
+	
+	os.pullEvent("key")
+end
+
+--Displays an animated series of images in a frame with the start and end index of the image buffer. A key event will close the image. The time delay indicates the
+--space of time between each frame.
+function displayAnimatedImage(startindex, endindex, timedelay, woffset, hoffset)
+
+end
+
+				--[[SETION: Overworld, Initialization]]--
+				
+--Opens the overworld directory and adds it to the overworld parameters
+function readOverWorld()
+	local file = io.open(shell.resolve(".").."/scripts/world", "r")
+	if not file then error("Error: \'world\' file not present!") end
+	local fline = file:read()
+	local count = 1
+	while fline do
+		overworld[count] = { }
+		for i=1,#fline do
+			overworld[count][i] = string.sub(fline,i,i)
+		end
+		fline = file:read()
+		count = count + 1
+	end
+	file:close()
+	print("Overworld successfully parsed.")
+end
+
+				--[[SECTION: Town, Helper]]--
+
+--This will set any given quest to be active and in the user's set. Though this occurs most commonly in town, it can be done anywhere.
+function activateQuest(quest)
+	table.insert(activeQuests, quest)
+	if quest.onActivation then quest:onActivation() end
+	addEvent("New Quest: "..quest.name)
+	
+	if debugging then 
+		writeToLog("New Quest Added", "\""..activeQuests[#activeQuests].name.."\"", activeQuests[#activeQuests].activeStage)
+	end
+end
+
+--Completes a quest, and removes it from the active quest list. You can specify the message you want to display when the quest is removed, otherwise a default one is used.
+function deactivateQuest(quest, message)
+	table.remove(activeQuests, quest)
+	if message then
+		addEvent(message)
+	else
+		addEvent("Quest Complete!")
+	end
+end
+				
+--This checks anytime you want to see if a quest objective (or more than one) have been completed. The boolean determines
+--if only one is checked (i.e. if true once then it stops), or if it keeps going one after another.
+function checkQuestUpdate(event)
+	local questupdated = false
+	for i=1,#activeQuests do
+		--It only allows one per quest giver (the newest)
+		local quest, qstage = activeQuests[i], activeQuests[i].activestage
+		local statechange = quest.stages[qstage].condition(quest, event)
+		if statechange then 
+			if activeQuests[i].activestage == -1 then
+				deactivateQuest(i, quest.name.." Complete!")
+			end
+			return statechange 
+		end
+	end
+	return nil
+end				
+				
+--Finds an NPC by name, if he exists within the town (to access his details but not change them)
+function findNPC(name, townindex)
+	for i=1,#town[townindex].npc do
+		local locnpc = town[townindex].npc[i]
+		if locnpc.name == name then return locnpc end
+	end
+	return nil
+end				
+
+--Allows you to change an NPC's dialog, by name and town
+function setNPCDialogue(name, townindex, subject, dialogue)
+	for i=1,#town[townindex].npc do
+		local locnpc = town[townindex].npc[i]
+		if locnpc.name == name then 
+			town[townindex].npc[i].dialogue[subject] = dialogue
+			return
+		end
+	end
+end
+
+--Moves an NPC to a new location
+function setNPCPosition(name, townindex, newx, newy)
+	for i=1,#town[townindex].npc do
+		local locnpc = town[townindex].npc[i]
+		if locnpc.name == name then 
+			town[townindex].npc[i].xpos = newx
+			town[townindex].npc[i].ypos = newy
+			return
+		end
+	end
+end
+
+--Determines how much a given item will be valued by any NPC.
+function getNPCValueOn(locnpc, item)
+	if not item then return 0 end
+
+	local value = math.floor(locnpc.priceModifier * item.value)
+	if value < 1 then value = 1
+	elseif locnpc.job == "merchant" and value > locnpc.goldLimit then value = locnpc.goldLimit end
+	
+	return value
+end
+
+--This takes everyNPC in the world and generates a fresh inventory for them
+function refreshNPCInventory()
+	for t=1,#town do
+		for n=1,#town[t].npc do
+			local chosenNPC = town[t].npc[n]
+			
+			if chosenNPC.job == "smith" then
+				chosenNPC.inventory = { }
+				for i=1, math.random(5,15) do
+					table.insert(chosenNPC.inventory, generateLoot(chosenNPC.level + 3))
+				end
+			end
+		end
+	end
+end
+
+--Simply returns the character's name- for dynamic use in dialogues etc.
+function getCharName()
+	return charName
+end
+
+--Sets the character's name... weird bug means I have to do this. Sorry.
+function setCharName(newName)
+	charName = newName
+end
+
+				--[[SECTION: Dungeon, Initialization]]--
+				
+--This adds a 2 point space to each part of the level. It's not necessary but it makes level design easier. Part of the level parse.
+function bufferLevel(index)
+	for i=1,#dungeons[index].level do
+		for j=1, #dungeons[index].level[i] do
+			dungeons[index].level[i][j] = "  "..dungeons[index].level[i][j].."  "
+		end
+		table.insert(dungeons[index].level[i], 1, string.rep(" ", #dungeons[index].level[i][1]))
+		table.insert(dungeons[index].level[i], 1, string.rep(" ", #dungeons[index].level[i][1]))
+		table.insert(dungeons[index].level[i], string.rep(" ", #dungeons[index].level[i][1]))
+		table.insert(dungeons[index].level[i], string.rep(" ", #dungeons[index].level[i][1]))
+	end
+	dungeons[index].startx = dungeons[index].startx + 2
+	dungeons[index].starty = dungeons[index].starty + 2
+end
+
+				--[[SECTION: Combat, Helper]]--
+
+--This takes an index from the creature library, creates a clone and returns it
+--You can use a numerical index or the creatures name, if it's easier
+function cloneCreature(index, xpos, ypos, level)
+	if type(index) == "string" then
+		for i,v in ipairs(creatures) do
+			if v.name == index then
+				index = i
+				break
+			end
+		end
+	end
+	if type(index) == "string" then error(index.." creature not found!") end
+	local newcreature = {
+		name = creatures[index].name,
+		xpos = xpos,
+		ypos = ypos,
+		levelpos = level,
+		level = creatures[index].level,
+		hit = creatures[index].hit,
+		xp = creatures[index].xp,
+		weapon = creatures[index].weapon,
+		ac = creatures[index].ac,
+		imageone = creatures[index].imageone,
+		imagetwo = creatures[index].imagetwo
+	}
+	return newcreature
+end
+
+--This function adds a creature to a random position somewhere on the overworld map.
+function addCreatureToWorldMap()
+	--It only tries 5 times right now
+	for i=1,5 do
+		local xval = math.random(pox - 3, pox + 3)
+		local yval = math.random(poy - 3, poy + 3)
+		
+		if xval > 0 and yval > 0 and xval <= #overworld[1] and yval <= #overworld and
+				overworld[yval][xval] == " " and (xval ~= pox or yval ~= poy) then
+			local safe = true
+			for k,v in pairs(overcreatures) do
+				if v.xpos == xval and v.ypos == yval then
+					safe = false
+					break
+				end
+			end
+		
+			if safe then
+				local newCreature = cloneCreature(math.random(1,2), xval, yval, nil)
+				newCreature.chaseturns = 0
+				newCreature.stillturns = 0
+				table.insert(overcreatures, newCreature)
+				addEvent(newCreature.name.." has appeared!")
+				return
+			end
+		end
+	end
+end
+
+--This function adds a creature to a random position somewhere nearby the player in a dungeon.
+function addCreatureToDungeon()
+	local viableSpots = {}
+	for xval = dunpx - 3, dunpx + 3 do
+		for yval = dunpy - 3, dunpy + 3 do
+			if xval >= 2 and yval >= 2 and xval <= #dungeons[activeDungeon].level[dunlevel] - 2 and yval <= #dungeons[activeDungeon].level[dunlevel] - 2 and
+					dungeonTileAt(xval,yval,dunlevel) ~= " " and (xval ~= dunpx or yval ~= dunpy) then
+				table.insert(viableSpots, { x = xval, y = yval })
+			end
+		end
+	end
+	
+	--I have no idea, but this apparently is happening. Solve for later
+	if #viableSpots == 0 then return end
+	
+	local spot = viableSpots[math.random(1, #viableSpots)]
+	local possibleMonsters = {}
+	for k,v in pairs(creatures) do
+		if v.level <= charLevel then table.insert(possibleMonsters, k) end
+	end
+		
+	local newCreature = cloneCreature(possibleMonsters[math.random(1,#possibleMonsters)], spot.x, spot.y, dunlevel)
+	table.insert(dungeons[activeDungeon].creatures, newCreature)
+	addEvent("You hear a noise nearby.")
+	return
+end
+
+--This determines how much is done, by a given weapon
+function calculateDamage(weapon, isPlayer)
+	return math.random(weapon.base - weapon.base/5, weapon.base + weapon.base/5)
+end
+
+--Adds XP and increases the player's level
+function addXP(amount)
+	charXP = charXP + amount
+	if charXP >= charNextXP then
+		charXP = charXP - charNextXP
+		charNextXP = charNextXP * 2
+		charMaxHealth = charMaxHealth + 10
+		charHealth = charMaxHealth
+		charLevel = charLevel + 1
+		addEvent("You are now level "..charLevel.."!")
+	end
+end
+
+--Adds Gold to the player's inventory
+function addGold(amount)
+	charGold = charGold + amount
+	addEvent("Got "..amount.." gold!")
+end
+
+--This section determines how much damage is deflected by a given creatures, or player (using nil)
+
+				--[[SECTION: Inventory, Helper]]--
+
+--This takes an index from the item library, creates a clone and returns it.
+function cloneItem(index)
+	return {
+		name = items[index].name,
+		class = items[index].class,
+		desc = items[index].desc,
+		bodypart = items[index].bodypart,
+		level = items[index].level,
+		requirements = items[index].requirements,
+		base = items[index].base,
+		enchantment = items[index].enchantment,
+		enchantTypes = items[index].enchantTypes,
+		value = items[index].value,
+		weight = items[index].weight
+	}
+end
+
+--This takes a string index from the enchantment library, creates a clone and returns it.
+function cloneEnchantment(index)
+	if string.find(index, "#") == 1 then return { } end
+	if not enchantments[index] then return { } end
+	return {
+		name = enchantments[index].name,
+		desc = enchantments[index].desc,
+		prefix = enchantments[index].prefix,
+		skill = enchantments[index].skill,
+		effect = enchantments[index].effect,
+		level = enchantments[index].level,
+		value = enchantments[index].value
+	}
+end
+
+--This generates a random bit of loot, based on the provided level, and returns it.
+function generateLoot(maxlevel)
+	--We have a 1 in 5 of the loot being enchanted.
+	local hasEnchant = math.random(1,5) == 1
+	
+	local viableItems = {}
+	for i=1,#items do
+		--We copy every index of value to us before creating the item
+		if items[i].level <= maxlevel then 
+			table.insert(viableItems, i)	
+		end
+	end
+	
+	local finalItem = cloneItem(viableItems[math.random(1,#viableItems)])
+	if not hasEnchant then return finalItem end
+	
+	--If we need to enchant...
+	local viableEnchant = {}
+	--First we filter down so we have only "base" enchants (not categories, or #'s)
+	
+	for i=1,#finalItem.enchantTypes do 
+		table.insert(viableEnchant, finalItem.enchantTypes[i])
+	end
+	
+	local allBaseEnchants = true
+	repeat
+		allBaseEnchants = true
+		for i=1,#viableEnchant do
+			local currEnchant = viableEnchant[i]
+			if string.find(currEnchant, "#") == 1 then
+				table.remove(viableEnchant, i)
+				for j=1,#enchantments[currEnchant] do
+					table.insert(viableEnchant, enchantments[currEnchant][j])
+				end
+				allBaseEnchants = false
+				break
+			end
+		end
+	until allBaseEnchants
+	
+	--Then we whittle off those that the weapon can't handle
+	local it = 1
+	while it <= #viableEnchant do
+		if enchantments[viableEnchant[it]].level > finalItem.level then
+			table.remove(viableEnchant, it)
+		else 
+			it = it+1 
+		end
+	end
+	
+	--Finally, we randomly pick one of those enchantments and bam! Cut, print, that's the show.
+	finalItem.enchantment = cloneEnchantment(viableEnchant[math.random(1,#viableEnchant)])
+	finalItem.value = math.floor(finalItem.value * finalItem.enchantment.value)
+	if finalItem.value < 1 then finalItem.value = 1 end
+	if finalItem.enchantment.skill == "base" then
+		if math.abs(finalItem.enchantment.effect) > (0.5 * finalItem.enchantment.effect) then
+			finalItem.base = math.floor(finalItem.base + finalItem.enchantment.effect)
+		else
+			finalItem.base = math.floor((finalItem.base/2) * (finalItem.enchantment.effect/math.abs(finalItem.enchantment.effect)))
+		end
+	end
+	return finalItem
+end
+
+				--[[SECTION: General, Interface]]--
+
+--Runs a display for the interface, overlaying the interface screen and runs input on that interface
+--until a user termiantes the interaction.
+--We use an NPC here- depending on the profession we buy from his inventory or sell from our own.
+--This is toggled by the buy tag as the second parameter.
+function runTradeInterface(chosenNPC, buying)
+	local selected = 1
+	local scroll = 1
+	local selectInv = nil
+	if buying then selectInv = inventory
+	else selectInv = chosenNPC.inventory end
+	
+	while true do
+		--This is actually a tidy little time saver- shows the player's gold and his stats!
+		printTownInterface()
+		--First we draw our display, as always
+		printLeft(shopInterface[1], 1)
+		for i=2,12 do printLeft(shopInterface[2], i) end
+		printLeft(shopInterface[3], 13)
+		for i=14,18 do printLeft(shopInterface[4], i) end
+		printLeft(shopInterface[5], 19)
+		
+		for i=scroll,math.min(scroll+16,scroll+#selectInv-1) do
+			local prefix = "  "
+			if i==selected then prefix = ">>" end
+			local suffix = ""
+			for __,v in pairs(charEquipment) do
+				if v.value == selectInv[i] then
+					if selectInv[i].bodypart == "both" then suffix = "(S/O)"
+					else suffix = v.suffix end
+					break 
+				end
+			end
+			
+			if selectInv[i].enchantment then
+				if selectInv[i].enchantment.prefix then prefix = prefix..selectInv[i].enchantment.name.." "
+				else suffix = selectInv[i].enchantment.name..suffix end
+			end
+
+			printLeft(prefix..selectInv[i].name.." "..suffix, i-scroll+2, 2)
+		end
+		
+		term.setCursorPos(31, 14)
+		if chosenNPC.job == "merchant" then
+			printLeft("Trader buys at "..(chosenNPC.priceModifier * 100).."%", 14, 31)
+			printLeft("Gold limit: "..chosenNPC.goldLimit, 15, 31)
+			printLeft("Final price: "..getNPCValueOn(chosenNPC, selectInv[selected]), 17, 31)
+		else
+			printLeft("Trader sells at "..(chosenNPC.priceModifier * 100).."%", 14, 31)
+			printLeft("Final price: "..getNPCValueOn(chosenNPC, selectInv[selected]), 17, 31)
+		end
+		
+		local id,key = os.pullEvent("key")
+		if key == keys.enter then break
+		elseif key == keys.up and selected > 1 then
+			selected = selected-1
+			if selected < scroll + 2 and scroll > 1 then
+				scroll = scroll - 1
+			end
+		
+		elseif key == keys.down and selected < #selectInv then
+			selected = selected+1
+			if selected > scroll + 14 and selected < #selectInv - 1 then
+				scroll = scroll+1
+			end
+		elseif key == keys.space then
+			if buying then
+				charGold = charGold + getNPCValueOn(chosenNPC, selectInv[selected])
+				if isEquipped(selected) then equipItem(selected) end
+				table.remove(selectInv, selected)
+				
+				if selected > #selectInv then selected = selected-1 end
+				if #selectInv == 0 then
+					local ctitle = chosenNPC.name.." the "..chosenNPC.job.." says:"
+					displayConfirmDialogue(ctitle, "That's all your gear! Pleasure doing business with you.")
+					break
+				end
+			elseif not buying and charGold >= getNPCValueOn(chosenNPC, selectInv[selected]) then
+				charGold = charGold - getNPCValueOn(chosenNPC, selectInv[selected])
+				table.insert(inventory, selectInv[selected])
+				table.remove(selectInv, selected)
+				
+				if selected > #selectInv then selected = selected-1 end
+				if #selectInv == 0 then
+					local ctitle = chosenNPC.name.." the "..chosenNPC.job.." says:"
+					displayConfirmDialogue(ctitle, "I'm sold out of stock! Come back when I have some more stuff.")
+					break
+				end
+			end
+		end
+	end
+end
+
+--Runs a display interface that displays each quest the user has, and allows them to cycle between them.
+--A quest is displayed on each page of a book, with the user able to flip pages left and right to see other
+--quests.
+function runJournalInterface()
+	if #activeQuests == 0 then
+		addEvent("You have no currently active quests.")
+		return
+	end
+	
+	if journalPage * 2 - 1 > #activeQuests then journalPage = 1 end
+	
+	while true do
+		--Draw the backdrop
+		for i=1,2 do
+			term.setCursorPos(1,i)
+			term.write(journalInterface[i])
+		end
+		for i=3,h-1 do
+			term.setCursorPos(1,i)
+			term.write(journalInterface[3])
+		end
+		term.setCursorPos(1,h)
+		term.write(journalInterface[4])
+		
+		--Draw the quest on each page
+		local dquest = activeQuests[journalPage * 2 - 1]
+		if dquest then
+			wprintLeft(dquest.name, 3, 22, 3)
+			local _,ny = term.getCursorPos()
+			ny = ny + 3
+			wprintLeft(dquest.generalDescription, ny, 22, 3)
+			local _,ny = term.getCursorPos()
+			ny = ny + 3
+			wprintLeft(dquest.stages[dquest.activestage].desc, ny, 22, 3)
+			wprintOffCenter("Page "..(journalPage * 2 - 1), h-1, 22, 3)
+		end
+		
+		dquest = activeQuests[journalPage * 2]
+		if dquest then
+			wprintLeft(dquest.name, 3, 22, 29)
+			local _,ny = term.getCursorPos()
+			ny = ny + 3
+			wprintLeft(dquest.generalDescription, ny, 22, 29)
+			local _,ny = term.getCursorPos()
+			ny = ny + 3
+			wprintLeft(dquest.stages[dquest.activestage].desc, ny, 22, 29)
+			wprintOffCenter("Page "..(journalPage * 2), h-1, 22, 29)
+		end
+		
+		--Left and right arrow events shift from one page to the next, enter quits.
+		local _,key = os.pullEvent("key")
+		
+		if key == keys.left and journalPage > 1 then
+			journalPage = journalPage - 1
+		elseif key == keys.right and activeQuests[(journalPage + 1) * 2 - 1] then
+			journalPage = journalPage + 1
+		elseif key == keys.enter then break end
+	end
+end
+				
+--[[INCOMPLETE]]--
+--Displays a screen with each of the player's attributes
+function printPlayerStats()
+	
+end
+
+				--[[SECTION: Inventory, Interface]]--
+
+--This method creates a display for the interface, overlaying the current screen, and runs input on
+--that interface until the user terminates the interaction.
+function runInventoryInterface()
+	local selected = 1
+	local scroll = 1
+	
+	if #inventory == 0 then
+		displayConfirmDialogue("*", "Your inventory is empty.")
+		return
+	end
+	
+	while true do
+		--This actually produces the physical display for the interface
+		for i=1,#inventoryInterface do
+			term.setCursorPos(1, i)
+			term.write(inventoryInterface[i])
+		end
+		for i=#inventoryInterface+1,h-1 do
+			term.setCursorPos(1,i)
+			term.clearLine()
+		end
+		term.setCursorPos(1,h)
+		term.write(inventoryInterface[#inventoryInterface])
+		for i=scroll,math.min(scroll+10,scroll+#inventory-1) do
+			local prefix = "  "
+			if i==selected then prefix = ">>" end
+			local suffix = ""
+			for __,v in pairs(charEquipment) do
+				if v.value == inventory[i] then 
+					if inventory[i].bodypart == "both" then suffix = "(S/O)"
+					else suffix = v.suffix end
+					break 
+				end
+			end
+			
+			if inventory[i].enchantment then
+				if inventory[i].enchantment.prefix then prefix = prefix..inventory[i].enchantment.name.." "
+				else suffix = inventory[i].enchantment.name..suffix end
+			end
+
+			printLeft(prefix..inventory[i].name.." "..suffix, i-scroll+2, 2)
+		end
+		local itemdesc = inventory[selected].desc
+		if inventory[selected].enchantment then
+			itemdesc = itemdesc.." "..inventory[selected].enchantment.desc 
+			printOffCenter(inventory[selected].enchantment.skill.." "..inventory[selected].enchantment.effect, h-1, w, 0)
+		end
+		
+		wprintOffCenter(itemdesc, #inventoryInterface + 1, w-4, 2)
+		if inventory[selected].class == "weapon" then
+			printLeft("Damage:"..inventory[selected].base, h-1, 1)
+		elseif inventory[selected].class == "shield" then
+			printLeft("Block: "..(inventory[selected].base*100).."%", h-1, 1)
+		elseif inventory[selected].class == "armour" then
+			printLeft("AC:"..inventory[selected].base, h-1, 1)
+		end
+		printRight("Value: "..inventory[selected].value, h-1, 1)
+		
+		--This handles input, which is repeated until the method is complete
+		local id, key = os.pullEvent("key")
+		if key == keys.enter then break
+		elseif key == keys.down and selected < #inventory then
+			selected = selected+1
+			if selected > scroll + 8 and selected < #inventory - 1 then
+				scroll = scroll+1
+			end
+		elseif key == keys.up and selected > 1 then
+			selected = selected-1
+			if selected < scroll + 2 and scroll > 1 then
+				scroll = scroll - 1
+			end
+		elseif key == keys.space then
+			equipItem(selected)
+		end
+	end
+end
+
+--This takes a selectedIndex and equips it (or unequips it)
+function equipItem(itemIndex)
+	if inventory[itemIndex].bodypart == "both" then
+		if charEquipment["swordhand"].value == inventory[itemIndex] then
+			charEquipment["swordhand"].value = nil
+			charEquipment["offhand"].value = nil
+		else
+			charEquipment["swordhand"].value = inventory[itemIndex]
+			charEquipment["offhand"].value = inventory[itemIndex]
+		end
+	elseif charEquipment[inventory[itemIndex].bodypart].value == inventory[itemIndex] then
+		charEquipment[inventory[itemIndex].bodypart].value = nil
+	else
+		local oldValue = charEquipment[inventory[itemIndex].bodypart].value
+		if oldValue and oldValue.bodypart == "both" then
+			charEquipment["swordhand"].value = nil
+			charEquipment["offhand"].value = nil
+		end
+		charEquipment[inventory[itemIndex].bodypart].value = inventory[itemIndex]
+	end
+end
+
+--Returns true or false depending on whether or not the item has been equipped
+function isEquipped(itemIndex)
+	local selItem = inventory[itemIndex]
+	if selItem.bodypart == "both" then
+		return charEquipment["swordhand"].value == selItem
+	else
+		return charEquipment[selItem.bodypart].value == selItem
+	end
+end
+
+				--[[SECTION: Overworld, Display]]--
+
+--Prints the world map for the overworld
+function printWorldMap()
+	local moffx = 1
+	local moffy = 1
+	
+	if(pox > math.ceil(mapw / 2)) then moffx = pox - math.ceil(mapw/2) end
+	if(pox > #overworld[1] - math.ceil(mapw / 2) + 1) then moffx = #overworld[1] - mapw end
+	
+	if(poy > math.ceil(maph / 2)) then moffy = poy - math.ceil(maph/2) end
+	if(poy > #overworld - math.ceil(maph / 2) + 1) then moffy = #overworld - maph + 1 end
+	
+	--local mpx = mapw/2
+	--local mpy = maph/2
+	
+	for y = moffy, moffy + maph -1 do
+		term.setCursorPos(2, y - moffy + 3)
+		local line = ""
+		for x = moffx, moffx + mapw - 1 do
+			line = line..overworld[y][x]
+		end
+		--term.write(string.sub(overworld[i + moffy - 1], moffx, mapw + moffx - 1))
+		term.write(line)
+	end
+	
+	--For every town within the world, it prints a "T", where it can be found
+	for i = 1, #town do
+		if town[i].visible and town[i].xpos >= moffx and town[i].xpos <= moffx + mapw - 1 and 
+				town[i].ypos >= moffy and town[i].ypos <= moffy + maph - 1 then
+			term.setCursorPos(2 + town[i].xpos - moffx, 3 + town[i].ypos - moffy)
+			term.write("T")
+		end
+	end
+	--For every dungeon within the world, the numeral "0" is used (to indicate cave opening)
+	for i = 1, #dungeons do
+		if dungeons[i].visible and dungeons[i].xpos >= moffx and dungeons[i].xpos <= moffx + mapw - 1 and 
+				dungeons[i].ypos >= moffy and dungeons[i].ypos <= moffy + maph - 1 then
+			term.setCursorPos(2 + dungeons[i].xpos - moffx, 3 + dungeons[i].ypos - moffy)
+			term.write("0")
+		end
+	end
+	--Monsters in the overworld are displayed with the first letter of their name.
+	for i = 1, #overcreatures do
+		term.setCursorPos(2 + overcreatures[i].xpos - moffx, 3 + overcreatures[i].ypos - moffy)
+		term.write(string.sub(overcreatures[i].name, 1, 1))
+	end
+	
+	term.setCursorPos(2 + pox - moffx - 1, 3 + poy - moffy - 1)
+	term.write("@")
+	
+end
+
+--This draws the "external" interface, the map frame, player stats and the history log
+function printOverworldInterface()
+	term.clear()
+	--Draws the frame
+	term.setCursorPos(2,2)
+	term.write(string.rep("_", mapw))
+	term.setCursorPos(2,maph + 3)
+	term.write(string.rep("-", mapw))
+	for i=3,maph+2 do
+		term.setCursorPos(1, i)
+		term.write("("..string.rep(" ", mapw)..")")
+	end
+	--Draws the frame title
+	printOffCenter(worldname, 1, mapw, 2)
+	
+	--Draws player information
+	printOffCenter(charName, 2, (w - mapw - 5), mapw + 5)
+	printOffCenter(string.rep("=", #charName), 3, (w - mapw - 5), mapw + 5)
+	
+	term.setCursorPos(mapw + 4, 5)
+	term.write("Level "..charLevel.." "..charClass)
+	term.setCursorPos(mapw + 4, 7)
+	term.write("HP: "..charHealth.."/"..charMaxHealth)
+	term.setCursorPos(mapw + 4, 8)
+	term.write("XP: "..charXP.."/"..charNextXP)
+	term.setCursorPos(mapw + 4, 9)
+	term.write("Gold: "..charGold)
+	term.setCursorPos(mapw + 4, 10)
+	term.write(string.rep("-", w - (mapw + 4)))
+	
+	--Draws the event log
+	local hoffset = 0
+	for i=1,#overEventList do
+		hoffset = hoffset + wprintLeft(overEventList[i], h - 8 + i + hoffset, w - (mapw + 4), mapw + 4) - 1
+	end
+end
+
+				--[[SECTION: Town, Display]]--
+
+--This draws the "external" interface, the map frame, player stats and the history log
+function printTownInterface()
+	term.clear()
+	
+	--Draws the event log (this may/perhaps should? be eclipsed)
+	local hoffset = 0
+	for i=1,#townEventList do
+		hoffset = hoffset + wprintLeft(townEventList[i], h - 8 + i + hoffset, w - (mapw + 4), mapw + 4) - 1
+	end
+	
+	--Draws the frame
+	term.setCursorPos(1,2)
+	term.write("/"..string.rep("=", mapw).."\\")
+	term.setCursorPos(1,maph + 3)
+	term.write("\\"..string.rep("=", mapw).."/")
+	--This draws the town itself
+	for i=3,maph+2 do
+		term.setCursorPos(1, i)
+		term.write("|"..town[activeTown].level[i-2].."|")
+	end
+	--Draws each NPC within the town
+	for i=1,#town[activeTown].npc do
+		term.setCursorPos(town[activeTown].npc[i].xpos + 1, town[activeTown].npc[i].ypos + 2)
+		term.write("&")
+	end
+	--Draws the frame title
+	printOffCenter(town[activeTown].name, 1, mapw, 2)
+	term.setCursorPos(1, 10)
+	
+	
+	--Draws player information
+	printOffCenter(charName, 2, (w - mapw - 5), mapw + 5)
+	printOffCenter(string.rep("=", #charName), 3, (w - mapw - 5), mapw + 5)
+	
+	term.setCursorPos(mapw + 4, 5)
+	term.write("Level "..charLevel.." "..charClass)
+	term.setCursorPos(mapw + 4, 7)
+	term.write("HP: "..charHealth.."/"..charMaxHealth)
+	term.setCursorPos(mapw + 4, 8)
+	term.write("XP: "..charXP.."/"..charNextXP)
+	term.setCursorPos(mapw + 4, 9)
+	term.write("Gold: "..charGold)
+	term.setCursorPos(mapw + 4, 10)
+	term.write(string.rep("-", w - (mapw + 4)))
+	
+	--Draws the player himself
+	term.setCursorPos(1 + townpx, 2 + townpy)
+	term.write("@")
+end
+
+					--[[SECTION: Dungeon, Display]]--
+
+--This, of course, draws the corridor.
+function drawDungeonCorridor()
+	term.clear()
+	--Draws the corridor (the basis for every scene)
+	for i=1,#cor do
+		term.setCursorPos(corx + 2, cory + i - 1)
+		term.write(cor[i])
+	end
+	
+	--These point to coordinates left and right of the player
+	local rx,ry = getRight(dunfx,dunfy)
+	local lx,ly = getLeft(dunfx,dunfy)
+	
+	--[[Section: Two tiles away]]--
+	
+	--If there is a turn on the left or right of the forward tile, this draws the branch
+	local turningtright = false
+	if string.sub(dungeons[activeDungeon].level[dunlevel][dunpy + dunfy + ry], dunpx + dunfx + rx, dunpx + dunfx + rx) ~= " " then
+		turningtright = true
+		for i=1,#trightturn do
+			term.setCursorPos(trightturnx, trightturny + i - 1)
+			term.write(trightturn[i]);
+		end
+	end
+	
+	local turningtleft = false
+	if string.sub(dungeons[activeDungeon].level[dunlevel][dunpy + dunfy + ly], dunpx + dunfx + lx, dunpx + dunfx + lx) ~= " " then
+		turningtleft = true
+		for i=1,#tleftturn do
+			term.setCursorPos(tleftturnx, tleftturny + i - 1)
+			term.write(tleftturn[i]);
+		end
+	end
+	
+	--Determines if there is a wall 2 tiles from the facing position- draws a wall ahead
+	local twoendtile = string.sub(dungeons[activeDungeon].level[dunlevel][dunpy + dunfy + dunfy], dunpx + dunfx + dunfx, dunpx + dunfx + dunfx)
+	if twoendtile == " " or twoendtile == "E" then
+		for i=1,#twoend do
+			term.setCursorPos(twoendx, twoendy + i - 1)
+			if twoendtile == " " then term.write(twoend[i])
+			else term.write(twoexitend[i]) end
+			--If turning left or right, the wall needs to be slightly modified to remove the "extra" edge
+			if turningtright then
+				term.setCursorPos(trightturnx, trightturny + i - 1)
+				if i == 1 then term.write("_")
+				elseif i == #twoend then term.write("-")
+				else term.write(" ") end
+			end
+			if turningtleft then
+				term.setCursorPos(tleftturnx + #tleftturn[i] - 1, tleftturny + i - 1)
+				if i == 1 then term.write("_")
+				elseif i == #twoend then term.write("-")
+				else term.write(" ") end
+			end
+		end
+	end
+	
+	--Draws creatures two tiles away, if they're visible
+	for i=1, #dungeons[activeDungeon].creatures do
+		local c = dungeons[activeDungeon].creatures[i]
+		
+		if c.xpos == dunpx + dunfx + dunfx and c.ypos == dunpy + dunfy + dunfy and c.levelpos == dunlevel and
+				string.sub(dungeons[activeDungeon].level[dunlevel][dunpy+dunfy], dunpx+dunfx, dunpx+dunfx) ~= " " then
+			for j=1,#c.imagetwo do
+				term.setCursorPos(23/2 - #c.imagetwo[j]/2 + 1, 12 - (#c.imagetwo - j))
+				term.write(c.imagetwo[j])
+			end
+		end
+	end
+	
+	--[[Section: On the immediate tile]]--
+	
+	--If there is a left or right turn on the current tile, this draws the branch
+	local turningright = false
+	if string.sub(dungeons[activeDungeon].level[dunlevel][dunpy + ry], dunpx + rx, dunpx + rx) ~= " " then
+		turningright = true
+		for i=1,#rightturn do
+			term.setCursorPos(rightturnx, rightturny + i - 1)
+			term.write(rightturn[i])
+		end
+	end
+	
+	local turningleft = false
+	if string.sub(dungeons[activeDungeon].level[dunlevel][dunpy + ly], dunpx + lx, dunpx + lx) ~= " " then
+		turningleft = true
+		for i=1,#leftturn do
+			term.setCursorPos(leftturnx, leftturny + i - 1)
+			term.write(leftturn[i])
+		end
+	end
+	
+	--Determines if there is a wall immediately facing the player- draws the wall ahead
+	local oneendtile = string.sub(dungeons[activeDungeon].level[dunlevel][dunpy + dunfy], dunpx + dunfx, dunpx + dunfx)
+	if oneendtile == " " or oneendtile == "E" then
+		for i=1,#oneend do
+			term.setCursorPos(oneendx, oneendy + i - 1)
+			if oneendtile == " " then term.write(oneend[i])
+			else term.write(oneexitend[i]) end
+			--If turning left or right, the wall needs to be slightly modified to remove the "extra" edge
+			if turningright then
+				term.setCursorPos(rightturnx, rightturny + i + 1)
+				if i == 1 or i == #oneend then term.write("_")
+				else term.write(" ") end
+			end
+			if turningleft then
+				term.setCursorPos(leftturnx + #leftturn[i] - 1, leftturny + i + 1)
+				if i == 1 or i == #oneend then term.write("_")
+				else term.write(" ") end
+			end
+		end
+	end
+	
+	--If the player has their back to a wall, the "front corners" of the corridor need to be erased
+	if turningleft and string.sub(dungeons[activeDungeon].level[dunlevel][dunpy - dunfy], dunpx - dunfx, dunpx - dunfx) == " " then
+		for i=1,#bwturn do
+			term.setCursorPos(bwleftturnx, bwturny + i - 1)
+			term.write(bwturn[i])
+		end
+	end if turningright and string.sub(dungeons[activeDungeon].level[dunlevel][dunpy - dunfy], dunpx - dunfx, dunpx - dunfx) == " " then
+		for i=1,#bwturn do
+			term.setCursorPos(bwrightturnx, bwturny + i - 1)
+			term.write(bwturn[i])
+		end
+	end
+	
+	--[[Section: Physical objects]]--
+	
+	--This draws creatures on the immediate tile
+	
+	for i = 1, #dungeons[activeDungeon].creatures do
+		local c = dungeons[activeDungeon].creatures[i]
+		
+		if c.xpos == dunpx + dunfx and c.ypos == dunpy + dunfy  and c.levelpos == dunlevel then
+			for j=1,#c.imageone do
+				term.setCursorPos(23/2 - #c.imageone[j]/2 + 1, 15 - (#c.imageone - j))
+				term.write(c.imageone[j])
+			end
+		end
+	end
+
+	--Ladders- Up, Down and Both, and chests Open and Closed
+	if string.sub(dungeons[activeDungeon].level[dunlevel][dunpy], dunpx, dunpx) == "D" then
+		for i=1,#ladderd do
+			term.setCursorPos(ladderdx, ladderdy + i - 1)
+			term.write(ladderd[i])
+		end
+	elseif string.sub(dungeons[activeDungeon].level[dunlevel][dunpy], dunpx, dunpx) == "U" then
+		for i=1,#ladderu do
+			term.setCursorPos(ladderux, ladderuy + i - 1)
+			term.write(ladderu[i])
+		end
+	elseif string.sub(dungeons[activeDungeon].level[dunlevel][dunpy], dunpx, dunpx) == "B" then
+		for i=1,#ladderud do
+			term.setCursorPos(ladderudx, ladderudy + i - 1)
+			term.write(ladderud[i])
+		end
+	elseif string.sub(dungeons[activeDungeon].level[dunlevel][dunpy], dunpx, dunpx) == "C" then
+		for i=1,#chestc do
+			term.setCursorPos(chestcx, chestcy + i - 1)
+			term.write(chestc[i])
+		end
+	elseif string.sub(dungeons[activeDungeon].level[dunlevel][dunpy], dunpx, dunpx) == "O" then
+		for i=1,#chesto do
+			term.setCursorPos(chestox, chestoy + i - 1)
+			term.write(chesto[i])
+		end
+	end
+end
+
+--This draws the side interface
+function drawDungeonInterface()
+	--Draws a simple border on the side of the screen
+	for i=1,h do
+		term.setCursorPos(24, i)
+		term.write("#")
+	end
+	
+	printOffCenter(dungeons[activeDungeon].name, 1, w-25, 25)
+	printOffCenter(string.rep("*", #dungeons[activeDungeon].name), 2, w-25, 25)
+	if dungeons[activeDungeon].playerHasCompass then drawCompass(26,2) end
+	
+	term.setCursorPos(38, 4)
+	term.write("Level "..charLevel)
+	term.setCursorPos(38, 5)
+	term.write("HP: "..charHealth.."/"..charMaxHealth)
+	term.setCursorPos(38, 6)
+	term.write("XP: "..charXP.."/"..charNextXP)
+	term.setCursorPos(38, 7)
+	term.write("Gold: "..charGold)
+	term.setCursorPos(25, 9)
+	term.write(string.rep("#",w-25))
+	
+	--Draws an altimeter (for lack of a better word)
+	for i=1,#dungeons[activeDungeon].level do
+		term.setCursorPos(33, i + 3)
+		if dunlevel == i then term.write("["..i.."]")
+		else term.write(" "..i.." ") end
+	end
+	
+	--Draws the event log
+	local hoffset = 0
+	for i=1,#dungeonEventList do
+		hoffset = hoffset + wprintLeft(dungeonEventList[i], h - 9 + i + hoffset, w - 25, 25) - 1
+	end
+end
+
+--Uses facing and nearby enemies to draw a simple compass
+function drawCompass(x,y)
+	for i=1,#compass do
+		term.setCursorPos(x, y + i)
+		term.write(compass[i])
+	end
+	if dunfx == -1 then 
+		term.setCursorPos(x + 1, y + 3)
+		term.write("__")
+	elseif dunfx == 1 then
+		term.setCursorPos(x + 4, y + 3)
+		term.write("__")
+	elseif dunfy == -1 then
+		term.setCursorPos(x + 3, y + 2)
+		term.write("|")
+		term.setCursorPos(x + 3, y + 3)
+		term.write("|")
+	elseif dunfy == 1 then
+		term.setCursorPos(x + 3, y + 4)
+		term.write("|")
+		term.setCursorPos(x + 3, y + 5)
+		term.write("|")
+	end
+	
+	--If an enemy is nearby, within 1 or 2 squares (and visible to the player, not behind walls)
+	--then the compass will draw a x or a X to indicate danger in that direction.
+	local nn = 0
+	local ns = 0
+	local ne = 0
+	local nw = 0
+	for i=1,#dungeons[activeDungeon].creatures do
+		local c = dungeons[activeDungeon].creatures[i]
+		if c.levelpos == dunlevel then
+		
+			if dunpx - c.xpos == 1 and dunpy - c.ypos == 0 then
+				ne = 1
+				term.setCursorPos(x, y + 3)
+				term.write("X")
+			elseif ne ~= 1 and dunpx - c.xpos == 2 and dunpy - c.ypos == 0 then
+				term.setCursorPos(x, y + 3)
+				term.write("x")
+			end
+			
+			if dunpx - c.xpos == -1 and dunpy - c.ypos == 0 then
+				nw = 1
+				term.setCursorPos(x + 6, y + 3)
+				term.write("X")
+			elseif nw ~= 1 and dunpx - c.xpos == -2 and dunpy - c.ypos == 0 then
+				term.setCursorPos(x + 6, y + 3)
+				term.write("x")
+			end
+			
+			if dunpy - c.ypos == 1 and dunpx - c.xpos == 0 then
+				nn = 1
+				term.setCursorPos(x + 3, y + 1)
+				term.write("X")
+			elseif nn ~= 1 and dunpy - c.ypos == 2 and dunpx - c.xpos == 0 then
+				term.setCursorPos(x + 3, y + 1)
+				term.write("x")
+			end
+			
+			if dunpy - c.ypos == -1 and dunpx - c.xpos == 0 then
+				ns = 1
+				term.setCursorPos(x + 3, y + 5)
+				term.write("X")
+			elseif ns ~= 1 and dunpy - c.ypos == -2 and dunpx - c.xpos == 0 then
+				term.setCursorPos(x + 3, y + 5)
+				term.write("x")
+			end
+		end
+	end
+end
+
+--This draws a dungeon map, with the player, his orientation and the location of all enemies
+function drawDungeonMap()
+	term.setCursorPos(3, 3)
+	term.write("*"..string.rep("-", #dungeons[activeDungeon].level[dunlevel][1]).."*")
+	term.setCursorPos(3, 3 + #dungeons[activeDungeon].level[dunlevel] + 1)
+	term.write("*"..string.rep("-", #dungeons[activeDungeon].level[dunlevel][1]).."*")
+	for i=1,#dungeons[activeDungeon].level[dunlevel] do
+		local str = dungeons[activeDungeon].level[dunlevel][i]
+		str = string.gsub(str, "C", "#")
+		str = string.gsub(str, "O", "C")
+		term.setCursorPos(3, 3 + i)
+		term.write("|"..str.."|")
+	end
+	
+	--[[
+	for i=1,#dungeons[activeDungeon].creatures do
+		local crea = dungeons[activeDungeon].creatures[i]
+		if crea.levelpos == dunlevel then
+			term.setCursorPos(3 + crea.xpos, 3 + crea.ypos)
+			term.write(string.sub(crea.name, 1, 1))
+		end
+	end]]--
+	term.setCursorPos(3 + dunpx, 3 + dunpy)
+	term.write("@")
+end
+
+				--[[SECTION: Overword, Input]]--
+
+--A simple text input reader, this is more powerful than "io.read" as it doesn't blank the line it's working
+--on, it has a numerical limit and it trims whitespace. Non-sensible or null lims are set to the end of the screen.
+function readInput(lim)
+	sleep(0.1)
+	term.setCursorBlink(true)
+
+	local inputString = ""
+	local ox,oy = term.getCursorPos()
+	term.write(" ")
+	term.setCursorPos(ox, oy)
+	if not lim or type(lim) ~= "number" or lim < 1 then lim = w - ox end
+	
+	while true do
+		local id,key = os.pullEvent()
+		
+		if id == "key" and key == 14 and #inputString > 0 then
+			inputString = string.sub(inputString, 1, #inputString-1)
+			term.setCursorPos(ox + #inputString,oy)
+			term.write(" ")
+		elseif id == "key" and key == 28 and inputString ~= string.rep(" ", #inputString) then 
+			break
+		elseif id == "char" and #inputString < lim then
+			inputString = inputString..key
+		end
+		term.setCursorPos(ox,oy)
+		term.write(inputString)
+		term.setCursorPos(ox + #inputString, oy)
+	end
+	
+	while string.sub(inputString, 1, 1) == " " do
+		inputString = string.sub(inputString, 2, #inputString)
+	end
+	while string.sub(inputString, #inputString, #inputString) == " " do
+		inputString = string.sub(inputString, 1, #inputString-1)
+	end
+	term.setCursorBlink(false)
+	
+	return inputString
+end
+				
+--Handles all input from the overworld
+function handleOverworldInput()
+	while true do
+		local id,key = os.pullEvent("key")
+		local desX = pox
+		local desY = poy
+
+		if key == keys.left then desX = pox - 1
+		elseif key == keys.right then desX = pox + 1
+		elseif key == keys.up then desY = poy - 1
+		elseif key == keys.down then desY = poy + 1
+		elseif key == keys.i then runInventoryInterface() return
+		elseif key == keys.j then runJournalInterface() return
+		elseif key == keys.space then break
+		elseif key == keys.enter then
+			gameOver = true
+			break
+		end
+	
+		--In the event the player has come upon a town
+		for i=1,#town do
+			if town[i].visible and town[i].xpos == desX - 1 and town[i].ypos == desY - 1 then
+				activeTown = i
+				inTown = true
+				townpx = town[i].startx
+				townpy = town[i].starty
+			
+				while #overEventList > 0 do table.remove(overEventList, 1) end
+				addEvent("Healing...")
+				charHealth = charMaxHealth
+				qUpdate = {
+					type = "move";
+					town = activeTown;
+					xpos,ypos = townpx,townpy;
+				}
+				qUpdate = checkQuestUpdate(qUpdate)
+				if qUpdate then displayConfirmDialogue("Quest Update", qUpdate) end
+				return
+			end
+		end
+		for i=1,#dungeons do
+			if dungeons[i].visible and dungeons[i].xpos == desX - 1 and dungeons[i].ypos == desY - 1 then
+				activeDungeon = i
+				inDungeon = true
+				dunpx = dungeons[i].startx
+				dunpy = dungeons[i].starty
+				dunlevel = dungeons[i].startlevel
+				dunfx = dungeons[i].startfx
+				dunfy = dungeons[i].startfy
+			
+				clearEvents()
+				qUpdate = {
+					type = "move";
+					dungeon = activeDungeon;
+					xpos,ypox,zpos = dunpx,dunpy,dunlevel;
+				}
+				qUpdate = checkQuestUpdate(qUpdate)
+				if qUpdate then displayConfirmDialogue("Quest Update", qUpdate) end
+				return
+			end
+		end
+		if desX ~= pox or desY ~= poy then
+			--We attack creatures with our chosen weapon by "walking into them", for simplicity's sake
+			for i=1,#overcreatures do
+				if overcreatures[i].xpos + 1 == desX and overcreatures[i].ypos + 1 == desY then
+					if charEquipment["swordhand"].value ~= nil then
+						local damagedone = calculateDamage(charEquipment["swordhand"].value, true)
+						addEvent("You strike for "..damagedone)
+						overcreatures[i].hit = overcreatures[i].hit - damagedone
+						if overcreatures[i].hit <= 0 then
+							addEvent(overcreatures[i].name.." has been slain")
+							term.setCursorPos(1,1)
+							addXP(overcreatures[i].xp)
+							addEvent("You earned "..overcreatures[i].xp.."XP")
+							local qUpdate = {
+								type = "kill";
+								monster = overcreatures[i];
+							}
+							table.remove(overcreatures, i)
+							qUpdate = checkQuestUpdate(qUpdate)
+							if qUpdate then displayConfirmDialogue("Quest Update", qUpdate) end
+						end
+					else
+						addEvent("You have no weapon!")
+					end
+					return
+				end
+			end
+			
+			if overworld[desY - 1][desX - 1] == " " then 
+				pox, poy = desX, desY 
+				local qUpdate = {
+					type = "move";
+					xpos,ypos = pox,poy
+				}
+				qUpdate = checkQuestUpdate(qUpdate)
+				if qUpdate then displayConfirmDialogue("Quest Update", qUpdate) end
+				break
+			end
+		end
+	end
+end
+
+				--[[SECTION: Overworld, Helper]]--
+
+--Handles state and monster updates from the overworld
+function updateOverworld()
+	for i = 1, #overcreatures do
+		if not overcreatures[i] then
+			table.remove(overcreatures, i)
+			i = i+1
+		else
+	
+		local desx = pox - overcreatures[i].xpos - 1
+		local desy = poy - overcreatures[i].ypos - 1
+		
+		local ndesx = desx/math.abs(desx)
+		local ndesy = desy/math.abs(desy)
+		if desx == 0 then ndesx = 0 end
+		if desy == 0 then ndesy = 0 end
+		
+		if math.abs(desx) + math.abs(desy) == 1 then
+			local damagedone = calculateDamage(overcreatures[i].weapon, false)
+			addEvent(overcreatures[i].name.." strikes for "..damagedone)
+			charHealth = charHealth - damagedone
+			overcreatures[i].chaseturns = 0
+			overcreatures[i].stillturns = 0
+			if charHealth <= 0 then
+				displayConfirmDialogue("RIP!", "You were slain by a "..overcreatures[i].name.."! Better luck next time")
+				gameOver = true
+			end
+		else
+			if debugging then
+				writeToLog("index "..i, " X:", overcreatures[i].xpos, " Y:", overcreatures[i].ypos, " Desx:", ndesx, " Desy", ndesy)
+			end
+			overcreatures[i].chaseturns = overcreatures[i].chaseturns + 1
+			
+			if ndesx ~= 0 and math.abs(desx) - math.abs(desy) >= 0 and overworld[overcreatures[i].ypos][overcreatures[i].xpos + ndesx] == " " then
+					--We check for other monsters too
+					local obstructed = false
+					for j=1,#overcreatures do
+						local oc = overcreatures[j]
+						if i ~= j and overcreatures[i].xpos + ndesx == oc.xpos and overcreatures[i].ypos == oc.ypos then
+							obstructed = true 
+						end
+					end
+					
+					if not obstructed then
+						overcreatures[i].xpos = overcreatures[i].xpos + ndesx
+					end
+				elseif ndesy ~= 0 and overworld[overcreatures[i].ypos][overcreatures[i].xpos + ndesx] == " " then
+					--We check for other monsters too
+					local obstructed = false
+					for j=1,#overcreatures do
+						local oc = overcreatures[j]
+						if i ~= j and overcreatures[i].xpos == oc.xpos and overcreatures[i].ypos + ndesy == oc.ypos then 
+							obstructed = true 
+						end
+					end
+					
+					if not obstructed then
+						overcreatures[i].ypos = overcreatures[i].ypos + ndesy
+					end
+				else
+					overcreatures[i].stillturns = overcreatures[i].stillturns + 1
+				end
+			end
+		
+			if overcreatures[i].chaseturns > 10 or overcreatures[i].stillturns > 3 then
+				addEvent(overcreatures[i].name.." gave up")
+				table.remove(overcreatures, i)
+				i = i - 1
+			end
+		end
+	end
+	
+	--We've used a fixed value here of 1 in 30 chance
+	if math.random(1,30) == 1 then
+		addCreatureToWorldMap()
+	end
+end
+
+				--[[SECTION: Dungeon, Helper]]--
+
+--Gets the tile at the currently active dungeon at the specified x, y and level
+function dungeonTileAt(x,y,lev)
+	return string.sub(dungeons[activeDungeon].level[lev][y], x, x)
+end
+
+				--[[SECTION: Logging, Helper]]--
+
+--Adds an event to the current event list- over event, town event or dungeon event
+function addEvent(msg)
+	if inTown then
+		if debugging then 
+			writeToLog("TownEvent:", msg)
+		end
+		table.insert(townEventList, 1, msg)
+		if #townEventList > 7 then
+			table.remove(townEventList, #townEventList)
+		end
+	elseif inDungeon then
+		if debugging then 
+			writeToLog("DungeonEvent:", msg)
+		end
+		table.insert(dungeonEventList, 1, msg)
+		if #dungeonEventList > 9 then
+			table.remove(dungeonEventList, #dungeonEventList)
+		end
+	else
+		if debugging then
+			writeToLog("OverEvent:", msg)
+		end
+		table.insert(overEventList, 1, msg)
+		if #overEventList > 7 then
+			table.remove(overEventList, #overEventList)
+		end
+	end
+end
+
+--Clears all events the active event log (should be called when changing between modes)
+function clearEvents()
+	if inTown then
+		while #townEventList > 0 do table.remove(townEventList, 1) end
+	elseif inDungeon then
+		while #dungeonEventList > 0 do table.remove(dungeonEventList, 1) end
+	else
+		while #overEventList > 0 do table.remove(overEventList, 1) end
+	end
+end
+
+				--[[SECTION: Town, Input]]--
+
+--Handles key events and all actions that occur in town
+function handleTownInput(key)
+	--Contextually a space bar movement is important- it handles input across town
+	if key == 57 then
+		--Most importantly, it's used for dialog
+		for i=1,#town[activeTown].npc do
+			local currnpc = town[activeTown].npc[i]
+			for d=1,#directions do
+				if currnpc.xpos + directions[d].x == townpx and currnpc.ypos + directions[d].y == townpy then
+					converseWith(currnpc)
+					break
+				end
+			end
+		end
+		return
+	end
+	
+	if key == keys.i then
+		runInventoryInterface()
+		return
+	end
+	
+	if key==keys.j then
+		runJournalInterface()
+		return
+	end
+
+	--In all other cases, input handled manages movement.
+	local desX = townpx
+	local desY = townpy
+	local posmove = true
+
+	if key == 203 then desX = townpx - 1
+	elseif key == 205 then desX = townpx + 1
+	elseif key == 200 then desY = townpy - 1
+	elseif key == 208 then desY = townpy + 1
+	else posmove = false end
+	
+	for i=1,#town[activeTown].npc do
+		if town[activeTown].npc[i].xpos == desX and town[activeTown].npc[i].ypos == desY
+		--Tiny optimizer
+				or not posmove then 
+			posmove = false 
+			break 
+		end
+	end
+	
+	if posmove and not(desX < 1 or desX > mapw or desY < 1 or desY > maph) and string.sub(town[activeTown].level[desY], desX, desX) == " " then 
+		townpx, townpy = desX, desY 
+		--We check the quests in the event of a successful move
+		if townpx == town[activeTown].startx and townpy == town[activeTown].starty then
+			inTown = false
+			activeTown = 0
+			while #townEventList > 0 do table.remove(townEventList, 1) end
+			local qUpdate = {
+				type = "move";
+				xpos,ypos = pox,poy
+			}
+			qUpdate = checkQuestUpdate(qUpdate)
+			if qUpdate then displayConfirmDialogue("Quest Update", qUpdate) end
+		else
+			local qUpdate = {
+				type = "move";
+				town = activeTown;
+				xpos,ypos = townpx,townpy
+			}
+			qUpdate = checkQuestUpdate(qUpdate)
+			if qUpdate then displayConfirmDialogue("Quest Update", qUpdate) end
+		end
+	end
+end
+	
+--Handles the display and all input for when an NPC performs a dialog. This function may encompass
+--more than one, depending on how complex they get
+--NOTE: This method is now DEPRECATED. "Converse With" is now the updated method.
+function displayDialog(locnpc)
+	local msg = locnpc.dialogue
+	activeDialog = locnpc.name
+	
+	--DEPRECATED- no longer functional
+	--if checkQuestUpdate(false) then return end
+	
+	--If they're a quest giver, they say their piece
+	if locnpc.quest ~= nil then
+		local lquest = quests[locnpc.quest]
+		lquest.activestage = 1
+		msg = lquest.acceptMessage
+		table.insert(activeQuests, lquest)
+		locnpc.quest = nil
+	end
+	
+	--If they're a merchant they you can purchase some items
+	local toTrade = false
+	if not msg then 
+		if stocktrade[locnpc.job] then
+			if locnpc.job == "merchant" and #inventory == 0 or ((locnpc.job == "smith" or locnpc.job == "mystic") and 
+				#locnpc.inventory == 0) then
+				msg = stocksoldout[locnpc.job][#stocksoldout[locnpc.job]]
+			else
+				toTrade = true
+				msg = stocktrade[locnpc.job][#stocktrade[locnpc.job]]
+			end
+		else
+			msg = stockmessages[math.random(1, #stockmessages)] 
+		end
+	end
+	msg = "\""..msg.."\""
+	local ctitle = locnpc.name.." the "..locnpc.job.." says:"
+	
+	displayConfirmDialogue(ctitle, msg)
+	if toTrade then runTradeInterface(locnpc) end
+	--This needs to be reset (so as not to confuse other quest objectives)
+	activeDialog = nil
+end
+
+--This is a typical function used to display any message, with a title and dialog. It can be used for NPC
+--dialogues, notifications of quest updates and other things. The title is displayed at the top, the message
+--in the center and the aftermessage (optional, like "type a key to continue") near the bottom.
+function displayConfirmDialogue(ctitle, msg)
+	local dialogoffset = 5
+	--We actually print twice- once to get the lines, second time to print proper. Easier this way.
+	local lines = wprintOffCenter(msg, 6, w - (dialogoffset+2) * 2, dialogoffset + 2)
+	
+	--This cluster of statements prints a nice box with the message the NPC has for the player in it.
+	term.setCursorPos(dialogoffset, 3)
+	term.write(string.rep("*", w - dialogoffset * 2))
+	term.setCursorPos(dialogoffset, 4)
+	term.write("* "..ctitle..string.rep(" ", w - (dialogoffset) * 2 - #ctitle - 3).."*")
+	for i=5,6+lines do
+		term.setCursorPos(dialogoffset, i) 
+		term.write("*"..string.rep(" ", w - (dialogoffset) * 2 - 2).."*")
+	end
+	term.setCursorPos(dialogoffset, 6 + lines + 1)
+	term.write(string.rep("*", w - (dialogoffset) * 2))
+	wprintOffCenter(msg, 6, w - (dialogoffset+2) * 2, dialogoffset + 2)
+	
+	--In the event of a message, the player hits anything to continue
+	os.pullEvent("key")
+end
+
+--This dialogue is much the same as a confirm but offers explicit options rather than requiring manual input.
+--The options are simply fit on the one line and designed to be short (yes/no sort of things). Returns the option
+--chosen. A yes/no option set is default for empty or null lists.
+function displayOptionDialogue(ctitle, msg, options)
+	if not options or type(options) ~= "table" or #options == 0 then
+		options = {"yes", "no"}
+	end
+
+	local dialogoffset = 5
+	--We actually print twice- once to get the lines, second time to print proper. Easier this way.
+	local lines = wprintOffCenter(msg, 6, w - (dialogoffset+2) * 2, dialogoffset + 2)
+	
+	--This cluster of statements prints a nice box with the message the NPC has for the player in it.
+	term.setCursorPos(dialogoffset, 3)
+	term.write(string.rep("*", w - dialogoffset * 2))
+	term.setCursorPos(dialogoffset, 4)
+	term.write("* "..ctitle..string.rep(" ", w - (dialogoffset) * 2 - #ctitle - 3).."*")
+	for i=5,8+lines do
+		term.setCursorPos(dialogoffset, i) 
+		term.write("*"..string.rep(" ", w - (dialogoffset) * 2 - 2).."*")
+	end
+	term.setCursorPos(dialogoffset, 8 + lines + 1)
+	term.write(string.rep("*", w - (dialogoffset) * 2))
+	wprintOffCenter(msg, 6, w - (dialogoffset+2) * 2, dialogoffset + 2)
+	
+	
+	--Next we display our options- this is done regularly
+	local selection = 1
+	while true do
+		local optoffset = 0
+		for i=1,#options do
+			term.setCursorPos(dialogoffset + optoffset + 1, 8 + lines)
+			if selection==i then
+				term.write("["..options[i].."]")
+			else
+				term.write(" "..options[i].." ")
+			end
+			optoffset = optoffset + 3 + #options[i]
+		end
+		
+		local _,key = os.pullEvent("key")
+		if key == keys.left and selection > 1 then selection = selection-1
+		elseif key == keys.right and selection < #options then selection = selection+1
+		elseif key == keys.enter then return options[selection] end
+	end
+end
+
+--This displays an input dialogue- it's essentially identical to the "displayConfirmDialogue" but rather than simply
+--displaying a message and an keypress ending it, instead it requests a text input to terminate. This returns the
+--input the user has given.
+function displayInputDialogue(ctitle, msg, prompt)
+	if not prompt then prompt = ">" end
+
+	local dialogoffset = 5
+	--We actually print twice- once to get the lines, second time to print proper. Easier this way.
+	local lines = wprintOffCenter(msg, 6, w - (dialogoffset+2) * 2, dialogoffset + 2)
+	
+	--This cluster of statements prints a nice box with the message the NPC has for the player in it.
+	term.setCursorPos(dialogoffset, 3)
+	term.write(string.rep("*", w - dialogoffset * 2))
+	term.setCursorPos(dialogoffset, 4)
+	term.write("* "..ctitle..string.rep(" ", w - (dialogoffset) * 2 - #ctitle - 3).."*")
+	for i=5,8+lines do
+		term.setCursorPos(dialogoffset, i) 
+		term.write("*"..string.rep(" ", w - (dialogoffset) * 2 - 2).."*")
+	end
+	term.setCursorPos(dialogoffset, 8 + lines + 1)
+	term.write(string.rep("*", w - (dialogoffset) * 2))
+	wprintOffCenter(msg, 6, w - (dialogoffset+2) * 2, dialogoffset + 2)
+	
+	term.setCursorPos(dialogoffset + 1, 8 + lines)
+	term.write(" "..prompt)
+	
+	--We get our input here
+	local input = readInput(#prompt + (w - (dialogoffset+2) * 2 + 1))
+	
+	return input
+end
+
+--This allows the user to have a conversation with an NPC
+function converseWith(locnpc)
+	local input = ""
+	if locnpc.greeted then
+		input = "ongreet"
+	else
+		locnpc.greeted = true
+		input = "onfirstgreet"
+	end
+	
+	local dialogue = nil
+	while true do
+		local qUpdate = {
+			type = "dialogue";
+			town = activeTown;
+			npc = locnpc;
+			topic = input;
+		}
+		local qUpdate = checkQuestUpdate(qUpdate)
+		dialogue = qUpdate
+		
+		if not dialogue then
+			dialogue = locnpc.dialogue["#"..input]
+		end
+		if not dialogue and locnpc.useGeneral and inTown then
+			dialogue = town[activeTown].dialogue["#"..input]
+		end
+		if not dialogue then
+			dialogue = globalDialogue["#"..input]
+		end
+		if not dialogue then
+			dialogue = locnpc.nodialogue
+		end
+		--This really, should never happen. Be careful with your scripting guys.
+		if not dialogue then dialogue = "I don't have an answer to your question." end
+		
+		if input=="onfarewell" then break end
+		
+		if type(dialogue) == "function" then
+			dialogue = dialogue(locnpc)
+			if not dialogue then break end
+		end
+		
+		if type(dialogue) == "table" then
+			local locd = nil
+			for i=1,#dialogue-1 do
+				locd = replaceDialogueTags(dialogue[i])
+				if inTown then printTownInterface() end
+				displayConfirmDialogue(locnpc.name.." the "..locnpc.job.." says:", dialogue)
+			end
+			locd = replaceDialogueTags(dialogue[#dialogue])
+			if inTown then printTownInterface() end
+			input = string.lower(displayInputDialogue(locnpc.name.." the "..locnpc.job.." says:", dialogue, "Ask>"))
+			
+		elseif string.sub(dialogue, 1, 1) == "#" then input = string.sub(dialogue, 2, #dialogue)
+		else
+			printTownInterface()
+			if inTown then dialogue = replaceDialogueTags(dialogue) end
+			input = string.lower(displayInputDialogue(locnpc.name.." the "..locnpc.job.." says:", dialogue, "Ask>"))
+		end
+	end
+	
+	if inTown then printTownInterface() end
+	if dialogue then
+		dialogue = replaceDialogueTags(dialogue)
+		displayConfirmDialogue(locnpc.name.." the "..locnpc.job.." says:", dialogue)
+	end
+end
+
+--Takes the tags from a conversation and replaces them with user attributes
+function replaceDialogueTags(dialogue)
+	local findex = string.find(dialogue, "#name")
+	while findex do
+		dialogue = string.sub(dialogue, 1, findex-1)..getCharName()..string.sub(dialogue, findex+5, #dialogue)
+		findex = string.find(dialogue, "#name")
+	end
+	findex = string.find(dialogue, "#class")
+	while findex do
+		dialogue = string.sub(dialogue, 1, findex-1)..charClass..string.sub(dialogue, findex+6, #dialogue)
+		findex = string.find(dialogue, "#class")
+	end
+	
+	return dialogue
+end
+
+				--[[SECTION: Dungeon, Input]]--
+
+--Replaces a tile in a dungeon with a new tile- used for removing chests, secret doors, etc.
+function subDungeonTile(index, x, y, level, char)
+	dungeons[index].level[level][y] = string.sub(dungeons[index].level[level][y], 1, x - 1)..char..
+		string.sub(dungeons[index].level[level][y], x + 1, #dungeons[index].level[level][y])
+end
+				
+--This moves the player according to the key specified
+function handleDungeonInput(key)
+	local currtile = string.sub(dungeons[activeDungeon].level[dunlevel][dunpy], dunpx, dunpx)
+	
+	if key==keys.m then 
+		if dungeons[activeDungeon].playerHasMap then
+			drawDungeonMap()
+			os.pullEvent("key")
+		else
+			addEvent("You don't have a dungeon map!")
+		end
+	end
+	
+	if key==keys.i then
+		runInventoryInterface()
+	end
+	
+	if key==keys.j then
+		runJournalInterface()
+	end
+	
+	if key==keys.up and string.sub(dungeons[activeDungeon].level[dunlevel][dunpy + dunfy], dunpx + dunfx, dunpx + dunfx) ~= " " then
+		--If a creature occupies the desired space, combat occurs
+		for i = 1, #dungeons[activeDungeon].creatures do
+			local c = dungeons[activeDungeon].creatures[i]
+			if c.xpos == dunpx + dunfx and c.ypos == dunpy + dunfy and c.levelpos == dunlevel then
+				if charEquipment["swordhand"].value ~= nil then
+					local damagedone = calculateDamage(charEquipment["swordhand"].value, true)
+					addEvent("You strike for "..damagedone)
+					c.hit = c.hit - damagedone
+					if c.hit <= 0 then
+						addEvent(c.name.." has been slain!")
+						addXP(c.xp)
+						addEvent("You earned "..c.xp.."XP")
+						local qUpdate = {
+							type = "kill";
+							dungeon = activeDungeon;
+							monster = dungeons[activeDungeon].creatures[i]
+						}
+						qUpdate = checkQuestUpdate(qUpdate)
+						if qUpdate then displayConfirmDialogue("Quest Update:", qUpdate) end
+						table.remove(dungeons[activeDungeon].creatures, i)
+					end
+				else
+					addEvent("You have no weapon!")
+				end
+				return
+			end
+		end
+		
+		--Otherwise, the player simply moves forward (how much easier is that!)
+		dunpx = dunpx + dunfx
+		dunpy = dunpy + dunfy
+		--Quest updates are checked on movement (direction doesn't matter)
+		local qUpdate = {
+			type = "move";
+			dungeon = activeDungeon;
+			xpos = dunpx;
+			ypos = dunpy;
+			zpos = dunlevel;
+		}
+		qUpdate = checkQuestUpdate(qUpdate)
+		if qUpdate then displayConfirmDialogue("Quest Update: ", qUpdate) end
+	elseif key==keys.left then
+		dunfx, dunfy = getLeft(dunfx, dunfy)
+	elseif key==keys.right then
+		dunfx, dunfy = getRight(dunfx, dunfy)
+	elseif key==keys.down then
+		dunfx = dunfx * -1
+		dunfy = dunfy * -1
+	elseif key==keys.pageUp and (currtile == "U" or currtile == "B") then
+		dunlevel = dunlevel - 1
+		local qUpdate = {
+			type = "move";
+			dungeon = activeDungeon;
+			xpos = dunpx;
+			ypos = dunpy;
+			zpos = dunlevel;
+		}
+		qUpdate = checkQuestUpdate(qUpdate)
+		if qUpdate then displayConfirmDialogue("Quest Update: ", qUpdate) end
+	elseif key==keys.pageDown and (currtile == "D" or currtile == "B") then
+		dunlevel = dunlevel + 1
+		local qUpdate = {
+			type = "move";
+			dungeon = activeDungeon;
+			xpos = dunpx;
+			ypos = dunpy;
+			zpos = dunlevel;
+		}
+		qUpdate = checkQuestUpdate(qUpdate)
+		if qUpdate then displayConfirmDialogue("Quest Update: ", qUpdate) end
+		
+	--The player opens a chest
+	elseif key==keys.space and currtile == "C" then
+		subDungeonTile(activeDungeon, dunpx, dunpy, dunlevel, "O")
+		
+		--It is possible to have scripted loot, given by a quest...
+		local qUpdate = {
+			type = "chest";
+			dungeon = activeDungeon;
+			xpos = dunpx;
+			ypos = dunpy;
+			zpos = dunlevel;
+		}
+		qUpdate = checkQuestUpdate(qUpdate)
+		if qUpdate then 
+			displayConfirmDialogue("Quest Update: ", qUpdate)
+		else
+			--Or scripted loot given by the dungeon
+			local cscriptFound = false
+			for i,v in ipairs(dungeons[activeDungeon].chests) do
+				if v.xpos == dunpx and v.ypos == dunpy and v.zpos == dunlevel then
+					cscriptFound = true
+					if type(v.content == "string") then
+						if v.content == "item" then
+							local newItem = generateLoot(charLevel)
+							table.insert(inventory, newItem)
+							addEvent("Chest contained a "..newItem.name)
+						elseif v.content == "map" then
+							dungeons[activeDungeon].playerHasMap = true
+							addEvent("Chest contained a dungeon map!")
+						elseif v.content == "compass" then
+							dungeons[activeDungeon].playerHasCompass = true
+							addEvent("Chest contained a compass!")
+						else
+							cscriptFound = false
+						end
+					elseif type(v.content == "table") then
+						table.insert(inventory, v.content)
+						addEvent("Chest contained a "..v.content.name)
+					else
+						charGold = charGold + v.content
+						addEvent("Chest contained "..v.content.." gold")
+					end
+					break
+				end
+			end
+			
+			--Or just some random amount of gold.
+			if not cscriptFound then
+				local basegold = math.pow(2, charLevel + 1)
+				basegold = math.random(basegold - basegold/2, basegold + basegold/2)
+				addEvent("Chest contained "..basegold.." gold!")
+				charGold = charGold + basegold
+			end
+		end
+	end
+	
+	if string.sub(dungeons[activeDungeon].level[dunlevel][dunpy], dunpx, dunpx) == "E" then
+		inDungeon = false
+		activeDungeon = 0
+		while #dungeonEventList > 0 do table.remove(dungeonEventList, 1) end
+		local qUpdate = {
+			type = "move";
+			xpos = pox;
+			ypos = poy;
+		}
+		qUpdate = checkQuestUpdate(qUpdate)
+		if qUpdate then displayConfirmDialogue(qUpdate) end
+	end
+end
+
+--This updates the dungeon
+function updateDungeon()
+	--This moves, and if necessary, causes creaturse to attack
+	for i=1,#dungeons[activeDungeon].creatures do
+		local c = dungeons[activeDungeon].creatures[i]
+		
+		--Ensuring the creature is close enough to need to act- just out of viewing distance, but this can be changed later
+		--(maybe make it 3 or 4 for a more difficult game?
+		if c.levelpos == dunlevel and math.abs(c.xpos - dunpx) + math.abs(c.ypos - dunpy) <= 3 then
+			local desx = dunpx - c.xpos
+			local desy = dunpy - c.ypos
+			
+			local ndesx = desx/math.abs(desx)
+			local ndesy = desy/math.abs(desy)
+			if desx == 0 then ndesx = 0 end
+			if desy == 0 then ndesy = 0 end
+			
+			if math.abs(desx) + math.abs(desy) == 1 then
+				local toBlock = math.random(1,100)
+				if charEquipment["offhand"] and charEquipment["offhand"].class == "shield" and toBlock <= 
+						charEquipment["offhand"].base * 100 then
+					addEvent("You block strike by "..c.name.."!")
+				else
+					local damagedone = calculateDamage(c.weapon, false)
+					addEvent(c.name.." strikes for "..damagedone)
+					charHealth = charHealth - damagedone
+					if charHealth <= 0 then
+						displayConfirmDialogue("RIP!", "You were slain by a "..c.name.."! Better luck next time")
+						gameOver = true
+					end
+				end
+			else
+				--It should be noted monsters can't follow you up and down ladders (for obvious reasons!)
+				if ndesx ~= 0 and math.abs(desx) - math.abs(desy) >= 0 and dungeonTileAt(c.xpos + ndesx, c.ypos, c.levelpos) ~= " " then
+					--We check for other monsters too
+					local obstructed = false
+					for j=1,#dungeons[activeDungeon].creatures do
+						local oc = dungeons[activeDungeon].creatures[j]
+						if i ~= j and c.xpos + ndesx == oc.xpos and c.ypos == oc.ypos and c.levelpos == oc.levelpos then
+							obstructed = true 
+						end
+					end
+					
+					if not obstructed then
+						c.xpos = c.xpos + ndesx
+					end
+				elseif ndesy ~= 0 and dungeonTileAt(c.xpos, c.ypos + ndesy, c.levelpos) ~= " " then
+					--We check for other monsters too
+					local obstructed = false
+					for j=1,#dungeons[activeDungeon].creatures do
+						local oc = dungeons[activeDungeon].creatures[j]
+						if i ~= j and c.xpos == oc.xpos and c.ypos + ndesy == oc.ypos and c.levelpos == oc.levelpos then 
+							obstructed = true 
+						end
+					end
+					
+					if not obstructed then
+						c.ypos = c.ypos + ndesy
+					end
+				end
+			end
+		end
+	end
+	
+	--Decides whether or not to add a creature to the dungeon
+	if dungeons[activeDungeon].creaturesSpawn and math.random(1,15) == 1 then
+		addCreatureToDungeon()
+	end
+end
+	
+				--[[SECTION: Parser, Helper]]--
+
+--Reads in a file, the town, and uses it to produce each town map in the game (NPC's etc. are handled in the script)
+function parseTowns()
+	local file = io.open(shell.resolve(".").."/scripts/towns", "r")
+	if not file then error("\'"..towns.."\' file not found.") end
+	local flines = { }
+	flines [1] = file:read()
+	while true do
+		local towntitle = ""
+		towntitle, flines[#flines] = readFromQuoteMarks(flines[#flines])
+		if not towntitle then
+			print("Malformed string, breaking")
+			break
+		end
+		local coords = split(flines[#flines], ",")
+		local townlevel = { }
+		for i=1,16 do
+			local townline = file:read()
+			if #townline > mapw then
+				townline = string.sub(townline, 1, mapw)
+			elseif #townline < mapw then
+				townline = townline..string.rep(" ", mapw - #townline)
+			end
+			table.insert(townlevel, townline)
+		end
+		table.insert(town, {
+			name = towntitle,
+			xpos = tonumber(coords[1]),
+			ypos = tonumber(coords[2]),
+			startx = tonumber(coords[3]),
+			starty = tonumber(coords[4]),
+			visible = true,
+			level = townlevel,
+			npc = { }
+		})
+		print("Created town "..towntitle.." ("..tonumber(coords[1])..","..tonumber(coords[2])..")")
+		flines[#flines + 1] = file:read()
+		if not (flines[#flines] and string.find(flines[#flines], "TOWN") == 1) then break end
+	end
+	file:close()
+end
+
+--This returns two things- the word in quotation marks, and the rest of the string
+function readFromQuoteMarks(quotestr)
+	local firstQuote = quotestr:find("\"")
+	if not firstQuote then return nil end
+	local lastQuote = quotestr:find("\"", firstQuote + 1)
+	if not lastQuote then return nil end
+	if not firstQuote or not lastQuote then error("Malformed quotation marks!") end
+	
+	return string.sub(quotestr, firstQuote + 1, lastQuote - 1), string.sub(quotestr, lastQuote + 1)
+end
+
+--Splits a string according to a pattern into a table				
+function split(str, pattern)
+  local t = { }
+  local fpat = "(.-)" .. pattern
+  local last_end = 1
+  local s, e, cap = str:find(fpat, 1)
+  while s do
+    if s ~= 1 or cap ~= "" then
+      table.insert(t,cap)
+    end
+    last_end = e+1
+    s, e, cap = str:find(fpat, last_end)
+  end
+  if last_end <= #str then
+    cap = str:sub(last_end)
+    table.insert(t, cap)
+  end
+  return t
+end
+
+--Finds if one of a series of words can be found in a given string
+function findIn(...)
+	local str = arg[1]
+	
+	for i=2,#arg do
+		if string.find(str, arg[i]) then return true end
+	end
+	return false
+end
+
+				--[[SECTION: Logging]]--
+
+--This clears the log file.
+function clearLog()
+  local file = io.open(shell.resolve(".").."/log", "w")
+  file:write(os.time()..": Log opened.\n")
+  file:close()
+end
+
+--This writes debug info to the log file
+function writeToLog(...)
+  local file = io.open(shell.resolve(".").."/log", "a")
+  file:write(os.time()..": ")
+  for k,v in pairs(arg) do
+	if not v then file:write("<nil> ")
+	else file:write(v, " ") end
+  end
+  file:write("\n")
+  file:close()
+end
+
+--Runs all the scripts
+function executeScripts()
+	local scripts = { "script", "equipment", "creatures", "quest", "npc", "dungeons" }
+
+	local scriptSuccessful = true
+
+	for _,v in pairs(scripts) do
+		print("Running "..v.." script...")
+		if not fs.exists(shell.resolve(".").."/scripts/"..v) then error("Cannot find "..v.." file!") return false end
+		if not shell.run("scripts/"..v) then 
+			print(v.." failed to execute")
+			scriptSuccessful = false
+			break
+		end
+	end
+
+	return scriptSuccessful
+end
+
+				--[[SECTION: Main]]--
+
+--The main function- prepares the game to play and manages game states
+function main()
+	term.clear()
+
+	readOverWorld()
+	parseTowns()
+	if not executeScripts() then error("Error in script!") return end
+	refreshNPCInventory()
+	
+	print("Initializing game...")
+	sleep(1)
+	onInit()
+	clearLog()
+	if debugging then writeToLog("Game Started") end
+	
+	for i = 1, #dungeons do bufferLevel(i) end
+	
+	while not gameOver do
+		--In the event the player is in a town
+		if inTown then
+			printTownInterface()
+			local id, key = os.pullEvent("key")
+			if key == 28 then break
+			else handleTownInput(key) end
+		--In the event the player is in a dungeon
+		elseif inDungeon then
+			term.clear()
+			drawDungeonCorridor()
+			drawDungeonInterface()
+			local id,key = os.pullEvent("key")
+			if key == 28 then break
+			else handleDungeonInput(key) end
+			if inDungeon then updateDungeon() end
+		else
+		--In the event the player is in the world map
+			printOverworldInterface()
+			printWorldMap()
+			handleOverworldInput()
+			if not inDungeon and not inTown then updateOverworld() end
+		end
+	end
+	
+	if debugging then writeToLog("Game terminated successfully.") end
+	SpeedOS.Close()
+end
+
+main()
