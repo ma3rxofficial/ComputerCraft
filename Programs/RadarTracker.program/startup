@@ -14,7 +14,12 @@ windows.clearScreen(colors.black)
 term.setCursorPos(1, 1)
 
 if not peripheral.find("ICBMRadar", true) then
-    windows.error("Ebana! U tebya net radara blyat!")
+    if math.random(1, 2) == 1 then
+        windows.error("Ebana! U tebya net radara blyat!")
+    else
+        windows.error("This program requires Radar from ICBM mod.")
+    end
+
     SpeedOS.Close()
 end
 
