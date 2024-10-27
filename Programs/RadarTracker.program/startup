@@ -29,6 +29,8 @@ if not peripheral.find("ICBMRadar", true) then
     SpeedOS.Close()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 local use_distance
 local x2
 local y2
