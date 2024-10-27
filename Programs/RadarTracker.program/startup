@@ -17,6 +17,8 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 windows.clearScreen(colors.black)
 term.setCursorPos(1, 1)
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 if not peripheral.find("ICBMRadar", true) then
     if math.random(1, 2) == 1 then
         windows.error("Ebana! U tebya net radara blyat!")
