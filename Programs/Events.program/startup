@@ -15,6 +15,7 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Ну бляэ аывлщващывшвш ну ээээ
+-- Настройки короч
 
 local pathToConfig = "System/Events.settings" -- путь до файла конфигурации программы
 local skippedEvents = textutils.unserialize(config.read(pathToConfig, "skip")) -- эвенты, о которых информация отображаться не будет
