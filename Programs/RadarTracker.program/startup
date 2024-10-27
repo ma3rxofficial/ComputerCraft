@@ -14,8 +14,6 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
-io = SpeedOS.IO
-
 windows.clearScreen(colors.black)
 term.setCursorPos(1, 1)
 
