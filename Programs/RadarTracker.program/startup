@@ -37,6 +37,8 @@ local y2
 local z2
 local use_distance = SpeedText.stringToBoolean(config.read("System/RadarTracker.settings", "count the distance"))
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 if use_distance then
     term.setTextColor(colors.lime)
     SpeedText.slowWrite("Welcome to Tracker!")
