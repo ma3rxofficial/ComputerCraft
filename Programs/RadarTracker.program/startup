@@ -68,8 +68,6 @@ radarSide = peripheral.find("ICBMRadar", true)
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
-
---[[Radar Target Handler Display]]--        
 term.setBackgroundColor(colors.blue)
 term.clear()
 term.setCursorPos(1, 1)
