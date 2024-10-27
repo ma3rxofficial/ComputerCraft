@@ -9,7 +9,7 @@ SpeedOS.LoadAPI("SpeedAPI/windows")
 
 windows.clearScreen(colors.cyan)
 
-button = windows.select({"Recovery OS!"},{"Do you want to recover your OS?"},{"No",colors.gray,colors.white}, {"Yes",colors.orange,colors.white})
+button = windows.select({"Recovery OS!"}, {"Do you want to recover your OS?"},{"No",colors.gray,colors.white}, {"Yes",colors.orange,colors.white})
 
 if button == "No" then
 	SpeedOS.Close()
