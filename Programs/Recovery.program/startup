@@ -50,6 +50,8 @@ installer_file = fs.open("startup", "w")
 installer_file.write(recovery_result.readAll())
 installer_file.close()
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 sleep(1)
 
 windows.clearScreen(colors.gray)
