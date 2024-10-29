@@ -71,3 +71,5 @@ SpeedText.cPrint("Or use Ctrl+R to restart your computer", 10)
 
 SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
 SpeedOS.Close()
+
+-----------------------------------------------------------------------------------------------------------------------------------
