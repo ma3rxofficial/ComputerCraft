@@ -37,10 +37,14 @@ if not recovery_result then
 	SpeedOS.Close()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 sleep(0.5)
 
 windows.clearScreen(colors.gray)
 SpeedText.cPrint("Writing data to installer...")
+
+-----------------------------------------------------------------------------------------------------------------------------------
 
 installer_file = fs.open("startup", "w")
 installer_file.write(recovery_result.readAll())
