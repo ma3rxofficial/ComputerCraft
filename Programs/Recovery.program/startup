@@ -28,6 +28,8 @@ windows.clearScreen(colors.gray)
 term.setTextColor(colors.lightGray)
 SpeedText.cPrint("Connecting to Pastebin.com...")
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 recovery_result = http.get("https://pastebin.com/raw/dN2gMnV9")
 
 if not recovery_result then
