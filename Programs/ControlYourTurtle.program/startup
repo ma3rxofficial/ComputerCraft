@@ -97,19 +97,19 @@ while true do
   if string.lower(command) == "exit" or string.lower(command) == "quit" then -- в случае, если пользователь ввел команду выхода
     SpeedOS.Close() -- то мы закрываем программу
 
-  elif command == "help" or command == "HELP" then -- если пользователь ввел команду вывода помощи
+  elseif string.lower(command) == "help" then -- если пользователь ввел команду вывода помощи
     help() -- то мы ее, собственно, выводим
-  end  
-
-  -- Небольшой кусок кода, который ожидает сигнала от черепашки после подачи команды. В случае, если ответа от черепашки не было получено, то пишем, что черепашку, видимо, распидорасило
-  repeat
-    rID, msg = rednet.receive(turtle_delay)
-  until rID ~= os.getComputerID() or rID == tonumber(turtle_id) 
-
-  if rID == tonumber(turtle_id)  then
-    print(msg)
   else
-    print("Can't reach your turtle!")
+    -- Небольшой кусок кода, который ожидает сигнала от черепашки после подачи команды. В случае, если ответа от черепашки не было получено, то пишем, что черепашку, видимо, распидорасило
+    repeat
+      rID, msg = rednet.receive(turtle_delay)
+    until rID ~= os.getComputerID() or rID == tonumber(turtle_id) 
+
+    if rID == tonumber(turtle_id)  then
+      print(msg)
+    else
+      print("Can't reach your turtle!")
+    end
   end
 end 
 
