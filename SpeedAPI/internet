@@ -19,6 +19,8 @@ local function checkForBlacklist(url)
 	return false
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function get(url)
 	if not checkForBlacklist(url) then
 		return http.get(url)
