@@ -22,6 +22,7 @@ local function checkForBlacklist(url)
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Замена стандартным функциям http.
 
 function get(url)
 	if not checkForBlacklist(url) then
