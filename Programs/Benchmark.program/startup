@@ -1,3 +1,8 @@
+--[[		
+	Программа полная хуйня. Не пользуйтесь.
+
+]]
+
 if SpeedOS then
      SpeedOS.ToolBarColour = colours.black
      SpeedOS.ToolBarTextColour = colours.white
