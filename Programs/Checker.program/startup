@@ -86,6 +86,20 @@ function GetProgram(selected)
 
       if button == "No" then -- ну не
         Menu() -- снова рисуем меню
+      else
+        fs.delete(selected)
+        windows.clearScreen(colors.gray) -- очищаем экран в серый цвет, шобы не втыкали
+        term.setTextColor(colors.white) -- делаем цвет распечатываемого текста белым
+
+        SpeedText.cPrint("Downloaded!", 8) -- СКАЧАЛАСЬ НИД ФОР СПИД УРЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯ
+        sleep(0.5)
+
+        -- Ну дальше мои комментарии абсолютно излишни, просто послушайте
+        term.setTextColor(colors.lightGray) -- это было в 2006 году 20 сентября
+        SpeedText.cPrint("Click anywhere to continue...", 9) -- ПОНЯЛИ ОТСЫЛКУ ПОНЯЛИ?? ПОНЯЛИ???????? ЭТО ЖЕ ОТСЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЛКААААА
+
+        SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
+        Menu()
       end
     else  
       windows.error("Program not exists!") -- ПРОГРАММА НЕ НАЙДЕНА! ТЫ ДОЛБОЁБ!!!!!!!!
