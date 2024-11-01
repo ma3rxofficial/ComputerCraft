@@ -80,10 +80,12 @@ function GetProgram(selected)
   
   if not result then -- в случае, если нормально отправить запрос по указанному пути не удалось
     windows.clearScreen(colors.cyan) -- очищаем экран в бирюзовый цвет
+
     if fs.exists(selected) then
       button = windows.select({"Program was deleted!"},{"Do you want to delete it from your computer?"},{"No",colors.lightGray,colors.black}, {"Yes",colors.lightBlue,colors.black}) 
-    windows.error("Program not exists!") -- ПРОГРАММА НЕ НАЙДЕНА! ТЫ ДОЛБОЁБ!!!!!!!!
-    Menu() -- снова запускаем наше меню
+    else  
+      windows.error("Program not exists!") -- ПРОГРАММА НЕ НАЙДЕНА! ТЫ ДОЛБОЁБ!!!!!!!!
+      Menu() -- снова запускаем наше меню
   end  
 
   if not fs.exists(selected) then -- если до этого у нас не было файла по указанному пути
