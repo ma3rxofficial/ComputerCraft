@@ -88,18 +88,18 @@ function GetProgram(selected)
         Menu() -- снова рисуем меню
       else
         fs.delete(selected)
-        windows.clearScreen(colors.gray) -- очищаем экран в серый цвет, шобы не втыкали
-        term.setTextColor(colors.white) -- делаем цвет распечатываемого текста белым
+        windows.clearScreen(colors.gray) -- чистим экран в серый цвет (пиздец нравится)
+        term.setTextColor(colors.white) -- ставим цвет текста на белый
 
-        SpeedText.cPrint("Sucesfully deleted!", 8) -- СКАЧАЛАСЬ НИД ФОР СПИД УРЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯ
+        SpeedText.cPrint("Sucesfully deleted!", 8) -- информируем пользователя о том, что файл удален
         sleep(0.5)
 
-        -- Ну дальше мои комментарии абсолютно излишни, просто послушайте
-        term.setTextColor(colors.lightGray) -- это было в 2006 году 20 сентября
-        SpeedText.cPrint("Click anywhere to continue...", 9) -- ПОНЯЛИ ОТСЫЛКУ ПОНЯЛИ?? ПОНЯЛИ???????? ЭТО ЖЕ ОТСЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЛКААААА
+        -- Просто красивая хуйня
+        term.setTextColor(colors.lightGray) -- выбираем цвет текста
+        SpeedText.cPrint("Click anywhere to continue...", 9) -- ну тут понятно
 
-        SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"})
-        Menu()
+        SpeedText.waitForEvent({"mouse_click", "mouse_drag", "mouse_scroll", "key"}) -- ждём
+        Menu() -- дождались
       end
     else  
       windows.error("Program not exists!") -- ПРОГРАММА НЕ НАЙДЕНА! ТЫ ДОЛБОЁБ!!!!!!!!
