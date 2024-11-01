@@ -104,6 +104,7 @@ function GetProgram(selected)
     else  
       windows.error("Program not exists!") -- ПРОГРАММА НЕ НАЙДЕНА! ТЫ ДОЛБОЁБ!!!!!!!!
       Menu() -- снова запускаем наше меню
+    end
   end  
 
   if not fs.exists(selected) then -- если до этого у нас не было файла по указанному пути
