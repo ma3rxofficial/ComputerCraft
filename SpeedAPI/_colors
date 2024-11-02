@@ -46,6 +46,8 @@ function subtract( colors, ... )
 	return r
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function test( colors, color )
   return ((bit.band(colors, color)) == color)
 end
