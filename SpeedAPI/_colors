@@ -36,6 +36,8 @@ function combine( ... )
   return r
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function subtract( colors, ... )
 	local r = colors
 	for n,c in ipairs( { ... } ) do
