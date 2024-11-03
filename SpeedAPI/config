@@ -22,7 +22,7 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Вписать параметр в конфигурационный файл
 
-function write(pathToConfig,key,value)
+function write(pathToConfig, key,value)
         if not fs.exists(pathToConfig) then
                 local file = fs.open(pathToConfig,"w")
                 file.close()
