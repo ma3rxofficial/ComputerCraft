@@ -1,7 +1,7 @@
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Чтение параметра из конфигурационного файла
 
-function read(pathToConfig,whatToRead)
+function read(pathToConfig, whatToRead)
         if not fs.exists(pathToConfig) then error("No such file") end
         local file = fs.open(pathToConfig,"r")
         while true do
