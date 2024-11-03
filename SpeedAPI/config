@@ -17,6 +17,8 @@ function read(pathToConfig,whatToRead)
                 end
         end
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
  
 function write(pathToConfig,key,value)
         if not fs.exists(pathToConfig) then
