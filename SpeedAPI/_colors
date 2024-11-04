@@ -8,7 +8,7 @@ white = 1 -- белый
 orange = 2 -- оранжевый
 magenta = 4 -- пурпурный
 lightBlue = 8 -- светлосиний
-yellow = 16
+yellow = 16 -- жёлтый
 lime = 32
 pink = 64
 
