@@ -6,7 +6,7 @@
 
 white = 1 -- белый
 orange = 2 -- оранжевый
-magenta = 4
+magenta = 4 -- пурпурный
 lightBlue = 8
 yellow = 16
 lime = 32
