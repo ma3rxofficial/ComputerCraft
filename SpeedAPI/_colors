@@ -10,7 +10,7 @@ magenta = 4 -- пурпурный
 lightBlue = 8 -- светлосиний
 yellow = 16 -- жёлтый
 lime = 32 -- лаймовый
-pink = 64
+pink = 64 -- розовый
 
 gray = 128
 grey = gray
