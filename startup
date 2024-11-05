@@ -8,7 +8,7 @@
 -- Загрузка набора самых базовых библиотек для первичной загрузки
 
 os.loadAPI('SpeedAPI/SpeedText')
-os.loadAPI('SpeedAPI/peripheral')
+os.loadAPI('SpeedAPI/peripheral') 
 os.loadAPI('System/API/Log') 
 os.loadAPI('System/API/Settings')
  
