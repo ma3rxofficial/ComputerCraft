@@ -12,7 +12,7 @@ yellow = 16 -- жёлтый
 lime = 32 -- лаймовый
 pink = 64 -- розовый
 
-gray = 128 -- cерый
+gray = 128
 grey = gray
 
 lightGray = 256
