@@ -13,7 +13,7 @@ lime = 32 -- лаймовый
 pink = 64 -- розовый
 
 gray = 128 -- cерый
-grey = gray -- ДЛЯ ЕБУЧИХ БРИТАНЦЕВ
+grey = gray
 
 lightGray = 256
 lightGrey = lightGray
