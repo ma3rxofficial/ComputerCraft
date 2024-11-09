@@ -13,6 +13,7 @@ SpeedOS.LoadAPI("SpeedAPI/peripheral")
 SpeedOS.LoadAPI("SpeedAPI/config")
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Проверяем наличие модема на пользовательском компьютер
 
 if not peripheral.find("modem") then
   windows.clearScreen(colors.cyan)
