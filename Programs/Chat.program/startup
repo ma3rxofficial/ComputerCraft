@@ -26,6 +26,7 @@ if SpeedOS then
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- АПИ
 
 SpeedOS.LoadAPI("SpeedAPI/SpeedText")
 SpeedOS.LoadAPI("SpeedAPI/windows")
