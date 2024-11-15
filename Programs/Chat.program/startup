@@ -46,6 +46,8 @@ local sBars = ""
 local pathToConfig = "System/Chat.settings"
 local showIDs = SpeedText.stringToBoolean(config.read(pathToConfig, "show user IDs"))
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 if not peripheral.find("modem") then
 	windows.clearScreen(colors.cyan)
 	windows.error("This program requires wireless modem!")
