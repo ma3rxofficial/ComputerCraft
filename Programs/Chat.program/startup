@@ -37,7 +37,7 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 -- Всякие константы
 
 local messages = {} -- массив с сообщениями
-local serverHost = false
+local serverHost = false -- хостит ли наш пользователь канал?
 local channelOP = 0
 local x,y = 51, 17
 local serverOPs = {}
