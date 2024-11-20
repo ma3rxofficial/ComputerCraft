@@ -19,6 +19,8 @@ local function runMethod(periph, method, ...)
 	end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function wrap(side)
 	if peripheral.getType(side) ~= "InventoryManager" then
 		error("invalid peripheral type")
