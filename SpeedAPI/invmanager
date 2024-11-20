@@ -1,3 +1,9 @@
+--[[
+    Либа для работы с invmanager (Inventory Manager), ничего такого...
+]]
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
 local function runMethod(periph, method, ...)
 	local res = periph[method](...)
 	if res == nil then
