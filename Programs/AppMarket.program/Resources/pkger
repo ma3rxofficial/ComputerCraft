@@ -1,0 +1,77 @@
+sPackage=[[local pkg=%@1
+local function makeFile(_path,_content)
+ local file=SpeedOS.FS.open(_path,"w")
+ file.write(_content)
+ file.close()
+end
+local function makeFolder(_path,_content)
+ SpeedOS.FS.makeDir(_path)
+ for k,v in pairs(_content) do
+  if type(v)=="table" then
+   makeFolder(_path.."/"..k,v)
+  else
+   makeFile(_path.."/"..k,v)
+  end
+ end
+end
+local sDest= installLocation or '/'
+if sDest=="root" then
+ sDest="/"
+end
+sDest = sDest .. %@2
+local tPackage=pkg
+makeFolder(sDest,tPackage)
+sleep(0.01)
+SpeedOS.Close()
+]]
+
+function addFile(_package,_path)
+	if SpeedOS.FS.getName(_path)==".DS_Store" then
+		return _package
+	end
+	local file,err=SpeedOS.FS.open(_path,"r")
+	local content=file.readAll()
+	content=content:gsub("%%","%%%%")
+	_package[SpeedOS.FS.getName(_path)]=content
+	file.close()
+	return _package
+end
+
+function addFolder(_package,_path)
+	if string.sub(_path,1,string.len("rom"))=="rom" or string.sub(_path,1,string.len("/rom"))=="/rom" then
+		return
+	end
+	_package=_package or {}
+	for _,f in ipairs(SpeedOS.FS.list(_path)) do
+		local path=_path.."/"..f
+		if SpeedOS.FS.isDir(path) then
+			_package[SpeedOS.FS.getName(f)]=addFolder(_package[SpeedOS.FS.getName(f)],path)
+		else
+			_package=addFile(_package,path)
+		end
+	end
+	return _package
+end
+
+function pack(source, dest)
+	local sSource=source
+	local sDest=dest
+
+
+	if SpeedOS.FS.exists(sSource) and SpeedOS.FS.isDir(sSource) then
+		tPackage={}
+		tPackage=addFolder(tPackage,sSource)
+		fPackage=SpeedOS.FS.open(sDest,"w")
+		if fPackage then
+			sPackage=string.gsub(sPackage,"%%@1",textutils.serialize(tPackage))
+			sPackage=string.gsub(sPackage,"%%@2",textutils.serialize(SpeedOS.FS.getName(source)))
+			fPackage.write(sPackage)
+			fPackage.close()
+		else
+			error(sDest)
+		end
+	else
+		error(sSource)
+		error("Source does not exist or is not a folder.")
+	end
+end
