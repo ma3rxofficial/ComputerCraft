@@ -1,0 +1,963 @@
+if SpeedOS then
+    SpeedOS.ToolBarColour = colours.white
+    SpeedOS.ToolBarTextColour = colours.black
+end
+
+SpeedOS.LoadAPI("SpeedAPI/windows")
+SpeedOS.LoadAPI("Programs/AppMarket.program/Resources/pkger")
+
+local imya, parol
+local authorized = false
+local server_addr = "http://3.67.161.133:11033"
+
+fs = SpeedOS.FS
+
+function downloadApp(appName, save_as)
+    local response = http.get(server_addr .. "/apps/" .. tostring(appName))
+    if response then
+        local content = response.readAll()
+        response.close()
+
+        if not content or #content == 0 then
+            windows.error("Error: empty response from server")
+            return
+        end
+
+        local file = fs.open(save_as, "w")
+        file.write(content)
+        file.close()
+
+        function removeEmptyLines(inputFile, outputFile)
+            if not fs.exists(inputFile) then
+                print("Input file not found: " .. inputFile)
+                return
+            end
+
+            local file = fs.open(inputFile, "r")
+            local lines = file.readAll()
+            file.close()
+
+            local cleanedLines = {}
+            for line in lines:gmatch("[^\r\n]+") do
+                if line:match("%S") then
+                    table.insert(cleanedLines, line)
+                end
+            end
+
+            local result = table.concat(cleanedLines, "\n")
+
+            local outFile = fs.open(outputFile, "w")
+            outFile.write(result)
+            outFile.close()
+        end
+
+        removeEmptyLines(save_as, save_as)
+
+        SpeedOS.Run(save_as)
+        sleep(1)
+        fs.delete(save_as)
+
+        windows.attention({"Done!"}, {'App ' .. '"' .. save_as .. '"', "successfully downloaded"})
+        listApps()
+    else
+        windows.error("Can't load app. Server not reachable.")
+        listApps()
+    end
+end
+
+function drawGrid(apps)
+    term.setBackgroundColor(colors.white)
+    term.setTextColor(colors.black)
+    term.clear()
+
+    local width, height = term.getSize()
+    local columns = 3
+    local xMargin = 2
+    local yMargin = 3
+
+    local columnWidth = math.floor(width / columns)
+    local rowHeight = 4
+
+    for index, app in ipairs(apps) do
+        local column = (index - 1) % columns
+        local row = math.floor((index - 1) / columns)
+
+        local xStart = column * columnWidth + xMargin
+        local yStart = (row * rowHeight + yMargin)
+
+        term.setCursorPos(xStart, yStart)
+        term.setTextColor(colors.black)
+        term.write(app.name2)
+
+        term.setCursorPos(xStart, yStart + 1)
+        term.setTextColor(colors.lightGray)
+        term.write("(" .. app.size .. " bytes)")
+
+        term.setCursorPos(xStart, yStart + 2)
+        term.write(app.description)
+    end
+end
+
+function drawMenu()
+    local width, height = term.getSize()
+    local menuWidth = 10
+
+    term.setBackgroundColor(colors.gray)
+    for y = 1, height do
+        term.setCursorPos(1, y)
+        term.write(string.rep(" ", menuWidth))
+    end
+
+    local buttons = {
+        {text = "Home", action = listApps},
+        {text = "Upload", action = os.shutdown},
+        {text = "Exit", action = error}
+    }
+
+    if not authorized then
+        buttons = {
+        {text = "Home", action = listApps},
+        {text = "Login", action = drawLoginPage},
+        {text = "Register", action = drawRegisterPage},
+        {text = "Exit", action = error}
+    }
+    end
+
+    term.setTextColor(colors.white)
+    for i, button in ipairs(buttons) do
+        term.setCursorPos(2, 2 + (i - 1) * 2)
+        term.write(button.text)
+    end
+
+    return buttons, menuWidth
+end
+
+function wrapText(text, maxWidth)
+    local wrappedText = {}
+    local currentLine = ""
+
+    for i = 1, string.len(text) do
+        local char = string.sub(text, i, i)
+        
+        if string.len(currentLine .. char) <= maxWidth then
+            currentLine = currentLine .. char
+        else
+            table.insert(wrappedText, currentLine)
+            currentLine = char
+        end
+    end
+
+    if currentLine ~= "" then
+        table.insert(wrappedText, currentLine)
+    end
+
+    return wrappedText
+end
+
+function drawAppPage(app)
+    term.setBackgroundColor(colors.white)
+    term.clear()
+
+    local buttons, menuWidth = drawMenu()
+
+    local width, height = term.getSize()
+
+    local sidebarWidth = 12
+    local sidebarX = width - sidebarWidth + 1
+
+    term.setBackgroundColor(colors.gray)
+    for y = 1, height do
+        term.setCursorPos(sidebarX, y)
+        term.write(string.rep(" ", sidebarWidth))
+    end
+
+    term.setTextColor(colors.white)
+    term.setCursorPos(sidebarX + 1, 2)
+    term.write("Size:")
+    term.setCursorPos(sidebarX + 1, 3)
+    term.setTextColor(colors.lightGray)
+    term.write(app.size .. " bytes")
+    term.setCursorPos(sidebarX + 1, 5)
+    term.setTextColor(colors.white)
+    term.write("Uploader:")
+
+    local uploaderLines = wrapText(app.uploader, sidebarWidth - 2)
+
+    local uploaderY = 6
+    for _, line in ipairs(uploaderLines) do
+        term.setCursorPos(sidebarX + 1, uploaderY)
+        term.setTextColor(colors.lightGray)
+        term.write(line)
+        uploaderY = uploaderY + 1
+    end
+
+    term.setCursorPos(sidebarX + 1, uploaderY + 1)
+    term.setTextColor(colors.white)
+    term.write("Uploaded:")
+    term.setCursorPos(sidebarX + 1, uploaderY + 2)
+    term.setTextColor(colors.lightGray)
+    term.write(app.date)
+
+    term.setCursorPos(sidebarX + 1, uploaderY + 1)
+    term.setTextColor(colors.white)
+    term.write("Uploaded:")
+    term.setCursorPos(sidebarX + 1, uploaderY + 2)
+    term.setTextColor(colors.lightGray)
+    term.write(app.date)
+
+    term.setBackgroundColor(colors.white)
+    term.setTextColor(colors.black)
+    term.setCursorPos(menuWidth + 2, 2)
+    term.write(app.name2)
+
+    term.setTextColor(colors.lightGray)
+    local descriptionLines = {}
+    local descLineWidth = sidebarX - menuWidth - 4
+    local currentLine = ""
+    for word in app.description:gmatch("%S+") do
+        if #currentLine + #word + 1 <= descLineWidth then
+            currentLine = currentLine .. (currentLine == "" and "" or " ") .. word
+        else
+            table.insert(descriptionLines, currentLine)
+            currentLine = word
+        end
+    end
+    table.insert(descriptionLines, currentLine)
+
+    local yDescStart = 4
+    for i, line in ipairs(descriptionLines) do
+        term.setCursorPos(menuWidth + 2, yDescStart + i - 1)
+        term.write(line)
+    end
+
+    local buttonWidth = 12
+    local buttonX = 1 + math.floor(((width + 12) - sidebarWidth - buttonWidth) / 2)
+    local buttonY = height - 1
+    term.setBackgroundColor(colors.lightGray)
+    term.setTextColor(colors.black)
+    term.setCursorPos(buttonX, buttonY)
+    term.write(" Download ")
+
+    while true do
+        local event, button, x, y = os.pullEvent("mouse_click")
+
+        if x <= menuWidth then
+            for i, btn in ipairs(buttons) do
+                local btnY = 2 + (i - 1) * 2
+                if authorized then
+                    if y == 2 then
+                        listApps()
+                        return
+                    elseif y == 4 then
+                        drawUploadPage()
+                        return
+                    elseif y == 6 then
+                        SpeedOS.Close()
+                        return
+                    end
+                else
+                    if y == 2 then
+                        listApps()
+                        return
+                    elseif y == 4 then
+                        drawLoginPage()
+                        return
+                    elseif y == 6 then
+                        drawRegisterPage()
+                        return
+                    elseif y == 8 then
+                        term.clear()
+                        print("xyu")
+                        SpeedOS.Close()
+                        return
+                    end
+                end
+            end
+        end
+
+        if button == 1 and x >= buttonX and x < buttonX + buttonWidth and y == buttonY then
+            downloadApp(app.name, app.name2)
+            return
+        end
+    end
+end
+
+
+function listApps()
+    term.setBackgroundColor(colors.white)
+    term.clear()
+
+    local buttons, menuWidth = drawMenu()
+
+    local response = http.get(server_addr .. "/apps")
+    if response then
+        local responseText = response.readAll()
+        response.close()
+
+        local func = loadstring(responseText)
+        if func then
+            local apps = func()
+            if apps and type(apps) == "table" then
+                term.setBackgroundColor(colors.white)
+                term.setTextColor(colors.black)
+
+                local width, height = term.getSize()
+                local columns = 2
+                local columnWidth = math.floor((width - menuWidth) / columns)
+                local rowHeight = 5
+                local rowsPerPage = math.floor(height / rowHeight)
+                local appsPerPage = rowsPerPage * columns
+                local currentPage = 1
+                local totalPages = math.ceil(#apps / appsPerPage)
+
+                local function drawApps()
+                    term.setBackgroundColor(colors.white)
+                    term.clear()
+                    drawMenu()
+
+                    term.setBackgroundColor(colors.white)
+                    term.setTextColor(colors.black)
+
+                    local startIndex = (currentPage - 1) * appsPerPage + 1
+                    local endIndex = math.min(startIndex + appsPerPage - 1, #apps)
+
+                    for index = startIndex, endIndex do
+                        local app = apps[index]
+                        local relativeIndex = index - startIndex + 1
+                        local column = (relativeIndex - 1) % columns
+                        local row = math.floor((relativeIndex - 1) / columns)
+
+                        local xStart = menuWidth + column * columnWidth + 2
+                        local yStart = row * rowHeight + 2
+
+                        term.setCursorPos(xStart, yStart)
+                        term.setBackgroundColor(colors.white)
+                        term.setTextColor(colors.black)
+                        term.write(app.name2)
+
+                        term.setCursorPos(xStart, yStart + 1)
+                        term.setBackgroundColor(colors.white)
+                        term.setTextColor(colors.lightGray)
+                        term.write("(" .. app.size .. " bytes)")
+
+                        term.setCursorPos(xStart, yStart + 2)
+                        term.setBackgroundColor(colors.white)
+                        local maxDescWidth = columnWidth - 2
+                        local description = app.description or ""
+                        if #description > maxDescWidth then
+                            description = description:sub(1, maxDescWidth - 3) .. "..."
+                        end
+                        term.write(description)
+                    end
+
+                    term.setCursorPos(menuWidth + 2, height)
+                    term.setBackgroundColor(colors.white)
+                    term.setTextColor(colors.black)
+                    term.write("<")
+                    term.setCursorPos(menuWidth + 4, height)
+                    paginator_len = string.len("Page " .. currentPage .. " of " .. totalPages .. " ")
+                    term.write("Page " .. currentPage .. " of " .. totalPages)
+                    term.setCursorPos(menuWidth + 4 + paginator_len, height)
+                    term.write(">")
+                end
+
+                drawApps()
+
+                while true do
+                    local event, button, x, y = os.pullEvent()
+
+                    if event == "mouse_click" then
+                        if x <= menuWidth then
+                            for i, btn in ipairs(buttons) do
+                                local btnY = 2 + (i - 1) * 2
+                                if y == 2 then
+                                    listApps()
+                                    return
+                                elseif y == 4 then
+                                    if authorized then
+                                        drawUploadPage()
+                                        return
+                                    else
+                                        drawLoginPage()
+                                        return
+                                    end
+                                elseif y == 6 then
+                                    if authorized then
+                                        term.clear()
+                                        print("xyu")
+                                        SpeedOS.Close()
+                                        return
+                                    else
+                                        drawRegisterPage()
+                                        return
+                                    end
+                                elseif y == 8 and not authorized then
+                                    term.clear()
+                                    print("xyu")
+                                    SpeedOS.Close()
+                                end
+                            end
+                        end
+
+                        for index = 1, appsPerPage do
+                            local globalIndex = (currentPage - 1) * appsPerPage + index
+                            if globalIndex > #apps then break end
+
+                            local relativeIndex = index
+                            local column = (relativeIndex - 1) % columns
+                            local row = math.floor((relativeIndex - 1) / columns)
+
+                            local xStart = menuWidth + column * columnWidth + 2
+                            local yStart = row * rowHeight + 3
+
+                            if x >= xStart and x < xStart + columnWidth and y >= yStart and y < yStart + rowHeight then
+                                drawAppPage(apps[globalIndex])
+                                return
+                            end
+                        end
+
+                        if x >= menuWidth + 2 and x <= menuWidth + 4 and y == height and currentPage > 1 then
+                            currentPage = currentPage - 1
+                            drawApps()
+                        end
+
+                        if x >= menuWidth + 4 + paginator_len and x <= menuWidth + width and y == height and currentPage < totalPages then
+                            currentPage = currentPage + 1
+                            drawApps()
+                        end
+                    end
+                end
+            else
+                windows.error("Error: received data is not a table")
+                SpeedOS.Close()
+            end
+        else
+            windows.error("Error: failed to parse server response")
+            SpeedOS.Close()
+        end
+    else
+        windows.error("Can't connect to server")
+        SpeedOS.Close()
+    end
+end
+
+
+
+
+
+function uploadApp(username, password, app_name, app_content, app_description)
+    local data = "username=" .. textutils.urlEncode(username) .. "&password=" .. textutils.urlEncode(password) .. "&name=" .. textutils.urlEncode(app_name) .. "&content=" .. textutils.urlEncode(app_content) .. "&description=" .. app_description or "No description"
+
+    local response = http.post(server_addr .. "/apps", data)
+    if response then
+        local body = response.readAll()
+        response.close()
+
+        if body == "App " .. app_name .. " uploaded successfully!" then
+            windows.attention({"Done!"}, {"App uploaded successfully."})
+            listApps()
+        else
+            windows.error("Upload failed: " .. body)
+            listApps()
+        end
+    else
+        windows.error("Error connecting to the server.")
+        listApps()
+    end
+end
+
+function drawUploadPage()
+    term.setBackgroundColor(colors.white)
+    term.clear()
+
+    local buttons, menuWidth = drawMenu()
+
+    local width, height = term.getSize()
+    local inputWidth = 20
+    local fieldX = menuWidth + math.floor((width - menuWidth - inputWidth) / 2)
+
+    term.setBackgroundColor(colors.white)
+    term.setTextColor(colors.black)
+    term.setCursorPos(menuWidth + 2, 2)
+    term.write("Upload App")
+
+    term.setCursorPos(fieldX, 4)
+    term.write("App Name:")
+
+    term.setBackgroundColor(colors.lightGray)
+    term.setCursorPos(fieldX, 5)
+    term.write(string.rep(" ", inputWidth))
+
+    term.setBackgroundColor(colors.white)
+    term.setCursorPos(fieldX, 7)
+    term.write("Program Path:")
+
+    term.setBackgroundColor(colors.lightGray)
+    term.setCursorPos(fieldX, 8)
+    term.write(string.rep(" ", inputWidth))
+
+    term.setBackgroundColor(colors.white)
+    term.setCursorPos(fieldX, 10)
+    term.write("Description:")
+
+    term.setBackgroundColor(colors.lightGray)
+    term.setCursorPos(fieldX, 11)
+    term.write(string.rep(" ", inputWidth))
+
+    local buttonWidth = 12
+    local buttonX = 2 + math.floor((width + menuWidth - buttonWidth) / 2)
+    local buttonY = 13
+    term.setBackgroundColor(colors.lightGray)
+    term.setTextColor(colors.black)
+    term.setCursorPos(buttonX, buttonY)
+    term.write(" Upload ")
+
+    local appName = ""
+    local filePath = ""
+    local description = ""
+    local focusedField = 1
+    local showCursor = true
+
+    local function drawFieldContent()
+        term.setCursorPos(fieldX, 5)
+        term.setBackgroundColor(colors.lightGray)
+        term.setTextColor(colors.black)
+        term.write(string.rep(" ", inputWidth))
+        term.setCursorPos(fieldX, 5)
+        term.write(appName:sub(1, inputWidth))
+        if focusedField == 1 and showCursor and #appName then
+            term.write("_")
+        end
+
+        term.setCursorPos(fieldX, 8)
+        term.write(string.rep(" ", inputWidth))
+        term.setCursorPos(fieldX, 8)
+        term.write(filePath:sub(1, inputWidth))
+        if focusedField == 2 and showCursor and #filePath then
+            term.write("_")
+        end
+
+        term.setCursorPos(fieldX, 11)
+        term.write(string.rep(" ", inputWidth))
+        term.setCursorPos(fieldX, 11)
+        term.write(description:sub(1, inputWidth))
+        if focusedField == 3 and showCursor and #description then
+            term.write("_")
+        end
+    end
+
+    drawFieldContent()
+
+    local timer = os.startTimer(0.5)
+
+    while true do
+        local event, param1, x, y = os.pullEvent()
+
+        if event == "mouse_click" then
+            if x <= menuWidth then
+                for i, btn in ipairs(buttons) do
+                    if y == 2 then
+                        listApps()
+                        return
+                    elseif y == 4 then
+                        if authorized then
+                            drawUploadPage()
+                            return
+                        else
+                            drawLoginPage()
+                            return
+                        end
+                    elseif y == 6 then
+                        if authorized then
+                            SpeedOS.Close()
+                            return
+                        else
+                            drawRegisterPage()
+                            return
+                        end
+                    elseif y == 8 and not authorized then
+                        SpeedOS.Close()
+                    end
+                end
+            end
+
+            if y == 5 then
+                focusedField = 1
+            elseif y == 8 then
+                focusedField = 2
+            elseif y == 11 then
+                focusedField = 3
+            elseif x >= buttonX and x < buttonX + buttonWidth and y == buttonY then
+                if imya and parol then
+                    if string.find(filePath, ".program") then
+                        if fs.exists(filePath) and fs.isDir(filePath) then
+                            pkger.pack(filePath, "Programs/AppMarket.program/.cache/archive")
+                            fileData_ = fs.open("Programs/AppMarket.program/.cache/archive", "r")
+                            fileData = fileData_.readAll()
+                            fileData_.close()
+
+                            uploadApp(imya, parol, appName, fileData, description)
+                        else
+                            windows.error("Program not found!")
+                            drawUploadPage()
+                        end
+                    else
+                        windows.error("Not valid program type!")
+                        drawUploadPage()
+                    end
+                else
+                    windows.error("You are not authorized!")
+                    drawLoginPage()
+                end
+                return
+            end
+            drawFieldContent()
+        elseif event == "char" then
+            if focusedField == 1 and #appName then
+                appName = appName .. param1
+            elseif focusedField == 2 and #filePath then
+                filePath = filePath .. param1
+            elseif focusedField == 3 and #description then
+                description = description .. param1
+            end
+            drawFieldContent()
+        elseif event == "key" then
+            if param1 == keys.backspace then
+                if focusedField == 1 and #appName > 0 then
+                    appName = appName:sub(1, -2)
+                elseif focusedField == 2 and #filePath > 0 then
+                    filePath = filePath:sub(1, -2)
+                elseif focusedField == 3 and #description > 0 then
+                    description = description:sub(1, -2)
+                end
+                drawFieldContent()
+            end
+        elseif event == "timer" and param1 == timer then
+            showCursor = not showCursor
+            drawFieldContent()
+            timer = os.startTimer(0.5)
+        end
+    end
+end
+
+
+function drawLoginPage()
+    term.setBackgroundColor(colors.white)
+    term.clear()
+
+    local buttons, menuWidth = drawMenu()
+
+    local width, height = term.getSize()
+    local inputWidth = 20
+    local fieldX = menuWidth + math.floor((width - menuWidth - inputWidth) / 2)
+
+    term.setBackgroundColor(colors.white)
+    term.setTextColor(colors.black)
+    term.setCursorPos(menuWidth + 2, 2)
+    term.write("Login")
+
+    term.setCursorPos(fieldX, 4)
+    term.write("Username:")
+
+    term.setBackgroundColor(colors.lightGray)
+    term.setCursorPos(fieldX, 5)
+    term.write(string.rep(" ", inputWidth))
+
+    term.setBackgroundColor(colors.white)
+    term.setCursorPos(fieldX, 7)
+    term.write("Password:")
+
+    term.setBackgroundColor(colors.lightGray)
+    term.setCursorPos(fieldX, 8)
+    term.write(string.rep(" ", inputWidth))
+
+    local buttonWidth = 12
+    local buttonX = 2 + math.floor((width + menuWidth - buttonWidth) / 2)
+    local buttonY = 10
+    term.setBackgroundColor(colors.lightGray)
+    term.setTextColor(colors.black)
+    term.setCursorPos(buttonX, buttonY)
+    term.write(" Login ")
+
+    local username = ""
+    local password = ""
+    local focusedField = 1
+    local showCursor = true
+
+    local function drawFieldContent()
+        term.setCursorPos(fieldX, 5)
+        term.setBackgroundColor(colors.lightGray)
+        term.setTextColor(colors.black)
+        term.write(string.rep(" ", inputWidth))
+        term.setCursorPos(fieldX, 5)
+        term.write(username:sub(1, inputWidth))
+        if focusedField == 1 and showCursor and #username then
+            term.write("_")
+        end
+
+        term.setCursorPos(fieldX, 8)
+        term.write(string.rep(" ", inputWidth))
+        term.setCursorPos(fieldX, 8)
+        term.write(string.rep("*", #password))
+        if focusedField == 2 and showCursor and #password then
+            term.write("_")
+        end
+    end
+
+    drawFieldContent()
+
+    local timer = os.startTimer(0.5)
+
+    while true do
+        local event, param1, x, y = os.pullEvent()
+
+        if event == "mouse_click" then
+            if x <= menuWidth then
+                for i, btn in ipairs(buttons) do
+                    if y == 2 then
+                        listApps()
+                        return
+                    elseif y == 4 then
+                        if authorized then
+                            drawUploadPage()
+                            return
+                        else
+                            drawLoginPage()
+                            return
+                        end
+                    elseif y == 6 then
+                        if authorized then
+                            SpeedOS.Close()
+                            return
+                        else
+                            drawRegisterPage()
+                            return
+                        end
+                    elseif y == 8 and not authorized then
+                        term.clear()
+                        print("xyu")
+                        SpeedOS.Close()
+                    end
+                end
+            end
+
+            if y == 5 then
+                focusedField = 1 
+            elseif y == 8 then
+                focusedField = 2
+            elseif x >= buttonX and x < buttonX + buttonWidth and y == buttonY then
+                if login(username, password) then
+                    imya, parol = username, password
+                    authorized = true
+                    listApps()
+                end
+                return
+            end
+            drawFieldContent()
+        elseif event == "char" then
+            if focusedField == 1 and #username then
+                username = username .. param1
+            elseif focusedField == 2 and #password then
+                password = password .. param1
+            end
+            drawFieldContent()
+        elseif event == "key" then
+            if param1 == keys.backspace then
+                if focusedField == 1 and #username > 0 then
+                    username = username:sub(1, -2)
+                elseif focusedField == 2 and #password > 0 then
+                    password = password:sub(1, -2)
+                end
+                drawFieldContent()
+            end
+        elseif event == "timer" and param1 == timer then
+            showCursor = not showCursor
+            drawFieldContent()
+            timer = os.startTimer(0.5)
+        end
+    end
+end
+
+function login(username, password)
+    local params = "username=" .. username .. "&password=" .. password
+    local response = http.post("http://localhost:5000/login", params)
+
+    if response then
+        local body = response.readAll()
+        response.close()
+
+        if body == "Login successful!" then
+            return true
+        else
+            return false
+        end
+    else
+        windows.error("Invalid username/password!")
+        drawLoginPage()
+        return false
+    end
+end
+
+function drawRegisterPage()
+    term.setBackgroundColor(colors.white)
+    term.clear()
+
+    local buttons, menuWidth = drawMenu()
+
+    local width, height = term.getSize()
+    local inputWidth = 20
+    local fieldX = menuWidth + math.floor((width - menuWidth - inputWidth) / 2)
+
+    term.setBackgroundColor(colors.white)
+    term.setTextColor(colors.black)
+    term.setCursorPos(menuWidth + 2, 2)
+    term.write("Register")
+
+    term.setCursorPos(fieldX, 4)
+    term.write("Username:")
+
+    term.setBackgroundColor(colors.lightGray)
+    term.setCursorPos(fieldX, 5)
+    term.write(string.rep(" ", inputWidth))
+
+    term.setBackgroundColor(colors.white)
+    term.setCursorPos(fieldX, 7)
+    term.write("Password:")
+
+    term.setBackgroundColor(colors.lightGray)
+    term.setCursorPos(fieldX, 8)
+    term.write(string.rep(" ", inputWidth))
+
+    term.setBackgroundColor(colors.white)
+    term.setCursorPos(fieldX, 10)
+    term.write("Confirm Password:")
+
+    term.setBackgroundColor(colors.lightGray)
+    term.setCursorPos(fieldX, 11)
+    term.write(string.rep(" ", inputWidth))
+
+    local buttonWidth = 12
+    local buttonX = 1 + math.floor((width + menuWidth - buttonWidth) / 2)
+    local buttonY = 13
+    term.setBackgroundColor(colors.lightGray)
+    term.setTextColor(colors.black)
+    term.setCursorPos(buttonX, buttonY)
+    term.write(" Register ")
+
+    local username = ""
+    local password = ""
+    local confirmPassword = ""
+    local focusedField = 1
+    local showCursor = true
+
+    local function drawFieldContent()
+        term.setCursorPos(fieldX, 5)
+        term.setBackgroundColor(colors.lightGray)
+        term.setTextColor(colors.black)
+        term.write(string.rep(" ", inputWidth))
+        term.setCursorPos(fieldX, 5)
+        term.write(username:sub(1, inputWidth))
+        if focusedField == 1 and showCursor and #username then
+            term.write("_")
+        end
+
+        term.setCursorPos(fieldX, 8)
+        term.write(string.rep(" ", inputWidth))
+        term.setCursorPos(fieldX, 8)
+        term.write(string.rep("*", #password))
+        if focusedField == 2 and showCursor and #password then
+            term.write("_")
+        end
+
+        term.setCursorPos(fieldX, 11)
+        term.write(string.rep(" ", inputWidth))
+        term.setCursorPos(fieldX, 11)
+        term.write(string.rep("*", #confirmPassword))
+        if focusedField == 3 and showCursor and #confirmPassword then
+            term.write("_")
+        end
+    end
+
+    drawFieldContent()
+
+    local timer = os.startTimer(0.5)
+
+    while true do
+        local event, param1, x, y = os.pullEvent()
+
+        if event == "mouse_click" then
+            if x <= menuWidth then
+                for i, btn in ipairs(buttons) do
+                    if y == 2 then
+                        listApps()
+                        return
+                    elseif y == 4 then
+                        drawUploadPage()
+                        return
+                    elseif y == 6 then
+                        SpeedOS.Close()
+                        return
+                    end
+                end
+            end
+
+            if y == 5 then
+                focusedField = 1
+            elseif y == 8 then
+                focusedField = 2
+            elseif y == 11 then
+                focusedField = 3
+            elseif x >= buttonX and x < buttonX + buttonWidth and y == buttonY then
+                if password == confirmPassword then
+                    local response = http.post(server_addr .. "/register", "username=" .. username .. "&password=" .. password)
+                    if response then
+                        local responseBody = response.readAll()
+                        response.close()
+
+                        if responseBody == "User registered successfully!" then
+                            imya, parol = username, password
+                            authorized = true
+                            listApps()
+                        else
+                            windows.error("Error: " .. responseBody)
+                        end
+                    else
+                        windows.error("Username already taken! Or fields are empty.")
+                        drawRegisterPage()
+                    end
+                else
+                    windows.error("Passwords do not match")
+                end
+
+                return
+            end
+            drawFieldContent()
+        elseif event == "char" then
+            if focusedField == 1 and #username then
+                username = username .. param1
+            elseif focusedField == 2 and #password then
+                password = password .. param1
+            elseif focusedField == 3 and #confirmPassword then
+                confirmPassword = confirmPassword .. param1
+            end
+            drawFieldContent()
+        elseif event == "key" then
+            if param1 == keys.backspace then
+                if focusedField == 1 and #username > 0 then
+                    username = username:sub(1, -2)
+                elseif focusedField == 2 and #password > 0 then
+                    password = password:sub(1, -2)
+                elseif focusedField == 3 and #confirmPassword > 0 then
+                    confirmPassword = confirmPassword:sub(1, -2)
+                end
+                drawFieldContent()
+            end
+        elseif event == "timer" and param1 == timer then
+            showCursor = not showCursor
+            drawFieldContent()
+            timer = os.startTimer(0.5)
+        end
+    end
+end
+
+drawLoginPage()
