@@ -39,7 +39,7 @@ SpeedOS.LoadAPI("SpeedAPI/config")
 local messages = {} -- массив с сообщениями
 local serverHost = false -- хостит ли наш пользователь канал?
 local channelOP = 0 -- айдишник оператора канала. пока что - 0.
-local x,y = 51, 17 -- размер экрана
+local x, y = 51, 17 -- размер экрана
 local serverOPs = {}
 local banList = {}
 local msgI = 3
