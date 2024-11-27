@@ -20,7 +20,7 @@ if sDest=="root" then
 end
 sDest = sDest .. %@2
 local tPackage=pkg
-makeFolder(sDest,tPackage)
+makeFolder("Programs/"..sDest,tPackage)
 sleep(0.01)
 SpeedOS.Close()
 ]]
