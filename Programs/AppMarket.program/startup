@@ -177,13 +177,24 @@ function drawAppPage(app)
     term.setCursorPos(sidebarX + 1, 3)
     term.setTextColor(colors.lightGray)
     term.write(app.size .. " bytes")
-    term.setCursorPos(sidebarX + 1, 5)
+
+    local sizeLines = wrapText(app.size .. " bytes", sidebarWidth - 2)
+
+    local sizeY = 3
+    for _, line in ipairs(sizeLines) do
+        term.setCursorPos(sidebarX + 1, sizeY)
+        term.setTextColor(colors.lightGray)
+        term.write(line)
+        sizeY = sizeY + 1
+    end
+
+    term.setCursorPos(sidebarX + 1, sizeY + 1)
     term.setTextColor(colors.white)
     term.write("Uploader:")
 
     local uploaderLines = wrapText(app.uploader, sidebarWidth - 2)
 
-    local uploaderY = 6
+    local uploaderY = sizeY + 2
     for _, line in ipairs(uploaderLines) do
         term.setCursorPos(sidebarX + 1, uploaderY)
         term.setTextColor(colors.lightGray)
