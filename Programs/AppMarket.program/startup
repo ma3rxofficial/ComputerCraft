@@ -216,9 +216,20 @@ function drawAppPage(app)
     term.setTextColor(colors.lightGray)
     term.write(app.date)
 
+    if fs.exists("Programs/"..app.name2..".program") then
+        Drawing.DrawImage(menuWidth + 2, 2, Drawing.LoadImage("Programs/"..app.name2..".program".."/icon"), 4, 3)
+        Drawing.DrawBuffer()  
+    elseif fs.exists("Programs/Games/"..app.name2..".program") then
+        Drawing.DrawImage(menuWidth + 2, 2, Drawing.LoadImage("Programs/Games/"..app.name2..".program".."/icon"), 4, 3)
+        Drawing.DrawBuffer()  
+    else
+        Drawing.DrawImage(menuWidth + 2, 2, Drawing.LoadImage("Programs/AppMarket.program/Resources/no_icon.nft"), 4, 3)
+        Drawing.DrawBuffer()  
+    end
+
     term.setBackgroundColor(colors.white)
     term.setTextColor(colors.black)
-    term.setCursorPos(menuWidth + 2, 2)
+    term.setCursorPos(menuWidth + 7, 2)
     term.write(app.name2)
 
     term.setTextColor(colors.lightGray)
@@ -235,7 +246,7 @@ function drawAppPage(app)
     end
     table.insert(descriptionLines, currentLine)
 
-    local yDescStart = 4
+    local yDescStart = 6
     for i, line in ipairs(descriptionLines) do
         term.setCursorPos(menuWidth + 2, yDescStart + i - 1)
         term.write(line)
