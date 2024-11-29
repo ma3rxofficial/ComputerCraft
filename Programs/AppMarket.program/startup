@@ -341,19 +341,40 @@ function listApps()
                         local xStart = menuWidth + column * columnWidth + 2
                         local yStart = row * rowHeight + 2
 
-                        term.setCursorPos(xStart, yStart)
+                        for y = yStart, yStart + 2 do
+                            term.setCursorPos(xStart, y)
+                            term.setBackgroundColor(colors.lightGray)
+                            zov1, zov2 = term.getCursorPos()
+
+                            if y == yStart then
+                                SpeedOS.LoadAPI("System/API/Drawing")
+
+                                if fs.exists("Programs/"..app.name2..".program") then
+                                    Drawing.DrawImage(zov1, zov2, Drawing.LoadImage("Programs/"..app.name2..".program".."/icon"), 4, 3)
+                                    Drawing.DrawBuffer()  
+                                elseif fs.exists("Programs/Games/"..app.name2..".program") then
+                                    Drawing.DrawImage(zov1, zov2, Drawing.LoadImage("Programs/Games/"..app.name2..".program".."/icon"), 4, 3)
+                                    Drawing.DrawBuffer()  
+                                else
+                                    Drawing.DrawImage(zov1, zov2, Drawing.LoadImage("Programs/AppMarket.program/Resources/no_icon.nft"), 4, 3)
+                                    Drawing.DrawBuffer()  
+                                end
+                            end
+                        end
+
+                        term.setCursorPos(xStart + 6, yStart)
                         term.setBackgroundColor(colors.white)
                         term.setTextColor(colors.black)
                         term.write(app.name2)
 
-                        term.setCursorPos(xStart, yStart + 1)
+                        term.setCursorPos(xStart + 6, yStart + 1)
                         term.setBackgroundColor(colors.white)
                         term.setTextColor(colors.lightGray)
                         term.write("(" .. app.size .. " bytes)")
 
-                        term.setCursorPos(xStart, yStart + 2)
+                        term.setCursorPos(xStart + 6, yStart + 2)
                         term.setBackgroundColor(colors.white)
-                        local maxDescWidth = columnWidth - 2
+                        local maxDescWidth = columnWidth - 8
                         local description = app.description or ""
                         if #description > maxDescWidth then
                             description = description:sub(1, maxDescWidth - 3) .. "..."
