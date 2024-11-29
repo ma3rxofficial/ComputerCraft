@@ -12,6 +12,46 @@ local server_addr = "http://3.67.161.133:11033"
 
 fs = SpeedOS.FS
 
+function removeEmptyLines(inputFile, outputFile)
+    if not fs.exists(inputFile) then
+        print("Input file not found: " .. inputFile)
+        return
+    end
+
+    local file = fs.open(inputFile, "r")
+    local lines = file.readAll()
+    file.close()
+
+    local cleanedLines = {}
+    for line in lines:gmatch("[^\r\n]+") do
+        if line:match("%S") then
+            table.insert(cleanedLines, line)
+        end
+    end
+
+    local result = table.concat(cleanedLines, "\n")
+
+    local outFile = fs.open(outputFile, "w")
+    outFile.write(result)
+    outFile.close()
+end
+
+function removeEmptyLines_string(inputString, outputFile)
+
+    local cleanedLines = {}
+    for line in inputString:gmatch("[^\r\n]+") do
+        if line:match("%S") then
+            table.insert(cleanedLines, line)
+        end
+    end
+
+    local result = table.concat(cleanedLines, "\n")
+
+    local outFile = fs.open(outputFile, "w")
+    outFile.write(result)
+    outFile.close()
+end
+
 function downloadApp(appName, save_as)
     local response = http.get(server_addr .. "/apps/" .. tostring(appName))
     if response then
@@ -216,12 +256,18 @@ function drawAppPage(app)
     term.setTextColor(colors.lightGray)
     term.write(app.date)
 
-    if fs.exists("Programs/"..app.name2..".program") then
-        Drawing.DrawImage(menuWidth + 2, 2, Drawing.LoadImage("Programs/"..app.name2..".program".."/icon"), 4, 3)
+    app_icon_url = server_addr .. "/icons/" .. app.name
+    app_response = http.get(app_icon_url)
+
+    if app_response then
+        app_icon = app_response.readAll()
+        removeEmptyLines_string(app_icon, "Programs/AppMarket.program/.cache/"..app.name..".nft")
+    end
+
+    if fs.exists("Programs/AppMarket.program/.cache/"..app.name..".nft") then
+        Drawing.DrawImage(menuWidth + 2, 2, Drawing.LoadImage("Programs/AppMarket.program/.cache/"..app.name..".nft"), 4, 3)
         Drawing.DrawBuffer()  
-    elseif fs.exists("Programs/Games/"..app.name2..".program") then
-        Drawing.DrawImage(menuWidth + 2, 2, Drawing.LoadImage("Programs/Games/"..app.name2..".program".."/icon"), 4, 3)
-        Drawing.DrawBuffer()  
+        fs.delete("Programs/AppMarket.program/.cache/"..app.name..".nft")
     else
         Drawing.DrawImage(menuWidth + 2, 2, Drawing.LoadImage("Programs/AppMarket.program/Resources/no_icon.nft"), 4, 3)
         Drawing.DrawBuffer()  
@@ -352,6 +398,14 @@ function listApps()
                         local xStart = menuWidth + column * columnWidth + 2
                         local yStart = row * rowHeight + 2
 
+                        app_icon_url = server_addr .. "/icons/" .. app.name
+                        app_response = http.get(app_icon_url)
+
+                        if app_response then
+                            app_icon = app_response.readAll()
+                            removeEmptyLines_string(app_icon, "Programs/AppMarket.program/.cache/"..app.name..".nft")
+                        end
+
                         for y = yStart, yStart + 2 do
                             term.setCursorPos(xStart, y)
                             term.setBackgroundColor(colors.lightGray)
@@ -360,15 +414,10 @@ function listApps()
                             if y == yStart then
                                 SpeedOS.LoadAPI("System/API/Drawing")
 
-                                if fs.exists("Programs/"..app.name2..".program") then
-                                    Drawing.DrawImage(zov1, zov2, Drawing.LoadImage("Programs/"..app.name2..".program".."/icon"), 4, 3)
+                                if fs.exists("Programs/AppMarket.program/.cache/"..app.name..".nft") then
+                                    Drawing.DrawImage(zov1, zov2, Drawing.LoadImage("Programs/AppMarket.program/.cache/"..app.name..".nft"), 4, 3)
                                     Drawing.DrawBuffer()  
-                                elseif fs.exists("Programs/Games/"..app.name2..".program") then
-                                    Drawing.DrawImage(zov1, zov2, Drawing.LoadImage("Programs/Games/"..app.name2..".program".."/icon"), 4, 3)
-                                    Drawing.DrawBuffer()  
-                                else
-                                    Drawing.DrawImage(zov1, zov2, Drawing.LoadImage("Programs/AppMarket.program/Resources/no_icon.nft"), 4, 3)
-                                    Drawing.DrawBuffer()  
+                                    fs.delete("Programs/AppMarket.program/.cache/"..app.name..".nft")
                                 end
                             end
                         end
