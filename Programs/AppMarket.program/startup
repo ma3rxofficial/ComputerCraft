@@ -3,6 +3,7 @@ if SpeedOS then
     SpeedOS.ToolBarTextColour = colours.black
 end
 
+SpeedOS.LoadAPI("System/API/Drawing")
 SpeedOS.LoadAPI("SpeedAPI/windows")
 SpeedOS.LoadAPI("Programs/AppMarket.program/Resources/pkger")
 
@@ -412,8 +413,6 @@ function listApps()
                             zov1, zov2 = term.getCursorPos()
 
                             if y == yStart then
-                                SpeedOS.LoadAPI("System/API/Drawing")
-
                                 if fs.exists("Programs/AppMarket.program/.cache/"..app.name..".nft") then
                                     Drawing.DrawImage(zov1, zov2, Drawing.LoadImage("Programs/AppMarket.program/.cache/"..app.name..".nft"), 4, 3)
                                     Drawing.DrawBuffer()  
