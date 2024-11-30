@@ -1,5 +1,0 @@
-term.clear()
-term.setCursorPos(1,1)
-print("Which file to edit?")
-filename = read()
-shell.run("edit",filename)

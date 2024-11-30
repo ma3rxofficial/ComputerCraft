@@ -1,7 +1,0 @@
-local tArgs = { ... }
-term.clear()
-term.setCursorPos(1,1)
-print("What option do you wish to use with " .. tArgs[1])
-filename = read()
-print(shell.run(tArgs[1], filename))
-os.pullEvent()
