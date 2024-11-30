@@ -283,7 +283,14 @@ function drawAppPage(app)
     local descriptionLines = {}
     local descLineWidth = sidebarX - menuWidth - 4
     local currentLine = ""
-    for word in app.description:gmatch("%S+") do
+
+    local maxDesc2Width = 200
+    local description2 = app.description
+    if #description2 > maxDesc2Width then
+        description2 = description2:sub(1, maxDesc2Width - 3) .. "..."
+    end
+
+    for word in description2:gmatch("%S+") do
         if #currentLine + #word + 1 <= descLineWidth then
             currentLine = currentLine .. (currentLine == "" and "" or " ") .. word
         else
