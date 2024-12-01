@@ -43,7 +43,7 @@ local x, y = 51, 17 -- размер экрана
 local serverOPs = {} -- массив с операторами канала
 local banList = {} -- массив со списком банов (для оператора канала)
 local msgI = 3 -- начальная длина сообщения
-local sBars = ""
+local sBars = "" -- хуй знает
 local pathToConfig = "System/Chat.settings"
 local showIDs = SpeedText.stringToBoolean(config.read(pathToConfig, "show user IDs"))
 
