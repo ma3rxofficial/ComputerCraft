@@ -45,7 +45,7 @@ local banList = {} -- массив со списком банов (для опе
 local msgI = 3 -- начальная длина сообщения
 local sBars = "" -- хуй знает
 local pathToConfig = "System/Chat.settings" -- путь к файлу настроек
-local showIDs = SpeedText.stringToBoolean(config.read(pathToConfig, "show user IDs"))
+local showIDs = SpeedText.stringToBoolean(config.read(pathToConfig, "show user IDs")) -- настройка для показа ID пользователей на канале.
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
