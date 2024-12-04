@@ -55,6 +55,8 @@ if not peripheral.find("modem") then
 	SpeedOS.Close()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 rednet.open(peripheral.find("modem"))
 
 for i=1, 50 do
