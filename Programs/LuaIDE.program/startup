@@ -245,7 +245,7 @@ term.setTextColor(colors[t.textColor])
 term.setBackgroundColor(colors[t.background])
 term.clear()
 term.setBackgroundColor(colors[t.backgroundHighlight])
-for e=2,4 do term.setCursorPos(1,e)term.clearLine()end
+for e=2,4 do term.setCursorPos(1,e)term.clearLine() term.setCursorPos(1,e)end
 term.setCursorPos(3,3)
 term.write(e)
 end
@@ -822,6 +822,7 @@ local function j()
 term.setBackgroundColor(colors[t.backgroundHighlight])
 term.setCursorPos(2,1)
 term.clearLine()
+term.setCursorPos(2,1)
 term.write("Line: ")
 local e=p({visibleLength=n-2})
 local e=tonumber(e)
@@ -829,6 +830,7 @@ if e and e>0 then return e
 else
 term.setCursorPos(2,1)
 term.clearLine()
+term.setCursorPos(2,1)
 term.write("Not a line number!")
 sleep(1.6)
 return nil
@@ -845,6 +847,7 @@ term.setCursorBlink(false)
 term.setBackgroundColor(colors[t.backgroundHighlight])
 term.setCursorPos(2,1)
 term.clearLine()
+term.setCursorPos(2,1)
 term.write(a[e])
 while true do
 local o,t,o,o=os.pullEvent("key")
@@ -852,11 +855,13 @@ if t==203 then
 e=math.max(1,e-1)
 term.setCursorPos(2,1)
 term.clearLine()
+term.setCursorPos(2,1)
 term.write(a[e])
 elseif t==205 then
 e=math.min(#a,e+1)
 term.setCursorPos(2,1)
 term.clearLine()
+term.setCursorPos(2,1)
 term.write(a[e])
 elseif t==28 then
 if e==1 then d=s.lua
@@ -988,6 +993,7 @@ term.setCursorBlink(false)
 term.setCursorPos(2,1)
 term.setBackgroundColor(colors[t.backgroundHighlight])
 term.clearLine()
+term.setCursorPos(2,1)
 term.write(e)
 sleep(1.6)
 return a
@@ -1111,6 +1117,7 @@ term.setCursorPos(1,1)
 term.setTextColor(colors[t.textColor])
 term.setBackgroundColor(colors[t.backgroundHighlight])
 term.clearLine()
+term.setCursorPos(1,1)
 local e=0
 for a,t in pairs(_)do
 term.setCursorPos(3+e,1)
