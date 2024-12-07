@@ -48,6 +48,7 @@ local pathToConfig = "System/Chat.settings" -- путь к файлу настр
 local showIDs = SpeedText.stringToBoolean(config.read(pathToConfig, "show user IDs")) -- настройка для показа ID пользователей на канале.
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Информирование пользователя о том, что этой программе нужен модем для работы.
 
 if not peripheral.find("modem") then
 	windows.clearScreen(colors.cyan)
