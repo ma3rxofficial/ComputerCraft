@@ -996,11 +996,25 @@ function drawRegisterPage()
                         listApps()
                         return
                     elseif y == 4 then
-                        drawUploadPage()
-                        return
+                        if authorized then
+                            drawUploadPage()
+                            return
+                        else
+                            drawLoginPage()
+                            return
+                        end
                     elseif y == 6 then
+                        if authorized then
+                            SpeedOS.Close()
+                            return
+                        else
+                            drawRegisterPage()
+                            return
+                        end
+                    elseif y == 8 and not authorized then
+                        term.clear()
+                        print("xyu")
                         SpeedOS.Close()
-                        return
                     end
                 end
             end
