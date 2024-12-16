@@ -73,7 +73,7 @@ end
 
 function Start()
 	-- СПИЗДИЛ
-	local function cPrint(text)
+	local function cPrint(text) -- зачем - не знаю. можно было просто SpeedText.cPrint
 	   local x,y = 51, 17
 	   x2,y2 = term.getCursorPos()
 	   term.setCursorPos(math.ceil((x / 2) - (text:len() / 2)), y2)
