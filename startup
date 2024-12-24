@@ -24,7 +24,7 @@ local tAPIsLoading = {} -- хранилище подгружаемых API
 
 for _, value in pairs(install_files) do
   if fs.exists(value) then
-    fs.delete(value)
+    fs.delete(value) -- да
   end
 end
 
