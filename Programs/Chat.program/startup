@@ -82,7 +82,7 @@ function Start()
 
 	function newIRCREAD( _sReplaceChar, _tHistory ) -- принципиально новая
 		term.setTextColor(colors.lightGray)
-		term.setCursorBlink( true)
+		term.setCursorBlink(true)
 
 		local sLine = ""
 		local nHistoryPos = nil
