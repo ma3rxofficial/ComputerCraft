@@ -84,7 +84,7 @@ function Start()
 		term.setTextColor(colors.lightGray)
 		term.setCursorBlink(true)
 
-		local sLine = ""
+		local sLine = "" -- изначальная строка
 		local nHistoryPos = nil
 		local nPos = 0
 		if _sReplaceChar then
