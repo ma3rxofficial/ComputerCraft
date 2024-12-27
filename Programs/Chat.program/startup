@@ -85,7 +85,7 @@ function Start()
 		term.setCursorBlink(true)
 
 		local sLine = "" -- изначальная строка
-		local nHistoryPos = nil
+		local nHistoryPos = nil -- забыл
 		local nPos = 0
 		if _sReplaceChar then
 			_sReplaceChar = string.sub( _sReplaceChar, 1, 1 )
