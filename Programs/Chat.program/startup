@@ -80,7 +80,7 @@ function Start()
 	   write(text.. "\n")
 	end
 
-	function newIRCREAD( _sReplaceChar, _tHistory ) -- принципиально новая
+	function newIRCREAD(_sReplaceChar, _tHistory ) -- принципиально новая
 		term.setTextColor(colors.lightGray)
 		term.setCursorBlink(true)
 
