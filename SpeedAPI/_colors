@@ -13,7 +13,7 @@ lime = 32 -- лаймовый (светло-зелёный)
 pink = 64 -- розовый
 
 gray = 128 -- серый
-grey = gray
+grey = gray -- сЕрый
 
 lightGray = 256
 lightGrey = lightGray
