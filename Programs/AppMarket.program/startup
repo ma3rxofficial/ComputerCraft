@@ -9,7 +9,7 @@ SpeedOS.LoadAPI("Programs/AppMarket.program/Resources/pkger")
 
 local imya, parol
 local authorized = false
-local server_addr = "http://3.67.161.133:11033"
+local server_addr = "http://3.130.81.8:5000"
 
 fs = SpeedOS.FS
 
