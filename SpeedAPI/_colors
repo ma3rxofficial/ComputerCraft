@@ -15,7 +15,7 @@ pink = 64 -- розовый
 gray = 128 -- серый
 grey = gray -- сЕрый
 
-lightGray = 256
+lightGray = 256 -- cветло-серый
 lightGrey = lightGray
 
 cyan = 512
