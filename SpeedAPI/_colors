@@ -16,7 +16,7 @@ gray = 128 -- серый
 grey = gray -- сЕрый
 
 lightGray = 256 -- cветло-серый
-lightGrey = lightGray
+lightGrey = lightGray -- светло-серый светло-серый
 
 cyan = 512
 purple = 1024
