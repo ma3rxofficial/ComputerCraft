@@ -18,7 +18,7 @@ grey = gray -- сЕрый
 lightGray = 256 -- cветло-серый
 lightGrey = lightGray -- светло-серый светло-серый
 
-cyan = 512
+cyan = 512 -- голубой
 purple = 1024
 blue = 2048
 brown = 4096
