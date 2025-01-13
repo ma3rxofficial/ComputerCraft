@@ -21,7 +21,7 @@
 -- Меняем цвет верхнего тулбара
 
 if SpeedOS then
-	SpeedOS.ToolBarColour = colours.grey
+	SpeedOS.ToolBarColour = colours.grey -- ебал
 	SpeedOS.ToolBarTextColour = colours.white
 end
 
