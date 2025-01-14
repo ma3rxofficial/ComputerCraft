@@ -9,7 +9,18 @@ SpeedOS.LoadAPI("Programs/AppMarket.program/Resources/pkger")
 
 local imya, parol
 local authorized = false
-local server_addr = "http://3.130.81.8:5000"
+
+windows.clearScreen(colors.white)
+
+get_request = http.get("https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/refs/heads/main/Programs/AppMarket.program/Resources/server_ip.dat")
+
+if not get_request then
+    windows.clearScreen(colors.cyan)
+    windows.error("Can't reach server adress, can't start AppMarket.")
+    SpeedOS.Close()
+end
+
+local server_addr = "http://"..get_request.readAll()
 
 fs = SpeedOS.FS
 
