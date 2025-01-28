@@ -369,196 +369,244 @@ function drawAppPage(app)
     end
 end
 
-
 function listApps()
     term.setBackgroundColor(colors.white)
     term.clear()
 
     local buttons, menuWidth = drawMenu()
 
-    local response = http.get(server_addr .. "/apps")
-    if response then
-        local responseText = response.readAll()
-        response.close()
+    local searchQuery = ""
+    local cursorVisible = true
+    local width, height = term.getSize()
+    local searchBarHeight = 3 -- Высота строки поиска
+    local maxSearchLength = width - menuWidth - 10
+    local cursorPos = 1
 
-        local func = loadstring(responseText)
-        if func then
-            local apps = func()
-            if apps and type(apps) == "table" then
-                term.setBackgroundColor(colors.white)
-                term.setTextColor(colors.black)
+    -- Отрисовка строки поиска
+    local function drawSearchBar()
+        term.setBackgroundColor(colors.lightGray)
+        term.setTextColor(colors.black)
+        term.setCursorPos(menuWidth + 2, 2)
+        term.write(string.rep(" ", width - menuWidth - 10))
+        term.setCursorPos(menuWidth + 3, 2)
 
-                local width, height = term.getSize()
-                local columns = 2
-                local columnWidth = math.floor((width - menuWidth) / columns)
-                local rowHeight = 5
-                local rowsPerPage = math.floor(height / rowHeight)
-                local appsPerPage = rowsPerPage * columns
-                local currentPage = 1
-                local totalPages = math.ceil(#apps / appsPerPage)
+        local displayQuery = searchQuery:sub(cursorPos, cursorPos + maxSearchLength - 2)
+        term.write(displayQuery)
 
-                local function drawApps()
-                    term.setBackgroundColor(colors.white)
-                    term.clear()
-                    drawMenu()
+        if cursorVisible then
+            term.setCursorPos(menuWidth + 2 + math.min(#displayQuery, #searchQuery) + 1, 2)
+            term.setTextColor(colors.black)
+            term.write("_")
+        end
 
-                    term.setBackgroundColor(colors.white)
-                    term.setTextColor(colors.black)
+        term.setBackgroundColor(colors.lightGray)
+        term.setTextColor(colors.black)
+        term.setCursorPos(width - 7, 2)
+        term.write("Search")
+    end
 
-                    local startIndex = (currentPage - 1) * appsPerPage + 1
-                    local endIndex = math.min(startIndex + appsPerPage - 1, #apps)
+    local function drawApps()
+        term.setBackgroundColor(colors.white)
+        term.clear()
+        drawMenu()
+        drawSearchBar()
 
-                    for index = startIndex, endIndex do
-                        local app = apps[index]
-                        local relativeIndex = index - startIndex + 1
-                        local column = (relativeIndex - 1) % columns
-                        local row = math.floor((relativeIndex - 1) / columns)
+        local response = http.get(server_addr .. "/search=" .. textutils.urlEncode(searchQuery))
+        if response then
+            local responseText = response.readAll()
+            response.close()
 
-                        local xStart = menuWidth + column * columnWidth + 2
-                        local yStart = row * rowHeight + 2
-
-                        app_icon_url = server_addr .. "/icons/" .. app.name
-                        app_response = http.get(app_icon_url)
-
-                        if app_response then
-                            app_icon = app_response.readAll()
-                            removeEmptyLines_string(app_icon, "Programs/AppMarket.program/.cache/"..app.name..".nft")
-                        end
-
-                        for y = yStart, yStart + 2 do
-                            term.setCursorPos(xStart, y)
-                            term.setBackgroundColor(colors.lightGray)
-                            zov1, zov2 = term.getCursorPos()
-
-                            if y == yStart then
-                                if fs.exists("Programs/AppMarket.program/.cache/"..app.name..".nft") then
-                                    Drawing.DrawImage(zov1, zov2, Drawing.LoadImage("Programs/AppMarket.program/.cache/"..app.name..".nft"), 4, 3)
-                                    Drawing.DrawBuffer()  
-                                    fs.delete("Programs/AppMarket.program/.cache/"..app.name..".nft")
-                                end
-                            end
-                        end
-
-                        local maxAppNameWidth = columnWidth - 8
-                        local name2 = app.name2
-                        if #name2 > maxAppNameWidth then
-                            name2 = name2:sub(1, maxAppNameWidth - 3) .. "..."
-                        end
-
-                        term.setCursorPos(xStart + 6, yStart)
-                        term.setBackgroundColor(colors.white)
-                        term.setTextColor(colors.black)
-                        term.write(name2)
-
-                        term.setCursorPos(xStart + 6, yStart + 1)
-                        term.setBackgroundColor(colors.white)
-                        term.setTextColor(colors.lightGray)
-                        term.write("(" .. app.size .. " bytes)")
-
-                        term.setCursorPos(xStart + 6, yStart + 2)
-                        term.setBackgroundColor(colors.white)
-                        local maxDescWidth = columnWidth - 8
-                        local description = app.description or ""
-                        if #description > maxDescWidth then
-                            description = description:sub(1, maxDescWidth - 3) .. "..."
-                        end
-                        term.write(description)
-                    end
-
-                    term.setCursorPos(menuWidth + 2, height)
+            local func = loadstring(responseText)
+            if func then
+                local apps = func()
+                if apps and type(apps) == "table" then
                     term.setBackgroundColor(colors.white)
                     term.setTextColor(colors.black)
-                    term.write("<")
-                    term.setCursorPos(menuWidth + 4, height)
-                    paginator_len = string.len("Page " .. currentPage .. " of " .. totalPages .. " ")
-                    term.write("Page " .. currentPage .. " of " .. totalPages)
-                    term.setCursorPos(menuWidth + 4 + paginator_len, height)
-                    term.write(">")
-                end
 
-                drawApps()
+                    local columns = 2
+                    local columnWidth = math.floor((width - menuWidth) / columns)
+                    local rowHeight = 5
+                    local rowsPerPage = math.floor((height - searchBarHeight - 1) / rowHeight)
+                    local appsPerPage = rowsPerPage * columns + 3
+                    local currentPage = 1
+                    local totalPages = math.ceil(#apps / appsPerPage)
 
-                while true do
-                    local event, button, x, y = os.pullEvent()
+                    local function drawPage()
+                        term.setBackgroundColor(colors.white)
+                        term.clear()
+                        drawMenu()
+                        drawSearchBar()
 
-                    if event == "mouse_click" then
-                        if x <= menuWidth then
-                            for i, btn in ipairs(buttons) do
-                                local btnY = 2 + (i - 1) * 2
-                                if y == 2 then
-                                    listApps()
-                                    return
-                                elseif y == 4 then
-                                    if authorized then
-                                        drawUploadPage()
-                                        return
-                                    else
-                                        drawLoginPage()
-                                        return
-                                    end
-                                elseif y == 6 then
-                                    if authorized then
-                                        term.clear()
-                                        print("xyu")
-                                        SpeedOS.Close()
-                                        return
-                                    else
-                                        drawRegisterPage()
-                                        return
-                                    end
-                                elseif y == 8 and not authorized then
-                                    term.clear()
-                                    print("xyu")
-                                    SpeedOS.Close()
-                                end
-                            end
-                        end
+                        local startIndex = (currentPage - 1) * appsPerPage + 1
+                        local endIndex = math.min(startIndex + appsPerPage - 1, #apps)
 
-                        for index = 1, appsPerPage do
-                            local globalIndex = (currentPage - 1) * appsPerPage + index
-                            if globalIndex > #apps then break end
-
-                            local relativeIndex = index
+                        for index = startIndex, endIndex do
+                            local app = apps[index]
+                            local relativeIndex = index - startIndex + 1
                             local column = (relativeIndex - 1) % columns
                             local row = math.floor((relativeIndex - 1) / columns)
 
                             local xStart = menuWidth + column * columnWidth + 2
-                            local yStart = row * rowHeight + 3
+                            local yStart = searchBarHeight + 1 + row * rowHeight
 
-                            if x >= xStart and x < xStart + columnWidth and y >= yStart and y < yStart + rowHeight then
-                                drawAppPage(apps[globalIndex])
-                                return
+                            app_icon_url = server_addr .. "/icons/" .. app.name
+                            app_response = http.get(app_icon_url)
+
+                            if app_response then
+                                app_icon = app_response.readAll()
+                                removeEmptyLines_string(app_icon, "Programs/AppMarket.program/.cache/" .. app.name .. ".nft")
                             end
+
+                            for y = yStart, yStart + 2 do
+                                term.setCursorPos(xStart, y)
+                                term.setBackgroundColor(colors.lightGray)
+                                zov1, zov2 = term.getCursorPos()
+
+                                if y == yStart then
+                                    if fs.exists("Programs/AppMarket.program/.cache/" .. app.name .. ".nft") then
+                                        Drawing.DrawImage(zov1, zov2, Drawing.LoadImage("Programs/AppMarket.program/.cache/" .. app.name .. ".nft"), 4, 3)
+                                        Drawing.DrawBuffer()
+                                        fs.delete("Programs/AppMarket.program/.cache/" .. app.name .. ".nft")
+                                    end
+                                end
+                            end
+
+                            local maxAppNameWidth = columnWidth - 8
+                            local name2 = app.name2
+                            if #name2 > maxAppNameWidth then
+                                name2 = name2:sub(1, maxAppNameWidth - 3) .. "..."
+                            end
+
+                            term.setCursorPos(xStart + 6, yStart)
+                            term.setBackgroundColor(colors.white)
+                            term.setTextColor(colors.black)
+                            term.write(name2)
+
+                            term.setCursorPos(xStart + 6, yStart + 1)
+                            term.setBackgroundColor(colors.white)
+                            term.setTextColor(colors.lightGray)
+                            term.write("(" .. app.size .. " bytes)")
+
+                            term.setCursorPos(xStart + 6, yStart + 2)
+                            term.setBackgroundColor(colors.white)
+                            local maxDescWidth = columnWidth - 8
+                            local description = app.description or ""
+                            if #description > maxDescWidth then
+                                description = description:sub(1, maxDescWidth - 3) .. "..."
+                            end
+                            term.write(description)
                         end
 
-                        if x >= menuWidth + 2 and x <= menuWidth + 4 and y == height and currentPage > 1 then
-                            currentPage = currentPage - 1
-                            drawApps()
-                        end
+                        term.setCursorPos(menuWidth + 2, height)
+                        term.setBackgroundColor(colors.white)
+                        term.setTextColor(colors.black)
+                        term.write("<")
+                        term.setCursorPos(menuWidth + 4, height)
+                        paginator_len = string.len("Page " .. currentPage .. " of " .. totalPages .. " ")
+                        term.write("Page " .. currentPage .. " of " .. totalPages)
+                        term.setCursorPos(menuWidth + 4 + paginator_len, height)
+                        term.write(">")
+                    end
 
-                        if x >= menuWidth + 4 + paginator_len and x <= menuWidth + width and y == height and currentPage < totalPages then
-                            currentPage = currentPage + 1
+                    drawPage()
+
+                    while true do
+                        local event, button, x, y = os.pullEvent()
+
+                        if event == "mouse_click" then
+                            if x >= width - 7 and x <= width - 1 and y == 2 then
+                                drawApps()
+                            elseif x >= menuWidth + 2 and x <= menuWidth + 4 and y == height and currentPage > 1 then
+                                currentPage = currentPage - 1
+                                drawPage()
+                            elseif x >= menuWidth + 4 + paginator_len and x <= menuWidth + width and y == height and currentPage < totalPages then
+                                currentPage = currentPage + 1
+                                drawPage()
+                            elseif x <= menuWidth then
+                                for i, btn in ipairs(buttons) do
+                                    local btnY = 2 + (i - 1) * 2
+                                    if y == 2 then
+                                        listApps()
+                                        return
+                                    elseif y == 4 then
+                                        if authorized then
+                                            drawUploadPage()
+                                            return
+                                        else
+                                            drawLoginPage()
+                                            return
+                                        end
+                                    elseif y == 6 then
+                                        if authorized then
+                                            term.clear()
+                                            print("xyu")
+                                            SpeedOS.Close()
+                                            return
+                                        else
+                                            drawRegisterPage()
+                                            return
+                                        end
+                                    elseif y == 8 and not authorized then
+                                        term.clear()
+                                        print("xyu")
+                                        SpeedOS.Close()
+                                    end
+                                end
+                            else
+                                for index = 1, appsPerPage do
+                                    local globalIndex = (currentPage - 1) * appsPerPage + index
+                                    if globalIndex > #apps then break end
+
+                                    local relativeIndex = index
+                                    local column = (relativeIndex - 1) % columns
+                                    local row = math.floor((relativeIndex - 1) / (columns * 3))
+                                    local subRow = math.floor((relativeIndex - 1) % (columns * 3) / columns)
+
+                                    local xStart = menuWidth + column * columnWidth + 2
+                                    local yStart = searchBarHeight + 1 + row * (rowHeight * 3) + subRow * rowHeight
+
+                                    if x >= xStart and x < xStart + columnWidth and y >= yStart and y < yStart + rowHeight then
+                                        drawAppPage(apps[globalIndex])
+                                        return
+                                    end
+                                end
+                            end
+                        elseif event == "char" then
+                            if #searchQuery < maxSearchLength then
+                                searchQuery = searchQuery .. button
+                            else
+                                cursorPos = cursorPos + 1
+                            end
+                            drawSearchBar()
+                        elseif event == "key" and button == keys.backspace then
+                            if #searchQuery > 0 then
+                                searchQuery = searchQuery:sub(1, #searchQuery - 1)
+                                if cursorPos > 1 then
+                                    cursorPos = cursorPos - 1
+                                end
+                            end
+                            drawSearchBar()
+                        elseif event == "key" and button == keys.enter then
                             drawApps()
                         end
                     end
+                else
+                    windows.error("Error: received data is not a table")
+                    SpeedOS.Close()
                 end
             else
-                windows.error("Error: received data is not a table")
+                windows.error("Error: failed to parse server response")
                 SpeedOS.Close()
             end
         else
-            windows.error("Error: failed to parse server response")
+            windows.error("Can't connect to server")
             SpeedOS.Close()
         end
-    else
-        windows.error("Can't connect to server")
-        SpeedOS.Close()
     end
+
+    drawSearchBar()
+    drawApps()
 end
-
-
-
-
 
 function uploadApp(username, password, app_name, app_content, app_description)
     local data = "username=" .. textutils.urlEncode(username) .. "&password=" .. textutils.urlEncode(password) .. "&name=" .. textutils.urlEncode(app_name) .. "&content=" .. textutils.urlEncode(app_content) .. "&description=" .. app_description or "No description"
@@ -1089,4 +1137,4 @@ function drawRegisterPage()
     end
 end
 
-drawLoginPage()
+listApps()
