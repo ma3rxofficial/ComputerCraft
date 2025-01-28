@@ -378,11 +378,10 @@ function listApps()
     local searchQuery = ""
     local cursorVisible = true
     local width, height = term.getSize()
-    local searchBarHeight = 3 -- Высота строки поиска
+    local searchBarHeight = 3
     local maxSearchLength = width - menuWidth - 10
     local cursorPos = 1
 
-    -- Отрисовка строки поиска
     local function drawSearchBar()
         term.setBackgroundColor(colors.lightGray)
         term.setTextColor(colors.black)
