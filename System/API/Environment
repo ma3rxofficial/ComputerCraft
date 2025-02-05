@@ -100,9 +100,9 @@ This essentially allows the programs to run sandboxed. For example, os.shutdown 
 			Desktop = Desktop,
 			Settings = Settings,
 			Version = SpeedOSVersion,
-			Restart = Restart,
+			Restart = os.reboot, -- kostil, nu i pohuj
 			Reboot = Restart,
-			Shutdown = Shutdown,
+			Shutdown = os.shutdown, -- ja zhe skazal - pohuj!
 			Clipboard = Clipboard,
 			FS = fs,
 			OSRun = os.run,
