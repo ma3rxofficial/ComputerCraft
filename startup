@@ -16,7 +16,6 @@ os.loadAPI('System/API/Settings')
 -- Базовые константы загрузчика
 
 local install_files = {'installer', 'Installer.lua', 'install', 'dN2gMnV9', '.tmp'} -- временные файлы, которые могут остаться при установке ОС
-local isModified = false -- переменная, отвечающая за информацию о том, модифицированы ли системные файлы
 local tAPIsLoading = {} -- хранилище подгружаемых API
 
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -79,41 +78,6 @@ if fs.exists('/.update/') and fs.isDir('/.update/') then -- система об�
   installFolder('')
   fs.delete('/.update/')
   Log.i('Update installed!')
-end
-
------------------------------------------------------------------------------------------------------------------------------------
--- Проверка на модифицированность системных файлов, используется переменная isModified
-
-if http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup') then
-  code = http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/startup').readAll() -- получаем код из репозитория с нашей ОС
-  code2 = fs.open('startup', 'r') -- открываем файл загрузки на компьютере пользователя
-  code3 = code2.readAll() -- читаем информацию из файла пользователя
-
-  -- Проверяем соответствие данных с репозитория и с локальных файлов на пользовательском компе
-  if code3 == code then
-    Log.i('Startup file isn\'\t modified!')
-  else
-    Log.w('Modified startup file detected!')
-    isModified = true
-  end
-
-  code2.close()
-end
-
--- Проверка аналогична предыдущей, только файл System/main.lua
-if http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua') then
-  code = http.get('https://raw.githubusercontent.com/ma3rxofficial/ComputerCraft/main/System/main.lua').readAll()
-  code2 = fs.open('System/main.lua', 'r')
-  code3 = code2.readAll()
-
-  if code3 == code then
-    Log.i('OS file isn\'\t modified!')
-  else
-    Log.w('Modified OS file detected!')
-    isModified = true
-  end
-
-  code2.close()
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -404,47 +368,29 @@ elseif LoadingScreen() then
         Log.e(v)
 
         if peripheral.find('modem') then -- отправки ошибки мне по емаилу
-          if not isModified then -- но только если сис. файлы не были модифицированы, а то нахуй мне эти репорты вообще?
-            rednet.open(peripheral.find('modem'))
-            local newemail = '$EMAIL'..tostring(576)
-                     ..'!SP!'..os.getComputerLabel()
-                     ..'!SP!'..os.time()..'!SP!'
-                     ..'User #'..tostring(os.getComputerID())..', got error:\n\n'..v..'\n\nSent on '..SpeedText.get_date()..', '..SpeedText.time(true)..'.'
-            rednet.send(434, newemail)  -- отправка ошибки на почту через мыло-сервак
-            if rednet.receive(5)~=nil then
-              success = true
-            else
-              success = false
-              Log.w('Error sending report!')
-            end
-
+          rednet.open(peripheral.find('modem'))
+          local newemail = '$EMAIL'..tostring(576)
+                   ..'!SP!'..os.getComputerLabel()
+                   ..'!SP!'..os.time()..'!SP!'
+                   ..'User #'..tostring(os.getComputerID())..', got error:\n\n'..v..'\n\nSent on '..SpeedText.get_date()..', '..SpeedText.time(true)..'.'
+          rednet.send(434, newemail)  -- отправка ошибки на почту через мыло-сервак
+          if rednet.receive(5)~=nil then
+            success = true
           else
-            sucess = false
-            Log.w('System files are modified. Not sending report!') -- модифицированы системные файлы!
+            success = false
+            Log.w('Error sending report!')
           end
         end
     end
 
-    PrintCentered('Please report this on the forum.', Drawing.Screen.Height)
+    PrintCentered('Please report this to OS Github repository.', Drawing.Screen.Height)
     term.setTextColor(colours.white)
     
     local message = 'Error report failed!'
 
-    if isModified then
-      message = ''
-    end
-
     if success then
       Log.i('Error report sent to Ma3rX\'\s mail!')
       message = 'Error report sent!'
-    end
-
-    if isModified then
-      term.setCursorPos(1, Drawing.Screen.Height-4)
-      term.clearLine()
-
-      Log.w('System is modified, not submitting report.')
-      PrintCentered('System is modified, not submitting report.', Drawing.Screen.Height-4)
     end
 
     term.setCursorPos(1, Drawing.Screen.Height-3)
