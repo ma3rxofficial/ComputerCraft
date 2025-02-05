@@ -16,6 +16,14 @@ InterfaceElements = {
 	
 }
 
+function getFreeSpace()
+	if fs.getFreeSpace("/") == "unlimited" then
+		return 20971520 + FolderSize('/')
+	else
+		return fs.getFreeSpace("/")
+	end
+end
+
 function Initialise()
 	EventRegister('mouse_click', TryClick)
 	EventRegister('mouse_drag', TryClick)
@@ -31,7 +39,7 @@ function Initialise()
 	programsSize = FolderSize('/Programs/')
 	totalSize = FolderSize('/')
 	logo = Drawing.LoadImage('/System/Images/Logo')
-	maxSpace = 20971520 + totalSize
+	maxSpace = getFreeSpace()
 	thanksLines = Helpers.WrapText('Thanks to difanys and Bosya for supporting in developing this OS, thanks to Tomaska for testing GameBox and other beta testers!', Drawing.Screen.Width-2)
 	Update()
 	EventHandler()
