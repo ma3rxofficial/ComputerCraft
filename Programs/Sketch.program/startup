@@ -2829,6 +2829,14 @@ function NewDocument(path, width, height, format, backgroundColour)
 	Draw()
 end
 local function Extension(path, addDot)
+	if string.find(path, ".program") then
+		path = path:sub(2)
+		path = path:gsub(".*(%.program/)", "")
+		if path == "icon" then
+			return ".nft"
+		end
+	end
+
 	if not string.find(path, '%.') then
 		if not addDot then
 			local _fs = fs
@@ -3520,7 +3528,7 @@ function Initialise(arg)
 	if SpeedOS then
 		_fs = SpeedOS.FS
 	end
-	if arg and _fs.exists(arg) then
+	if arg and SpeedOS.FS.exists(arg) then
 		OpenDocument(arg)
 	else
 		--NewDocument()
@@ -3535,6 +3543,7 @@ function Initialise(arg)
 	sleep(0)
 
 	EventHandler()
+
 end
 
 function SplashScreen()
