@@ -367,18 +367,18 @@ elseif LoadingScreen() then
         print(v)
         Log.e(v)
 
-        if peripheral.find('modem') then -- отправки ошибки мне по емаилу
-          rednet.open(peripheral.find('modem'))
-          local newemail = '$EMAIL'..tostring(576)
-                   ..'!SP!'..os.getComputerLabel()
-                   ..'!SP!'..os.time()..'!SP!'
-                   ..'User #'..tostring(os.getComputerID())..', got error:\n\n'..v..'\n\nSent on '..SpeedText.get_date()..', '..SpeedText.time(true)..'.'
-          rednet.send(434, newemail)  -- отправка ошибки на почту через мыло-сервак
-          if rednet.receive(5)~=nil then
+        v = v:gsub(" ", "%%20")
+
+        report_server_address = "http://127.0.0.1:8000" -- адрес сервера для отправки репортов
+        report = http.get(report_server_address.."/report?title=SpeedOS%20crash%20report&text="..v)
+
+        if report then -- если сервер репортов доступен
+          report_response = report.readAll() -- читаем ответ севрера на отправленный репорт
+
+          if string.find(report_response, "https://") then -- ну бля ну понятно же!
             success = true
           else
-            success = false
-            Log.w('Error sending report!')
+            sucess = false
           end
         end
     end
@@ -389,7 +389,7 @@ elseif LoadingScreen() then
     local message = 'Error report failed!'
 
     if success then
-      Log.i('Error report sent to Ma3rX\'\s mail!')
+      Log.i('Error report sent!')
       message = 'Error report sent!'
     end
 
