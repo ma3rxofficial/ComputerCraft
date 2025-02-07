@@ -370,7 +370,9 @@ elseif LoadingScreen() then
         v = v:gsub(" ", "%%20")
 
         report_server_address = "http://127.0.0.1:8000" -- адрес сервера для отправки репортов
-        report = http.get(report_server_address.."/report?title=SpeedOS%20crash%20report&text="..v)
+        report_text = "Error:%20"..v -- текст репорта в Issue
+        report_title = "[v"..versionData.."]%20"..v -- заголовок Issue
+        report = http.get(report_server_address.."/report?title="..report_title.."&text="..report_text)
 
         if report then -- если сервер репортов доступен
           report_response = report.readAll() -- читаем ответ севрера на отправленный репорт
