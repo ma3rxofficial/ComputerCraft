@@ -1,1 +1,62 @@
--- xyu
+--[[
+    API, на котором основана почти вся архитектура
+    SpeedOS. Эмуляция оперативной памяти для ComputerCraft.
+]]
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Возвращает массив с API SpeedOS.Base (_G)
+
+function getBaseAPI()
+    local apis = {}
+
+    for k, v in pairs(SpeedOS.Base) do
+        if type(v) == "table" then
+            table.insert(apis, k)
+        end
+    end
+
+    return apis
+end
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Возвращает массив с API SpeedOS
+
+function getOSAPI()
+    local apis = {}
+
+    for k, v in pairs(SpeedOS) do
+        if type(v) == "table" then
+            table.insert(apis, k)
+        end
+    end
+
+    return apis
+end
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Вычисление используемой ОЗУ
+
+function calculateMemoryUsage()
+    local totalMemory = 0
+    local apiMemory = {}
+    local bases = {_G, SpeedOS}
+
+    for _, base in pairs(bases) do
+      for apiName, apiTable in pairs(base) do
+          if type(apiTable) == "table" then
+              local methodCount = 0
+              for _ in pairs(apiTable) do
+                  methodCount = methodCount + 1
+              end
+
+              local memoryUsed = methodCount * 10 -- каждая функция = 10 единиц
+              apiMemory[apiName] = memoryUsed
+              totalMemory = totalMemory + memoryUsed
+          end
+      end
+    end
+
+    return totalMemory, apiMemory
+end
+
+-----------------------------------------------------------------------------------------------------------------------------------
