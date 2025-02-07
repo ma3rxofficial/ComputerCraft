@@ -39,7 +39,7 @@ end
 function calculateMemoryUsage()
     local totalMemory = 0
     local apiMemory = {}
-    local bases = {_G, SpeedOS}
+    local bases = {SpeedOS.Base, SpeedOS}
 
     for _, base in pairs(bases) do
       for apiName, apiTable in pairs(base) do
