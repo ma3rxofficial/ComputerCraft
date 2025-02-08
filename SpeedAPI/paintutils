@@ -1,13 +1,24 @@
+--[[
+    Замена paintutils из CraftOS, добавляет
+    всякие новые функции, использует глобальную
+    файловую систему (SpeedOS.FS)
+]]
+
+-----------------------------------------------------------------------------------------------------------------------------------
 
 local function drawPixelInternal( xPos, yPos )
     term.setCursorPos( xPos, yPos )
     term.write(" ")
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 local tColourLookup = {}
 for n=1,16 do
     tColourLookup[ string.byte( "0123456789abcdef",n,n ) ] = 2^(n-1)
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
 
 function loadImage( sPath )
     if type( sPath ) ~= "string" then
@@ -45,6 +56,8 @@ function loadImage( sPath )
     return nil
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function drawPixel( xPos, yPos, nColour )
     if type( xPos ) ~= "number" or type( yPos ) ~= "number" or (nColour ~= nil and type( nColour ) ~= "number") then
         error( "Expected x, y, colour", 2 )
@@ -54,6 +67,8 @@ function drawPixel( xPos, yPos, nColour )
     end
     drawPixelInternal( xPos, yPos )
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
 
 function drawLine( startX, startY, endX, endY, nColour )
     if type( startX ) ~= "number" or type( startX ) ~= "number" or
@@ -115,6 +130,8 @@ function drawLine( startX, startY, endX, endY, nColour )
     end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function drawBox( startX, startY, endX, endY, nColour )
     if type( startX ) ~= "number" or type( startX ) ~= "number" or
        type( endX ) ~= "number" or type( endY ) ~= "number" or
@@ -159,6 +176,8 @@ function drawBox( startX, startY, endX, endY, nColour )
     end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function drawFilledBox( startX, startY, endX, endY, nColour )
     startX = math.floor(startX)
     startY = math.floor(startY)
@@ -192,6 +211,8 @@ function drawFilledBox( startX, startY, endX, endY, nColour )
     end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function drawImage( tImage, xPos, yPos )
     if type( tImage ) ~= "table" or type( xPos ) ~= "number" or type( yPos ) ~= "number" then
         error( "Expected image, x, y", 2 )
@@ -206,3 +227,5 @@ function drawImage( tImage, xPos, yPos )
         end
     end
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
