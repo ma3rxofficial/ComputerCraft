@@ -1,27 +1,104 @@
-
-function slowWrite( sText, nRate )
-	nRate = nRate or 20
-	if nRate < 0 then
-		error( "rate must be positive" )
-	end
-	local nSleep = 1 / nRate
-		
-	sText = tostring( sText )
-	local x,y = term.getCursorPos(x,y)
-	local len = string.len( sText )
-	
-	for n=1,len do
-		term.setCursorPos( x, y )
-		sleep( nSleep )
-		local nLines = write( string.sub( sText, 1, n ) )
-		local newX, newY = term.getCursorPos()
-		y = newY - nLines
-	end
+function test(string)
+	print(string)
 end
 
-function slowPrint( sText, nRate )
-	slowWrite( sText, nRate)
-	print()
+function _write( sText , _term)
+	if _term == nil then
+		_term = term
+	end
+	local w,h = _term.getSize()		
+	local x,y = _term.getCursorPos()
+	
+	local nLinesPrinted = 0
+	local function newLine()
+		if y + 1 <= h then
+			_term.setCursorPos(1, y + 1)
+		else
+			_term.setCursorPos(1, h)
+			_term.scroll(1)
+		end
+		x, y = _term.getCursorPos()
+		nLinesPrinted = nLinesPrinted + 1
+	end
+	
+	-- Print the line with proper word wrapping
+	while string.len(sText) > 0 do
+		local whitespace = string.match( sText, "^[ \t]+" )
+		if whitespace then
+			-- Print whitespace
+			_term.write( whitespace )
+			x,y = _term.getCursorPos()
+			sText = string.sub( sText, string.len(whitespace) + 1 )
+		end
+		
+		local newline = string.match( sText, "^\n" )
+		if newline then
+			-- Print newlines
+			newLine()
+			sText = string.sub( sText, 2 )
+		end
+		
+		local text = string.match( sText, "^[^ \t\n]+" )
+		if text then
+			sText = string.sub( sText, string.len(text) + 1 )
+			if string.len(text) > w then
+				-- Print a multiline word				
+				while string.len( text ) > 0 do
+					if x > w then
+						newLine()
+					end
+					_term.write( text )
+					text = string.sub( text, (w-x) + 2 )
+					x,y = _term.getCursorPos()
+				end
+			else
+				-- Print a word normally
+				if x + string.len(text) - 1 > w then
+					newLine()
+				end
+				_term.write( text )
+				x,y = _term.getCursorPos()
+			end
+		end
+	end
+	
+	return nLinesPrinted
+end
+
+function slowWrite( sText, nRate, _term )
+	if _term == nil then
+		_term = term
+	end
+
+    if nRate ~= nil and type( nRate ) ~= "number" then
+        error( "bad argument #2 (expected number, got " .. type( nRate ) .. ")", 2 )
+    end
+    nRate = nRate or 20
+    if nRate < 0 then
+        error( "Rate must be positive", 2 )
+    end
+
+    local nSleep = 1 / nRate
+        
+    sText = tostring( sText )
+    local x,y = _term.getCursorPos()
+    local len = string.len( sText )
+    
+    for n=1,len do
+        _term.setCursorPos( x, y )
+        sleep( nSleep )
+        local nLines = _write( string.sub( sText, 1, n ) , _term)
+        local newX, newY = _term.getCursorPos()
+        y = newY - nLines
+    end
+end
+
+function slowPrint( sText, nRate, _term)
+	if _term == nil then
+			_term = term
+	end
+    slowWrite( sText, nRate , _term)
+    print()
 end
 
 function formatTime( nTime, bTwentyFourHour )
