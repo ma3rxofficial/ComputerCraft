@@ -131,7 +131,9 @@ function LoadAPI(_sPath)
     tAPI[k] =  v
   end
   
+  -- Загружает API в оперативную память, позволяя заменить уже существующие API CraftOS
   getfenv()[sName] = tAPI
+  _G[sName] = tAPI
 
   tAPIsLoading[sName] = nil
   return true
