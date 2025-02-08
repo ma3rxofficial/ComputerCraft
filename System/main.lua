@@ -187,6 +187,12 @@ function LaunchProgram(path, args, title) -- функция запуска пр�
 
 		for _, apishnik in pairs(fs.list("SpeedAPI")) do -- то мы их поочередно выгружаем
 			os.unloadAPI("SpeedAPI/"..apishnik)
+
+			-- Если API был в оперативной памяти, то тоже разгружаем
+			if _G[apishnik] then
+				_G[apishnik] = nil
+			end
+
 			Log.i("API "..apishnik.." unloaded (Auto API Unloading)") -- и логируем это в лог-файл
 		end
 	end
