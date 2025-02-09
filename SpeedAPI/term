@@ -1,4 +1,5 @@
 
+current = term.native or term
 native = term.native or term
 
 local redirectTarget = native
@@ -21,6 +22,7 @@ term.redirect = function( _object )
 				_object[k] = function() 
 					term.restore()
 					error( "Redirect object is missing method "..k..". Restoring.")
+					current = term
 				end
 			end
 		end
@@ -28,6 +30,7 @@ term.redirect = function( _object )
 
 	tRedirectStack[#tRedirectStack + 1] = redirectTarget
 	redirectTarget = _object
+	current = _object
 end
 term.restore = function()
 	if #tRedirectStack > 0 then
