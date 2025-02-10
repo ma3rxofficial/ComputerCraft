@@ -58,6 +58,24 @@ end
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
+function loadImageFromString( string_ )
+    if type( string_ ) ~= "string" then
+        error( "Expected string", 2 )
+    end
+
+    local tImage = {}
+    local tLine = {}
+    for x=1,string_:len() do
+        tLine[x] = tColourLookup[ string.byte(string_,x,x) ] or 0
+    end
+    table.insert( tImage, tLine )
+
+    return tImage
+end
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function drawPixel( xPos, yPos, nColour )
     if type( xPos ) ~= "number" or type( yPos ) ~= "number" or (nColour ~= nil and type( nColour ) ~= "number") then
         error( "Expected x, y, colour", 2 )
