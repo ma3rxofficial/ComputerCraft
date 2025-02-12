@@ -40,6 +40,8 @@ function wrap(side)
 	end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function call(side, ...)
 	if peripheral.getType(side) == "sensor" then
 		local id = peripheral.call(side, ...)
