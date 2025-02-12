@@ -17,6 +17,8 @@ local function waitForResponse( _id )
 	end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function wrap(side)
 	local wrappedTable = {}
 	if peripheral.getType(side) == "sensor" then
