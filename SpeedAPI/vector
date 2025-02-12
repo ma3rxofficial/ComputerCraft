@@ -47,6 +47,9 @@ local vector = {
 			self.x*o.y - self.y*o.x
 		)
 	end,
+
+-----------------------------------------------------------------------------------------------------------------------------------
+	
 	length = function( self )
 		return math.sqrt( self.x*self.x + self.y*self.y + self.z*self.z )
 	end,
