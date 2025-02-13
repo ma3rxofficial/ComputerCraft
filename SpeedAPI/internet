@@ -1,6 +1,7 @@
 --[[
     Либа - по сути некая "насдтройка" над стандартным 
-    http. Добавляет функцию чёрного списка сайтов.
+    http. Добавляет функции, которые делают использование
+    этого самого HTTP чуть более удобным.
 ]]
 
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -11,9 +12,9 @@ local blacklist = {}
 -----------------------------------------------------------------------------------------------------------------------------------
 -- Спизженная из SpeedText функция, проверяет наличие элемента в массиве.
 
-local function checkForBlacklist(url)
-	for _, urlik in pairs(blacklist) do
-		if url == urlik then
+local function isBlacklisted(url)
+	for _, pizda in pairs(blacklist) do
+		if url == pizda then
 			return true
 		end
 	end
@@ -25,7 +26,7 @@ end
 -- Замена стандартным функциям http.
 
 function get(url)
-	if not checkForBlacklist(url) then
+	if not isBlacklisted(url) then
 		return http.get(url)
 	end
 end
@@ -34,8 +35,58 @@ end
 -- Ну бля ээ ну ты понял
 
 function post(url)
-	if not checkForBlacklist(url) then
+	if not isBlacklisted(url) then
 		return http.post(url)
+	end
+end
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Функция преобразования обычной строки в пригодную для HTTP-запроса
+
+function urlEncode(str)
+	if str then
+		str = string.gsub(str, "\n", "\r\n")
+		str = string.gsub(str, "([^%w ])",
+		function (c)
+			return string.format("%%%02X", string.byte(c))
+		end)
+		str = string.gsub(str, " ", "%%20")
+	end
+	return str	
+end
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Сериализация Lua-таблиц в формат URL-строки
+
+function serialize(data)
+	if type(data) == "table" then		
+		local result = ""
+
+		local function doSerialize(table, keyStack)
+			for key, value in pairs(table) do
+				if type(key) == "number" then
+					key = key - 1
+				end
+
+				if type(value) == "table" then
+					doSerialize(value, keyStack .. "[" .. urlEncode(tostring(key)) .. "]")
+				else
+					result = result .. keyStack .. "[" .. urlEncode(tostring(key)) .. "]=" .. urlEncode(tostring(value)) .. "&"
+				end
+			end
+		end
+		
+		for key, value in pairs(data) do	
+			if type(value) == "table" then
+				doSerialize(value, urlEncode(tostring(key)))
+			else
+				result = result .. key .. "=" .. urlEncode(tostring(value)) .. "&"
+			end
+		end
+
+		return result.sub(1, -2)
+	else
+		return tostring(data)
 	end
 end
 
