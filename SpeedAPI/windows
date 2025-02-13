@@ -1,128 +1,128 @@
-------------------------ÃÐÀÔÈÊÀ---------------------------------------------------------------------------------------------------
+------------------------ГРАФИКА---------------------------------------------------------------------------------------------------
  
--- colorText(int õ_íà÷àëà, int y_íà÷àëà, string òåêñò, int öâåò_òåêñòà)
--- Îòðèñîâêà öâåòíîãî òåêñòà ïî çàäàííûì êîîðäèíàòàì. Öâåò ôîíà îñòàåòñÿ òåì æå.
- 
- 
--- usualText(int õ_íà÷àëà, int y_íà÷àëà, string òåêñò)
--- Îòðèñîâêà îáû÷íîãî òåêñòà ïî çàäàííûì êîîðäèíàòàì.
+-- colorText(int х_начала, int y_начала, string текст, int цвет_текста)
+-- Отрисовка цветного текста по заданным координатам. Цвет фона остается тем же.
  
  
--- square(int x_íà÷àëà, int x_êîíöà, int øèðèíà, int âûñîòà, int öâåò)
--- Îïòèìèçèðîâàííàÿ îòðèñîâêà êâàäðàòà íà ýêðàíå (áûñòðåå, ÷åì ñòàíäàðòíàÿ ÊÊ). Ïîäõîäèò òàêæå äëÿ ëèíèé.
+-- usualText(int х_начала, int y_начала, string текст)
+-- Отрисовка обычного текста по заданным координатам.
  
  
--- clearScreen(int öâåò)
--- Çàëèâêà âñåãî ýêðàíà âûáðàííûì öâåòîì.
+-- square(int x_начала, int x_конца, int ширина, int высота, int цвет)
+-- Оптимизированная отрисовка квадрата на экране (быстрее, чем стандартная КК). Подходит также для линий.
  
  
--- fadeIn(int ñêîðîñòü)
--- fadeOut(int ñêîðîñòü)
--- Ïëàâíîå çàæèãàíèå è óãàñàíèå ýêðàíà ñ áåëîãî íà ÷åðíûé è íàîáîðîò. Ñêîðîñòü ëó÷øå ñòàâèòü íà 0.
+-- clearScreen(int цвет)
+-- Заливка всего экрана выбранным цветом.
  
  
--- tv(int ñêîðîñòü)
--- Óãàñàíèå ýêðàíà â ñòèëèñòèêå ñòàðûõ òåëåâèçîðîâ. Ñêîðîñòü ëó÷øå ñòàâèòü íà 0.
+-- fadeIn(int скорость)
+-- fadeOut(int скорость)
+-- Плавное зажигание и угасание экрана с белого на черный и наоборот. Скорость лучше ставить на 0.
  
  
--- emptyWindow(int õ_íà÷àëà, int y_íà÷àëà, int øèðèíà, int âûñîòà, string çàãîëîâîê)
--- Îòðèñîâêà áåëîãî îêîøêà ñ òåíüþ è çàãîëîâêîì ââåðõó.
+-- tv(int скорость)
+-- Угасание экрана в стилистике старых телевизоров. Скорость лучше ставить на 0.
  
  
--- sampleWindow(int õ_íà÷àëà, int y_íà÷àëà, int øèðèíà, int âûñîòà)
--- Îòðèñîâêà òîãî æå îêîøêà, íî áåç çàãîëîâêà.
+-- emptyWindow(int х_начала, int y_начала, int ширина, int высота, string заголовок)
+-- Отрисовка белого окошка с тенью и заголовком вверху.
  
  
--- drawProgressBar(int õ_íà÷àëà, int y_íà÷àëà, int øèðèíà, int âûñîòà, int öâåò_ïåðåäíåé_îáëàñòè, int öâåò_çàäíåé_îáëàñòè, int ïðîöåíò_çàïîëíåííîñòè_øêàëû)
--- Îòðèñîâêà øêàëû ïðîãðåññà ñ óêàçàííûì ïðîöåíòîì çàïîëíåííîñòè.
+-- sampleWindow(int х_начала, int y_начала, int ширина, int высота)
+-- Отрисовка того же окошка, но без заголовка.
  
  
--- scrollBar(int õ_íà÷àëà, int y_íà÷àëà, int ðàçìåð_øêàëû_ïî_âûñîòå, int êîëè÷åñòâî_âñåõ_ýëåìåíòîâ, int òåêóùèé_ýëåìåíò, int öâåò_çàäíåé_îáëàñòè, int öâåò_ïåðåäíåé_îáëàñòè)
--- Îòðèñîâêà âåðòèêàëüíîé øêàëû ïðîêðóòêè.
--- Êîëè÷åñòâîì ýëåìåíòîâ òóò ÿâëÿåòñÿ, ê ïðèìåðó, êîëè÷åñòâî ôàéëîâ â äèðåêòîðèè.
--- Òàêèì îáðàçîì, åñëè êîëè÷åñòâîì ýëåìåíòîâ ó íàñ áóäåò 100, à òåêóùèì ýëåìåíòîì áóäåò ÷èñëî 50,
--- òî ïîëçóíîê øêàëû îòîáðàçèòñÿ ïðèìåðíî ïî öåíòðó ñàìîé øêàëû.
- 
--------------------------ÎÒÐÈÑÎÂÊÀ ÎÊÎÍ-------------------------------------------------------------------------------------
- 
--- error(string òåêñò_îøèáêè)
--- Îòîáðàæåíèå îêíà îøèáêè ïî öåíòðó ýêðàíà.
+-- drawProgressBar(int х_начала, int y_начала, int ширина, int высота, int цвет_передней_области, int цвет_задней_области, int процент_заполненности_шкалы)
+-- Отрисовка шкалы прогресса с указанным процентом заполненности.
  
  
--- attention(table òåêñò_çàãîëîâêà, table òåêñò_ïîäçàãîëîâêà, int öâåò(ïî æåëàíèþ))
--- Îòîáðàæåíèå îêíà "Âíèìàíèå!" ñ êàêîé-òî èíôîðìàöèåé.
--- Êàæäûé ýëåìåíò ìàññèâà - ýòî ñòðîêà çàãîëîâêà èëè ïîäçàãîëîâêà, à êîëè÷åñòâî ñòðîê íå îãðàíè÷åíî.
+-- scrollBar(int х_начала, int y_начала, int размер_шкалы_по_высоте, int количество_всех_элементов, int текущий_элемент, int цвет_задней_области, int цвет_передней_области)
+-- Отрисовка вертикальной шкалы прокрутки.
+-- Количеством элементов тут является, к примеру, количество файлов в директории.
+-- Таким образом, если количеством элементов у нас будет 100, а текущим элементом будет число 50,
+-- то ползунок шкалы отобразится примерно по центру самой шкалы.
+ 
+-------------------------ОТРИСОВКА ОКОН-------------------------------------------------------------------------------------
+ 
+-- error(string текст_ошибки)
+-- Отображение окна ошибки по центру экрана.
+ 
+ 
+-- attention(table текст_заголовка, table текст_подзаголовка, int цвет(по желанию))
+-- Отображение окна "Внимание!" с какой-то информацией.
+-- Каждый элемент массива - это строка заголовка или подзаголовка, а количество строк не ограничено.
 --
--- Ïðèìåð èñïîëüçîâàíèÿ: attention({"Hey!","This is attention window!"},{"And this is information!"})
+-- Пример использования: attention({"Hey!","This is attention window!"},{"And this is information!"})
  
  
--- input(int x_íà÷àëà, int y_íà÷àëà, string çàãîëîâîê_îêíà , int øèðèíà_îêíà, table ïîëå_ââîäà1, table ïîëå_ââîäà2 ... table ïîëå_ââîäàN)
--- Âûçûâàåò îêíî ñ ïîëÿìè ââîäà òåêñòà.
--- Êàæäîå ïîëå - ýòî ìàññèâ âèäà {string íàçâàíèå_ïîëÿ, string èíôîðìàöèÿ_óæå_çàïèñàííàÿ_â_ïîëå}
--- Ïîñëå çàïîëíåíèÿ âñåõ ïîëåé ñ êëàâèàòóðû, ôóíêöèÿ âîçâðàùàåò ìàññèâ ñ ââåäåííûìè äàííûìè.
+-- input(int x_начала, int y_начала, string заголовок_окна , int ширина_окна, table поле_ввода1, table поле_ввода2 ... table поле_вводаN)
+-- Вызывает окно с полями ввода текста.
+-- Каждое поле - это массив вида {string название_поля, string информация_уже_записанная_в_поле}
+-- После заполнения всех полей с клавиатуры, функция возвращает массив с введенными данными.
 --
--- Åñëè x_íà÷àëà èëè y_íà÷àëà áóäåò ðàâåí "auto", òî ñîîòâåòñòâóþùàÿ êîîðäèíàòà
--- áóäåò ðàññ÷èòàíà àâòîìàòè÷åñêè è îêíî ðàñïîëîæèòñÿ ïî öåíòðó ýêðàíà ïî ýòîé êîîðäèíàòå.
+-- Если x_начала или y_начала будет равен "auto", то соответствующая координата
+-- будет рассчитана автоматически и окно расположится по центру экрана по этой координате.
 --
--- Ïðèìåð èñïîëüçîâàíèÿ: myData = input("auto","auto","Login",20,{"Username",""},{"Password",""})
--- Åñëè ìû ââåäåì â ïîëå Username "Igor", à â ïîëå Password "12345",
--- òî ôóíêöèÿ âîâçðàòèò ìàññèâ âèäà {"Igor","12345"}
+-- Пример использования: myData = input("auto","auto","Login",20,{"Username",""},{"Password",""})
+-- Если мы введем в поле Username "Igor", а в поле Password "12345",
+-- то функция вовзратит массив вида {"Igor","12345"}
 --
--- Ê ñëîâó, â ïîëå ìîæíî âñòàâëÿòü äàííûå ñ ïîìîùüþ ctrl+v
+-- К слову, в поле можно вставлять данные с помощью ctrl+v
  
  
--- select(table çàãîëîâîê, table ïîäçàãîëîâîê, table êíîïêà1, table êíîïêà2 ... table êíîïêàN)
--- Ôóíêöèÿ âûçûâàåò îêíî ñ òåêñòîì è êíîïêàìè âûáîðà.
+-- select(table заголовок, table подзаголовок, table кнопка1, table кнопка2 ... table кнопкаN)
+-- Функция вызывает окно с текстом и кнопками выбора.
 --
--- Ñòðóêòóðà ìàññèâà çàãîëîâêà è ïîäçàãîëîâêà: {string òåêñò1, string òåêñò2 ... string òåêñòN}
--- Ñòðóêòóðà ìàññèâà êíîïêè: {string èìÿ_êíîïêè, int öâåò_êíîïêè, int öâåò_òåêñòà_êíîïêè}
+-- Структура массива заголовка и подзаголовка: {string текст1, string текст2 ... string текстN}
+-- Структура массива кнопки: {string имя_кнопки, int цвет_кнопки, int цвет_текста_кнопки}
 --
--- Ïðè íàæàòèè íà êíîïêó ôóíêöèÿ âîçâðàùàåò èìÿ íàæàòîé êíîïêè.
+-- При нажатии на кнопку функция возвращает имя нажатой кнопки.
 --
--- Ïðèìåð èñïîëüçîâàíèÿ: pressedButton = windows.select({"Hello!"},{"Do you want to load OS","when computer starts?"},{"No",colors.lightGray,colors.black},{"Yes",colors.lightBlue,colors.black})
+-- Пример использования: pressedButton = windows.select({"Hello!"},{"Do you want to load OS","when computer starts?"},{"No",colors.lightGray,colors.black},{"Yes",colors.lightBlue,colors.black})
  
  
--- aboutFile(int õ_íà÷àëà, int y_íà÷àëà, int øèðèíà_îêíà, string ïóòü_ê_ôàéëó)
--- Íàãëÿäíî îòîáðàæàåò èíôîðìàöèþ î ôàéëå â êðàñèâîì îêîøêå.
--- Êîîðäèíàòû êîððåêòèðóþòñÿ àâòîìàòè÷åñêè.
+-- aboutFile(int х_начала, int y_начала, int ширина_окна, string путь_к_файлу)
+-- Наглядно отображает информацию о файле в красивом окошке.
+-- Координаты корректируются автоматически.
  
  
--- progressBar(int õ_íà÷àëà, int y_íà÷àëà, int øèðèíà_îêíà, string çàãîëîâîê, string èíôîðìàöèÿ, int ñêîðîñòü)
--- Ôóíêöèÿ îòðèñîâûâàåò îêíî ñ èíôîðìàöèåé è èìèòèðóåò ïðîäîëæèòåëüíûé ïðîöåññ, ðèñóÿ øêàëó ïðîãðåññà.
+-- progressBar(int х_начала, int y_начала, int ширина_окна, string заголовок, string информация, int скорость)
+-- Функция отрисовывает окно с информацией и имитирует продолжительный процесс, рисуя шкалу прогресса.
  
  
--- search(int õ_íà÷àëà, int y_íà÷àëà, int øèðèíà_îêíà, int êîëè÷åñòâî_ýëåìåíòîâ_ïî_âûñîòå, string òåêñò_äëÿ_ïîèñêà)
--- Ôóíêöèÿ ðèñóåò êðàñèâîå îêîøêà ïîèñêà ïî ôàéëîâîé ñèñòåìå.
--- Òàêæå îòîáðàæàåòñÿ èíôîðìàöèÿ î ôàéëàõ.
--- Ïðè ââîäå ëþáîé èíôîðìàöèè íà÷èíàåòñÿ ïîèñê ñîâïàäåíèé ñ èìåíàìè ôàéëîâ.
--- Ê ðåãèñòðó áóêâ íå ÷óâñòâèòåëüíà.
--- Ïîñëå âûáîðà ëþáîãî íàéäåííîãî ýëåìåíòà ñ ïîìîùüþ ìûøè, ôóíêöèÿ âîâçðàùàåò ïóòü ê âûáðàííîìó ôàéëó.
+-- search(int х_начала, int y_начала, int ширина_окна, int количество_элементов_по_высоте, string текст_для_поиска)
+-- Функция рисует красивое окошка поиска по файловой системе.
+-- Также отображается информация о файлах.
+-- При вводе любой информации начинается поиск совпадений с именами файлов.
+-- К регистру букв не чувствительна.
+-- После выбора любого найденного элемента с помощью мыши, функция вовзращает путь к выбранному файлу.
  
--------------------------ÐÀÁÎÒÀ Ñ ÔÀÉËÀÌÈ-------------------------------------------------------------------------------------
+-------------------------РАБОТА С ФАЙЛАМИ-------------------------------------------------------------------------------------
  
--- getFileFormat(string ïóòü_ê_ôàéëó)
--- Ôóíêöèÿ âîçâðàùàåò ðàñøèðåíèå ôàéëà ïî òèïó .zip, .app è ïðî÷èå. Åñëè ðàñøèðåíèå îòñóòñòâóåò, âîçâðàùàåò nil.
+-- getFileFormat(string путь_к_файлу)
+-- Функция возвращает расширение файла по типу .zip, .app и прочие. Если расширение отсутствует, возвращает nil.
  
--- hideFileFormat(string ïóòü_ê_ôàéëó)
--- Åñëè ôàéë èìååò ðàñøèðåíèå, òî ôóíêöèÿ âîçâðàùàåò èìÿ ôàéëà áåç ýòîãî ðàñøèðåíèÿ. Åñëè ðàñøèðåíèÿ íåò, âîçâðàùàåòñÿ òî æå èìÿ.
+-- hideFileFormat(string путь_к_файлу)
+-- Если файл имеет расширение, то функция возвращает имя файла без этого расширения. Если расширения нет, возвращается то же имя.
  
--- isFileHidden(string ïóòü_ê_ôàéëó)
--- Åñëè â íà÷àëå èìåíè ôàéëà åñòü ñèìâîë ".", òî ôóíêöèÿ âîçâðàùàåò true. Åñëè íåò, òî false.
+-- isFileHidden(string путь_к_файлу)
+-- Если в начале имени файла есть символ ".", то функция возвращает true. Если нет, то false.
  
--- getFileSize(string ïóòü_ê_ôàéëó)
--- Ôóíêöèÿ âîçâðàùàåò ñóììàðíûé ðàçìåð âñåõ ôàéëîâ â óêàçàííîì ïóòè. Â òîì ÷èñëå è ðàçìåð ïîäôàéëîâ è ïîääèðåêòîðèé.
+-- getFileSize(string путь_к_файлу)
+-- Функция возвращает суммарный размер всех файлов в указанном пути. В том числе и размер подфайлов и поддиректорий.
  
--- getFileType(string ïóòü_ê_ôàéëó)
--- Ôóíêöèÿ âîçâðàùàåò òèï ôàéëà. Íàïðèìåð, åñëè ðàñøèðåíèå ôàéëà .zip, òî åãî òèï - Application.
+-- getFileType(string путь_к_файлу)
+-- Функция возвращает тип файла. Например, если расширение файла .zip, то его тип - Application.
  
--- stringLimit(string ðåæèì, string ñòðîêà, int îãðàíè÷åíèå_ñòðîêè)
--- Îãðàíè÷èòåëü ñòðîêè ñ äâóìÿ ðåæèìàìè ðàáîòû. Âîò ïðèìåðû:
+-- stringLimit(string режим, string строка, int ограничение_строки)
+-- Ограничитель строки с двумя режимами работы. Вот примеры:
 --
 -- local s = "HelloWorldBitches!"
 -- print(stringLimit("start", s, 10))
 -- print(stringLimit("end", s, 10))
 --
--- Íà ýêðàíå áóäåò îòîáðàæåíî:
+-- На экране будет отображено:
 -- ...itches!
 -- HelloWo...
  
@@ -132,7 +132,7 @@
 local xSize,ySize = term.getSize()
 local centerX,centerY = math.floor(xSize/2),math.floor(ySize/2)
  
---ÏÎÈÑÊ ÏÅÐÈÔÅÐÈÈ
+--ПОИСК ПЕРИФЕРИИ
 function findPeripheral(whatToFind)
   local PeriList = rs.getSides()
   for i=1,#PeriList do
@@ -142,7 +142,7 @@ function findPeripheral(whatToFind)
   end
 end
  
---ÏÎÈÑÊ ÁÅÑÏÐÎÂÎÄÍÎÃÎ ÌÎÄÅÌÀ
+--ПОИСК БЕСПРОВОДНОГО МОДЕМА
 function findWirelessModem()
         local periList = rs.getSides() --peripheral.getNames()
         for i=1,#periList do
@@ -155,13 +155,13 @@ function findWirelessModem()
         end
 end
  
---ÊËÈÊÍÓËÈ ËÈ Â ÇÎÍÓ
+--КЛИКНУЛИ ЛИ В ЗОНУ
 function clickedAtArea(x,y,sx,sy,ex,ey)
     if (x >= sx) and (x <= ex) and (y >= sy) and (y <= ey) then return true end    
     return false
 end
  
---Â ÁÓËÈÍ, ÅÏÒÛ ÁËß
+--В БУЛИН, ЕПТЫ БЛЯ
 function toboolean(s)
         if s == "true" then
                 return true
@@ -170,14 +170,14 @@ function toboolean(s)
         end
 end
  
---ÖÂÅÒÍÎÉ ÒÅÊÑÒ
+--ЦВЕТНОЙ ТЕКСТ
 function colorText(x,y,text,textColor)
         term.setTextColor(textColor)
         term.setCursorPos(x,y)
         term.write(text)
 end
  
---ÖÂÅÒÍÎÉ ÒÅÊÑÒ Ñ ÔÎÍÎÌ
+--ЦВЕТНОЙ ТЕКСТ С ФОНОМ
 function colorTextWithBack(x,y,text,textColor,backColor)
         term.setTextColor(textColor)
         term.setBackgroundColor(backColor)
@@ -185,13 +185,13 @@ function colorTextWithBack(x,y,text,textColor,backColor)
         term.write(text)
 end
  
---ÏÐÎÑÒÎÅ ÎÒÎÁÐÀÆÅÍÈÅ ÒÅÊÑÒÀ ÏÎ ÊÎÎÐÄÈÍÀÒÀÌ
+--ПРОСТОЕ ОТОБРАЖЕНИЕ ТЕКСТА ПО КООРДИНАТАМ
 function usualText(x,y,text)
         term.setCursorPos(x,y)
         term.write(text)
 end
  
---ÓÍÈÂÅÐÑÀËÜÍÀß ÔÓÍÊÖÈß ÄËß ÎÒÎÁÐÀÆÅÍÈß ÒÅÊÑÒÀ ÏÎ ÖÅÍÒÐÓ ÝÊÐÀÍÀ
+--УНИВЕРСАЛЬНАЯ ФУНКЦИЯ ДЛЯ ОТОБРАЖЕНИЯ ТЕКСТА ПО ЦЕНТРУ ЭКРАНА
 function centerText(how,coord,text,textColor,backColor)
         term.setTextColor(textColor)
         term.setBackgroundColor(backColor)
@@ -205,7 +205,7 @@ function centerText(how,coord,text,textColor,backColor)
         term.write(text)
 end
  
---ÐÈÑÎÂÀÍÈÅ ÊÂÀÄÐÀÒÀ Ñ ÇÀËÈÂÊÎÉ
+--РИСОВАНИЕ КВАДРАТА С ЗАЛИВКОЙ
 function square(x1,y1,width,height,color)
         local string = string.rep(" ",width)
         term.setBackgroundColor(color)
@@ -214,7 +214,7 @@ function square(x1,y1,width,height,color)
         end
 end
  
---ÐÈÑÎÂÀÍÈÅ ÊÐÓÃÀ
+--РИСОВАНИЕ КРУГА
 function circle(cx, cy, radius, char, backColor, textColor)
         local x = radius
     local y = 0
@@ -240,13 +240,13 @@ function circle(cx, cy, radius, char, backColor, textColor)
     end
 end
  
---ÇÀËÈÂÊÀ ÝÊÐÀÍÀ ÖÂÅÒÎÌ
+--ЗАЛИВКА ЭКРАНА ЦВЕТОМ
 function clearScreen(color)
         term.setBackgroundColor(color)
         term.clear()
 end
  
---ÏËÀÂÍÎÅ ÂÊËÞ×ÅÍÈÅ ÝÊÐÀÍÀ
+--ПЛАВНОЕ ВКЛЮЧЕНИЕ ЭКРАНА
 function fadeIn(time)
         clearScreen(colors.gray)
         sleep(time)
@@ -256,7 +256,7 @@ function fadeIn(time)
         sleep(time)
 end
  
---ÏËÀÂÍÎÅ ÇÀÒÓÕÀÍÈÅ ÝÊÐÀÍÀ
+--ПЛАВНОЕ ЗАТУХАНИЕ ЭКРАНА
 function fadeOut(time)
         clearScreen(colors.lightGray)
         sleep(time)
@@ -268,7 +268,7 @@ function fadeOut(time)
         term.setTextColor(colors.white)
 end
  
---ÏÐÎÑÒÎÅ ÎÊÍÎ Ñ ÏÎËÎÑÊÎÉ ÍÀÂÅÐÕÓ
+--ПРОСТОЕ ОКНО С ПОЛОСКОЙ НАВЕРХУ
 function emptyWindow(xStart,yStart,xWindowSize,yWindowSize,title)
         --DRAW WINDOW
         square(xStart,yStart,xWindowSize,1,colors.lightGray)
@@ -285,7 +285,7 @@ function emptyWindow(xStart,yStart,xWindowSize,yWindowSize,title)
         end
 end
  
---ÏÐÎÑÒÎÅ ÎÊÍÎ ÁÅÇ ÏÎËÎÑÊÈ
+--ПРОСТОЕ ОКНО БЕЗ ПОЛОСКИ
 function sampleWindow(xStart,yStart,xWindowSize,yWindowSize)
         square(xStart,yStart,xWindowSize,yWindowSize,colors.white)
         --DRAW SHADOW
@@ -297,7 +297,7 @@ function sampleWindow(xStart,yStart,xWindowSize,yWindowSize)
         end
 end
  
---ÎÃÐÀÍÈ×ÅÍÈÅ ÄËÈÍÛ ÑÒÐÎÊÈ
+--ОГРАНИЧЕНИЕ ДЛИНЫ СТРОКИ
 function stringLimit(mode,text,size,noDots)
         if string.len(text)<=size then return text end
         if mode == "start" then
@@ -315,7 +315,7 @@ function stringLimit(mode,text,size,noDots)
         end
 end
  
---ÏÎËÓ×ÅÍÈÅ ÔÎÐÌÀÒÀ ÔÀÉËÀ
+--ПОЛУЧЕНИЕ ФОРМАТА ФАЙЛА
 function getFileFormat(path)
         local name = fs.getName(path)
         local starting,ending = string.find(name,"(.)%.[%d%w]*$")
@@ -326,7 +326,7 @@ function getFileFormat(path)
         end
 end
  
---ÏÐÎÂÅÐÊÀ, ÑÊÐÛÒÛÉ ËÈ ÔÀÉË
+--ПРОВЕРКА, СКРЫТЫЙ ЛИ ФАЙЛ
 function isFileHidden(path)
         local name = fs.getName(path)
         local starting,ending = string.find(name,"^%.(.*)$")
@@ -337,7 +337,7 @@ function isFileHidden(path)
         end
 end
  
---ÑÊÐÛÒÜ ÐÀÑØÈÐÅÍÈÅ ÔÀÉËÀ
+--СКРЫТЬ РАСШИРЕНИЕ ФАЙЛА
 function hideFileFormat(path)
         local name = fs.getName(path)
         local fileFormat = getFileFormat(name)
@@ -348,7 +348,7 @@ function hideFileFormat(path)
         end
 end
  
---ÏÎËÓ×ÅÍÈÅ ÐÀÇÌÅÐÀ ÔÀÉËÀ ÈËÈ ÏÀÏÊÈ
+--ПОЛУЧЕНИЕ РАЗМЕРА ФАЙЛА ИЛИ ПАПКИ
 function getFileSize(path)
         local allFilesSize = 0
         if fs.isDir(path) then
@@ -362,7 +362,7 @@ function getFileSize(path)
         return allFilesSize
 end
  
---ÏÎËÓ×ÈÒÜ ÒÈÏ ÔÀÉËÀ
+--ПОЛУЧИТЬ ТИП ФАЙЛА
 function getFileType(path)
         local fileTypes = {
                 [".png"] = "Image",
@@ -387,7 +387,7 @@ function getFileType(path)
         return currentFileType
 end
  
---ÐÅÎÐÃÀÍÈÇÌÀÖÈß ÌÀÑÑÈÂÀ ÄËß ÎÑ-ÊÈ
+--РЕОРГАНИЗМАЦИЯ МАССИВА ДЛЯ ОС-КИ
 function reorganizeFilesAndFolders(workPath,massivSudaPihay,showHiddenFiles,showSystemFolders)
         local reorganizedMassiv = {}
         local function doGovno(i)
@@ -422,27 +422,26 @@ function reorganizeFilesAndFolders(workPath,massivSudaPihay,showHiddenFiles,show
         return reorganizedMassiv
 end
  
---ÎÒÐÈÑÎÂÊÀ ÈÊÎÍÊÈ ÄËß ÎÑ
+--ОТРИСОВКА ИКОНКИ ДЛЯ ОС
 function drawOSIcon(xIconPos,yIconPos,workPath,name,fileFormat)
-        --ÅÑËÈ ÝÒÎ ÍÅ ÏÀÏÊÀ
-        SpeedOS.LoadAPI("SpeedAPI/image")
+        --ЕСЛИ ЭТО НЕ ПАПКА
         if not fs.isDir(workPath.."/"..name) then
                 if fileFormat == ".png" then
-                        image.draw(xIconPos,yIconPos,"System/Images/OS/Icons/image.png")
-		elseif fileFormat == ".nfp" then
-                        image.draw(xIconPos,yIconPos,"System/Images/OS/Icons/nfp.png")
-		elseif fileFormat == ".skch" then
-                        image.draw(xIconPos,yIconPos,"System/Images/OS/Icons/nfp.png")
-		elseif fileFormat == ".gif" then
-                        image.draw(xIconPos,yIconPos,"System/Images/OS/Icons/gif.png")
+                        image.draw(xIconPos,yIconPos,"System/OS/Icons/image.png")
+                elseif fileFormat == ".nfp" then
+                        image.draw(xIconPos,yIconPos,"System/OS/Icons/nfp.png")
+                elseif fileFormat == ".skch" then
+                        image.draw(xIconPos,yIconPos,"System/OS/Icons/nfp.png")
+                elseif fileFormat == ".gif" then
+                        image.draw(xIconPos,yIconPos,"System/OS/Icons/gif.png")
                 elseif fileFormat == ".cfg" then
-                        image.draw(xIconPos,yIconPos,"System/Images/OS/Icons/config.png")
+                        image.draw(xIconPos,yIconPos,"System/OS/Icons/config.png")
                 elseif fileFormat == ".zip" then
-                        image.draw(xIconPos,yIconPos,"System/Images/OS/Icons/zip.png")
+                        image.draw(xIconPos,yIconPos,"System/OS/Icons/zip.png")
                 else
-                        image.draw(xIconPos,yIconPos,"System/Images/OS/Icons/default.png")
+                        image.draw(xIconPos,yIconPos,"System/OS/Icons/default.png")
                 end
-        --ÅÑËÈ ÝÒÎ ÏÀÏÊÀ
+        --ЕСЛИ ЭТО ПАПКА
         else
                 local iconPath = workPath.."/"..name.."/Resources/icon.png"
                 if fileFormat == ".app" and fs.exists(iconPath) then
@@ -455,7 +454,7 @@ function drawOSIcon(xIconPos,yIconPos,workPath,name,fileFormat)
         end
 end
  
---ÊÎÐÐÅÊÒÈÐÎÂÊÀ ÑÒÀÐÒÎÂÛÕ ÊÎÎÐÄÈÍÀÒ
+--КОРРЕКТИРОВКА СТАРТОВЫХ КООРДИНАТ
 local function correctStartCoords(xStart,yStart,xWindowSize,yWindowSize)
         if xStart == "auto" then
                 xStart = math.floor(xSize/2 - xWindowSize/2)
@@ -466,7 +465,7 @@ local function correctStartCoords(xStart,yStart,xWindowSize,yWindowSize)
         return xStart,yStart
 end
  
---ÐÈÑÎÂÀÍÈÅ ÊÍÎÏÊÈ
+--РИСОВАНИЕ КНОПКИ
 function button(x,y,xOffset,yOffset,text,textColor,backColor)
         local width = xOffset*2+#text
         local height = yOffset*2+1
@@ -476,7 +475,7 @@ function button(x,y,xOffset,yOffset,text,textColor,backColor)
         return x,y,x+width-1,y+height-1
 end
  
---ÎÒÐÈÑÎÂÊÀ ØÊÀËÛ ÏÐÎÃÐÅÑÑÀ
+--ОТРИСОВКА ШКАЛЫ ПРОГРЕССА
 local function drawProgressBar(xStart,yStart,width,height,frontColor,backColor,percent)
         local doneSize = math.ceil(percent/100*width)
  
@@ -484,7 +483,7 @@ local function drawProgressBar(xStart,yStart,width,height,frontColor,backColor,p
         square(xStart,yStart,doneSize,height,frontColor)
 end
  
---ÎÒÐÈÑÎÂÊÀ ÏÎËÎÑÛ ÏÐÎÊÐÓÒÊÈ
+--ОТРИСОВКА ПОЛОСЫ ПРОКРУТКИ
 function scrollBar(xStart,yStart,height,countOfAllElements,currentElement,backColor,frontColor)
         local percent = 1/countOfAllElements
         local sizeOfScrollBar = math.ceil(percent * height)
@@ -499,7 +498,7 @@ function scrollBar(xStart,yStart,height,countOfAllElements,currentElement,backCo
         end
 end
  
---ÏÎÈÑÊ ×ÅÃÎ-ËÈÁÎ Â ÔÀÉËÎÂÎÉ ÑÈÑÒÅÌÅ
+--ПОИСК ЧЕГО-ЛИБО В ФАЙЛОВОЙ СИСТЕМЕ
 local function searchInAllFiles(path,whatToFind)
  
         local function poiskSovpadeniya(name)
@@ -533,7 +532,7 @@ local function searchInAllFiles(path,whatToFind)
  
 end
  
---ÔÎÐÌÀÒÈÐÎÂÀÍÍÛÉ ÒÅÊÑÒ ÊÀÊ Â ×ÀÒÅ ÌÀÉÍÀ ×ÅÐÅÇ &6, &c, &a È Ò.Ï.
+--ФОРМАТИРОВАННЫЙ ТЕКСТ КАК В ЧАТЕ МАЙНА ЧЕРЕЗ &6, &c, &a И Т.П.
 local colorCodes = {
         {["code"] = "&0", ["color"] = 1},
         {["code"] = "&1", ["color"] = 2},
@@ -613,7 +612,7 @@ function error(text1)
         local xStart = math.floor(xSize/2-xWindowSize/2)
         local yStart = math.floor(ySize/2-yWindowSize/2)
        
-        --ÐÈÑÎÂÀÍÈÅ ÏÓÑÒÎÃÎ ÎÊÍÀ
+        --РИСОВАНИЕ ПУСТОГО ОКНА
         emptyWindow(xStart,yStart,xWindowSize,yWindowSize," ")
  
         --DRAW ICON
@@ -689,7 +688,7 @@ function attention(text1,text2, addPidor)
         local xStart = math.floor(xSize/2-xWindowSize/2)
         local yStart = math.floor(ySize/2-yWindowSize/2)
        
-        --ÐÈÑÎÂÀÍÈÅ ÏÓÑÒÎÃÎ ÎÊÍÀ
+        --РИСОВАНИЕ ПУСТОГО ОКНА
         emptyWindow(xStart,yStart,xWindowSize,yWindowSize," ")
  
         --DRAW ICON
@@ -767,12 +766,12 @@ function input(...)
  
         xStart, yStart = correctStartCoords(xStart,yStart,xWindowSize,yWindowSize)
  
-        --ÇÀÍÎÑÈÌ ÑÒÀÐÒÎÂÎÅ ÃÎÂÍÎ Â ÈÍÏÓÒÑ, ÁÈ×
+        --ЗАНОСИМ СТАРТОВОЕ ГОВНО В ИНПУТС, БИЧ
         for i=1,sizeOfText1 do
                 Inputs[i]=arg[i+4][2]
         end
  
-        --ÑÎÇÄÀÍÈÅ ÎÁÚÅÊÒÎÂ
+        --СОЗДАНИЕ ОБЪЕКТОВ
         local Objects = {}
         local function newObj(class,name,x1,y1,width,height)
                 Objects[class] = Objects[class] or {}
@@ -783,7 +782,7 @@ function input(...)
                 Objects[class][name]["y2"]=y1+height-1
         end
  
-        --ÐÈÑÎÂÀÍÈÅ ÏÓÑÒÎÃÎ ÎÊÍÀ
+        --РИСОВАНИЕ ПУСТОГО ОКНА
         emptyWindow(xStart,yStart,xWindowSize,yWindowSize,title)
  
         --BUTTON
@@ -850,7 +849,7 @@ function input(...)
  
                 local event,side,x,y = os.pullEvent()
                 if event == "key" then
-                        --ÅÍÒÅÐ
+                        --ЕНТЕР
                         if side == 28 then
                                 if currentInput ~= "" then
                                         currentInput = ""
@@ -866,11 +865,11 @@ function input(...)
                                         sleep(0.2)
                                         return Inputs
                                 end
-                        --ÁÅÊÑÏÅÉÑ
+                        --БЕКСПЕЙС
                         elseif side == 14 then
                                 currentInput = string.sub(currentInput,1,-2)
                                 Inputs[inputCounter] = currentInput
-                        --ÊÍÎÏÎ×ÊÈ ÂÂÅÐÕ-ÂÍÈÇ
+                        --КНОПОЧКИ ВВЕРХ-ВНИЗ
                         elseif side == 200 then
                                 inputCounter = inputCounter - 1
                                 if inputCounter < 1 then inputCounter = 1 end
@@ -927,7 +926,7 @@ end
  
 function select(...)
  
-        --ÑÎÇÄÀÍÈÅ ÎÁÚÅÊÒÎÂ
+        --СОЗДАНИЕ ОБЪЕКТОВ
         local Objects = {}
         local function newObj(class,name,x1,y1,width,height)
                 --if not Objects[class] then Objects[class] = {} end
@@ -954,7 +953,7 @@ function select(...)
         local hereIsOnlyOneElement = false
         if sizeOfText1 == 0 then hereIsOnlyOneElement = true end
  
-        --ÂÛ×ÈÑËÅÍÈÅ ÄËÈÍÛ ÎÊÍÀ ÍÀ ÎÑÍÎÂÅ ÒÅÊÑÒÀ
+        --ВЫЧИСЛЕНИЕ ДЛИНЫ ОКНА НА ОСНОВЕ ТЕКСТА
         local theLongestElement = 0
         for i=1,sizeOfText1 do
                 if #text1[i] > theLongestElement then theLongestElement = #text1[i] end
@@ -963,7 +962,7 @@ function select(...)
                 if #text2[i] > theLongestElement then theLongestElement = #text2[i] end
         end
  
-        --ÏÅÐÅÑ×ÅÒ ÄËÈÍÛ ÎÊÍÀ ÍÀ ÎÑÍÎÂÅ ÊÎËÈ×ÅÑÒÂÀ ÊÍÎÏÎÊ
+        --ПЕРЕСЧЕТ ДЛИНЫ ОКНА НА ОСНОВЕ КОЛИЧЕСТВА КНОПОК
         local countOfButtons = #arg-2
         local sizeOfAllButtons = 0
         for i=1,countOfButtons do
@@ -972,7 +971,7 @@ function select(...)
         sizeOfAllButtons = sizeOfAllButtons - 1
         if sizeOfAllButtons>theLongestElement then theLongestElement=sizeOfAllButtons end
  
-        --ÇÀÄÀÍÈÅ ÊÎÍÊÐÅÒÍÛÕ ÐÀÇÌÅÐÎÂ ÎÊÍÀ ÏÎÑËÅ ÂÛ×ÈÑËÅÍÈÉ
+        --ЗАДАНИЕ КОНКРЕТНЫХ РАЗМЕРОВ ОКНА ПОСЛЕ ВЫЧИСЛЕНИЙ
         local xWindowSize = 2 + theLongestElement + 2
         local yWindowSize = nil
         if hereIsOnlyOneElement then
@@ -984,7 +983,7 @@ function select(...)
         local xStart = math.floor(xSize/2-xWindowSize/2)
         local yStart = math.floor(ySize/2-yWindowSize/2)
        
-        --ÐÈÑÎÂÀÍÈÅ ÏÓÑÒÎÃÎ ÎÊÍÀ
+        --РИСОВАНИЕ ПУСТОГО ОКНА
         emptyWindow(xStart,yStart,xWindowSize,yWindowSize," ")
  
         --TEXTS
@@ -1034,7 +1033,7 @@ function aboutFile(x,y,xWindowSize,path)
         local limitOfText = xWindowSize - 2
         local yWindowSize = 16
  
-        --ÑÎÇÄÀÍÈÅ ÎÁÚÅÊÒÎÂ
+        --СОЗДАНИЕ ОБЪЕКТОВ
         local Objects = {}
         local function newObj(class,name,x1,y1,width,height)
                 Objects[class] = Objects[class] or {}
@@ -1045,7 +1044,7 @@ function aboutFile(x,y,xWindowSize,path)
                 Objects[class][name]["y2"]=y1+height-1
         end
  
-        --ÐÈÑÎÂÀÍÈÅ ÊÍÎÏÊÈ
+        --РИСОВАНИЕ КНОПКИ
         local function drawButton(x,y,name,textColor,backColor)
                 local sizeOfButton = 2+#name+2
                 square(x,y,sizeOfButton,1,backColor)
@@ -1053,7 +1052,7 @@ function aboutFile(x,y,xWindowSize,path)
                 newObj("buttons",name,x,y,sizeOfButton,1)
         end
  
-        ---------------ÍÅÍÓÆÍÎÅ ÃÎÂÍÎ, ËÎÑÎÑÍÈ
+        ---------------НЕНУЖНОЕ ГОВНО, ЛОСОСНИ
  
         local info = {}
  
@@ -1064,28 +1063,28 @@ function aboutFile(x,y,xWindowSize,path)
         info["fileSize"] = math.ceil(getFileSize(path)/1024).."KB"
  
         info["readOnly"] = tostring(fs.isReadOnly(path))
-        ---------------ÍÓÆÍÎÅ ÃÎÂÍÎ
+        ---------------НУЖНОЕ ГОВНО
  
-        --ÊÎÐÐÅÊÖÈß ÊÎÎÐÄÈÍÀÒÛ GOVNA, ×ÒÎÁ ÇÀ ÊÐÀß ÝÊÐÀÍÀ ÍÅ ÇÀËÅÇÀËÎ
+        --КОРРЕКЦИЯ КООРДИНАТЫ GOVNA, ЧТОБ ЗА КРАЯ ЭКРАНА НЕ ЗАЛЕЗАЛО
         if y+yWindowSize - 1  >= ySize then y = y - (y+yWindowSize - 1 - ySize) - 1 end
         if x+xWindowSize - 1  >= xSize then x = x - (x+xWindowSize - 1 - xSize) - 1 end
  
-        --ÐÈÑÓÅÌ ÎÊÍÎ
+        --РИСУЕМ ОКНО
         emptyWindow(x,y,xWindowSize,yWindowSize,"Properties")
  
-        --ÈÊÎÍÎ×ÊÈ, ÁÈ×
+        --ИКОНОЧКИ, БИЧ
         drawOSIcon(x+1,y+2,path,name,info["fileFormat"])
  
-        --ÏÎËÎÑÎ×ÊÀ ÏÎÄ ÈÊÎÍÊÎÉ
+        --ПОЛОСОЧКА ПОД ИКОНКОЙ
         square(x,y+7,xWindowSize,1,colors.lightGray)
         colorText(x+1,y+7,"Info",colors.white)
  
-        --ÒÅÊÑÒ ÑÏÐÀÂÀ ÎÒ ÈÊÎÍÊÈ
+        --ТЕКСТ СПРАВА ОТ ИКОНКИ
         term.setBackgroundColor(colors.white)
         colorText(x+8,y+3,stringLimit("start",name,xWindowSize-9),colors.gray)
         colorText(x+8,y+4,info["fileSize"],colors.lightGray)
  
-        --ÒÅÊÑÒ ÏÎÄ ÈÊÎÍÊÎÉ
+        --ТЕКСТ ПОД ИКОНКОЙ
         local textStart = y+9
         colorText(x+1,textStart,"Type:",colors.gray)
         usualText(x+1,textStart+1,"Size:",colors.gray)
@@ -1097,10 +1096,10 @@ function aboutFile(x,y,xWindowSize,path)
         usualText(x+7,textStart+2,stringLimit("start",path,xWindowSize-8))
         usualText(x+12,textStart+3,info["readOnly"])
  
-        --ÊÍÎÏÊÀ
+        --КНОПКА
         drawButton(x+xWindowSize-11,y+yWindowSize-2,"Close",colors.black,colors.lightBlue)
  
-        --ÎÒÑËÅÆÈÂÀÍÈÅ ÍÀÆÀÒÈß ÍÀ ÊÍÎÏÊÓ
+        --ОТСЛЕЖИВАНИЕ НАЖАТИЯ НА КНОПКУ
         while true do
                 local event,side,x,y = os.pullEvent()
                 if event == "mouse_click" then
@@ -1118,7 +1117,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------
  
 function progressBar(xStart,yStart,xWindowSize,title,text,speed)
-        --ÑÊÎÐÐÅÊÒÈÐÎÂÀÒÜ ØÈÐÈÍÓ ÎÊÍÀ
+        --СКОРРЕКТИРОВАТЬ ШИРИНУ ОКНА
         if xWindowSize < 4+#text then
                 xWindowSize = 4+#text
         end
@@ -1126,17 +1125,17 @@ function progressBar(xStart,yStart,xWindowSize,title,text,speed)
         local yWindowSize = 6
         local sizeOfProgressBar = xWindowSize - 4
  
-        --ÑÊÎÐÐÅÊÒÈÐÎÂÀÒÜ ÊÎÎÐÄÛ
+        --СКОРРЕКТИРОВАТЬ КООРДЫ
         xStart,yStart = correctStartCoords(xStart,yStart,xWindowSize,yWindowSize)
  
-        --ÑÀÌÎ ÎÊÍÎ
+        --САМО ОКНО
         emptyWindow(xStart,yStart,xWindowSize,yWindowSize,title)
  
-        --ÒÅÊÑÒ ÎÊÍÀ
+        --ТЕКСТ ОКНА
         term.setBackgroundColor(colors.white)
         colorText(math.floor(xStart+(xWindowSize/2-#text/2)),yStart+2,text,colors.gray)
  
-        --ÐÈÑÎÂÀÍÈÅ ÏÐÎÃÐÅÑÑ ÁÀÐÀ
+        --РИСОВАНИЕ ПРОГРЕСС БАРА
         local xProgressBarPos = xStart+2
         local yProgressBarPos = yStart+4
         drawProgressBar(xProgressBarPos,yProgressBarPos,sizeOfProgressBar,1,colors.lightBlue,colors.lightGray,0)
@@ -1168,7 +1167,7 @@ function search(xStart,yStart,xWindowSize,limitOfElements,searchText)
         local fromElement = 1
         local searchInput = ""
  
-        --ÑÎÇÄÀÍÈÅ ÎÁÚÅÊÒÎÂ
+        --СОЗДАНИЕ ОБЪЕКТОВ
         local Objects = {}
         local function newObj(class,name,x1,y1,width,height,fileType,fileSize,path,fileName,fileFormat)
                 Objects[class] = Objects[class] or {}
@@ -1196,11 +1195,11 @@ function search(xStart,yStart,xWindowSize,limitOfElements,searchText)
         end
  
         local function drawSearches(fromElement)
-                --ÎÁÍÓËÅÍÈÅ ÎÁÚÅÊÒÎÂ
+                --ОБНУЛЕНИЕ ОБЪЕКТОВ
                 Objects = {}
                 newObj("icon","cykaBlyad",-5,-5,1,1,"hehe",5)          
  
-                --Î×ÈÑÒÊÀ ÝÊÐÀÍÀ ÏÎÊÀÇÀ
+                --ОЧИСТКА ЭКРАНА ПОКАЗА
                 square(xStart,yStart+3,xWindowSize-1,yWindowSize-3,colors.white)
  
                 if #searchList == 0 then
@@ -1226,9 +1225,9 @@ function search(xStart,yStart,xWindowSize,limitOfElements,searchText)
                 colorText(xStartOfSearchBar,yStartOfSearchBar,stringLimit("start",searchInput,sizeOfSearchBar),colors.black)
         end
  
-        --ÎÊÍÎ
+        --ОКНО
         sampleWindow(xStart,yStart,xWindowSize,yWindowSize)
-        --ÃÎËÓÁÀß ØÒÓ×ÊÀ
+        --ГОЛУБАЯ ШТУЧКА
         square(xStart,yStart,xWindowSize,3,colors.blue)
         colorText(xStart+1,yStart+1,searchText,colors.white)
         square(xStartOfSearchBar,yStartOfSearchBar,sizeOfSearchBar,1,colors.white)
