@@ -1,5 +1,4 @@
 
-current = term.native or term
 native = term.native or term
 
 local redirectTarget = native
