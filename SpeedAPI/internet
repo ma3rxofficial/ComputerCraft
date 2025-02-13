@@ -10,7 +10,7 @@
 local blacklist = {}
 
 -----------------------------------------------------------------------------------------------------------------------------------
--- Спизженная из SpeedText функция, проверяет наличие элемента в массиве.
+-- Спизженная из SpeedText функция, проверяет наличие элемента в массиве
 
 local function isBlacklisted(url)
 	for _, pizda in pairs(blacklist) do
@@ -23,20 +23,36 @@ local function isBlacklisted(url)
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
--- Замена стандартным функциям http.
+-- Цетральная функция для обработки POST- и GET- запросов по HTTP
 
-function get(url)
-	if not isBlacklisted(url) then
-		return http.get(url)
+local function wrapRequest(_url, _post)
+	local requestID = http.request(_url, _post)
+
+	while true do
+		local event, param1, param2 = os.pullEvent()
+		if event == "http_success" and param1 == _url then
+			return param2
+		elseif event == "http_failure" and param1 == _url then
+			return nil
+		end
+	end		
+end
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- GET-запрос
+
+http.get = function(_url)
+	if not isBlacklisted(_url) then
+		return wrapRequest(_url, nil)
 	end
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
--- Ну бля ээ ну ты понял
+-- POST-запрос
 
-function post(url)
-	if not isBlacklisted(url) then
-		return http.post(url)
+http.post = function(_url, _post)
+	if not isBlacklisted(_url) then
+		return wrapRequest(_url, _post or "")
 	end
 end
 
