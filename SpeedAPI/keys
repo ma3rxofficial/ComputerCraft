@@ -58,3 +58,7 @@ keys["return"] = keys.enter
 function getName( _nKey )
 	return tKeys[ _nKey ]
 end
+
+function test()
+	return "cyka"
+end
