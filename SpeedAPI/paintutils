@@ -155,6 +155,7 @@ function drawLine( startX, startY, endX, endY, nColour )
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Нарисовать прямоугольник (не заполненный)
 
 function drawBox( startX, startY, endX, endY, nColour )
     if type( startX ) ~= "number" or type( startX ) ~= "number" or
