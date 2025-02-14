@@ -79,6 +79,7 @@ end
 
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Нарисовать пиксель, но с заданным цветом
 
 function drawPixel( xPos, yPos, nColour )
     if type( xPos ) ~= "number" or type( yPos ) ~= "number" or (nColour ~= nil and type( nColour ) ~= "number") then
