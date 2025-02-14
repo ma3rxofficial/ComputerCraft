@@ -92,6 +92,7 @@ function drawPixel( xPos, yPos, nColour )
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Нарисовать линию нахуй
 
 function drawLine( startX, startY, endX, endY, nColour )
     if type( startX ) ~= "number" or type( startX ) ~= "number" or
