@@ -238,6 +238,7 @@ function drawFilledBox( startX, startY, endX, endY, nColour )
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------
+-- Нарисовать изображение, принимает массив, возвращаемый из функций loadImage, loadImageFromString
 
 function drawImage( tImage, xPos, yPos )
     if type( tImage ) ~= "table" or type( xPos ) ~= "number" or type( yPos ) ~= "number" then
