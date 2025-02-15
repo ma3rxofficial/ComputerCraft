@@ -68,6 +68,8 @@ function waitForAny( ... )
     return runUntilLimit( routines, #routines - 1 )
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function waitForAll( ... )
     local routines = { create( ... ) }
 	runUntilLimit( routines, 0 )
