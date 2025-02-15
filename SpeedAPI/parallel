@@ -9,6 +9,8 @@ function suka()
 	return "suka"
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 local function create( first, ... )
 	if first ~= nil then
 		return coroutine.create(first), create( ... )
