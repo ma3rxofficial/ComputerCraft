@@ -10,7 +10,7 @@ function getBaseAPI()
     local apis = {} -- подготавливаем ебанный массив
 
     for k, v in pairs(SpeedOS.Base) do -- перебираем весь _G, здесь k - имя переменной, v - её значение
-        if type(v) == "table" then
+        if type(v) == "table" then -- если переменная оказалась таблицей (API)
             table.insert(apis, k)
         end
     end
