@@ -7,7 +7,7 @@
 -- Возвращает массив с API SpeedOS.Base (_G)
 
 function getBaseAPI()
-    local apis = {}
+    local apis = {} -- подготавливаем ебанный массив
 
     for k, v in pairs(SpeedOS.Base) do
         if type(v) == "table" then
