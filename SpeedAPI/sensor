@@ -47,11 +47,11 @@ end
 
 function call(side, ...)
 	if peripheral.getType(side) == "sensor" then
-		local id = peripheral.call(side, ...)
-		if id == -1 then
+		local pizda = peripheral.call(side, ...)
+		if pizda == -1 then
 			return false
 		end
-		return waitForResponse(id)
+		return waitForResponse(pizda)
 	else
 		return nil, "not a sensor"
 	end
