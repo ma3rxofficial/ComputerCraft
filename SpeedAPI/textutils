@@ -114,6 +114,8 @@ function slowPrint( sText, nRate, _term)
     print()
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function formatTime( nTime, bTwentyFourHour )
 	local sTOD = nil
 	if not bTwentyFourHour then
