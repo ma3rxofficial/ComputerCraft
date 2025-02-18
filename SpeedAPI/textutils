@@ -138,6 +138,8 @@ function formatTime( nTime, bTwentyFourHour )
 	end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 local function makePagedScroll( _term, _nFreeLines )
 	local nativeScroll = _term.scroll
 	local nFreeLines = _nFreeLines or 0
