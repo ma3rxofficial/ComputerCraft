@@ -161,6 +161,9 @@ local function makePagedScroll( _term, _nFreeLines )
     end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
+
 function pagedPrint( _sText, _nFreeLines )
 	local nativeScroll = term.scroll
 	term.scroll = makePagedScroll( term, _nFreeLines )
