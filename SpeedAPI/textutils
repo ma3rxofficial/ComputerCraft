@@ -9,6 +9,8 @@ function test(string)
 	print(string)
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function _write( sText , _term)
 	if _term == nil then
 		_term = term
