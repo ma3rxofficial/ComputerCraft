@@ -74,6 +74,8 @@ function _write( sText , _term)
 	return nLinesPrinted
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function slowWrite( sText, nRate, _term )
 	if _term == nil then
 		_term = term
