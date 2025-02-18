@@ -104,6 +104,8 @@ function slowWrite( sText, nRate, _term )
     end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 function slowPrint( sText, nRate, _term)
 	if _term == nil then
 			_term = term
