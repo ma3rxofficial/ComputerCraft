@@ -19,7 +19,7 @@ local tKeys = {
 	"leftBracket","rightBracket","enter","leftCtrl","a",			                -- 26
 	"s",		"d",		"f",		"g",		"h",			-- 31
 	"j",		"k",		"l",		"semiColon","apostrophe",	        -- 36
-	"grave",	"leftShift","backslash","z",		"x",			-- 41
+	"grave",	"leftShift","backslash","z",		"x",			        -- 41
 	"c",		"v",		"b",		"n",		"m",			-- 46
 	"comma",	"period",	"slash",	"rightShift","multiply",	-- 51
 	"leftAlt",	"space",	"capsLock",	"f1",		"f2",			-- 56
