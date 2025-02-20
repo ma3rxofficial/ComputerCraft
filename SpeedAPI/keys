@@ -27,7 +27,7 @@ local tKeys = {
 	"f8",		"f9",		"f10",		"numLock",	"scollLock",	        -- 66	
 	"numPad7",	"numPad8",	"numPad9",	"numPadSubtract","numPad4",	        -- 71
 	"numPad5",	"numPad6",	"numPadAdd","numPad1",	"numPad2",		        -- 76
-	"numPad3",	"numPad0",	"numPadDecimal",nil,	nil,			-- 81
+	"numPad3",	"numPad0",	"numPadDecimal",nil,	nil,			        -- 81
 	nil,	 	"f11",		"f12",		nil,		nil,			-- 86
 	nil,		nil,		nil,		nil,		nil,			-- 91
 	nil,		nil,		nil,		nil,		"f13",			-- 96
