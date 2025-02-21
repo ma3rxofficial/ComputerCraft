@@ -54,6 +54,8 @@ term.restore = function()
 	end
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 term.test = function() return "IDI NAHUJ!!!!!!" end
 
 for k,v in pairs( native ) do
