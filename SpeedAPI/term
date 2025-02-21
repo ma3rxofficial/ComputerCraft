@@ -44,6 +44,9 @@ term.redirect = function( _object )
 	redirectTarget = _object
 	current = _object
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
 term.restore = function()
 	if #tRedirectStack > 0 then
 		redirectTarget = tRedirectStack[#tRedirectStack] 
