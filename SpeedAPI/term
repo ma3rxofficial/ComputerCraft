@@ -54,7 +54,7 @@ term.restore = function()
 	end
 end
 
-term.test = function() return "SpeedOS API!" end
+term.test = function() return "IDI NAHUJ!!!!!!" end
 
 for k,v in pairs( native ) do
 	if type( k ) == "string" and type( v ) == "function" then
