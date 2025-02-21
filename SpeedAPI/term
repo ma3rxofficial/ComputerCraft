@@ -10,6 +10,8 @@ native = term.native or term
 local redirectTarget = native
 local tRedirectStack = {}
 
+-----------------------------------------------------------------------------------------------------------------------------------
+
 local function wrap( _sFunction )
 	return function( ... )
 		return redirectTarget[ _sFunction ]( ... )
