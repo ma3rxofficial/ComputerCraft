@@ -18,7 +18,7 @@ local function wrap( _sFunction )
 	end
 end
 
-local term = {}
+-----------------------------------------------------------------------------------------------------------------------------------
 term.redirect = function( _object )
 	if _object == nil or type( _object ) ~= "table" then
 		error( "Invalid redirect object" )
