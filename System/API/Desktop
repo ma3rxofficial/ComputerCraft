@@ -245,7 +245,7 @@ function Click(event, side, x, y)
 		selectedFile = nil
 		MainDraw()
 	elseif not found then
-		if event == 'mouse_click' and side == 2 then
+		if event == 'mouse_click' or event == "mouse_drag" and side == 2 then
 			Menu:Initialise(x, y, nil, nil, self,{ 
 				{
 					Title = 'New Folder...',
